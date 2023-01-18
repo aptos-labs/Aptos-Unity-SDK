@@ -65,6 +65,9 @@ namespace Aptos.Accounts
             }
         }
 
+        // TODO: Add hex derivation from public key string
+        // TODO: Add hex derivation from public key bytes
+
         /// <summary>
         /// Initializes the PublicKey object with a given byte array.
         /// </summary>
@@ -118,6 +121,69 @@ namespace Aptos.Accounts
         public bool IsOnCurve()
         {
             return KeyBytesFromBase58.IsOnCurve();
+        }
+
+        /// <summary>
+        /// Compares two public key objects
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator ==(PublicKey lhs, PublicKey rhs)
+        {
+            if (lhs is null)
+            {
+                if (rhs is null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(PublicKey lhs, PublicKey rhs) {
+            return lhs == rhs;
+        } 
+
+        /// <summary>
+        /// Convert a PublicKey object to Base58 encoded string representatio public key.
+        /// </summary>
+        /// <param name="publicKey">The PublicKey object.</param>
+        /// <returns>Base58 encoded string representing the public key.</returns>
+        public static implicit operator string(PublicKey publicKey)
+        {
+            return publicKey.Key;
+        }
+
+        /// <summary>
+        /// Convert Base58 encoded string of a public key to PublicKey object.
+        /// </summary>
+        /// <param name="publicKey">Base58 encoded string representing a public key.</param>
+        /// <returns>PublicKey object.</returns>
+        public static explicit operator PublicKey(string publicKey)
+        {
+            return new PublicKey(publicKey);
+        }
+
+        /// <summary>
+        /// Convert a PublicKey object to a byte array representation of a public key.
+        /// </summary>
+        /// <param name="publicKey">The PublicKey object.</param>
+        /// <returns>Public key as a byte array.</returns>
+        public static implicit operator byte[](PublicKey publicKey) 
+        {
+            return publicKey .KeyBytesFromBase58;
+        }
+
+        /// <summary>
+        /// Convert byte array representation of a public key to a PublicKey object.
+        /// </summary>
+        /// <param name="keyBytes">The public key as a byte array.</param>
+        /// <returns>PublicKey object.</returns>
+        public static explicit operator PublicKey(byte[] keyBytes)
+        {
+            return new PublicKey(keyBytes);
         }
     }
 }
