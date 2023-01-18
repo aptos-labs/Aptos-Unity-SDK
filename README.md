@@ -7,8 +7,18 @@ To get started, you may check our [Quick Start Guide](#). A set of examples and 
 An accompanying README file can be found in the open-source repository which provides further details on the integration.
 
 ### Installation
+Two installation methods are provided: (1) installation through our `unitypackage`, and (2) installation through the Unity Package Manager
 
-**NOTE:**  As of Unity 2020.x.x, Newtonsoft Json is common dependency. Prior versions of Unity require intalling Newtonsoft.
+1. Install by `unitypackage`
+    1. Download the latest `Aptos.Unity.unitypackge` file from [Release](https://www.google.com/) 
+    2. Inside Unity, Click on `Assets` → `Import Packages` → `Custom Package.` and select the downloaded file.
+2. Install by Unity Package Manager
+    1. Open [Unity Package Manager](https://docs.unity3d.com/Manual/upm-ui.html) window.
+    2. Click the add **+** button in the top status bar.
+    3. Select `Add package from git URL` from the dropdown menu.
+    4. Enter the `https://github.com/xxxxxxxxxx.git` and click Add
+
+**NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is common dependency. Prior versions of Unity require intalling Newtonsoft.
 
 ## Technical Details
 
