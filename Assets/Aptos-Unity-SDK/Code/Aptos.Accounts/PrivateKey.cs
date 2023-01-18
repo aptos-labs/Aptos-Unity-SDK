@@ -39,6 +39,7 @@ namespace Aptos.Accounts
                 }
                 return _keyBase58;
             }
+
             set
             {
                 _keyBase58 = value;
@@ -91,12 +92,12 @@ namespace Aptos.Accounts
         /// Initialize the PrivateKey object from the given string.
         /// </summary>
         /// <param name="key">The private key as base58 encoded byte array.</param>
-        public PrivateKey(ReadOnlySpan<byte> key)
+        public PrivateKey(ReadOnlySpan<byte> privateKey)
         {
-            if (key.Length != KeyLength)
-                throw new ArgumentException("Invalid key length: ", nameof(key));
+            if (privateKey.Length != KeyLength)
+                throw new ArgumentException("Invalid key length: ", nameof(privateKey));
             KeyBytesFromBase58 = new byte[KeyLength];
-            key.CopyTo(KeyBytesFromBase58.AsSpan());
+            privateKey.CopyTo(KeyBytesFromBase58.AsSpan());
         }
 
         /// <summary>
