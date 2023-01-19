@@ -77,7 +77,7 @@ namespace Aptos.Accounts
             if (publicKey == null)
                 throw new ArgumentNullException(nameof(publicKey));
             if (publicKey.Length != KeyLength)
-                throw new ArgumentException("invalid key length: ", nameof(publicKey));
+                throw new ArgumentException("Invalid key length: ", nameof(publicKey));
             KeyBytesFromBase58 = new byte[KeyLength];
             Array.Copy(publicKey, KeyBytesFromBase58, KeyLength);
         }
@@ -98,7 +98,7 @@ namespace Aptos.Accounts
         public PublicKey(ReadOnlySpan<byte> publicKey)
         {
             if (publicKey.Length != KeyLength)
-                throw new ArgumentException("invalid key length", nameof(publicKey));
+                throw new ArgumentException("Invalid key length: ", nameof(publicKey));
             KeyBytesFromBase58 = new byte[KeyLength];
             publicKey.CopyTo(KeyBytesFromBase58.AsSpan());
         }
