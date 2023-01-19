@@ -576,7 +576,7 @@ namespace Aptos.Unity.Rest
         /// <param name="description"></param>
         /// <param name="uri"></param>
         /// <returns></returns>
-        public IEnumerator CreateCollectionCor(Action<string> callback, Account sender, string collectionName, string collectionDescription, string uri)
+        public IEnumerator CreateCollection(Action<string> callback, Account sender, string collectionName, string collectionDescription, string uri)
         {
             // STEP 1: Create Transaction Arguments
             Arguments arguments = new Arguments()
@@ -657,42 +657,42 @@ namespace Aptos.Unity.Rest
             Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
             callback(txnRequestJson); //  TODO: Remove
 
-            //string transactionURL = Endpoint + "/transactions";
-            //Uri transactionsURI = new Uri(transactionURL);
-            //var request = new UnityWebRequest(transactionsURI, "POST");
-            //byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(txnRequestJson);
-            //request.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-            //request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-            //request.SetRequestHeader("Content-Type", "application/json");
+            string transactionURL = Endpoint + "/transactions";
+            Uri transactionsURI = new Uri(transactionURL);
+            var request = new UnityWebRequest(transactionsURI, "POST");
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(txnRequestJson);
+            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
 
-            //request.SendWebRequest();
-            //while (!request.isDone)
-            //{
-            //    yield return null;
-            //}
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
 
-            //if (request.result == UnityWebRequest.Result.ConnectionError)
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Submitting Transaction: " + request.error);
+                //return request.error;
+                callback(request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback("??????????????");
+            }
+            //else if (request.responseCode == 400)
             //{
-            //    Debug.LogError("Error While Submitting Transaction: " + request.error);
-            //    //return request.error;
-            //    callback(request.error);
+            //    // VM Error
             //}
-            //else if (request.responseCode == 404)
-            //{
-            //    callback("??????????????");
-            //}
-            ////else if (request.responseCode == 400)
-            ////{
-            ////    // VM Error
-            ////}
-            //else
-            //{
-            //    Debug.Log("RESPONSE CODE: " + request.responseCode);
-            //    string response = request.downloadHandler.text;
-            //    callback(response);
-            //}
+            else
+            {
+                Debug.Log("RESPONSE CODE: " + request.responseCode);
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
 
-            //request.Dispose();
+            request.Dispose();
 
             yield return null;
         }
