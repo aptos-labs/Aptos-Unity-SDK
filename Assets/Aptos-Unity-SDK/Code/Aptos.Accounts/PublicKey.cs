@@ -123,6 +123,26 @@ namespace Aptos.Accounts
             return KeyBytesFromBase58.IsOnCurve();
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is PublicKey publicKey)
+            {
+                return publicKey.Key.Equals(Key);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Key;
+        }
+
         /// <summary>
         /// Compares two public key objects
         /// </summary>
