@@ -1,106 +1,159 @@
 ﻿// An implementation of BCS in C#
-using System;
+
+
+using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization;
-// MemoryStream
 
 namespace Aptos.Utilities.BCS
 {
-    public static class Serialization
+    public class Serialization
     {
         #region Serialization
 
-        /// <summary>
-        /// Binary Canonical Serialization
-        /// </summary>
-        ///
-        /// This takes in a boxed object, and if it can serialize, it will.  This likely will require more
-        /// work around a more idiomatic implementation
-        /// 
-        /// <returns></returns>
-        public static byte[] Serialize(string value)
+        protected MemoryStream output;
+
+        public Serialization()
         {
-            return SerializeString(value);
+            output = new MemoryStream();
         }
 
-        public static byte[] Serialize(byte[] value)
+        public byte[] GetBytes()
         {
-            return SerializeBytes(value);
+            return output.ToArray();
         }
 
-        public static byte[] Serialize(bool value)
+        public Serialization Serialize(string value)
         {
-            return SerializeBool(value);
+            SerializeString(value);
+            return this;
         }
 
-        public static byte[] Serialize(byte num)
+        public Serialization Serialize(byte[] value)
         {
-            return SerializeU8(num);
+            SerializeBytes(value);
+            return this;
         }
 
-        public static byte[] Serialize(ushort num)
+        public Serialization Serialize(bool value)
         {
-            return SerializeU16(num);
+            SerializeBool(value);
+            return this;
         }
 
-        public static byte[] Serialize(uint num)
+        public Serialization Serialize(byte num)
         {
-            return SerializeU32(num);
+            SerializeU8(num);
+            return this;
         }
 
-        public static byte[] Serialize(ulong num)
+        public Serialization Serialize(ushort num)
         {
-            return SerializeU64(num);
+            SerializeU16(num);
+            return this;
         }
 
-        public static byte[] Serialize(BigInteger num)
+        public Serialization Serialize(uint num)
         {
-            return SerializeU128(num);
+            SerializeU32(num);
+            return this;
         }
-        
-        public static byte[] SerializeString(string value)
-        {
-            return SerializeBytes(System.Text.Encoding.UTF8.GetBytes(value));
-        }   
 
-        public static byte[] SerializeBytes(byte[] bytes)
+        public Serialization Serialize(ulong num)
         {
-            byte[] output = new byte[bytes.Length + 8];
-            // Copy the length to first 8 bytes
-            Array.Copy(SerializeLength((ulong)bytes.Length), output, 8);
+            SerializeU64(num);
+            return this;
+        }
+
+        public Serialization Serialize(BigInteger num)
+        {
+            SerializeU128(num);
+            return this;
+        }
+
+        /**
+        * Serializes a string. UTF8 string is supported. Serializes the string's bytes length "l" first,
+        * and then serializes "l" bytes of the string content.
+        *
+        * BCS layout for "string": string_length | string_content. string_length is the bytes length of
+        * the string that is uleb128 encoded. string_length is a u32 integer.
+        **/
+        public Serialization SerializeString(string value)
+        {
+            SerializeBytes(System.Text.Encoding.UTF8.GetBytes(value));
+            return this;
+        }
+
+        /**
+         * Serializes an array of bytes.
+         *
+         * BCS layout for "bytes": bytes_length | bytes. bytes_length is the length of the bytes array that is
+         * uleb128 encoded. bytes_length is a u32 integer.
+        **/
+        public Serialization SerializeBytes(byte[] bytes)
+        {
+            // Write the length of the bytes array
+            SerializeU32AsUleb128((uint)bytes.Length);
             // Copy the bytes to the rest of the array
-            Array.Copy(bytes, 0, output, 8, bytes.Length);
-            return output;
+            output.Write(bytes);
+            return this;
         }
 
-        public static byte[] SerializeBool(bool value)
+        public Serialization SerializeU32AsUleb128(uint value)
         {
-            byte val = (byte)(value ? 1 : 0);
-            return new[] { val };
+            while (value >= 0x80)
+            {
+                // Write 7 (lowest) bits of data and set the 8th bit to 1.
+                byte b = (byte)(value & 0x7F);
+
+                output.WriteByte((byte)(b | 0x80));
+                value >>= 7;
+            }
+
+            // Write the remaining bits of data and set the highest bit to 0
+            output.WriteByte((byte)(value & 0x7f));
+            return this;
         }
 
-        public static byte[] SerializeU8(byte num)
+        public Serialization SerializeBool(bool value)
         {
-            return new[] { num };
+            if (value)
+            {
+                output.WriteByte(0x01);
+            }
+            else
+            {
+                output.WriteByte(0x00);
+            }
+
+            return this;
         }
 
-        public static byte[] SerializeU16(ushort num)
+        public Serialization SerializeU8(byte num)
+        {
+            output.WriteByte(num);
+            return this;
+        }
+
+        public Serialization SerializeU16(ushort num)
         {
             byte lower = (byte)(num & 0xFF);
             byte upper = (byte)(num >> 8 & 0xFF);
-            return new[] { upper, lower };
+            output.Write(new[] { upper, lower });
+            return this;
         }
 
-        public static byte[] SerializeU32(uint num)
+        public Serialization SerializeU32(uint num)
         {
             byte byte1 = (byte)(num & 0xFF);
             byte byte2 = (byte)(num >> 8 & 0xFF);
             byte byte3 = (byte)(num >> 16 & 0xFF);
             byte byte4 = (byte)(num >> 24 & 0xFF);
-            return new[] { byte4, byte3, byte2, byte1 };
+            output.Write(new[] { byte1, byte2, byte3, byte4 });
+            return this;
         }
 
-        public static byte[] SerializeU64(ulong num)
+        public Serialization SerializeU64(ulong num)
         {
             byte byte1 = (byte)(num & 0xFF);
             byte byte2 = (byte)(num >> 8 & 0xFF);
@@ -110,10 +163,11 @@ namespace Aptos.Utilities.BCS
             byte byte6 = (byte)(num >> 40 & 0xFF);
             byte byte7 = (byte)(num >> 48 & 0xFF);
             byte byte8 = (byte)(num >> 56 & 0xFF);
-            return new[] { byte8, byte7, byte6, byte5, byte4, byte3, byte2, byte1 };
+            output.Write(new[] { byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 });
+            return this;
         }
 
-        public static byte[] SerializeU128(BigInteger value)
+        public Serialization SerializeU128(BigInteger value)
         {
             // Ensure the BigInteger is unsigned
             if (value.Sign == -1)
@@ -132,29 +186,14 @@ namespace Aptos.Utilities.BCS
             }
 
             // Ensure we're padded to 16
-            if (content.Length == 16)
+            output.Write(content);
+
+            if (content.Length != 16)
             {
-                return content;
+                output.Write(new byte[16 - content.Length]);
             }
 
-            byte[] output = new byte[16];
-            Array.Copy(content, 0, output, 0, content.Length);
-            return output;
-        }
-
-        public static byte[] SerializeLength(ulong length)
-        {
-            return SerializeU64(length);
-        }
-
-        public static byte[] SerializeVariantIndex(uint value)
-        {
-            return SerializeU32(value);
-        }
-
-        public static byte[] SerializeOptionTag(bool value)
-        {
-            return SerializeBool(value);
+            return this;
         }
 
         #endregion
