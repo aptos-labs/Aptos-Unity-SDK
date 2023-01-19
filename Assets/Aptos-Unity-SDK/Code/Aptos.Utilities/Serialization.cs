@@ -1,12 +1,10 @@
 ﻿// An implementation of BCS in C#
-
-
+using System;
 using System.Numerics;
 using System.Runtime.Serialization;
-
 // MemoryStream
 
-namespace bcs
+namespace Aptos.Utilities.BCS
 {
     public static class Serialization
     {
