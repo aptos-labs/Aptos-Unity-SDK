@@ -206,7 +206,7 @@ namespace Aptos.Unity.Rest
         /// <param name="accountAddress"></param>
         /// <param name="resourceType"></param>
         /// <returns></returns>
-        public IEnumerator GetTaleItem(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
+        public IEnumerator GetTableItem(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
             {
@@ -266,7 +266,7 @@ namespace Aptos.Unity.Rest
         /// <param name="sender"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public IEnumerator SubmitTransactionCor(Action<string> callback, Account sender, TransactionPayload payload)
+        public IEnumerator SubmitTransaction(Action<string> callback, Account sender, TransactionPayload payload)
         {
             ///////////////////////////////////////////////////////////////////////
             // 1) Generate a transaction request
@@ -461,7 +461,7 @@ namespace Aptos.Unity.Rest
         /// <param name="to"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public IEnumerator TransferCor(Action<string> callback, Account sender, string to, int amount)
+        public IEnumerator Transfer(Action<string> callback, Account sender, string to, int amount)
         {
             var transferPayload = new TransactionPayload()
             {
@@ -475,7 +475,7 @@ namespace Aptos.Unity.Rest
             };
 
             string response = "";
-            Coroutine cor_response = StartCoroutine(SubmitTransactionCor((_response) => {
+            Coroutine cor_response = StartCoroutine(SubmitTransaction((_response) => {
                 response = _response;
             }, sender, transferPayload));
 
@@ -710,7 +710,7 @@ namespace Aptos.Unity.Rest
         /// <param name="uri"></param>
         /// <param name="royaltyPointsPerMillion"></param>
         /// <returns></returns>
-        public IEnumerator CreateNFTTokenCor(Action<string> callback
+        public IEnumerator CreateNFTToken(Action<string> callback
             , Account senderRoyaltyPayeeAddress, string collectionName, string name, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
         {
             Arguments arguments = new Arguments()
