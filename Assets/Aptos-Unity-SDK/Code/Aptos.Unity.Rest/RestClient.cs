@@ -1,5 +1,6 @@
 using Aptos.Accounts;
 using Aptos.Rest;
+using Aptos.Rest.Models;
 using Aptos.Rpc.Model;
 using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
@@ -166,7 +167,7 @@ namespace Aptos.Unity.Rest
         /// <param name="accountAddress"></param>
         /// <param name="resourceType"></param>
         /// <returns></returns>
-        public IEnumerator GetAccountResourceCollection(Action<AccountResourceCollection> callback, AccountAddress accountAddress, string resourceType)
+        public IEnumerator GetAccountResourceCollection(Action<ResourceCollection> callback, AccountAddress accountAddress, string resourceType)
         {
             // TODO: AccountResourceCoin
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -191,7 +192,7 @@ namespace Aptos.Unity.Rest
             }
             else
             {
-                AccountResourceCollection acctResource = JsonConvert.DeserializeObject<AccountResourceCollection>(request.downloadHandler.text);
+                ResourceCollection acctResource = JsonConvert.DeserializeObject<ResourceCollection>(request.downloadHandler.text);
                 callback(acctResource);
             }
 
@@ -206,7 +207,7 @@ namespace Aptos.Unity.Rest
         /// <param name="accountAddress"></param>
         /// <param name="resourceType"></param>
         /// <returns></returns>
-        public IEnumerator GetTableItem(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
+        public IEnumerator GetTableItemCoin(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
             {
@@ -246,6 +247,52 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
+        {
+            TableItemRequest tableItemRequest = new TableItemRequest
+            {
+                KeyType = keyType,
+                ValueType = valueType,
+                Key = key
+            };
+
+            string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
+
+            // TODO: Get Table Item
+            string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
+            Uri getTableItemURI = new Uri(getTableItemURL);
+
+            var request = new UnityWebRequest(getTableItemURL, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Sending: " + request.error);
+                callback(null);
+            }
+            if (request.responseCode == 404)
+            {
+                Debug.LogError("Table Item Not Found: " + request.error);
+                callback(null);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+            yield return null;
+        }
         #endregion
 
         #region Ledger Accessors
@@ -698,7 +745,7 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Create NFT Token
+        /// Create Non-Fungible Token (NFT)
         /// https://github.com/aptos-labs/aptos-core/blob/main/aptos-move/framework/aptos-token/sources/token.move#L365
         /// </summary>
         /// <param name="callback"></param>
@@ -710,7 +757,7 @@ namespace Aptos.Unity.Rest
         /// <param name="uri"></param>
         /// <param name="royaltyPointsPerMillion"></param>
         /// <returns></returns>
-        public IEnumerator CreateNFTToken(Action<string> callback
+        public IEnumerator CreateToken(Action<string> callback
             , Account senderRoyaltyPayeeAddress, string collectionName, string name, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
         {
             Arguments arguments = new Arguments()
@@ -829,15 +876,534 @@ namespace Aptos.Unity.Rest
         }
 
         // TODO: OfferToken
+        public IEnumerator OfferToken(Action<string> callback
+            , Account account, AccountAddress receiver, AccountAddress creator
+            , string collectionName, string tokenName, string propertyVersion = "0")
+        {
+            Arguments arguments = new Arguments()
+            {
+                ArgumentStrings = new string[] {
+                    receiver.ToHexString(), creator.ToHexString(), collectionName, tokenName, propertyVersion
+                },
+                //MutateSettings = new bool[] { false, false, false, false, false },
+                //PropertyKeys = new string[] { },
+                //PropertyValues = new int[] { },
+                //PropertyTypes = new string[] { },
+            };
+
+            TransactionPayload txnPayload = new TransactionPayload()
+            {
+                Type = Constants.ENTRY_FUNCTION_PAYLOAD,
+                Function = Constants.TOKEN_TRANSFER_OFFER_SCRIPT,
+                TypeArguments = new string[] { },
+                Arguments = arguments
+            };
+
+            string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
+            Debug.Log("PAYLOAD JSON: " + payloadJson);
+
+            string sequenceNumber = "";
+
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+                sequenceNumber = _sequenceNumber;
+            }, account.AccountAddress.ToString()));
+
+            yield return cor_sequenceNumber;
+
+            var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
+
+            TransactionRequest txnRequest = new TransactionRequest()
+            {
+                Sender = account.AccountAddress.ToString(),
+                SequenceNumber = sequenceNumber,
+                MaxGasAmount = Constants.MAX_GAS_AMOUNT.ToString(),
+                GasUnitPrice = Constants.GAS_UNIT_PRICE.ToString(),
+                ExpirationTimestampSecs = expirationTimestamp,
+                Payload = txnPayload
+            };
+
+            string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
+            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
+
+            ///////////////////////////////////////////////////////////////////////
+            // 2) Submits that to produce a raw transaction
+            ///////////////////////////////////////////////////////////////////////
+
+            string encodedSubmission = "";
+
+            Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
+                encodedSubmission = _encodedSubmission;
+            }, txnRequestJson));
+
+            yield return cor_encodedSubmission;
+
+            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] signature = account.Sign(toSign);
+
+            txnRequest.Signature = new SignatureData()
+            {
+                Type = Constants.ED25519_SIGNATURE,
+                PublicKey = "0x" + CryptoBytes.ToHexStringLower(account.PublicKey),
+                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+            };
+
+            string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
+            txnRequestJson = txnRequestJson.Trim();
+
+            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
+
+            string transactionURL = Endpoint + "/transactions";
+            Uri transactionsURI = new Uri(transactionURL);
+            var request = new UnityWebRequest(transactionsURI, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Submitting Transaction: " + request.error);
+                callback(request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback("ERROR 404: " + request.downloadHandler.text);
+            }
+            else if (request.responseCode == 400)
+            {
+                callback("ERROR 400: " + request.downloadHandler.text);
+
+            }
+            else
+            {
+                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+
+            yield return null;
+        }
+
         // TODO: ClaimToken
-        // TODO: DirectTransferToken
+        public IEnumerator ClaimToken(Action<string> callback
+            , Account account, AccountAddress sender, AccountAddress creator
+            , string collectionName, string tokenName, string propertyVersion = "0")
+        {
+            Arguments arguments = new Arguments()
+            {
+                ArgumentStrings = new string[] {
+                      sender.ToHexString()
+                    , creator.ToHexString()
+                    , collectionName
+                    , tokenName
+                    , propertyVersion
+                },
+                //MutateSettings = new bool[] { false, false, false, false, false },
+                //PropertyKeys = new string[] { },
+                //PropertyValues = new int[] { },
+                //PropertyTypes = new string[] { },
+            };
+
+            TransactionPayload txnPayload = new TransactionPayload()
+            {
+                Type = Constants.ENTRY_FUNCTION_PAYLOAD,
+                Function = Constants.TOKEN_TRANSFER_CLAIM_SCRIPT,
+                TypeArguments = new string[] { },
+                Arguments = arguments
+            };
+
+            string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
+            Debug.Log("PAYLOAD JSON: " + payloadJson);
+
+            string sequenceNumber = "";
+
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+                sequenceNumber = _sequenceNumber;
+            }, account.AccountAddress.ToString()));
+
+            yield return cor_sequenceNumber;
+
+            var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
+
+            TransactionRequest txnRequest = new TransactionRequest()
+            {
+                Sender = account.AccountAddress.ToString(),
+                SequenceNumber = sequenceNumber,
+                MaxGasAmount = Constants.MAX_GAS_AMOUNT.ToString(),
+                GasUnitPrice = Constants.GAS_UNIT_PRICE.ToString(),
+                ExpirationTimestampSecs = expirationTimestamp,
+                Payload = txnPayload
+            };
+
+            string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
+            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
+
+            ///////////////////////////////////////////////////////////////////////
+            // 2) Submits that to produce a raw transaction
+            ///////////////////////////////////////////////////////////////////////
+
+            string encodedSubmission = "";
+
+            Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
+                encodedSubmission = _encodedSubmission;
+            }, txnRequestJson));
+
+            yield return cor_encodedSubmission;
+
+            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] signature = account.Sign(toSign);
+
+            txnRequest.Signature = new SignatureData()
+            {
+                Type = Constants.ED25519_SIGNATURE,
+                PublicKey = "0x" + CryptoBytes.ToHexStringLower(account.PublicKey),
+                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+            };
+
+            string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
+            txnRequestJson = txnRequestJson.Trim();
+
+            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
+
+            string transactionURL = Endpoint + "/transactions";
+            Uri transactionsURI = new Uri(transactionURL);
+            var request = new UnityWebRequest(transactionsURI, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Submitting Transaction: " + request.error);
+                callback(request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback("ERROR 404: " + request.downloadHandler.text);
+            }
+            else if (request.responseCode == 400)
+            {
+                callback("ERROR 400: " + request.downloadHandler.text);
+
+            }
+            else
+            {
+                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+
+            yield return null;
+        }
+        // TODO: DirectTransferToken; ask about Create Multi Agent BCS Transaction
+        public IEnumerator DirectTransferToken(Action<string> callback
+            , Account sender, Account receiver, AccountAddress receive, AccountAddress creatorsAddress
+            , string collectionName, string tokenName, string amount, string propertyVersion = "0")
+        {
+            Arguments arguments = new Arguments()
+            {
+                ArgumentStrings = new string[] {
+                      creatorsAddress.ToHexString() // TODO: Check on Hex string output
+                    , collectionName
+                    , tokenName
+                    , propertyVersion
+                    , amount
+                },
+                //MutateSettings = new bool[] { false, false, false, false, false },
+                //PropertyKeys = new string[] { },
+                //PropertyValues = new int[] { },
+                //PropertyTypes = new string[] { },
+            };
+
+            TransactionPayload txnPayload = new TransactionPayload()
+            {
+                Type = Constants.ENTRY_FUNCTION_PAYLOAD,
+                Function = Constants.DIRECT_TRANSFER_SCRIPT,
+                TypeArguments = new string[] { },
+                Arguments = arguments
+            };
+
+            string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
+            Debug.Log("PAYLOAD JSON: " + payloadJson);
+
+            string sequenceNumber = "";
+
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+                sequenceNumber = _sequenceNumber;
+            }, sender.AccountAddress.ToString()));
+
+            yield return cor_sequenceNumber;
+
+            var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
+
+            TransactionRequest txnRequest = new TransactionRequest()
+            {
+                Sender = sender.AccountAddress.ToString(),
+                SequenceNumber = sequenceNumber,
+                MaxGasAmount = Constants.MAX_GAS_AMOUNT.ToString(),
+                GasUnitPrice = Constants.GAS_UNIT_PRICE.ToString(),
+                ExpirationTimestampSecs = expirationTimestamp,
+                Payload = txnPayload
+            };
+
+            string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
+            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
+
+            ///////////////////////////////////////////////////////////////////////
+            // 2) Submits that to produce a raw transaction
+            ///////////////////////////////////////////////////////////////////////
+
+            string encodedSubmission = "";
+
+            Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
+                encodedSubmission = _encodedSubmission;
+            }, txnRequestJson));
+
+            yield return cor_encodedSubmission;
+
+            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] signature = sender.Sign(toSign);
+
+            txnRequest.Signature = new SignatureData()
+            {
+                Type = Constants.ED25519_SIGNATURE,
+                PublicKey = "0x" + CryptoBytes.ToHexStringLower(sender.PublicKey),
+                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+            };
+
+            string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
+            txnRequestJson = txnRequestJson.Trim();
+
+            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
+
+            string transactionURL = Endpoint + "/transactions";
+            Uri transactionsURI = new Uri(transactionURL);
+            var request = new UnityWebRequest(transactionsURI, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Submitting Transaction: " + request.error);
+                callback(request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback("ERROR 404: " + request.downloadHandler.text);
+            }
+            else if (request.responseCode == 400)
+            {
+                callback("ERROR 400: " + request.downloadHandler.text);
+
+            }
+            else
+            {
+                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+
+            yield return null;
+        }
+
         #endregion
 
         #region Token Accessors
-        // TODO: GetToken
+        public IEnumerator GetToken(Action<string> callback, AccountAddress ownerAddress, AccountAddress creatorAddress,
+            string collectionName, string tokenName, string propertyVersion = "0")
+        {
+
+            string tokenStoreResourceResp = "";
+            Coroutine cor_accountResource = StartCoroutine(GetAccountResource((returnResult) =>
+            {
+                tokenStoreResourceResp = returnResult;
+            }, ownerAddress, "0x3::token::TokenStore"));
+
+            yield return cor_accountResource;
+
+            AccountResourceTokenStore accountResource = JsonConvert.DeserializeObject<AccountResourceTokenStore>(tokenStoreResourceResp);
+            string tokenStoreHandle = accountResource.DataProp.Tokens.Handle;
+
+            TokenIdRequest tokenId = new TokenIdRequest
+            {
+                TokenDataId = new TokenDataId()
+                {
+                    Creator = creatorAddress.ToHexString(),
+                    Collection = collectionName,
+                    Name = tokenName
+                },
+                PropertyVersion = propertyVersion
+            };
+
+            string tokenIdJson = JsonConvert.SerializeObject(tokenId);
+
+            string tableItemResp = "";
+            Coroutine cor_getTableItem = StartCoroutine(GetTableItem((returnResult) =>
+            {
+                tableItemResp = returnResult;
+            }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenIdJson));
+
+            yield return null;
+        }
         // TODO: GetTokenBalance
+        public IEnumerator GetTokenBalance(Action<string> callback
+            , AccountAddress ownerAddress, AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
+        {
+            string tokenResp = "";
+            Coroutine cor_accountResource = StartCoroutine(GetToken((returnResult) =>
+            {
+                tokenResp = returnResult;
+            }, ownerAddress, creatorAddress, collectionName, tokenName, propertyVersion));
+
+            TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
+            string tokenBalance = tableItemToken.Amount;
+            callback(tokenBalance);
+
+            yield return null;
+        }
+
         // TODO: GetTokenData
+        /// <summary>
+        /// Read Collection's token data table 
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="creator"></param>
+        /// <param name="collectionName"></param>
+        /// <param name="tokenName"></param>
+        /// <param name="propertyVersion"></param>
+        /// <returns></returns>
+        public IEnumerator GetTokenData(Action<string> callback, AccountAddress creator,
+            string collectionName, string tokenName, string propertyVersion = "0")
+        {
+            string collectionResourceResp = "";
+            Coroutine cor_accountResource = StartCoroutine(GetAccountResource((returnResult) =>
+            {
+                collectionResourceResp = returnResult;
+            }, creator, "0x3::token::Collections"));
+
+            Debug.Log("GetTokenData Collection: " + collectionResourceResp);
+
+            ResourceCollection resourceCollection = JsonConvert.DeserializeObject<ResourceCollection>(collectionResourceResp);
+            string tokenDataHandle = resourceCollection.DataProp.TokenData.Handle;
+
+            TokenDataId tokenDataId = new TokenDataId
+            {
+                Creator = creator.ToHexString(),
+                Collection = collectionName,
+                Name = tokenName
+            };
+
+            string tokenDataIdJson = JsonConvert.SerializeObject(tokenDataId);
+
+            string tableItemResp = "";
+            Coroutine cor_getTableItem = StartCoroutine(
+                GetTableItem(
+                    (returnResult) => { tableItemResp = returnResult;}
+                    , tokenDataHandle
+                    , "0x3::token::TokenDataId"
+                    , "0x3::token::TokenData"
+                    , tokenDataIdJson)
+                );
+
+            callback(tableItemResp);
+            // TODO: Double check the return model
+            yield return null;
+        }
+
         // TODO: GetCollection
+        public IEnumerator GetCollection(Action<string> callback, AccountAddress creator,
+            string collectionName, string tokenName, string propertyVersion = "0")
+        {
+            string collectionResourceResp = "";
+            Coroutine cor_accountResource = StartCoroutine(GetAccountResource((returnResult) =>
+            {
+                collectionResourceResp = returnResult;
+            }, creator, "0x3::token::Collections"));
+
+            Debug.Log("GetTokenData Collection: " + collectionResourceResp);
+
+            ResourceCollection resourceCollection = JsonConvert.DeserializeObject<ResourceCollection>(collectionResourceResp);
+            string tokenDataHandle = resourceCollection.DataProp.TokenData.Handle;
+
+            //TokenDataId tokenDataId = new TokenDataId
+            //{
+            //    Creator = creator.ToHexString(),
+            //    Collection = collectionName,
+            //    Name = tokenName
+            //};
+            //string tokenDataIdJson = JsonConvert.SerializeObject(tokenDataId);
+
+            string tableItemResp = "";
+            Coroutine cor_getTableItem = StartCoroutine(
+                GetTableItem(
+                    (returnResult) => { tableItemResp = returnResult; }
+                    , tokenDataHandle
+                    , "0x1::string::String"
+                    , "0x3::token::CollectionData"
+                    , collectionName)
+                );
+
+            callback(tableItemResp);
+            // TODO: Double check the return model
+            yield return null;
+        }
+
+        public IEnumerator GetAccountResource(Action<string> callback, AccountAddress accountAddress, string resourceType)
+        {
+            string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
+            Uri accountsURI = new Uri(accountsURL);
+            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Sending: " + request.error);
+                callback("ERROR: Connection Error: " + request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                Debug.LogError("Error Not Found: " + request.error);
+                callback("ERROR: Resource Not Found: " + request.error);
+            }
+            else
+            {
+                callback(request.downloadHandler.text);
+            }
+
+            request.Dispose();
+        }
+
         #endregion
 
         #region Package Publishing
