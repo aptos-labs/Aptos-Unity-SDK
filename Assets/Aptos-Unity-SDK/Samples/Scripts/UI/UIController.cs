@@ -10,6 +10,12 @@ public class UIController : MonoBehaviour
     public List<PanelTab> panelTabs;
     [Space]
     [SerializeField] private TMP_Text mainPanelTitle;
+    [SerializeField] private Canvas mainCanvas;
+    [SerializeField] private GameObject notificationPrefab;
+
+    [Header("Wallet")]
+    [SerializeField] private TMP_InputField createdMnemonicInputField;
+
 
 
     private void Awake()
@@ -28,7 +34,7 @@ public class UIController : MonoBehaviour
         
     }
 
-    public void Open(PanelTab _panelTab)
+    public void OpenTabPanel(PanelTab _panelTab)
     {
         foreach (PanelTab _childPanelTab in panelTabs)
         {
@@ -45,4 +51,50 @@ public class UIController : MonoBehaviour
             mainPanelTitle.text = _panelTab.tabName;
         }
     }
+
+    public void ToggleNotification(bool _success, string _message)
+    {
+        NotificationPanel np = Instantiate(notificationPrefab, mainCanvas.transform).GetComponent<NotificationPanel>();
+        np.Toggle(_success, _message);
+    }
+
+    public void OnCreateWalletClicked()
+    {
+
+        createdMnemonicInputField.text = "";
+        ToggleNotification(true, "Create Wallet Success");
+    }
+
+    public void OnImportWalletClicked(TMP_InputField _input)
+    {
+        AptosUILink.instance.RestoreWallet(_input.text);
+        ToggleNotification(false, "Import Wallet Fail");
+    }
+
+    #region Utilities
+
+    public void TapToCopy(TMP_InputField _target)
+    {
+        CopyToClipboard(_target.text);
+    }
+
+    public void TapToCopy(TMP_Text _target)
+    {
+        CopyToClipboard(_target.text);
+    }
+
+    public void TapToCopy(TMP_Dropdown _target)
+    {
+        CopyToClipboard(_target.options[_target.value].text);
+    }
+
+    void CopyToClipboard(string _input)
+    {
+        TextEditor te = new TextEditor();
+        te.text = _input;
+        te.SelectAll();
+        te.Copy();
+    }
+
+    #endregion
 }
