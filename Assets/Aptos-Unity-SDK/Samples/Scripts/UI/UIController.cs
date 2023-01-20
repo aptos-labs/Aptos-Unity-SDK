@@ -4,18 +4,20 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using Aptos.Unity.Rest;
+using Aptos.Rest;
 
 public class UIController : MonoBehaviour
 {
     static public UIController Instance { get; set; }
 
+    [Header("General")]
     public List<PanelTab> panelTabs;
     [Space]
     [SerializeField] private TMP_Text mainPanelTitle;
     [SerializeField] private Canvas mainCanvas;
     [SerializeField] private GameObject notificationPrefab;
-
-    [Header("General")]
+    [Space]
     [SerializeField] private PanelTab accountTab;
     [SerializeField] private PanelTab sendTransactionTab;
     [SerializeField] private PanelTab mintNFTTab;
@@ -23,6 +25,7 @@ public class UIController : MonoBehaviour
 
     [Header("Infos")]
     [SerializeField] private TMP_Dropdown walletListDropDown;
+    [SerializeField] private TMP_Dropdown networkDropDown;
     [SerializeField] private TMP_Text balanceText;
 
     [Header("Add Account")]
@@ -31,6 +34,8 @@ public class UIController : MonoBehaviour
 
     [Header("Send Transaction")]
     [SerializeField] private TMP_Text senderAddress;
+    [SerializeField] private TMP_InputField receiverAddressInput;
+    [SerializeField] private TMP_InputField sendAmountInput;
 
     [Header("Notification")]
     [SerializeField] private Transform notificationPanel;
@@ -49,10 +54,56 @@ public class UIController : MonoBehaviour
         AptosUILink.Instance.onGetBalance += UpdateBalance;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    #region General
+
+    void InitStatusCheck()
+    {
+        if (PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey) != string.Empty)
+        {
+            AptosUILink.Instance.InitWalletFromCache();
+            AddWalletAddressListUI(AptosUILink.Instance.addressList);
+            ToggleEmptyState(false);
+        }
+        else
+        {
+            ToggleEmptyState(true);
+        }
+
+        walletListDropDown.onValueChanged.AddListener(delegate {
+            OnWalletListDropdownValueChanged(walletListDropDown);
+        });
+
+        networkDropDown.onValueChanged.AddListener(delegate
+        {
+            SetNetwork(networkDropDown);
+        });
+
+        networkDropDown.Select();
+    }
+
+    public void ToggleEmptyState(bool _empty)
+    {
+        accountTab.DeActive(_empty);
+        sendTransactionTab.DeActive(_empty);
+        mintNFTTab.DeActive(_empty);
+
+        if (_empty)
+        {
+            walletListDropDown.ClearOptions();
+            List<string> options = new List<string>();
+            options.Add("Please Create Wallet First");
+            walletListDropDown.AddOptions(options);
+            balanceText.text = "n/a APT";
+            createdMnemonicInputField.text = String.Empty;
+            importMnemonicInputField.text = String.Empty;
+
+            OpenTabPanel(addAccountTab);
+        }
     }
 
     public void OpenTabPanel(PanelTab _panelTab)
@@ -67,52 +118,10 @@ public class UIController : MonoBehaviour
 
         _panelTab.Selected();
 
-        if(_panelTab.panelGroup == PanelGroup.mainPanel)
+        if (_panelTab.panelGroup == PanelGroup.mainPanel)
         {
             mainPanelTitle.text = _panelTab.tabName;
         }
-    }
-
-    public void Logout()
-    {
-        PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
-
-        ToggleEmptyState(true);
-    }
-
-    public void ToggleEmptyState(bool _empty)
-    {
-        accountTab.DeActive(_empty);
-        sendTransactionTab.DeActive(_empty);
-        mintNFTTab.DeActive(_empty);
-
-        walletListDropDown.ClearOptions();
-        balanceText.text = String.Empty;
-        createdMnemonicInputField.text = String.Empty;
-        importMnemonicInputField.text = String.Empty;
-
-        if (_empty)
-        {
-            OpenTabPanel(addAccountTab);
-        }
-    }
-
-    void InitStatusCheck()
-    {
-        if (PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey) != string.Empty)
-        {
-            AptosUILink.Instance.InitWalletFromCache();
-            AddWalletAddressListUI(AptosUILink.Instance.addressList);
-            ToggleEmptyState(false);
-        }
-        else
-        {
-            ToggleEmptyState(true);
-        }
-
-        walletListDropDown.onValueChanged.AddListener(delegate {
-            OnWalletListDropdownValueChanged(walletListDropDown);
-        });
     }
 
     public void ToggleNotification(bool _success, string _message)
@@ -122,11 +131,15 @@ public class UIController : MonoBehaviour
         Debug.Log("Operation: " + _success + " || Got Message: " + _message);
     }
 
+    #endregion
+
+    #region Account
+
     public void OnCreateWalletClicked()
     {
         if (AptosUILink.Instance.CreateNewWallet())
         {
-            createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey);
+            createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey);
             ToggleEmptyState(false);
             ToggleNotification(true, "Successfully Create the Wallet");
         }
@@ -168,15 +181,14 @@ public class UIController : MonoBehaviour
 
         walletListDropDown.AddOptions(addressList);
 
-        senderAddress.text = ShortenString(AptosUILink.Instance.GetCurrentWalletAddress(), 4);
+        senderAddress.text = AptosUILink.Instance.GetCurrentWalletAddress();
     }
 
     void OnWalletListDropdownValueChanged(TMP_Dropdown _target)
     {
-        PlayerPrefs.SetInt(AptosUILink.Instance.CurrentAddressIndexKey, _target.value);
+        PlayerPrefs.SetInt(AptosUILink.Instance.currentAddressIndexKey, _target.value);
         AptosUILink.Instance.LoadCurrentWalletBalance();
-        senderAddress.text = ShortenString(AptosUILink.Instance.addressList[_target.value], 4);
-        Debug.Log(AptosUILink.Instance.addressList[_target.value]);
+        senderAddress.text = AptosUILink.Instance.addressList[_target.value];
     }
 
     void UpdateBalance(float _amount)
@@ -184,10 +196,59 @@ public class UIController : MonoBehaviour
         balanceText.text = AptosUILink.Instance.AptoTokenToFloat(_amount).ToString("0.0000") + " APT";
     }
 
+    public void Logout()
+    {
+        PlayerPrefs.DeleteKey(AptosUILink.Instance.mnemonicsKey);
+
+        ToggleEmptyState(true);
+    }
+
+    public void SetNetwork(TMP_Dropdown _target)
+    {
+        switch (_target.options[_target.value].text)
+        {
+            case "Mainnet":
+                RestClient.Instance.SetEndPoint(Constants.MAINNET_BASE_URL);
+                break;
+            case "Devnet":
+                RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+                break;
+            case "Testnet":
+                RestClient.Instance.SetEndPoint(Constants.TESTNET_BASE_URL);
+                break;
+            default:
+                RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+                break;
+        }
+
+        ToggleNotification(true, "Set Network to " + _target.options[_target.value].text);
+    }
+
+    public void CopyMnemonicWords()
+    {
+        CopyToClipboard(PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey));
+    }
+
+    public void CopyPrivateKey()
+    {
+        CopyToClipboard(PlayerPrefs.GetString(AptosUILink.Instance.privateKey));
+    }
+
+    #endregion
+
+    #region Send Transaction
+
+    public void SendToken()
+    {
+        StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptoFloatToToken(float.Parse(sendAmountInput.text))));
+    }
+
     public void Airdrop(int _amount)
     {
         StartCoroutine(AptosUILink.Instance.AirDrop(_amount));
     }
+
+    #endregion
 
     #region Utilities
 

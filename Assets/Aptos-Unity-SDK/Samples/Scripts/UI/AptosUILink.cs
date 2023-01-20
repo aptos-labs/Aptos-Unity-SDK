@@ -14,33 +14,31 @@ public class AptosUILink : MonoBehaviour
 {
     static public AptosUILink Instance { get; set; }
 
+    [HideInInspector]
+    public string mnemonicsKey = "MnemonicsKey";
+    [HideInInspector]
+    public string privateKey = "PrivateKey";
+    [HideInInspector]
+    public string currentAddressIndexKey = "CurrentAddressIndexKey";
+
     [SerializeField] private int accountNumLimit = 10;
-
-    [HideInInspector]
-    public string MnemonicsKey = "MnemonicsKey";
-    [HideInInspector]
-    public string CurrentAddressIndexKey = "CurrentAddressIndexKey";
-
-    private Wallet wallet;
-
     public List<string> addressList;
-    //private WalletTwo wallet;
 
     public event Action<float> onGetBalance;
 
+    private Wallet wallet;
     private string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
     private void Awake()
     {
         Instance = this;
     }
-    // Start is called before the first frame update
+
     void Start()
     {
-        SetNetwork(Constants.DEVNET_BASE_URL);
+
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -48,14 +46,9 @@ public class AptosUILink : MonoBehaviour
 
     public void InitWalletFromCache()
     {
-        wallet = new Wallet(PlayerPrefs.GetString(MnemonicsKey));
+        wallet = new Wallet(PlayerPrefs.GetString(mnemonicsKey));
         GetWalletAddress();
         LoadCurrentWalletBalance();
-    }
-
-    public void SetNetwork(string _network)
-    {
-        RestClient.Instance.SetEndPoint(_network);
     }
 
     public bool CreateNewWallet()
@@ -63,8 +56,8 @@ public class AptosUILink : MonoBehaviour
         Mnemonic mnemo = new Mnemonic(Wordlist.English, WordCount.Twelve);
         wallet = new Wallet(mnemo);
 
-        PlayerPrefs.SetString(MnemonicsKey, mnemo.ToString());
-        PlayerPrefs.SetInt(CurrentAddressIndexKey, 0);
+        PlayerPrefs.SetString(mnemonicsKey, mnemo.ToString());
+        PlayerPrefs.SetInt(currentAddressIndexKey, 0);
 
         GetWalletAddress();
         LoadCurrentWalletBalance();
@@ -84,8 +77,8 @@ public class AptosUILink : MonoBehaviour
         try
         {
             wallet = new Wallet(_mnemo);
-            PlayerPrefs.SetString(MnemonicsKey, _mnemo);
-            PlayerPrefs.SetInt(CurrentAddressIndexKey, 0);
+            PlayerPrefs.SetString(mnemonicsKey, _mnemo);
+            PlayerPrefs.SetInt(currentAddressIndexKey, 0);
 
             GetWalletAddress();
             LoadCurrentWalletBalance();
@@ -117,7 +110,7 @@ public class AptosUILink : MonoBehaviour
 
     public string GetCurrentWalletAddress()
     {
-        return addressList[PlayerPrefs.GetInt(CurrentAddressIndexKey)];
+        return addressList[PlayerPrefs.GetInt(currentAddressIndexKey)];
     }
 
     public void LoadCurrentWalletBalance()
@@ -136,7 +129,7 @@ public class AptosUILink : MonoBehaviour
                 onGetBalance?.Invoke(float.Parse(acctResourceCoin.DataProp.Coin.Value));
             }
 
-        }, wallet.GetAccount(PlayerPrefs.GetInt(CurrentAddressIndexKey)).AccountAddress));
+        }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress));
     }
 
     public IEnumerator AirDrop(int _amount)
@@ -144,7 +137,7 @@ public class AptosUILink : MonoBehaviour
         Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
         {
             Debug.Log("FAUCET RESPONSE: " + returnResult);
-        }, wallet.GetAccount(PlayerPrefs.GetInt(CurrentAddressIndexKey)).AccountAddress.ToString()
+        }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress.ToString()
             , _amount
             , faucetEndpoint));
 
@@ -152,6 +145,22 @@ public class AptosUILink : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         LoadCurrentWalletBalance();
+        UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
+    }
+
+    public IEnumerator SendToken(string targetAddress, int amount)
+    {
+        string transferResult = "";
+        Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
+        {
+            transferResult = _transferResult;
+        }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), targetAddress, amount));
+
+        yield return cor;
+
+        yield return new WaitForSeconds(1f);
+        LoadCurrentWalletBalance();
+        UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)amount) + " APT to " + UIController.Instance.ShortenString(targetAddress, 4));
     }
 
     public float AptoTokenToFloat(float _token)

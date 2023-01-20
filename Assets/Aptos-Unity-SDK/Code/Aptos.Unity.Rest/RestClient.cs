@@ -28,6 +28,8 @@ namespace Aptos.Unity.Rest
         private void Awake()
         {
             Instance = this;
+
+            SetEndPoint(Constants.DEVNET_BASE_URL);
         }
 
         #region Setup

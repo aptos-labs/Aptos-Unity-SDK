@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Aptos-Unity-SDK/Samples/Scenes/SampleWallet.unity
+    guid: a22940d51bddf4f4d88bc725ae960624
   m_configObjects: {}
