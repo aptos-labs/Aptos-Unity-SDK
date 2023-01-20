@@ -3,70 +3,73 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
-public class PanelTab : MonoBehaviour
+namespace Aptos.Unity.Sample
 {
-    public PanelGroup panelGroup;
-    public string tabName;
-    public GameObject targetPanel;
-    public GameObject lockIcon;
-
-    public bool isSelected;
-
-    private Color selectedColor;
-    private Color unselectedColor;
-
-    private Button m_button;
-
-    private void Awake()
+    [RequireComponent(typeof(Button))]
+    public class PanelTab : MonoBehaviour
     {
-        m_button = this.GetComponent<Button>();
-        m_button.onClick.AddListener(delegate { UIController.Instance.OpenTabPanel(this); });
+        public PanelGroup panelGroup;
+        public string tabName;
+        public GameObject targetPanel;
+        public GameObject lockIcon;
 
-        selectedColor = m_button.colors.selectedColor;
-        unselectedColor = m_button.colors.normalColor;
-    }
+        public bool isSelected;
 
-    private void Start()
-    {
-        if (isSelected)
+        private Color selectedColor;
+        private Color unselectedColor;
+
+        private Button m_button;
+
+        private void Awake()
         {
-            UIController.Instance.OpenTabPanel(this);
+            m_button = this.GetComponent<Button>();
+            m_button.onClick.AddListener(delegate { UIController.Instance.OpenTabPanel(this); });
+
+            selectedColor = m_button.colors.selectedColor;
+            unselectedColor = m_button.colors.normalColor;
+        }
+
+        private void Start()
+        {
+            if (isSelected)
+            {
+                UIController.Instance.OpenTabPanel(this);
+            }
+        }
+
+        public void DeActive(bool _lock)
+        {
+            lockIcon.SetActive(_lock);
+            m_button.interactable = !_lock;
+        }
+
+        public void Selected()
+        {
+            isSelected = true;
+
+            targetPanel.SetActive(true);
+
+            ColorBlock _colorBlock = m_button.colors;
+            _colorBlock.normalColor = selectedColor;
+            m_button.colors = _colorBlock;
+        }
+
+        public void UnSelected()
+        {
+            isSelected = false;
+
+            targetPanel.SetActive(false);
+
+            ColorBlock _colorBlock = m_button.colors;
+            _colorBlock.normalColor = unselectedColor;
+            m_button.colors = _colorBlock;
         }
     }
 
-    public void DeActive(bool _lock)
+    public enum PanelGroup
     {
-        lockIcon.SetActive(_lock);
-        m_button.interactable = !_lock;
+        mainPanel,
+        addAccount,
+        mintNFT,
     }
-
-    public void Selected()
-    {
-        isSelected = true;
-
-        targetPanel.SetActive(true);
-
-        ColorBlock _colorBlock = m_button.colors;
-        _colorBlock.normalColor = selectedColor;
-        m_button.colors = _colorBlock;
-    }
-
-    public void UnSelected()
-    {
-        isSelected = false;
-
-        targetPanel.SetActive(false);
-
-        ColorBlock _colorBlock = m_button.colors;
-        _colorBlock.normalColor = unselectedColor;
-        m_button.colors = _colorBlock;
-    }
-}
-
-public enum PanelGroup
-{
-    mainPanel,
-    addAccount,
-    mintNFT,
 }
