@@ -1,5 +1,6 @@
 using Chaos.NaCl;
 using NBitcoin;
+using System;
 
 namespace Aptos.Accounts
 {
@@ -48,6 +49,12 @@ namespace Aptos.Accounts
             PrivateKey = new PrivateKey(privateKey);
             PublicKey = new PublicKey(publicKey);
             AccountAddress = AccountAddress.FromKey(PublicKey);
+        }
+
+        // TODO: Implement Account generate
+        public Account generate()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
