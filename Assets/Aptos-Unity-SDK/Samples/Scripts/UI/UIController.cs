@@ -63,11 +63,19 @@ public class UIController : MonoBehaviour
 
     void InitStatusCheck()
     {
+        networkDropDown.onValueChanged.AddListener(delegate
+        {
+            SetNetwork(networkDropDown);
+        });
+
+        SetNetwork(networkDropDown);
+
         if (PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey) != string.Empty)
         {
             AptosUILink.Instance.InitWalletFromCache();
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
             ToggleEmptyState(false);
+            ToggleNotification(true, "Successfully Import the Wallet");
         }
         else
         {
@@ -77,13 +85,6 @@ public class UIController : MonoBehaviour
         walletListDropDown.onValueChanged.AddListener(delegate {
             OnWalletListDropdownValueChanged(walletListDropDown);
         });
-
-        networkDropDown.onValueChanged.AddListener(delegate
-        {
-            SetNetwork(networkDropDown);
-        });
-
-        networkDropDown.Select();
     }
 
     public void ToggleEmptyState(bool _empty)
