@@ -14,33 +14,29 @@ public class AptosUILink : MonoBehaviour
 {
     static public AptosUILink Instance { get; set; }
 
-    [SerializeField] private int accountNumLimit = 10;
-
     [HideInInspector]
     public string MnemonicsKey = "MnemonicsKey";
     [HideInInspector]
     public string CurrentAddressIndexKey = "CurrentAddressIndexKey";
 
-    private Wallet wallet;
-
+    [SerializeField] private int accountNumLimit = 10;
     public List<string> addressList;
-    //private WalletTwo wallet;
 
     public event Action<float> onGetBalance;
 
+    private Wallet wallet;
     private string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
     private void Awake()
     {
         Instance = this;
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         SetNetwork(Constants.DEVNET_BASE_URL);
     }
 
-    // Update is called once per frame
     void Update()
     {
 

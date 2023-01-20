@@ -9,13 +9,13 @@ public class UIController : MonoBehaviour
 {
     static public UIController Instance { get; set; }
 
+    [Header("General")]
     public List<PanelTab> panelTabs;
     [Space]
     [SerializeField] private TMP_Text mainPanelTitle;
     [SerializeField] private Canvas mainCanvas;
     [SerializeField] private GameObject notificationPrefab;
-
-    [Header("General")]
+    [Space]
     [SerializeField] private PanelTab accountTab;
     [SerializeField] private PanelTab sendTransactionTab;
     [SerializeField] private PanelTab mintNFTTab;
@@ -49,53 +49,12 @@ public class UIController : MonoBehaviour
         AptosUILink.Instance.onGetBalance += UpdateBalance;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void OpenTabPanel(PanelTab _panelTab)
-    {
-        foreach (PanelTab _childPanelTab in panelTabs)
-        {
-            if (_childPanelTab.panelGroup == _panelTab.panelGroup)
-            {
-                _childPanelTab.UnSelected();
-            }
-        }
-
-        _panelTab.Selected();
-
-        if(_panelTab.panelGroup == PanelGroup.mainPanel)
-        {
-            mainPanelTitle.text = _panelTab.tabName;
-        }
-    }
-
-    public void Logout()
-    {
-        PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
-
-        ToggleEmptyState(true);
-    }
-
-    public void ToggleEmptyState(bool _empty)
-    {
-        accountTab.DeActive(_empty);
-        sendTransactionTab.DeActive(_empty);
-        mintNFTTab.DeActive(_empty);
-
-        walletListDropDown.ClearOptions();
-        balanceText.text = String.Empty;
-        createdMnemonicInputField.text = String.Empty;
-        importMnemonicInputField.text = String.Empty;
-
-        if (_empty)
-        {
-            OpenTabPanel(addAccountTab);
-        }
-    }
+    #region General
 
     void InitStatusCheck()
     {
@@ -115,12 +74,54 @@ public class UIController : MonoBehaviour
         });
     }
 
+    public void ToggleEmptyState(bool _empty)
+    {
+        accountTab.DeActive(_empty);
+        sendTransactionTab.DeActive(_empty);
+        mintNFTTab.DeActive(_empty);
+
+        walletListDropDown.ClearOptions();
+        List<string> options = new List<string>();
+        options.Add("Please Create Wallet First");
+        walletListDropDown.AddOptions(options);
+        balanceText.text = "0.000000 APT";
+        createdMnemonicInputField.text = String.Empty;
+        importMnemonicInputField.text = String.Empty;
+
+        if (_empty)
+        {
+            OpenTabPanel(addAccountTab);
+        }
+    }
+
+    public void OpenTabPanel(PanelTab _panelTab)
+    {
+        foreach (PanelTab _childPanelTab in panelTabs)
+        {
+            if (_childPanelTab.panelGroup == _panelTab.panelGroup)
+            {
+                _childPanelTab.UnSelected();
+            }
+        }
+
+        _panelTab.Selected();
+
+        if (_panelTab.panelGroup == PanelGroup.mainPanel)
+        {
+            mainPanelTitle.text = _panelTab.tabName;
+        }
+    }
+
     public void ToggleNotification(bool _success, string _message)
     {
         NotificationPanel np = Instantiate(notificationPrefab, notificationPanel).GetComponent<NotificationPanel>();
         np.Toggle(_success, _message);
         Debug.Log("Operation: " + _success + " || Got Message: " + _message);
     }
+
+    #endregion
+
+    #region Account
 
     public void OnCreateWalletClicked()
     {
@@ -188,6 +189,15 @@ public class UIController : MonoBehaviour
     {
         StartCoroutine(AptosUILink.Instance.AirDrop(_amount));
     }
+
+    public void Logout()
+    {
+        PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
+
+        ToggleEmptyState(true);
+    }
+
+    #endregion
 
     #region Utilities
 
