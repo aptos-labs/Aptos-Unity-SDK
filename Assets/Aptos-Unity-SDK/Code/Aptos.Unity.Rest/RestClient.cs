@@ -6,19 +6,23 @@ using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
 using NBitcoin;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
-using static Aptos.Unity.Rest.Model.AccountResourceCoin;
 using Transaction = Aptos.Unity.Rest.Model.Transaction;
 
 namespace Aptos.Unity.Rest
 {
+    /// <summary>
+    /// The Aptos REST Client contains a set of [standalone] Coroutines
+    /// that can started within any Unity script.
+    /// 
+    /// Consideration must be placed into the wait time required 
+    /// for a transaction to be committed into the blockchain.
+    /// </summary>
     public class RestClient : MonoBehaviour
     {
         public static RestClient Instance { get; set; }
@@ -30,8 +34,6 @@ namespace Aptos.Unity.Rest
         private void Awake()
         {
             Instance = this;
-
-            //SetEndPoint(Constants.DEVNET_BASE_URL);
         }
 
         #region Setup
@@ -89,10 +91,8 @@ namespace Aptos.Unity.Rest
             Coroutine cor = StartCoroutine(GetAccount((_accountDataResp) => {
                 accountDataResp = _accountDataResp;
             }, accountAddress));
-
             yield return cor;
 
-            Debug.Log("ACCOUNT DATA RESPONSE: " + accountDataResp);
             AccountData accountData = JsonConvert.DeserializeObject<AccountData>(accountDataResp);
             string sequenceNumber = accountData.SequenceNumber;
 
@@ -219,6 +219,19 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        /// <summary>
+        /// Get a standard table item at a specific ledger vevrsion from the table identified
+        /// by the handle {table_handle} in the path adn the "key" (TableItemRequest)
+        /// provided by the request body.
+        /// 
+        /// https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="handle"></param> The identifier for the given table
+        /// <param name="keyType"></param> String representation of an on-chain Move tag that is exposed in the transaction
+        /// <param name="valueType"></param> String representation of an on-chain Move type value
+        /// <param name="key"></param>The value of the table item's key
+        /// <returns></returns> Callback withthe response
         public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -265,6 +278,9 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        /// Get a table item of a NFT
+        /// <inheritdoc cref="RestClient.GetTableItem(Action{string}, string, string, string, string)"/>
+        /// <param name="key"></param> A TokeIdRequest object that contains the token / collection info
         public IEnumerator GetTableItemNFT(Action<string> callback, string handle, string keyType, string valueType, TokenIdRequest key)
         {
             TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
@@ -322,6 +338,9 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        /// Get a table item of a token data
+        /// <inheritdoc cref="RestClient.GetTableItem(Action{string}, string, string, string, string)"/>
+        /// <param name="key"></param> a TokenDataId object that contains the token / collection info
         public IEnumerator GetTableItemTokenData(Action<string> callback, string handle, string keyType, string valueType, TokenDataId key)
         {
             TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
@@ -411,7 +430,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
             }, sender.AccountAddress.ToString()));
-
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -436,7 +454,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
                 encodedSubmission = _encodedSubmission;
             }, txnRequestJson));
-
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
@@ -587,7 +604,6 @@ namespace Aptos.Unity.Rest
         #endregion
 
         #region Transaction Wrappers
-
         /// <summary>
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
         /// Returns the sequence number of the transaction used to transfer.
@@ -614,7 +630,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_response = StartCoroutine(SubmitTransaction((_response) => {
                 response = _response;
             }, sender, transferPayload));
-
             yield return cor_response;
 
             callback(response);
@@ -667,9 +682,9 @@ namespace Aptos.Unity.Rest
         public IEnumerator EncodeSubmissionAsBytes(Action<byte[]> callback, string txnRequestJson)
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
-            Uri accountsURI = new Uri(transactionsEncodeURL);
+            Uri transactionsEncodeURI = new Uri(transactionsEncodeURL);
 
-            var request = new UnityWebRequest(transactionsEncodeURL, "POST");
+            var request = new UnityWebRequest(transactionsEncodeURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -743,7 +758,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
             }, sender.AccountAddress.ToString()));
-
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -768,7 +782,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
                 encodedSubmission = _encodedSubmission;
             }, txnRequestJson));
-
             yield return cor_encodedSubmission;
 
             ///////////////////////////////////////////////////////////////////////
@@ -827,7 +840,6 @@ namespace Aptos.Unity.Rest
             }
 
             request.Dispose();
-
             yield return null;
         }
 
@@ -875,7 +887,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
             }, senderRoyaltyPayeeAddress.AccountAddress.ToString()));
-
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -901,7 +912,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
                 encodedSubmission = _encodedSubmission;
             }, txnRequestJson));
-
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
@@ -945,7 +955,6 @@ namespace Aptos.Unity.Rest
             else if (request.responseCode == 400)
             {
                 callback("ERROR 400: " + request.downloadHandler.text);
-
             }
             else
             {
@@ -955,7 +964,6 @@ namespace Aptos.Unity.Rest
             }
 
             request.Dispose();
-
             yield return null;
         }
 
@@ -973,11 +981,7 @@ namespace Aptos.Unity.Rest
                     , propertyVersion
                     , amount
 
-                },
-                //MutateSettings = new bool[] { false, false, false, false, false },
-                //PropertyKeys = new string[] { },
-                //PropertyValues = new int[] { },
-                //PropertyTypes = new string[] { },
+                }
             };
 
             TransactionPayload txnPayload = new TransactionPayload()
@@ -995,7 +999,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
             }, account.AccountAddress.ToString()));
-
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -1020,7 +1023,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
                 encodedSubmission = _encodedSubmission;
             }, txnRequestJson));
-
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
@@ -1062,17 +1064,14 @@ namespace Aptos.Unity.Rest
             else if (request.responseCode == 400)
             {
                 callback("ERROR 400: " + request.downloadHandler.text);
-
             }
             else
             {
-                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
                 string response = request.downloadHandler.text;
                 callback(response);
             }
 
             request.Dispose();
-
             yield return null;
         }
 
@@ -1106,7 +1105,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
             }, account.AccountAddress.ToString()));
-
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -1131,7 +1129,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
                 encodedSubmission = _encodedSubmission;
             }, txnRequestJson));
-
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
@@ -1173,7 +1170,6 @@ namespace Aptos.Unity.Rest
             else if (request.responseCode == 400)
             {
                 callback("ERROR 400: " + request.downloadHandler.text);
-
             }
             else
             {
@@ -1182,7 +1178,6 @@ namespace Aptos.Unity.Rest
             }
 
             request.Dispose();
-
             yield return null;
         }
         // TODO: DirectTransferToken; ask about Create Multi Agent BCS Transaction
@@ -1216,7 +1211,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
             }, sender.AccountAddress.ToString()));
-
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -1241,7 +1235,6 @@ namespace Aptos.Unity.Rest
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
                 encodedSubmission = _encodedSubmission;
             }, txnRequestJson));
-
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
@@ -1292,7 +1285,6 @@ namespace Aptos.Unity.Rest
             }
 
             request.Dispose();
-
             yield return null;
         }
 
@@ -1330,8 +1322,8 @@ namespace Aptos.Unity.Rest
             {
                 tableItemResp = returnResult;
             }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenId));
-
             yield return getTableItemCor;
+
             callback(tableItemResp);
         }
         public IEnumerator GetTokenBalance(Action<string> callback
@@ -1346,8 +1338,8 @@ namespace Aptos.Unity.Rest
 
             TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
             string tokenBalance = tableItemToken.Amount;
-            callback(tokenBalance);
 
+            callback(tokenBalance);
             yield return null;
         }
 
@@ -1456,7 +1448,6 @@ namespace Aptos.Unity.Rest
 
             request.Dispose();
         }
-
         #endregion
 
         #region Package Publishing
@@ -1519,7 +1510,6 @@ namespace Aptos.Unity.Rest
             }
             return sb.ToString();
         }
-
         #endregion
     }
 }
