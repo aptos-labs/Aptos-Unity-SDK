@@ -672,7 +672,6 @@ namespace Aptos.Unity.Rest
             else
             {
                 var responseTxt = request.downloadHandler.text;
-                Debug.Log("ENCODED SUBMISSION TEXT: " + responseTxt);
                 callback(responseTxt);
             }
 
