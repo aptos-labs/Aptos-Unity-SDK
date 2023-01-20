@@ -225,14 +225,12 @@ namespace Aptos.Unity.Rest
                 ValueType = valueType,
                 Key = key
             };
-
             string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
 
-            // TODO: Get Table Item
-            string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
+            string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
 
-            var request = new UnityWebRequest(getTableItemURL, "POST");
+            var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1311,40 +1309,32 @@ namespace Aptos.Unity.Rest
 
         // TODO: GetCollection
         public IEnumerator GetCollection(Action<string> callback, AccountAddress creator,
-            string collectionName, string tokenName, string propertyVersion = "0")
+            string collectionName, string propertyVersion = "0")
         {
             string collectionResourceResp = "";
-            Coroutine cor_accountResource = StartCoroutine(GetAccountResource((returnResult) =>
+            Coroutine getAccountResourceCor = StartCoroutine(GetAccountResource((returnResult) =>
             {
                 collectionResourceResp = returnResult;
             }, creator, "0x3::token::Collections"));
-
-            Debug.Log("GetTokenData Collection: " + collectionResourceResp);
+            yield return getAccountResourceCor;
 
             ResourceCollection resourceCollection = JsonConvert.DeserializeObject<ResourceCollection>(collectionResourceResp);
-            string tokenDataHandle = resourceCollection.DataProp.TokenData.Handle;
-
-            //TokenDataId tokenDataId = new TokenDataId
-            //{
-            //    Creator = creator.ToHexString(),
-            //    Collection = collectionName,
-            //    Name = tokenName
-            //};
-            //string tokenDataIdJson = JsonConvert.SerializeObject(tokenDataId);
+            string tokenDataHandle = resourceCollection.DataProp.CollectionData.Handle;
 
             string tableItemResp = "";
-            Coroutine cor_getTableItem = StartCoroutine(
+            Coroutine getTableItemCor = StartCoroutine(
                 GetTableItem(
-                    (returnResult) => { tableItemResp = returnResult; }
+                    (returnResult) => {
+                        tableItemResp = returnResult;
+                        
+                    }
                     , tokenDataHandle
                     , "0x1::string::String"
                     , "0x3::token::CollectionData"
                     , collectionName)
                 );
-
+            yield return getTableItemCor;
             callback(tableItemResp);
-            // TODO: Double check the return model
-            yield return null;
         }
 
         public IEnumerator GetAccountResource(Action<string> callback, AccountAddress accountAddress, string resourceType)
