@@ -34,7 +34,7 @@ public class AptosUILink : MonoBehaviour
 
     void Start()
     {
-        SetNetwork(Constants.DEVNET_BASE_URL);
+
     }
 
     void Update()
@@ -148,6 +148,7 @@ public class AptosUILink : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         LoadCurrentWalletBalance();
+        UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
     }
 
     public float AptoTokenToFloat(float _token)
