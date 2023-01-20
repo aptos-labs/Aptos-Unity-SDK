@@ -305,7 +305,86 @@ namespace Aptos.Unity.Rest
             if (request.responseCode == 404)
             {
                 Debug.LogError("Table Item Not Found: " + request.error);
+                TableItemToken tableItemToken = new TableItemToken
+                {
+                    Id = new Aptos.Rest.Models.Id
+                    {
+                        TokenDataId =
+                        {
+                            Creator = key.TokenDataId.Creator,
+                            Collection = key.TokenDataId.Collection,
+                            Name = key.TokenDataId.Name
+                        }
+                    },
+                    Amount = "0"
+                };
+
+                string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
+                callback(tableItemTokenJson);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+            yield return null;
+        }
+
+        public IEnumerator GetTableItemTokenData(Action<string> callback, string handle, string keyType, string valueType, TokenDataId key)
+        {
+            TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
+            {
+                KeyType = keyType,
+                ValueType = valueType,
+                Key = key
+            };
+            string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
+
+            Debug.Log("TABLE ITEM REQUEST JSON: " + tableItemRequestJson);
+            Debug.Log("HANDLE: " + handle);
+
+            string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
+            Uri getTableItemURI = new Uri(getTableItemURL);
+            Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
+
+            var request = new UnityWebRequest(getTableItemURI, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Sending: " + request.error);
                 callback(null);
+            }
+            if (request.responseCode == 404)
+            {
+                Debug.LogError("Table Item Not Found: " + request.error);
+                TableItemToken tableItemToken = new TableItemToken
+                {
+                    Id = new Aptos.Rest.Models.Id
+                    {
+                        TokenDataId =
+                        {
+                            Creator = key.Creator,
+                            Collection = key.Collection,
+                            Name = key.Name
+                        }
+                    },
+                    Amount = "0"
+                };
+
+                string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
+                callback(tableItemTokenJson);
             }
             else
             {
@@ -1335,16 +1414,19 @@ namespace Aptos.Unity.Rest
             string collectionName, string tokenName, string propertyVersion = "0")
         {
             string collectionResourceResp = "";
-            Coroutine cor_accountResource = StartCoroutine(GetAccountResource((returnResult) =>
+            Coroutine accountResourceCor = StartCoroutine(GetAccountResource((returnResult) =>
             {
                 collectionResourceResp = returnResult;
             }, creator, "0x3::token::Collections"));
+
+            yield return accountResourceCor;
 
             Debug.Log("GetTokenData Collection: " + collectionResourceResp);
 
             ResourceCollection resourceCollection = JsonConvert.DeserializeObject<ResourceCollection>(collectionResourceResp);
             string tokenDataHandle = resourceCollection.DataProp.TokenData.Handle;
 
+            Debug.Log("TOKEN DATA HANDLE: " + tokenDataHandle);
             TokenDataId tokenDataId = new TokenDataId
             {
                 Creator = creator.ToHexString(),
@@ -1355,18 +1437,17 @@ namespace Aptos.Unity.Rest
             string tokenDataIdJson = JsonConvert.SerializeObject(tokenDataId);
 
             string tableItemResp = "";
-            Coroutine cor_getTableItem = StartCoroutine(
-                GetTableItem(
+            Coroutine getTableItemCor = StartCoroutine(
+                GetTableItemTokenData(
                     (returnResult) => { tableItemResp = returnResult;}
                     , tokenDataHandle
                     , "0x3::token::TokenDataId"
                     , "0x3::token::TokenData"
-                    , tokenDataIdJson)
+                    , tokenDataId)
                 );
 
+            yield return getTableItemCor;
             callback(tableItemResp);
-            // TODO: Double check the return model
-            yield return null;
         }
 
         // TODO: GetCollection
