@@ -59,5 +59,6 @@ public class PanelTab : MonoBehaviour
 public enum PanelGroup
 {
     mainPanel,
-    addAccount
+    addAccount,
+    mintNFT,
 }
