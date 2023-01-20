@@ -6,10 +6,12 @@ using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
 using NBitcoin;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 using static Aptos.Unity.Rest.Model.AccountResourceCoin;
@@ -227,8 +229,61 @@ namespace Aptos.Unity.Rest
             };
             string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
 
+            Debug.Log("TABLE ITEM REQUEST JSON: " + tableItemRequestJson);
+            Debug.Log("HANDLE: " + handle);
+
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
+
+            var request = new UnityWebRequest(getTableItemURI, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError("Error While Sending: " + request.error);
+                callback(null);
+            }
+            if (request.responseCode == 404)
+            {
+                Debug.LogError("Table Item Not Found: " + request.error);
+                callback(null);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+            yield return null;
+        }
+
+        public IEnumerator GetTableItemNFT(Action<string> callback, string handle, string keyType, string valueType, TokenIdRequest key)
+        {
+            TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
+            {
+                KeyType = keyType,
+                ValueType = valueType,
+                Key = key
+            };
+            string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
+
+            Debug.Log("TABLE ITEM REQUEST JSON: " + tableItemRequestJson);
+            Debug.Log("HANDLE: " + handle);
+
+            string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
+            Uri getTableItemURI = new Uri(getTableItemURL);
+            Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
 
             var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
@@ -1209,23 +1264,24 @@ namespace Aptos.Unity.Rest
         public IEnumerator GetToken(Action<string> callback, AccountAddress ownerAddress, AccountAddress creatorAddress,
             string collectionName, string tokenName, string propertyVersion = "0")
         {
-
             string tokenStoreResourceResp = "";
-            Coroutine cor_accountResource = StartCoroutine(GetAccountResource((returnResult) =>
+            Coroutine accountResourceCor = StartCoroutine(GetAccountResource((returnResult) =>
             {
                 tokenStoreResourceResp = returnResult;
             }, ownerAddress, "0x3::token::TokenStore"));
+            yield return accountResourceCor;
 
-            yield return cor_accountResource;
+            Debug.Log("TOKEN STORE RESOURCE RESPONSE: " + tokenStoreResourceResp);
 
             AccountResourceTokenStore accountResource = JsonConvert.DeserializeObject<AccountResourceTokenStore>(tokenStoreResourceResp);
             string tokenStoreHandle = accountResource.DataProp.Tokens.Handle;
+            Debug.Log("TOKEN STORE HANDLE: " + tokenStoreHandle);
 
             TokenIdRequest tokenId = new TokenIdRequest
             {
                 TokenDataId = new TokenDataId()
                 {
-                    Creator = creatorAddress.ToHexString(),
+                    Creator = creatorAddress.ToString(),
                     Collection = collectionName,
                     Name = tokenName
                 },
@@ -1233,24 +1289,30 @@ namespace Aptos.Unity.Rest
             };
 
             string tokenIdJson = JsonConvert.SerializeObject(tokenId);
+            Debug.Log("TOKEN ID JSON: " + tokenIdJson);
 
             string tableItemResp = "";
-            Coroutine cor_getTableItem = StartCoroutine(GetTableItem((returnResult) =>
+            Coroutine getTableItemCor = StartCoroutine(GetTableItemNFT((returnResult) =>
             {
                 tableItemResp = returnResult;
-            }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenIdJson));
+            }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenId));
 
-            yield return null;
+            yield return getTableItemCor;
+            Debug.Log("GET TABLE ITEM RESPONSE: " + tableItemResp);
+            callback(tableItemResp);
         }
         // TODO: GetTokenBalance
         public IEnumerator GetTokenBalance(Action<string> callback
             , AccountAddress ownerAddress, AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
         {
             string tokenResp = "";
-            Coroutine cor_accountResource = StartCoroutine(GetToken((returnResult) =>
+            Coroutine accountResourceCor = StartCoroutine(GetToken((returnResult) =>
             {
                 tokenResp = returnResult;
             }, ownerAddress, creatorAddress, collectionName, tokenName, propertyVersion));
+            yield return accountResourceCor;
+
+            Debug.Log("GET TOKEN RESPONSE: " + tokenResp);
 
             TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
             string tokenBalance = tableItemToken.Amount;
@@ -1326,7 +1388,6 @@ namespace Aptos.Unity.Rest
                 GetTableItem(
                     (returnResult) => {
                         tableItemResp = returnResult;
-                        
                     }
                     , tokenDataHandle
                     , "0x1::string::String"
