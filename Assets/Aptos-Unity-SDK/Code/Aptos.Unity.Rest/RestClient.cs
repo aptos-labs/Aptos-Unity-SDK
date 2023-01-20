@@ -17,9 +17,9 @@ using Transaction = Aptos.Unity.Rest.Model.Transaction;
 
 namespace Aptos.Unity.Rest
 {
-    public class RestClientUnity : MonoBehaviour
+    public class RestClient : MonoBehaviour
     {
-        public static RestClientUnity Instance { get; set; }
+        public static RestClient Instance { get; set; }
 
         public static int transactionWaitInSeconds = 20;
 
@@ -100,7 +100,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback"></param>
         /// <param name="accountAddress"></param>
         /// <returns></returns>
-        public IEnumerator GetAccountBalance(Action<AccountResourceCoin> callback, AccountAddress accountAddress)
+        public IEnumerator GetAccountBalance(Action<string> callback, AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
             Uri accountsURI = new Uri(accountsURL);
@@ -114,47 +114,15 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Sending: " + request.error);
-
-                Data data = new Data()
-                {
-                    Coin = new AccountResourceCoin.Coin()
-                    {
-                        Value = "ERROR"
-                    }
-                };
-
-                AccountResourceCoin accountResource = new AccountResourceCoin()
-                {
-                    Type = Constants.APTOS_COIN_TYPE,
-                    DataProp = data
-
-                };
-
-                callback(accountResource);
+                callback(null);
             }
             else if (request.responseCode == 404)
             {
-                Data data = new Data()
-                {
-                    Coin = new AccountResourceCoin.Coin()
-                    {
-                        Value = "-1"
-                    }
-                };
-
-                AccountResourceCoin accountResource = new AccountResourceCoin()
-                {
-                    Type = Constants.APTOS_COIN_TYPE,
-                    DataProp = data
-
-                };
-
-                callback(accountResource);
+                callback(null);
             }
             else
             {
-                AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
-                callback(acctResourceCoin);
+                callback(request.downloadHandler.text);
             }
 
             request.Dispose();
