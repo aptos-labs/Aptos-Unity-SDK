@@ -31,7 +31,7 @@ namespace Aptos.Unity.Rest
         {
             Instance = this;
 
-            SetEndPoint(Constants.DEVNET_BASE_URL);
+            //SetEndPoint(Constants.DEVNET_BASE_URL);
         }
 
         #region Setup
