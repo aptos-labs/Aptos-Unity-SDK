@@ -343,6 +343,7 @@ namespace Aptos.Unity.Rest
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
+            //TODO: Fix Error Responses
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -387,7 +388,10 @@ namespace Aptos.Unity.Rest
                     transactionPending = pending;
                     if (!transactionPending)
                     {
-                        callback(pending, response);
+                        Transaction transaction = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+                        if(transaction.GetType().GetProperty("Success") != null && transaction.Success) {
+                            callback(true, response);
+                        }
                     }
                     count += 1;
 
@@ -397,7 +401,7 @@ namespace Aptos.Unity.Rest
 
                 if (count > transactionWaitInSeconds)
                 {
-                    callback(true, "RESPONSE TIMED OUT");
+                    callback(true, "Response Timed Out");
                     break;
                 }
             }
@@ -422,19 +426,19 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                callback(true, "CONNECTION ERROR");
+                callback(true, "Connection Error");
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
             else if (request.responseCode == 404)
             {
-                callback(true, "TRANSACTION NOT FOUND: " + request.responseCode);
+                callback(true, "Transaction Not Found: " + request.responseCode);
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
             else if (request.responseCode == 400)
             {
-                callback(true, "TRANSACTION CALL ERROR: " + request.responseCode + " ::: " + request.downloadHandler.text);
+                callback(true, "Transaction Call Error: " + request.responseCode + " ::: " + request.downloadHandler.text);
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
@@ -445,7 +449,7 @@ namespace Aptos.Unity.Rest
 
                 if (isPending)
                 {
-                    Debug.LogWarning("PENDING TRANSACTION: " + request.downloadHandler.text);
+                    Debug.LogWarning("Transaction is Pending: " + request.downloadHandler.text);
                 }
 
                 callback(isPending, request.downloadHandler.text);
