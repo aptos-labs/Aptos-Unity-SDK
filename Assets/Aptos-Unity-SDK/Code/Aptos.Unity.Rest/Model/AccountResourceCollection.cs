@@ -7,10 +7,10 @@ namespace Aptos.Unity.Rest.Model
     /// https://fullnode.mainnet.aptoslabs.com/v1/spec#/schemas/MoveResource
     /// </summary>
     [JsonObject]
-    public class AccountResourceCollection
+    public class ResourceCollectionOLD
     {
         [JsonConstructor]
-        public AccountResourceCollection() { }
+        public ResourceCollectionOLD() { }
 
         [JsonProperty("type", Required = Required.Always)]
         public string Type { get; set; }
