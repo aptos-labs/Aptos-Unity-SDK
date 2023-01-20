@@ -3,59 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-[RequireComponent(typeof(CanvasGroup))]
-public class NotificationPanel : MonoBehaviour
+namespace Aptos.Unity.Sample.UI
 {
-    [SerializeField] float timer;
-    [SerializeField] GameObject errorIcon;
-    [SerializeField] GameObject successIcon;
-    [SerializeField] TMP_Text messageText;
-
-    private CanvasGroup canvasGroup;
-
-    private void Awake()
+    [RequireComponent(typeof(CanvasGroup))]
+    public class NotificationPanel : MonoBehaviour
     {
-        canvasGroup = this.GetComponent<CanvasGroup>();
-    }
+        [SerializeField] float timer;
+        [SerializeField] GameObject errorIcon;
+        [SerializeField] GameObject successIcon;
+        [SerializeField] TMP_Text messageText;
 
-    public void Toggle(bool _success, string _message)
-    {
-        errorIcon.SetActive(!_success);
-        successIcon.SetActive(_success);
+        private CanvasGroup canvasGroup;
 
-        messageText.text = _message;
-
-        StartCoroutine(Display());
-    }
-
-    IEnumerator Display()
-    {
-        StartCoroutine(Fade(false));
-
-        yield return new WaitForSeconds(timer);
-
-        Coroutine fadeCor = StartCoroutine(Fade(true));
-        yield return fadeCor;
-
-        Destroy(this.gameObject);
-    }
-
-    IEnumerator Fade(bool isFade)
-    {
-        if (isFade)
+        private void Awake()
         {
-            for (float alpha = 1f; alpha >= 0; alpha -= 0.01f)
-            {
-                canvasGroup.alpha = alpha;
-                yield return null;
-            }
+            canvasGroup = this.GetComponent<CanvasGroup>();
         }
-        else
+
+        public void Toggle(bool _success, string _message)
         {
-            for (float alpha = 0f; alpha <= 1; alpha += 0.01f)
+            errorIcon.SetActive(!_success);
+            successIcon.SetActive(_success);
+
+            messageText.text = _message;
+
+            StartCoroutine(Display());
+        }
+
+        IEnumerator Display()
+        {
+            StartCoroutine(Fade(false));
+
+            yield return new WaitForSeconds(timer);
+
+            Coroutine fadeCor = StartCoroutine(Fade(true));
+            yield return fadeCor;
+
+            Destroy(this.gameObject);
+        }
+
+        IEnumerator Fade(bool isFade)
+        {
+            if (isFade)
             {
-                canvasGroup.alpha = alpha;
-                yield return null;
+                for (float alpha = 1f; alpha >= 0; alpha -= 0.01f)
+                {
+                    canvasGroup.alpha = alpha;
+                    yield return null;
+                }
+            }
+            else
+            {
+                for (float alpha = 0f; alpha <= 1; alpha += 0.01f)
+                {
+                    canvasGroup.alpha = alpha;
+                    yield return null;
+                }
             }
         }
     }
