@@ -16,10 +16,10 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject notificationPrefab;
 
     [Header("General")]
-    [SerializeField] private Button accountTab;
-    [SerializeField] private Button sendTransactionTab;
-    [SerializeField] private Button mintNFTTab;
-    [SerializeField] private Button addAccountTab;
+    [SerializeField] private PanelTab accountTab;
+    [SerializeField] private PanelTab sendTransactionTab;
+    [SerializeField] private PanelTab mintNFTTab;
+    [SerializeField] private PanelTab addAccountTab;
 
     [Header("Infos")]
     [SerializeField] private TMP_Dropdown walletListDropDown;
@@ -27,6 +27,7 @@ public class UIController : MonoBehaviour
 
     [Header("Add Account")]
     [SerializeField] private TMP_InputField createdMnemonicInputField;
+    [SerializeField] private TMP_InputField importMnemonicInputField;
 
     [Header("Send Transaction")]
     [SerializeField] private TMP_Text senderAddress;
@@ -75,18 +76,24 @@ public class UIController : MonoBehaviour
     public void Logout()
     {
         PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
-        UnlockUI(false);
+
+        ToggleEmptyState(true);
     }
 
-    public void UnlockUI(bool _unlock)
+    public void ToggleEmptyState(bool _empty)
     {
-        accountTab.interactable = _unlock;
-        sendTransactionTab.interactable = _unlock;
-        mintNFTTab.interactable = _unlock;
+        accountTab.DeActive(_empty);
+        sendTransactionTab.DeActive(_empty);
+        mintNFTTab.DeActive(_empty);
 
-        if (!_unlock)
+        walletListDropDown.ClearOptions();
+        balanceText.text = String.Empty;
+        createdMnemonicInputField.text = String.Empty;
+        importMnemonicInputField.text = String.Empty;
+
+        if (_empty)
         {
-            OpenTabPanel(addAccountTab.GetComponent<PanelTab>());
+            OpenTabPanel(addAccountTab);
         }
     }
 
@@ -96,11 +103,11 @@ public class UIController : MonoBehaviour
         {
             AptosUILink.Instance.InitWalletFromCache();
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
-            UnlockUI(true);
+            ToggleEmptyState(false);
         }
         else
         {
-            UnlockUI(false);
+            ToggleEmptyState(true);
         }
 
         walletListDropDown.onValueChanged.AddListener(delegate {
@@ -120,12 +127,12 @@ public class UIController : MonoBehaviour
         if (AptosUILink.Instance.CreateNewWallet())
         {
             createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey);
-            UnlockUI(true);
+            ToggleEmptyState(false);
             ToggleNotification(true, "Successfully Create the Wallet");
         }
         else
         {
-            UnlockUI(false);
+            ToggleEmptyState(true);
             ToggleNotification(false, "Fail to Create the Wallet");
         }
 
@@ -137,12 +144,12 @@ public class UIController : MonoBehaviour
         if (AptosUILink.Instance.RestoreWallet(_input.text))
         {
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
-            UnlockUI(true);
+            ToggleEmptyState(false);
             ToggleNotification(true, "Successfully Import the Wallet");
         }
         else
         {
-            UnlockUI(false);
+            ToggleEmptyState(true);
             ToggleNotification(false, "Fail to Import the Wallet");
         }
     }

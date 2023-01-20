@@ -126,12 +126,13 @@ public class AptosUILink : MonoBehaviour
         {
             if (returnResult == null)
             {
-                UIController.Instance.ToggleNotification(false, "Fail to Fetch the Balance");
+                //UIController.Instance.ToggleNotification(false, "Fail to Fetch the Balance");
                 onGetBalance?.Invoke(0.0f);
             }
             else
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
+                Debug.Log(acctResourceCoin.DataProp.Coin.Value);
                 onGetBalance?.Invoke(float.Parse(acctResourceCoin.DataProp.Coin.Value));
             }
 

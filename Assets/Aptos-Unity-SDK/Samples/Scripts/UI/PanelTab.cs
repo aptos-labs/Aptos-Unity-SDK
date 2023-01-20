@@ -9,6 +9,8 @@ public class PanelTab : MonoBehaviour
     public PanelGroup panelGroup;
     public string tabName;
     public GameObject targetPanel;
+    public GameObject lockIcon;
+
     public bool isSelected;
 
     private Color selectedColor;
@@ -31,6 +33,12 @@ public class PanelTab : MonoBehaviour
         {
             UIController.Instance.OpenTabPanel(this);
         }
+    }
+
+    public void DeActive(bool _lock)
+    {
+        lockIcon.SetActive(_lock);
+        m_button.interactable = !_lock;
     }
 
     public void Selected()
