@@ -202,7 +202,7 @@ public class SimpleNftExample : MonoBehaviour
         Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((returnResult) =>
         {
             claimTokenResult = returnResult;
-        }, bob, alice.AccountAddress, alice.AccountAddress, collectionName, tokenName, "1"));
+        }, bob, alice.AccountAddress, alice.AccountAddress, collectionName, tokenName, propertyVersion));
 
         yield return claimTokenCor;
 
@@ -211,7 +211,8 @@ public class SimpleNftExample : MonoBehaviour
         string claimTokenTxnHash = claimTokenTxn.Hash;
         Debug.Log("Claim Token Hash: " + claimTokenTxnHash);
 
-        StartCoroutine(WaitForTransaction(claimTokenTxnHash));
+        waitForTransaction = StartCoroutine(WaitForTransaction(claimTokenTxnHash));
+        yield return waitForTransaction;
         #endregion
 
         #region Get Token Balance for NFT Alice
@@ -223,7 +224,7 @@ public class SimpleNftExample : MonoBehaviour
             }, aliceAddress, aliceAddress, collectionName, tokenName, propertyVersion)
         );
         yield return getTokenBalanceCor;
-        Debug.Log("Alice's Token Balance: " + getTokenBalanceResultAlice);
+        Debug.Log("Alice's NFT Token Balance: " + getTokenBalanceResultAlice);
         #endregion
 
         #region Get Token Balance for NFT Bob

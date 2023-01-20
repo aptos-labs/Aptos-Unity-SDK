@@ -1487,6 +1487,7 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
+            Debug.Log("ACCOUNTS RESOURCE URI: " + accountsURI);
             UnityWebRequest request = UnityWebRequest.Get(accountsURI);
             request.SendWebRequest();
             while (!request.isDone)
