@@ -165,7 +165,7 @@ public class SimpleNftExample : MonoBehaviour
             }, aliceAddress, aliceAddress, collectionName, tokenName, propertyVersion)
         );
         yield return getTokenBalanceCor;
-        Debug.Log("Alice's Token Balance: " + getTokenBalanceResultAlice);
+        Debug.Log("Alice's NFT Token Balance: " + getTokenBalanceResultAlice);
 
         string getTokenDataResultAlice = "";
         Coroutine getTokenDataCor = StartCoroutine(
@@ -188,9 +188,54 @@ public class SimpleNftExample : MonoBehaviour
         yield return offerTokenCor;
 
         Debug.Log("Offer Token Response: " + offerTokenResult);
-        //Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(createCollectionResult, new TransactionConverter());
-        //string transactionHash = createCollectionTxn.Hash;
-        //Debug.Log("Offer Token Hash: " + createCollectionTxn.Hash);
+        Transaction offerTokenTxn = JsonConvert.DeserializeObject<Transaction>(offerTokenResult, new TransactionConverter());
+        string offerTokenTxnHash = offerTokenTxn.Hash;
+        Debug.Log("Offer Token Hash: " + offerTokenTxnHash);
+
+        Coroutine waitForTransaction = StartCoroutine(WaitForTransaction(offerTokenTxnHash));
+        yield return waitForTransaction;
+        #endregion
+
+        #region Bob Claims Token
+        Debug.Log("=== Bob Claims Token ===");
+        string claimTokenResult = "";
+        Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((returnResult) =>
+        {
+            claimTokenResult = returnResult;
+        }, bob, alice.AccountAddress, alice.AccountAddress, collectionName, tokenName, "1"));
+
+        yield return claimTokenCor;
+
+        Debug.Log("Claim Token Response: " + claimTokenResult);
+        Transaction claimTokenTxn = JsonConvert.DeserializeObject<Transaction>(claimTokenResult, new TransactionConverter());
+        string claimTokenTxnHash = claimTokenTxn.Hash;
+        Debug.Log("Claim Token Hash: " + claimTokenTxnHash);
+
+        StartCoroutine(WaitForTransaction(claimTokenTxnHash));
+        #endregion
+
+        #region Get Token Balance for NFT Alice
+        Debug.Log("=== =============== GET TOKEN BALANCE FOR NFT ALICE ==================");
+        getTokenBalanceResultAlice = "";
+        getTokenBalanceCor = StartCoroutine(
+            RestClient.Instance.GetTokenBalance((returnResult) => {
+                getTokenBalanceResultAlice = returnResult;
+            }, aliceAddress, aliceAddress, collectionName, tokenName, propertyVersion)
+        );
+        yield return getTokenBalanceCor;
+        Debug.Log("Alice's Token Balance: " + getTokenBalanceResultAlice);
+        #endregion
+
+        #region Get Token Balance for NFT Bob
+        Debug.Log("=== =============== GET TOKEN BALANCE FOR NFT Bob ==================");
+        string getTokenBalanceResultBob = "";
+        getTokenBalanceCor = StartCoroutine(
+            RestClient.Instance.GetTokenBalance((returnResult) => {
+                getTokenBalanceResultBob = returnResult;
+            }, bobAddress, aliceAddress, collectionName, tokenName, propertyVersion)
+        );
+        yield return getTokenBalanceCor;
+        Debug.Log("Bob's NFT Token Balance: " + getTokenBalanceResultBob);
         #endregion
 
 
@@ -206,4 +251,15 @@ public class SimpleNftExample : MonoBehaviour
 
         yield return null;
     }
+
+    IEnumerator WaitForTransaction(string txnHash)
+    {
+        Coroutine waitForTransactionCor = StartCoroutine(
+            RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) => {
+                Debug.Log(transactionWaitResult);
+            }, txnHash)
+        );
+        yield return waitForTransactionCor;
+    }
+
 }
