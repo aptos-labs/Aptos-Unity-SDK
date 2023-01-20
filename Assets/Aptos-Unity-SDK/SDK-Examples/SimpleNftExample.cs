@@ -177,6 +177,22 @@ public class SimpleNftExample : MonoBehaviour
         Debug.Log("Alice's Token Data: " + getTokenDataResultAlice);
         #endregion
 
+        #region Transferring the Token to Bob
+        Debug.Log("=== Transferring the token to Bob ===");
+        string offerTokenResult = "";
+        Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((returnResult) =>
+        {
+            offerTokenResult = returnResult;
+        }, alice, bob.AccountAddress, alice.AccountAddress, collectionName, tokenName, "1"));
+
+        yield return offerTokenCor;
+
+        Debug.Log("Offer Token Response: " + offerTokenResult);
+        //Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(createCollectionResult, new TransactionConverter());
+        //string transactionHash = createCollectionTxn.Hash;
+        //Debug.Log("Offer Token Hash: " + createCollectionTxn.Hash);
+        #endregion
+
 
         //Debug.Log("=== =============== GET TOKEN BALANCE FOR NFT BOB ==================");
         //string getTokenBalanceResultBob = "";

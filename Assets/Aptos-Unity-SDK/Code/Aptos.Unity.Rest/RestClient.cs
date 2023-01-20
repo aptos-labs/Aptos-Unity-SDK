@@ -982,12 +982,18 @@ namespace Aptos.Unity.Rest
         // TODO: OfferToken
         public IEnumerator OfferToken(Action<string> callback
             , Account account, AccountAddress receiver, AccountAddress creator
-            , string collectionName, string tokenName, string propertyVersion = "0")
+            , string collectionName, string tokenName, string amount, string propertyVersion = "0")
         {
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
-                    receiver.ToHexString(), creator.ToHexString(), collectionName, tokenName, propertyVersion
+                      receiver.ToHexString()
+                    , creator.ToHexString()
+                    , collectionName
+                    , tokenName
+                    , propertyVersion
+                    , amount
+
                 },
                 //MutateSettings = new bool[] { false, false, false, false, false },
                 //PropertyKeys = new string[] { },
