@@ -80,16 +80,16 @@ public class UIController : MonoBehaviour
         sendTransactionTab.DeActive(_empty);
         mintNFTTab.DeActive(_empty);
 
-        walletListDropDown.ClearOptions();
-        List<string> options = new List<string>();
-        options.Add("Please Create Wallet First");
-        walletListDropDown.AddOptions(options);
-        balanceText.text = "0.000000 APT";
-        createdMnemonicInputField.text = String.Empty;
-        importMnemonicInputField.text = String.Empty;
-
         if (_empty)
         {
+            walletListDropDown.ClearOptions();
+            List<string> options = new List<string>();
+            options.Add("Please Create Wallet First");
+            walletListDropDown.AddOptions(options);
+            balanceText.text = "n/a APT";
+            createdMnemonicInputField.text = String.Empty;
+            importMnemonicInputField.text = String.Empty;
+
             OpenTabPanel(addAccountTab);
         }
     }
@@ -169,14 +169,14 @@ public class UIController : MonoBehaviour
 
         walletListDropDown.AddOptions(addressList);
 
-        senderAddress.text = ShortenString(AptosUILink.Instance.GetCurrentWalletAddress(), 4);
+        senderAddress.text = AptosUILink.Instance.GetCurrentWalletAddress();
     }
 
     void OnWalletListDropdownValueChanged(TMP_Dropdown _target)
     {
         PlayerPrefs.SetInt(AptosUILink.Instance.CurrentAddressIndexKey, _target.value);
         AptosUILink.Instance.LoadCurrentWalletBalance();
-        senderAddress.text = ShortenString(AptosUILink.Instance.addressList[_target.value], 4);
+        senderAddress.text = AptosUILink.Instance.addressList[_target.value];
         Debug.Log(AptosUILink.Instance.addressList[_target.value]);
     }
 
