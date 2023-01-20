@@ -118,7 +118,7 @@ namespace Aptos.Unity.Rest
             }
             else if (request.responseCode == 404)
             {
-                callback("0");
+                callback(null);
             }
             else
             {
