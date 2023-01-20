@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Text mainPanelTitle;
     [SerializeField] private Canvas mainCanvas;
     [SerializeField] private GameObject notificationPrefab;
+
+    [Header("General")]
+    [SerializeField] private Button accountTab;
+    [SerializeField] private Button sendTransactionTab;
+    [SerializeField] private Button mintNFTTab;
+    [SerializeField] private Button addAccountTab;
 
     [Header("Infos")]
     [SerializeField] private TMP_Dropdown walletListDropDown;
@@ -65,12 +72,35 @@ public class UIController : MonoBehaviour
         }
     }
 
+    public void Logout()
+    {
+        PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
+        UnlockUI(false);
+    }
+
+    public void UnlockUI(bool _unlock)
+    {
+        accountTab.interactable = _unlock;
+        sendTransactionTab.interactable = _unlock;
+        mintNFTTab.interactable = _unlock;
+
+        if (!_unlock)
+        {
+            OpenTabPanel(addAccountTab.GetComponent<PanelTab>());
+        }
+    }
+
     void InitStatusCheck()
     {
         if (PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey) != string.Empty)
         {
             AptosUILink.Instance.InitWalletFromCache();
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
+            UnlockUI(true);
+        }
+        else
+        {
+            UnlockUI(false);
         }
 
         walletListDropDown.onValueChanged.AddListener(delegate {
@@ -90,10 +120,12 @@ public class UIController : MonoBehaviour
         if (AptosUILink.Instance.CreateNewWallet())
         {
             createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey);
+            UnlockUI(true);
             ToggleNotification(true, "Successfully Create the Wallet");
         }
         else
         {
+            UnlockUI(false);
             ToggleNotification(false, "Fail to Create the Wallet");
         }
 
@@ -105,10 +137,12 @@ public class UIController : MonoBehaviour
         if (AptosUILink.Instance.RestoreWallet(_input.text))
         {
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
+            UnlockUI(true);
             ToggleNotification(true, "Successfully Import the Wallet");
         }
         else
         {
+            UnlockUI(false);
             ToggleNotification(false, "Fail to Import the Wallet");
         }
     }
