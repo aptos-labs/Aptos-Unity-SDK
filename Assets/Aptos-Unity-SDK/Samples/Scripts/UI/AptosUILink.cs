@@ -49,11 +49,6 @@ public class AptosUILink : MonoBehaviour
         LoadCurrentWalletBalance();
     }
 
-    public void SetNetwork(string _network)
-    {
-        RestClient.Instance.SetEndPoint(_network);
-    }
-
     public bool CreateNewWallet()
     {
         Mnemonic mnemo = new Mnemonic(Wordlist.English, WordCount.Twelve);

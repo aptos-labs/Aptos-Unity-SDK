@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using Aptos.Unity.Rest;
+using Aptos.Rest;
 
 public class UIController : MonoBehaviour
 {
@@ -23,6 +25,7 @@ public class UIController : MonoBehaviour
 
     [Header("Infos")]
     [SerializeField] private TMP_Dropdown walletListDropDown;
+    [SerializeField] private TMP_Dropdown networkDropDown;
     [SerializeField] private TMP_Text balanceText;
 
     [Header("Add Account")]
@@ -73,6 +76,11 @@ public class UIController : MonoBehaviour
 
         walletListDropDown.onValueChanged.AddListener(delegate {
             OnWalletListDropdownValueChanged(walletListDropDown);
+        });
+
+        networkDropDown.onValueChanged.AddListener(delegate
+        {
+            SetNetwork(networkDropDown);
         });
     }
 
@@ -179,17 +187,11 @@ public class UIController : MonoBehaviour
         PlayerPrefs.SetInt(AptosUILink.Instance.CurrentAddressIndexKey, _target.value);
         AptosUILink.Instance.LoadCurrentWalletBalance();
         senderAddress.text = AptosUILink.Instance.addressList[_target.value];
-        Debug.Log(AptosUILink.Instance.addressList[_target.value]);
     }
 
     void UpdateBalance(float _amount)
     {
         balanceText.text = AptosUILink.Instance.AptoTokenToFloat(_amount).ToString("0.0000") + " APT";
-    }
-
-    public void Airdrop(int _amount)
-    {
-        StartCoroutine(AptosUILink.Instance.AirDrop(_amount));
     }
 
     public void Logout()
@@ -199,6 +201,27 @@ public class UIController : MonoBehaviour
         ToggleEmptyState(true);
     }
 
+    public void SetNetwork(TMP_Dropdown _target)
+    {
+        switch (_target.options[_target.value].text)
+        {
+            case "Mainnet":
+                RestClient.Instance.SetEndPoint(Constants.MAINNET_BASE_URL);
+                break;
+            case "Devnet":
+                RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+                break;
+            case "Testnet":
+                RestClient.Instance.SetEndPoint(Constants.TESTNET_BASE_URL);
+                break;
+            default:
+                RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+                break;
+        }
+
+        ToggleNotification(true, "Set Network to " + _target.options[_target.value].text);
+    }
+
     #endregion
 
     #region Send Transaction
@@ -206,6 +229,11 @@ public class UIController : MonoBehaviour
     public void SendToken()
     {
         StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptoFloatToToken(float.Parse(sendAmountInput.text))));
+    }
+
+    public void Airdrop(int _amount)
+    {
+        StartCoroutine(AptosUILink.Instance.AirDrop(_amount));
     }
 
     #endregion
