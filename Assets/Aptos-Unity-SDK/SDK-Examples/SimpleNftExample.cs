@@ -156,16 +156,37 @@ public class SimpleNftExample : MonoBehaviour
         Debug.Log("Alice's Collection: " + getCollectionResult);
         #endregion
 
-        #region Get Token Balance
-        string getTokenBalanceResult = "";
+        #region Get Token Balance 
+        Debug.Log("=== =============== GET TOKEN BALANCE FOR NFT ALICE ==================");
+        string getTokenBalanceResultAlice = "";
         Coroutine getTokenBalanceCor = StartCoroutine(
             RestClient.Instance.GetTokenBalance((returnResult) => {
-                getTokenBalanceResult = returnResult;
+                getTokenBalanceResultAlice = returnResult;
             }, aliceAddress, aliceAddress, collectionName, tokenName, propertyVersion)
         );
         yield return getTokenBalanceCor;
-        Debug.Log("Alice's Token Balance: " + getTokenBalanceResult);
+        Debug.Log("Alice's Token Balance: " + getTokenBalanceResultAlice);
+
+        string getTokenDataResultAlice = "";
+        Coroutine getTokenDataCor = StartCoroutine(
+            RestClient.Instance.GetTokenData((returnResult) => {
+                getTokenDataResultAlice = returnResult;
+            }, aliceAddress, collectionName, tokenName, propertyVersion)
+        );
+        yield return getTokenDataCor;
+        Debug.Log("Alice's Token Data: " + getTokenDataResultAlice);
         #endregion
+
+
+        //Debug.Log("=== =============== GET TOKEN BALANCE FOR NFT BOB ==================");
+        //string getTokenBalanceResultBob = "";
+        //getTokenBalanceCor = StartCoroutine(
+        //    RestClient.Instance.GetTokenBalance((returnResult) => {
+        //        getTokenBalanceResultBob = returnResult;
+        //    }, bobAddress, aliceAddress, collectionName, tokenName, propertyVersion)
+        //);
+        //yield return getTokenBalanceCor;
+        //Debug.Log("Bob's Token Balance: " + getTokenBalanceResultBob);
 
         yield return null;
     }
