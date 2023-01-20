@@ -151,6 +151,21 @@ public class AptosUILink : MonoBehaviour
         UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
     }
 
+    public IEnumerator SendToken(string targetAddress, int amount)
+    {
+        string transferResult = "";
+        Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
+        {
+            transferResult = _transferResult;
+        }, wallet.GetAccount(PlayerPrefs.GetInt(CurrentAddressIndexKey)), targetAddress, amount));
+
+        yield return cor;
+
+        yield return new WaitForSeconds(1f);
+        LoadCurrentWalletBalance();
+        UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)amount) + " APT to " + UIController.Instance.ShortenString(targetAddress, 4));
+    }
+
     public float AptoTokenToFloat(float _token)
     {
         return _token / 100000000f;

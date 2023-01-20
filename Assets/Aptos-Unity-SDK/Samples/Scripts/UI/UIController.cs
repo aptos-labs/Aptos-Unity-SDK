@@ -31,6 +31,8 @@ public class UIController : MonoBehaviour
 
     [Header("Send Transaction")]
     [SerializeField] private TMP_Text senderAddress;
+    [SerializeField] private TMP_InputField receiverAddressInput;
+    [SerializeField] private TMP_InputField sendAmountInput;
 
     [Header("Notification")]
     [SerializeField] private Transform notificationPanel;
@@ -195,6 +197,15 @@ public class UIController : MonoBehaviour
         PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
 
         ToggleEmptyState(true);
+    }
+
+    #endregion
+
+    #region Send Transaction
+
+    public void SendToken()
+    {
+        StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptoFloatToToken(float.Parse(sendAmountInput.text))));
     }
 
     #endregion
