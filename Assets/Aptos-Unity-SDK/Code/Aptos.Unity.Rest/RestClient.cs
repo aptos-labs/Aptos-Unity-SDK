@@ -92,6 +92,7 @@ namespace Aptos.Unity.Rest
 
             yield return cor;
 
+            Debug.Log("ACCOUNT DATA RESPONSE: " + accountDataResp);
             AccountData accountData = JsonConvert.DeserializeObject<AccountData>(accountDataResp);
             string sequenceNumber = accountData.SequenceNumber;
 
@@ -304,20 +305,17 @@ namespace Aptos.Unity.Rest
             }
             if (request.responseCode == 404)
             {
-                Debug.LogError("Table Item Not Found: " + request.error);
-                TableItemToken tableItemToken = new TableItemToken
-                {
-                    Id = new Aptos.Rest.Models.Id
-                    {
-                        TokenDataId =
-                        {
-                            Creator = key.TokenDataId.Creator,
-                            Collection = key.TokenDataId.Collection,
-                            Name = key.TokenDataId.Name
-                        }
-                    },
-                    Amount = "0"
-                };
+                Debug.LogWarning("Table Item Not Found: " + request.error);
+
+                Debug.Log("CREATOR: " + key.TokenDataId.Creator + " COLLECTION: " + key.TokenDataId.Collection + " NAME: " + key.TokenDataId.Name);
+
+                TableItemToken tableItemToken = new TableItemToken();
+                tableItemToken.Id = new Aptos.Rest.Models.Id();
+                tableItemToken.Id.TokenDataId = new Aptos.Rest.Models.TokenDataId();
+                tableItemToken.Id.TokenDataId.Creator = key.TokenDataId.Creator;
+                tableItemToken.Id.TokenDataId.Collection = key.TokenDataId.Collection;
+                tableItemToken.Id.TokenDataId.Name = key.TokenDataId.Name;
+                tableItemToken.Amount = "0";
 
                 string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
                 callback(tableItemTokenJson);
@@ -531,7 +529,7 @@ namespace Aptos.Unity.Rest
 
                 }, txnHash));
 
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2f);
 
                 if (count > transactionWaitInSeconds)
                 {
