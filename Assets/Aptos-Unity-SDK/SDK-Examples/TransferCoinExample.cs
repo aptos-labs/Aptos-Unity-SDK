@@ -7,6 +7,7 @@ using NBitcoin;
 using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
+using Transaction = Aptos.Unity.Rest.Model.Transaction;
 
 public class TransferCoinExample : MonoBehaviour
 {
@@ -45,12 +46,12 @@ public class TransferCoinExample : MonoBehaviour
             if (returnResult == null)
             {
                 Debug.LogWarning("Account address not found, balance is 0");
-                Debug.Log("Alice: ::: " + 0);
+                Debug.Log("Alice Balance: " + 0);
             }
             else
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                Debug.Log("Alice: ::: " + acctResourceCoin.DataProp.Coin.Value);
+                Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
             }
 
         }, aliceAddress));
@@ -73,12 +74,12 @@ public class TransferCoinExample : MonoBehaviour
             if (returnResult == null)
             {
                 Debug.LogWarning("Account address not found, balance is 0");
-                Debug.Log("Alice: ::: " + 0);
+                Debug.Log("Alice Balance: " + 0);
             }
             else
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                Debug.Log("Alice: ::: " + acctResourceCoin.DataProp.Coin.Value);
+                Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
             }
 
         }, aliceAddress));
@@ -99,19 +100,19 @@ public class TransferCoinExample : MonoBehaviour
             if (returnResult == null)
             {
                 Debug.LogWarning("Account address not found, balance is 0");
-                Debug.Log("Bob: ::: " + 0);
+                Debug.Log("Bob Balance: " + 0);
             }
             else
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                Debug.Log("Bob: ::: " + acctResourceCoin.DataProp.Coin.Value);
+                Debug.Log("Bob Balance: " + acctResourceCoin.DataProp.Coin.Value);
             }
 
         }, bobAddress));
         yield return getBobAccountBalance;
         #endregion
 
-        #region Have Alice give Bob 1_000 coins
+        #region Have Alice give Bob 1_000 coins - Submit Transfer Transaction
         string transferResult = "";
         Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
         {
@@ -120,7 +121,56 @@ public class TransferCoinExample : MonoBehaviour
 
         yield return transferCor;
 
-        Debug.Log("TRANSFER RESPONSE: " + transferResult);
+        Debug.Log("Transfer Response: " + transferResult);
+        Transaction transaction = JsonConvert.DeserializeObject<Transaction>(transferResult, new TransactionConverter());
+        string transactionHash = transaction.Hash;
+        Debug.Log("Transfer Response Hash: " + transaction.Hash);
+        #endregion
+
+        #region Wait For Transaction
+        Coroutine waitForTransactionCor = StartCoroutine(
+            RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) => {
+                Debug.Log(transactionWaitResult);
+            }, transactionHash)
+        );
+
+        yield return waitForTransactionCor;
+        #endregion
+
+        #region Get Alice Account Balance After Transfer
+        Coroutine getAliceAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+        {
+            if (returnResult == null)
+            {
+                Debug.LogWarning("Account address not found, balance is 0");
+                Debug.Log("Alice Balance: " + 0);
+            }
+            else
+            {
+                AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
+                Debug.Log("Alice Balance After Funding: " + acctResourceCoin.DataProp.Coin.Value);
+            }
+
+        }, aliceAddress));
+        yield return getAliceAccountBalance3;
+        #endregion
+
+        #region Get Bob Account Balance After Transfer
+        Coroutine getBobAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+        {
+            if (returnResult == null)
+            {
+                Debug.LogWarning("Account address not found, balance is 0");
+                Debug.Log("Bob Balance: " + 0);
+            }
+            else
+            {
+                AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
+                Debug.Log("Bob Balance After Funding: " + acctResourceCoin.DataProp.Coin.Value);
+            }
+
+        }, bobAddress));
+        yield return getBobAccountBalance2;
         #endregion
     }
 }
