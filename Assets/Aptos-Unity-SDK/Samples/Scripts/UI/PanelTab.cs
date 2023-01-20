@@ -19,7 +19,7 @@ public class PanelTab : MonoBehaviour
     private void Awake()
     {
         m_button = this.GetComponent<Button>();
-        m_button.onClick.AddListener(delegate { UIController.instance.Open(this); });
+        m_button.onClick.AddListener(delegate { UIController.instance.OpenTabPanel(this); });
 
         selectedColor = m_button.colors.selectedColor;
         unselectedColor = m_button.colors.normalColor;
@@ -29,7 +29,7 @@ public class PanelTab : MonoBehaviour
     {
         if (isSelected)
         {
-            UIController.instance.Open(this);
+            UIController.instance.OpenTabPanel(this);
         }
     }
 
