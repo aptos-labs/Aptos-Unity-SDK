@@ -135,6 +135,25 @@ public class SimpleNftExample : MonoBehaviour
         Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
         #endregion
 
+        #region Wait For Transaction
+        waitForTransactionCor = StartCoroutine(
+            RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) => {
+                Debug.Log(transactionWaitResult);
+            }, createTokenTxnHash)
+        );
+        yield return waitForTransactionCor;
+
+        #endregion
+
+        string getCollectionResult = "";
+        Coroutine getCollectionCor = StartCoroutine(
+            RestClient.Instance.GetCollection((returnResult) => {
+                getCollectionResult = returnResult;
+            }, aliceAddress, collectionName)
+        );
+        yield return getCollectionCor;
+        Debug.Log("Alice's Collection: " + getCollectionResult);
+
         yield return null;
     }
 }
