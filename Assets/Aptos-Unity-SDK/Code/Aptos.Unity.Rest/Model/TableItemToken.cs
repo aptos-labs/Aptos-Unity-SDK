@@ -1,7 +1,7 @@
 
 using Newtonsoft.Json;
 
-namespace Aptos.Rest.Models
+namespace Aptos.Unity.Rest.Model
 {
     /// <summary>
     /// https://fullnode.mainnet.aptoslabs.com/v1/spec#/operations/get_table_item
@@ -30,18 +30,18 @@ namespace Aptos.Rest.Models
         public string PropertyVersion { get; set; }
     }
 
-    [JsonObject]
-    public class TokenDataId
-    {
-        [JsonProperty("collection", Required = Required.AllowNull)]
-        public string Collection { get; set; }
+    //[JsonObject]
+    //public class TokenDataId
+    //{
+    //    [JsonProperty("collection", Required = Required.AllowNull)]
+    //    public string Collection { get; set; }
 
-        [JsonProperty("creator", Required = Required.AllowNull)]
-        public string Creator { get; set; }
+    //    [JsonProperty("creator", Required = Required.AllowNull)]
+    //    public string Creator { get; set; }
 
-        [JsonProperty("name", Required = Required.AllowNull)]
-        public string Name { get; set; }
-    }
+    //    [JsonProperty("name", Required = Required.AllowNull)]
+    //    public string Name { get; set; }
+    //}
 
     [JsonObject]
     public class TokenProperties

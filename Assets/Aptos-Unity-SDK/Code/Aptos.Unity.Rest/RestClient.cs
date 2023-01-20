@@ -318,8 +318,8 @@ namespace Aptos.Unity.Rest
                 Debug.Log("CREATOR: " + key.TokenDataId.Creator + " COLLECTION: " + key.TokenDataId.Collection + " NAME: " + key.TokenDataId.Name);
 
                 TableItemToken tableItemToken = new TableItemToken();
-                tableItemToken.Id = new Aptos.Rest.Models.Id();
-                tableItemToken.Id.TokenDataId = new Aptos.Rest.Models.TokenDataId();
+                tableItemToken.Id = new Aptos.Unity.Rest.Model.Id();
+                tableItemToken.Id.TokenDataId = new Aptos.Unity.Rest.Model.TokenDataId();
                 tableItemToken.Id.TokenDataId.Creator = key.TokenDataId.Creator;
                 tableItemToken.Id.TokenDataId.Collection = key.TokenDataId.Collection;
                 tableItemToken.Id.TokenDataId.Name = key.TokenDataId.Name;
@@ -376,7 +376,7 @@ namespace Aptos.Unity.Rest
                 Debug.LogError("Table Item Not Found: " + request.error);
                 TableItemToken tableItemToken = new TableItemToken
                 {
-                    Id = new Aptos.Rest.Models.Id
+                    Id = new Aptos.Unity.Rest.Model.Id
                     {
                         TokenDataId =
                         {
