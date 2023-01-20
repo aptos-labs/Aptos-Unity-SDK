@@ -26,12 +26,9 @@ namespace Aptos.Unity.Rest
         /// <param name="amount"></param>
         /// <param name="endpoint"></param>
         /// <returns></returns>
-        public IEnumerator FundAccount(
-            Action<string> callback, string address, int amount, string endpoint)
+        public IEnumerator FundAccount(Action<string> callback, string address, int amount, string endpoint)
         {
-            // TODO: Create Constant Variables in a separate file instead of hardcoding
-            string faucetURL = endpoint + "/mint?amount=" + amount + "&Address=" + address;
-            Debug.Log("FAUCET: " + faucetURL);
+            string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
             Uri transactionsURI = new Uri(faucetURL);
             var request = new UnityWebRequest(transactionsURI, "POST");
             request.SetRequestHeader("Content-Type", "application/json");
@@ -42,7 +39,6 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
-            // TODO: Add proper callback return object that holds error code
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log("Error While Submitting Transaction: " + request.error);
@@ -51,20 +47,21 @@ namespace Aptos.Unity.Rest
             else if (request.responseCode == 404)
             {
                 // TODO: Implememt Error Code deserializer for Faucet Client
-                callback("??????????????");
+                callback(request.error);
             }
-            else if (request.result != UnityWebRequest.Result.Success)
+            else if (request.responseCode == 400)
             {
                 Debug.Log(request.error);
             }
             else
             {
-                Debug.Log("Account Funded!!");
+                Debug.Log("Account Funded: " + address);
             }
 
             request.Dispose();
 
-            yield return null;
+            // TODO: Inspect wait time until account balance is updated
+            yield return new WaitForSeconds(1f);
         }
     }
 }
