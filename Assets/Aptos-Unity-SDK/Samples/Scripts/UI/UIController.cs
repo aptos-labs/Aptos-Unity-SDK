@@ -63,7 +63,7 @@ public class UIController : MonoBehaviour
 
     void InitStatusCheck()
     {
-        if (PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey) != string.Empty)
+        if (PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey) != string.Empty)
         {
             AptosUILink.Instance.InitWalletFromCache();
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
@@ -82,6 +82,8 @@ public class UIController : MonoBehaviour
         {
             SetNetwork(networkDropDown);
         });
+
+        networkDropDown.Select();
     }
 
     public void ToggleEmptyState(bool _empty)
@@ -137,7 +139,7 @@ public class UIController : MonoBehaviour
     {
         if (AptosUILink.Instance.CreateNewWallet())
         {
-            createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey);
+            createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey);
             ToggleEmptyState(false);
             ToggleNotification(true, "Successfully Create the Wallet");
         }
@@ -184,7 +186,7 @@ public class UIController : MonoBehaviour
 
     void OnWalletListDropdownValueChanged(TMP_Dropdown _target)
     {
-        PlayerPrefs.SetInt(AptosUILink.Instance.CurrentAddressIndexKey, _target.value);
+        PlayerPrefs.SetInt(AptosUILink.Instance.currentAddressIndexKey, _target.value);
         AptosUILink.Instance.LoadCurrentWalletBalance();
         senderAddress.text = AptosUILink.Instance.addressList[_target.value];
     }
@@ -196,7 +198,7 @@ public class UIController : MonoBehaviour
 
     public void Logout()
     {
-        PlayerPrefs.DeleteKey(AptosUILink.Instance.MnemonicsKey);
+        PlayerPrefs.DeleteKey(AptosUILink.Instance.mnemonicsKey);
 
         ToggleEmptyState(true);
     }
@@ -220,6 +222,16 @@ public class UIController : MonoBehaviour
         }
 
         ToggleNotification(true, "Set Network to " + _target.options[_target.value].text);
+    }
+
+    public void CopyMnemonicWords()
+    {
+        CopyToClipboard(PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey));
+    }
+
+    public void CopyPrivateKey()
+    {
+        CopyToClipboard(PlayerPrefs.GetString(AptosUILink.Instance.privateKey));
     }
 
     #endregion
