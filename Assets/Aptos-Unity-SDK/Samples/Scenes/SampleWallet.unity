@@ -1066,7 +1066,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 122402108}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 339548600}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: CreateCollection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &122402108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2608,6 +2620,16 @@ MonoBehaviour:
   senderAddress: {fileID: 572668561}
   receiverAddressInput: {fileID: 1196199211}
   sendAmountInput: {fileID: 879460873}
+  c_collectionNameInputField: {fileID: 0}
+  collectionDescriptionInputField: {fileID: 0}
+  collectionUriInputField: {fileID: 0}
+  n_collectionNameInputField: {fileID: 0}
+  tokenNameInputField: {fileID: 0}
+  tokenDescriptionInputField: {fileID: 0}
+  supplyInputField: {fileID: 0}
+  maxInputField: {fileID: 0}
+  tokenURIInputField: {fileID: 0}
+  royaltyPointsInputField: {fileID: 0}
   notificationPanel: {fileID: 1521185682}
 --- !u!1 &348846585
 GameObject:
@@ -12783,7 +12805,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1323094478}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 339548600}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: CreateNFT
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1323094478
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -37,6 +37,19 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_InputField receiverAddressInput;
     [SerializeField] private TMP_InputField sendAmountInput;
 
+    [Header("Mint NFT")]
+    [SerializeField] private TMP_InputField c_collectionNameInputField;
+    [SerializeField] private TMP_InputField collectionDescriptionInputField;
+    [SerializeField] private TMP_InputField collectionUriInputField;
+    [Space]
+    [SerializeField] private TMP_InputField n_collectionNameInputField;
+    [SerializeField] private TMP_InputField tokenNameInputField;
+    [SerializeField] private TMP_InputField tokenDescriptionInputField;
+    [SerializeField] private TMP_InputField supplyInputField;
+    [SerializeField] private TMP_InputField maxInputField;
+    [SerializeField] private TMP_InputField tokenURIInputField;
+    [SerializeField] private TMP_InputField royaltyPointsInputField;
+
     [Header("Notification")]
     [SerializeField] private Transform notificationPanel;
 
@@ -247,6 +260,32 @@ public class UIController : MonoBehaviour
     public void Airdrop(int _amount)
     {
         StartCoroutine(AptosUILink.Instance.AirDrop(_amount));
+    }
+
+    #endregion
+
+    #region NFT
+
+    public void CreateCollection()
+    {
+        StartCoroutine(AptosUILink.Instance.CreateCollection(
+            c_collectionNameInputField.text,
+            collectionDescriptionInputField.text,
+            collectionUriInputField.text
+            ));
+    }
+
+    public void CreateNFT()
+    {
+        StartCoroutine(AptosUILink.Instance.CreateNFT(
+            n_collectionNameInputField.text,
+            tokenNameInputField.text,
+            tokenDescriptionInputField.text,
+            Int32.Parse(supplyInputField.text),
+            Int32.Parse(maxInputField.text),
+            tokenURIInputField.text,
+            Int32.Parse(royaltyPointsInputField.text)
+            ));
     }
 
     #endregion
