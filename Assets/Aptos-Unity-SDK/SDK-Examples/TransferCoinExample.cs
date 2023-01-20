@@ -110,5 +110,17 @@ public class TransferCoinExample : MonoBehaviour
         }, bobAddress));
         yield return getBobAccountBalance;
         #endregion
+
+        #region Have Alice give Bob 1_000 coins
+        string transferResult = "";
+        Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
+        {
+            transferResult = _transferResult;
+        }, alice, bob.AccountAddress.ToHexString(), 1000));
+
+        yield return transferCor;
+
+        Debug.Log("TRANSFER RESPONSE: " + transferResult);
+        #endregion
     }
 }

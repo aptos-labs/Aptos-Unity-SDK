@@ -311,7 +311,6 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             // 2) Submits that to produce a raw transaction
             ///////////////////////////////////////////////////////////////////////
-
             string encodedSubmission = "";
 
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
@@ -325,7 +324,6 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             // 3) Signs the raw transaction
             ///////////////////////////////////////////////////////////////////////
-
             byte[] signature = sender.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
@@ -512,7 +510,7 @@ namespace Aptos.Unity.Rest
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
             Uri accountsURI = new Uri(transactionsEncodeURL);
 
-            var request = new UnityWebRequest(transactionsEncodeURL, "POST");
+            var request = new UnityWebRequest(accountsURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
