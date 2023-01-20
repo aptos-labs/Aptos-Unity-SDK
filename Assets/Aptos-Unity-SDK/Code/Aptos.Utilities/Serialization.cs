@@ -1,6 +1,7 @@
 ﻿// An implementation of BCS in C#
 
 
+using System;
 using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization;
@@ -99,13 +100,18 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        public Serialization WriteBytes(byte[] bytes)
+        {
+            output.Write(bytes);
+            return this;
+        }
+
         public Serialization SerializeU32AsUleb128(uint value)
         {
             while (value >= 0x80)
             {
                 // Write 7 (lowest) bits of data and set the 8th bit to 1.
-                byte b = (byte)(value & 0x7F);
-
+                byte b = (byte)(value & 0x7f);
                 output.WriteByte((byte)(b | 0x80));
                 value >>= 7;
             }
