@@ -59,8 +59,6 @@ namespace Aptos.Unity.Rest
             }
 
             request.Dispose();
-
-            // TODO: Inspect wait time until account balance is updated
             yield return new WaitForSeconds(1f);
         }
     }
