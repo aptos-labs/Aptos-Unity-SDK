@@ -145,6 +145,7 @@ public class SimpleNftExample : MonoBehaviour
 
         #endregion
 
+        #region Get Collection
         string getCollectionResult = "";
         Coroutine getCollectionCor = StartCoroutine(
             RestClient.Instance.GetCollection((returnResult) => {
@@ -153,6 +154,18 @@ public class SimpleNftExample : MonoBehaviour
         );
         yield return getCollectionCor;
         Debug.Log("Alice's Collection: " + getCollectionResult);
+        #endregion
+
+        #region Get Token Balance
+        string getTokenBalanceResult = "";
+        Coroutine getTokenBalanceCor = StartCoroutine(
+            RestClient.Instance.GetTokenBalance((returnResult) => {
+                getTokenBalanceResult = returnResult;
+            }, aliceAddress, aliceAddress, collectionName, tokenName, propertyVersion)
+        );
+        yield return getTokenBalanceCor;
+        Debug.Log("Alice's Token Balance: " + getTokenBalanceResult);
+        #endregion
 
         yield return null;
     }
