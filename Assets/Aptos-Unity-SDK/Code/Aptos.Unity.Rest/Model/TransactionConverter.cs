@@ -78,7 +78,7 @@ namespace Aptos.Unity.Rest.Model
                             JArray jChanges = new JArray(item["changes"]);
                             foreach (var change in jChanges)
                             {
-                                // TODO: 
+                                // TODO: onChage
                                 //JObject oChange = change.ToObject<JObject>();
                                 //string typeStr = oChange["type"].ToString();
 
