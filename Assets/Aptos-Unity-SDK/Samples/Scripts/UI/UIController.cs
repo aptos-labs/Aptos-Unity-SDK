@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class UIController : MonoBehaviour
 {
-    static public UIController instance { get; set; }
+    static public UIController Instance { get; set; }
 
     public List<PanelTab> panelTabs;
     [Space]
@@ -13,19 +14,31 @@ public class UIController : MonoBehaviour
     [SerializeField] private Canvas mainCanvas;
     [SerializeField] private GameObject notificationPrefab;
 
-    [Header("Wallet")]
+    [Header("Infos")]
+    [SerializeField] private TMP_Dropdown walletListDropDown;
+    [SerializeField] private TMP_Text balanceText;
+
+    [Header("Add Account")]
     [SerializeField] private TMP_InputField createdMnemonicInputField;
 
+    [Header("Send Transaction")]
+    [SerializeField] private TMP_Text senderAddress;
 
+    [Header("Notification")]
+    [SerializeField] private Transform notificationPanel;
+
+    public event Action<float> onGetBalance;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     void Start()
     {
-        
+        InitStatusCheck();
+
+        AptosUILink.Instance.onGetBalance += UpdateBalance;
     }
 
     // Update is called once per frame
@@ -52,23 +65,87 @@ public class UIController : MonoBehaviour
         }
     }
 
+    void InitStatusCheck()
+    {
+        if (PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey) != string.Empty)
+        {
+            AptosUILink.Instance.InitWalletFromCache();
+            AddWalletAddressListUI(AptosUILink.Instance.addressList);
+        }
+
+        walletListDropDown.onValueChanged.AddListener(delegate {
+            OnWalletListDropdownValueChanged(walletListDropDown);
+        });
+    }
+
     public void ToggleNotification(bool _success, string _message)
     {
-        NotificationPanel np = Instantiate(notificationPrefab, mainCanvas.transform).GetComponent<NotificationPanel>();
+        NotificationPanel np = Instantiate(notificationPrefab, notificationPanel).GetComponent<NotificationPanel>();
         np.Toggle(_success, _message);
+        Debug.Log("Operation: " + _success + " || Got Message: " + _message);
     }
 
     public void OnCreateWalletClicked()
     {
+        if (AptosUILink.Instance.CreateNewWallet())
+        {
+            createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.MnemonicsKey);
+            ToggleNotification(true, "Successfully Create the Wallet");
+        }
+        else
+        {
+            ToggleNotification(false, "Fail to Create the Wallet");
+        }
 
-        createdMnemonicInputField.text = "";
-        ToggleNotification(true, "Create Wallet Success");
+        AddWalletAddressListUI(AptosUILink.Instance.addressList);
     }
 
     public void OnImportWalletClicked(TMP_InputField _input)
     {
-        AptosUILink.instance.RestoreWallet(_input.text);
-        ToggleNotification(false, "Import Wallet Fail");
+        if (AptosUILink.Instance.RestoreWallet(_input.text))
+        {
+            AddWalletAddressListUI(AptosUILink.Instance.addressList);
+            ToggleNotification(true, "Successfully Import the Wallet");
+        }
+        else
+        {
+            ToggleNotification(false, "Fail to Import the Wallet");
+        }
+    }
+
+    public void AddWalletAddressListUI(List<string> _addressList)
+    {
+        walletListDropDown.ClearOptions();
+        walletListDropDown.value = 0;
+
+        List<string> addressList = new List<string>();
+        foreach (string _s in _addressList)
+        {
+            //addressList.Add(ShortenString(_s, 4));
+            addressList.Add(_s);
+        }
+
+        walletListDropDown.AddOptions(addressList);
+
+        senderAddress.text = ShortenString(AptosUILink.Instance.GetCurrentWalletAddress(), 4);
+    }
+
+    void OnWalletListDropdownValueChanged(TMP_Dropdown _target)
+    {
+        PlayerPrefs.SetInt(AptosUILink.Instance.CurrentAddressIndexKey, _target.value);
+        AptosUILink.Instance.LoadCurrentWalletBalance();
+        senderAddress.text = ShortenString(AptosUILink.Instance.addressList[_target.value], 4);
+        Debug.Log(AptosUILink.Instance.addressList[_target.value]);
+    }
+
+    void UpdateBalance(float _amount)
+    {
+        balanceText.text = AptosUILink.Instance.AptoTokenToFloat(_amount).ToString("0.0000") + " APT";
+    }
+
+    public void Airdrop(int _amount)
+    {
+        StartCoroutine(AptosUILink.Instance.AirDrop(_amount));
     }
 
     #region Utilities
@@ -86,6 +163,11 @@ public class UIController : MonoBehaviour
     public void TapToCopy(TMP_Dropdown _target)
     {
         CopyToClipboard(_target.options[_target.value].text);
+    }
+
+    public string ShortenString(string _input, int _length)
+    {
+        return _input.Substring(0, _length) + "..." + _input.Substring(_input.Length - _length, _length);
     }
 
     void CopyToClipboard(string _input)
