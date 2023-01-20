@@ -189,7 +189,6 @@ namespace Aptos.Unity.Rest
                 Key = key
             };
 
-            // TODO: Get Table Item
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
             Uri getTableItemURI = new Uri(getTableItemURL);
 
@@ -501,7 +500,6 @@ namespace Aptos.Unity.Rest
         public IEnumerator WaitForTransaction(Action<bool, string> callback, string txnHash)
         {
             bool transactionPending = true;
-            // TODO: Add Timeout
             int count = 0;
             while (transactionPending)
             {
@@ -761,7 +759,6 @@ namespace Aptos.Unity.Rest
             };
 
             string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-            Debug.Log("TXN Request JSON: " + txnRequestJson);
 
             ///////////////////////////////////////////////////////////////////////
             // 2) Submits raw transaction to get encoded submission
@@ -792,7 +789,6 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
             callback(txnRequestJson); //  TODO: Remove
 
             string transactionURL = Endpoint + "/transactions";
@@ -963,7 +959,6 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
-        // TODO: OfferToken
         public IEnumerator OfferToken(Action<string> callback
             , Account account, AccountAddress receiver, AccountAddress creator
             , string collectionName, string tokenName, string amount, string propertyVersion = "0")
@@ -1081,7 +1076,6 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
-        // TODO: ClaimToken
         public IEnumerator ClaimToken(Action<string> callback
             , Account account, AccountAddress sender, AccountAddress creator
             , string collectionName, string tokenName, string propertyVersion = "0")
@@ -1340,7 +1334,6 @@ namespace Aptos.Unity.Rest
             yield return getTableItemCor;
             callback(tableItemResp);
         }
-        // TODO: GetTokenBalance
         public IEnumerator GetTokenBalance(Action<string> callback
             , AccountAddress ownerAddress, AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
         {
@@ -1358,7 +1351,6 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
-        // TODO: GetTokenData
         /// <summary>
         /// Read Collection's token data table 
         /// </summary>
@@ -1408,7 +1400,6 @@ namespace Aptos.Unity.Rest
             callback(tableItemResp);
         }
 
-        // TODO: GetCollection
         public IEnumerator GetCollection(Action<string> callback, AccountAddress creator,
             string collectionName, string propertyVersion = "0")
         {
