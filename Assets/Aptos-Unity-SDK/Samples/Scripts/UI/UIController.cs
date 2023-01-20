@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Aptos.Unity.Rest;
 using Aptos.Rest;
 
-namespace Aptos.Unity.Sample
+namespace Aptos.Unity.Sample.UI
 {
     public class UIController : MonoBehaviour
     {

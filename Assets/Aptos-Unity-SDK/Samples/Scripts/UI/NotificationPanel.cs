@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-namespace Aptos.Unity.Sample
+namespace Aptos.Unity.Sample.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class NotificationPanel : MonoBehaviour

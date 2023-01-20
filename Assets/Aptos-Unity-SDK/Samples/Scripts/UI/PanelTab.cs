@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Aptos.Unity.Sample
+namespace Aptos.Unity.Sample.UI
 {
     [RequireComponent(typeof(Button))]
     public class PanelTab : MonoBehaviour

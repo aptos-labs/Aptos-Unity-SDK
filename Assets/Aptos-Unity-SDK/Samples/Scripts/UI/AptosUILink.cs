@@ -13,7 +13,7 @@ using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using Aptos.Accounts;
 
-namespace Aptos.Unity.Sample
+namespace Aptos.Unity.Sample.UI
 {
     public class AptosUILink : MonoBehaviour
     {
