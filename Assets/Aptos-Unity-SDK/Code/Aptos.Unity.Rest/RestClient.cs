@@ -230,9 +230,6 @@ namespace Aptos.Unity.Rest
             };
             string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
 
-            Debug.Log("TABLE ITEM REQUEST JSON: " + tableItemRequestJson);
-            Debug.Log("HANDLE: " + handle);
-
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
             Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
@@ -279,12 +276,8 @@ namespace Aptos.Unity.Rest
             };
             string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
 
-            Debug.Log("TABLE ITEM REQUEST JSON: " + tableItemRequestJson);
-            Debug.Log("HANDLE: " + handle);
-
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
-            Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
 
             var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
@@ -340,12 +333,8 @@ namespace Aptos.Unity.Rest
             };
             string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
 
-            Debug.Log("TABLE ITEM REQUEST JSON: " + tableItemRequestJson);
-            Debug.Log("HANDLE: " + handle);
-
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
-            Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
 
             var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
@@ -884,7 +873,6 @@ namespace Aptos.Unity.Rest
             };
 
             string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
-            Debug.Log("PAYLOAD JSON: " + payloadJson);
 
             string sequenceNumber = "";
 
@@ -907,8 +895,6 @@ namespace Aptos.Unity.Rest
             };
 
             string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
-
 
             ///////////////////////////////////////////////////////////////////////
             // 2) Submits that to produce a raw transaction
@@ -1008,7 +994,6 @@ namespace Aptos.Unity.Rest
             };
 
             string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
-            Debug.Log("PAYLOAD JSON: " + payloadJson);
 
             string sequenceNumber = "";
 
@@ -1031,12 +1016,10 @@ namespace Aptos.Unity.Rest
             };
 
             string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
 
             ///////////////////////////////////////////////////////////////////////
             // 2) Submits that to produce a raw transaction
             ///////////////////////////////////////////////////////////////////////
-
             string encodedSubmission = "";
 
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
@@ -1057,8 +1040,6 @@ namespace Aptos.Unity.Rest
 
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
-
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
@@ -1114,10 +1095,6 @@ namespace Aptos.Unity.Rest
                     , tokenName
                     , propertyVersion
                 },
-                //MutateSettings = new bool[] { false, false, false, false, false },
-                //PropertyKeys = new string[] { },
-                //PropertyValues = new int[] { },
-                //PropertyTypes = new string[] { },
             };
 
             TransactionPayload txnPayload = new TransactionPayload()
@@ -1129,7 +1106,6 @@ namespace Aptos.Unity.Rest
             };
 
             string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
-            Debug.Log("PAYLOAD JSON: " + payloadJson);
 
             string sequenceNumber = "";
 
@@ -1152,12 +1128,10 @@ namespace Aptos.Unity.Rest
             };
 
             string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
 
             ///////////////////////////////////////////////////////////////////////
             // 2) Submits that to produce a raw transaction
             ///////////////////////////////////////////////////////////////////////
-
             string encodedSubmission = "";
 
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
@@ -1178,8 +1152,6 @@ namespace Aptos.Unity.Rest
 
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
-
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
@@ -1211,7 +1183,6 @@ namespace Aptos.Unity.Rest
             }
             else
             {
-                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
                 string response = request.downloadHandler.text;
                 callback(response);
             }
@@ -1233,11 +1204,7 @@ namespace Aptos.Unity.Rest
                     , tokenName
                     , propertyVersion
                     , amount
-                },
-                //MutateSettings = new bool[] { false, false, false, false, false },
-                //PropertyKeys = new string[] { },
-                //PropertyValues = new int[] { },
-                //PropertyTypes = new string[] { },
+                }
             };
 
             TransactionPayload txnPayload = new TransactionPayload()
@@ -1249,7 +1216,6 @@ namespace Aptos.Unity.Rest
             };
 
             string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
-            Debug.Log("PAYLOAD JSON: " + payloadJson);
 
             string sequenceNumber = "";
 
@@ -1272,12 +1238,10 @@ namespace Aptos.Unity.Rest
             };
 
             string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
 
             ///////////////////////////////////////////////////////////////////////
             // 2) Submits that to produce a raw transaction
             ///////////////////////////////////////////////////////////////////////
-
             string encodedSubmission = "";
 
             Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
@@ -1298,8 +1262,6 @@ namespace Aptos.Unity.Rest
 
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
-
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
@@ -1331,7 +1293,6 @@ namespace Aptos.Unity.Rest
             }
             else
             {
-                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
                 string response = request.downloadHandler.text;
                 callback(response);
             }
@@ -1354,11 +1315,8 @@ namespace Aptos.Unity.Rest
             }, ownerAddress, "0x3::token::TokenStore"));
             yield return accountResourceCor;
 
-            Debug.Log("TOKEN STORE RESOURCE RESPONSE: " + tokenStoreResourceResp);
-
             AccountResourceTokenStore accountResource = JsonConvert.DeserializeObject<AccountResourceTokenStore>(tokenStoreResourceResp);
             string tokenStoreHandle = accountResource.DataProp.Tokens.Handle;
-            Debug.Log("TOKEN STORE HANDLE: " + tokenStoreHandle);
 
             TokenIdRequest tokenId = new TokenIdRequest
             {
@@ -1372,7 +1330,6 @@ namespace Aptos.Unity.Rest
             };
 
             string tokenIdJson = JsonConvert.SerializeObject(tokenId);
-            Debug.Log("TOKEN ID JSON: " + tokenIdJson);
 
             string tableItemResp = "";
             Coroutine getTableItemCor = StartCoroutine(GetTableItemNFT((returnResult) =>
@@ -1381,7 +1338,6 @@ namespace Aptos.Unity.Rest
             }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenId));
 
             yield return getTableItemCor;
-            Debug.Log("GET TABLE ITEM RESPONSE: " + tableItemResp);
             callback(tableItemResp);
         }
         // TODO: GetTokenBalance
@@ -1394,8 +1350,6 @@ namespace Aptos.Unity.Rest
                 tokenResp = returnResult;
             }, ownerAddress, creatorAddress, collectionName, tokenName, propertyVersion));
             yield return accountResourceCor;
-
-            Debug.Log("GET TOKEN RESPONSE: " + tokenResp);
 
             TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
             string tokenBalance = tableItemToken.Amount;
@@ -1487,7 +1441,6 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
-            Debug.Log("ACCOUNTS RESOURCE URI: " + accountsURI);
             UnityWebRequest request = UnityWebRequest.Get(accountsURI);
             request.SendWebRequest();
             while (!request.isDone)
