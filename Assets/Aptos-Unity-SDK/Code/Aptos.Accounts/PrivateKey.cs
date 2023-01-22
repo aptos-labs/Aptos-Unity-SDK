@@ -6,7 +6,10 @@ using System;
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// Represents a 64-byte extended private key
+    /// Represents a 64-byte extended private key.
+    /// An extended private key is a requirement from Choas.NaCl.
+    /// 
+    /// Note that the hexadecimal string representation is of the 32-byte private key on it's own.
     /// </summary>
     public class PrivateKey
     {
@@ -62,6 +65,8 @@ namespace Aptos.Accounts
 
         /// <summary>
         /// The key in bytes.
+        /// Checks if we have the hexadecimal string representation of a 64-byte extended
+        /// , then return the bytes accordingly.
         /// </summary>
         public byte[] KeyBytes
         {
