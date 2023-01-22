@@ -11,6 +11,27 @@ namespace Aptos.HdWallet.Utils
     internal static class Utils
     {
         /// <summary>
+        /// Converts a hexadecimal string to an array of bytes
+        /// NOTE: string must not contain "0x"
+        /// Wrong input:   0x586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5
+        /// Correct input: 586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5
+        /// </summary>
+        /// <param name="input"></param> Valid hexadecimal string
+        /// <returns></returns> Byte array representation of hexadecimal string
+        internal static byte[] HexStringToByteArray(this string input)
+        {
+            var outputLength = input.Length / 2;
+            var output = new byte[outputLength];
+            var numeral = new char[2];
+            for (int i = 0; i < outputLength; i++)
+            {
+                input.CopyTo(i * 2, numeral, 0, 2);
+                output[i] = Convert.ToByte(new string(numeral), 16);
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Adds or replaces a value in a dictionary.
         /// </summary>
         /// <param name="dictionary">The dictionary.</param>
