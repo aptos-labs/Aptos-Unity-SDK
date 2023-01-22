@@ -1,3 +1,4 @@
+using Aptos.HdWallet.Utils;
 using Chaos.NaCl;
 using NBitcoin.DataEncoders;
 using System;
@@ -15,9 +16,9 @@ namespace Aptos.Accounts
         public const int KeyLength = 32;
 
         /// <summary>
-        /// String representation of public key
+        /// Hex string representation of publick key
         /// </summary>
-        private string _keyBase58;
+        private string _key;
 
         /// <summary>
         /// Byte representation of public key
@@ -25,17 +26,70 @@ namespace Aptos.Accounts
         private byte[] _keyBytes;
 
         /// <summary>
-        /// The key as base-58 encoded string
-        /// Base58 encoding scheme is used to facilitate switching 
-        /// from byte to alphanumeric text format (ASCII)
+        /// Base 58 string representation of public key
+        /// </summary>
+        private string _keyBase58;
+
+        /// <summary>
+        /// Byte representation of public key
+        /// </summary>
+        private byte[] _keyBytesBase58;
+
+        /// <summary>
+        /// The key as a hexadecimal encoded string
         /// </summary>
         public string Key
         {
             get
             {
-                if (_keyBase58 == null && _keyBytes != null)
+                if(_key == null && _keyBytes != null)
                 {
-                    _keyBase58 = Encoders.Base58.EncodeData(_keyBytes);
+                    string addressHex = CryptoBytes.ToHexStringLower(_keyBytes);
+                    _key = "0x" + addressHex;
+                }
+                return _key;
+            }
+
+            set
+            {
+                _key = value;
+            }
+        }
+
+        /// <summary>
+        /// The key in bytes.
+        /// </summary>
+        public byte[] KeyBytes
+        {
+            get
+            {
+                if (_keyBytes == null && _key != null)
+                {
+                    string key = _key;
+                    if (_key[0..2].Equals("0x")) { key = _key[2..]; }
+                    _keyBytes = key.HexStringToByteArray();
+                }
+                return _keyBytes;
+            }
+
+            set
+            {
+                _keyBytes = value;
+            }
+        }
+
+        /// <summary>
+        /// The key as base-58 encoded string
+        /// Base58 encoding scheme is used to facilitate switching 
+        /// from byte to alphanumeric text format (ASCII)
+        /// </summary>
+        public string KeyBase58
+        {
+            get
+            {
+                if (_keyBase58 == null && _keyBytesBase58 != null)
+                {
+                    _keyBase58 = Encoders.Base58.EncodeData(_keyBytesBase58);
                 }
                 return _keyBase58;
             }
@@ -53,20 +107,17 @@ namespace Aptos.Accounts
         {
             get
             {
-                if (_keyBytes == null && _keyBase58 != null)
+                if (_keyBytesBase58 == null && _keyBase58 != null)
                 {
-                    _keyBytes = Encoders.Base58.DecodeData(_keyBase58);
+                    _keyBytesBase58 = Encoders.Base58.DecodeData(_keyBase58);
                 }
-                return _keyBytes;
+                return _keyBytesBase58;
             }
             set
             {
-                _keyBytes = value;
+                _keyBytesBase58 = value;
             }
         }
-
-        // TODO: Add hex derivation from public key string
-        // TODO: Add hex derivation from public key bytes
 
         /// <summary>
         /// Initializes the PublicKey object with a given byte array.
@@ -78,14 +129,14 @@ namespace Aptos.Accounts
                 throw new ArgumentNullException(nameof(publicKey));
             if (publicKey.Length != KeyLength)
                 throw new ArgumentException("Invalid key length: ", nameof(publicKey));
-            KeyBytesFromBase58 = new byte[KeyLength];
-            Array.Copy(publicKey, KeyBytesFromBase58, KeyLength);
+            KeyBytes = new byte[KeyLength];
+            Array.Copy(publicKey, KeyBytes, KeyLength);
         }
 
         /// <summary>
-        /// Initializes the PublicKey object with a given ASCII representation of public key
+        /// Initializes the PublicKey object with a given hexadecimal representation of public key
         /// </summary>
-        /// <param name="key"></param> The public key as a Base58 encoded string
+        /// <param name="key"></param> The public key as a hexadecimal string
         public PublicKey(string key)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
@@ -94,13 +145,13 @@ namespace Aptos.Accounts
         /// <summary>
         /// Initialize the PublicKey object from the given string.
         /// </summary>
-        /// <param name="publicKey">The public key as base58 encoded byte array.</param>
+        /// <param name="publicKey">The public key as a byte array.</param>
         public PublicKey(ReadOnlySpan<byte> publicKey)
         {
             if (publicKey.Length != KeyLength)
                 throw new ArgumentException("Invalid key length: ", nameof(publicKey));
-            KeyBytesFromBase58 = new byte[KeyLength];
-            publicKey.CopyTo(KeyBytesFromBase58.AsSpan());
+            KeyBytes = new byte[KeyLength];
+            publicKey.CopyTo(KeyBytes.AsSpan());
         }
 
         /// <summary>
@@ -111,7 +162,7 @@ namespace Aptos.Accounts
         /// <returns></returns>
         public bool Verify(byte[] message, byte[] signature)
         {
-            return Ed25519.Verify(signature, message, KeyBytesFromBase58);
+            return Ed25519.Verify(signature, message, KeyBytes);
         }
 
         /// <summary>
@@ -120,7 +171,7 @@ namespace Aptos.Accounts
         /// <returns>Returns true if public key is on the curve.</returns>
         public bool IsOnCurve()
         {
-            return KeyBytesFromBase58.IsOnCurve();
+            return KeyBytes.IsOnCurve();
         }
 
         public override bool Equals(object obj)
@@ -193,7 +244,7 @@ namespace Aptos.Accounts
         /// <returns>Public key as a byte array.</returns>
         public static implicit operator byte[](PublicKey publicKey) 
         {
-            return publicKey .KeyBytesFromBase58;
+            return publicKey.KeyBytes;
         }
 
         /// <summary>
