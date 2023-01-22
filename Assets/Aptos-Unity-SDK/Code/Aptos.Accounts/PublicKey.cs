@@ -16,7 +16,7 @@ namespace Aptos.Accounts
         public const int KeyLength = 32;
 
         /// <summary>
-        /// Hex string representation of publick key
+        /// Hex string representation of public key
         /// </summary>
         private string _key;
 
@@ -36,7 +36,7 @@ namespace Aptos.Accounts
         private byte[] _keyBytesBase58;
 
         /// <summary>
-        /// The key as a hexadecimal encoded string
+        /// The key as a hexadecimal string
         /// </summary>
         public string Key
         {
