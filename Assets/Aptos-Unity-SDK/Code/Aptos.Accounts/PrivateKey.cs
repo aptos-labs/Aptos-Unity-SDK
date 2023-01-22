@@ -1,3 +1,4 @@
+using Aptos.HdWallet.Utils;
 using Chaos.NaCl;
 using NBitcoin.DataEncoders;
 using System;
@@ -15,9 +16,9 @@ namespace Aptos.Accounts
         public const int KeyLength = 64;
 
         /// <summary>
-        /// String representation of private key
+        /// Hex string representation of pruvate key
         /// </summary>
-        private string _keyBase58;
+        private string _key;
 
         /// <summary>
         /// Byte representation of private key
@@ -25,11 +26,68 @@ namespace Aptos.Accounts
         private byte[] _keyBytes;
 
         /// <summary>
+        /// String representation of private key
+        /// </summary>
+        private string _keyBase58;
+
+        /// <summary>
+        /// Byte representation of private key
+        /// </summary>
+        private byte[] _keyBytesBase58;
+
+        /// <summary>
+        /// The key as a 32-byte hexadecimal string (64 characters)
+        /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key
+        /// , then we slice it in half since the other half contains the public key.
+        /// </summary>
+        public string Key
+        {
+            get
+            {
+                if (_key == null && _keyBytes != null)
+                {
+                    //string addressHex = CryptoBytes.ToHexStringLower(_keyBytes.Slice(0, 32));
+                    string addressHex = CryptoBytes.ToHexStringLower(_keyBytes);
+                    _key = "0x" + addressHex;
+                }
+
+                return _key[0..66]; // account for "0x"
+            }
+
+            set
+            {
+                _key = value;
+            }
+        }
+
+        /// <summary>
+        /// The key in bytes.
+        /// </summary>
+        public byte[] KeyBytes
+        {
+            get
+            {
+                if (_keyBytes == null && _key != null)
+                {
+                    string key = _key;
+                    if (_key[0..2].Equals("0x")) { key = _key[2..]; }
+                    _keyBytes = key.HexStringToByteArray();
+                }
+                return _keyBytes;
+            }
+
+            set
+            {
+                _keyBytes = value;
+            }
+        }
+
+        /// <summary>
         /// The key as base-58 encoded string
         /// Base58 encoding scheme is used to facilitate switching 
         /// from byte to alphanumeric text format (ASCII)
         /// </summary>
-        public string Key
+        public string KeyBase58
         {
             get
             {
@@ -75,8 +133,8 @@ namespace Aptos.Accounts
                 throw new ArgumentNullException(nameof(privateKey));
             if (privateKey.Length != KeyLength)
                 throw new ArgumentException("Invalid key length: ", nameof(privateKey));
-            KeyBytesFromBase58 = new byte[KeyLength];
-            Array.Copy(privateKey, KeyBytesFromBase58, KeyLength);
+            KeyBytes = new byte[KeyLength];
+            Array.Copy(privateKey, KeyBytes, KeyLength);
         }
 
         /// <summary>
@@ -96,8 +154,8 @@ namespace Aptos.Accounts
         {
             if (privateKey.Length != KeyLength)
                 throw new ArgumentException("Invalid key length: ", nameof(privateKey));
-            KeyBytesFromBase58 = new byte[KeyLength];
-            privateKey.CopyTo(KeyBytesFromBase58.AsSpan());
+            KeyBytes = new byte[KeyLength];
+            privateKey.CopyTo(KeyBytes.AsSpan());
         }
 
         /// <summary>
@@ -110,8 +168,18 @@ namespace Aptos.Accounts
             ArraySegment<byte> signature = new ArraySegment<byte>(new byte[64]);
             Ed25519.Sign(signature,
                 new ArraySegment<byte>(message),
-                new ArraySegment<byte>(KeyBytesFromBase58));
+                new ArraySegment<byte>(KeyBytes));
             return signature.Array;
+        }
+
+        /// <summary>
+        /// Convert a PrivateKey object to hexadecimal string representation of private key.
+        /// </summary>
+        /// <param name="privateKey">The PrivateKey object.</param>
+        /// <returns>Hexadecimal string representing the private key.</returns>
+        public static implicit operator string(PrivateKey privateKey)
+        {
+            return privateKey.Key;
         }
     }
 }
