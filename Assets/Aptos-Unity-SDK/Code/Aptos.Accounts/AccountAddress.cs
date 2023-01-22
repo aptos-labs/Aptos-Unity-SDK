@@ -1,6 +1,7 @@
 using Chaos.NaCl;
 using System;
 using System.Text.RegularExpressions;
+using Aptos.HdWallet.Utils;
 
 namespace Aptos.Accounts
 {
@@ -62,7 +63,7 @@ namespace Aptos.Accounts
                 addr = pad + addr;
             }
 
-            return new AccountAddress(HexadecimalStringToByteArray_BestEffort(addr));
+            return new AccountAddress(addr.HexStringToByteArray());
         }
 
         /// <summary>
@@ -95,19 +96,6 @@ namespace Aptos.Accounts
             sha256.DoFinal(result, 0);
 
             return new AccountAddress(result);
-        }
-
-        public static byte[] HexadecimalStringToByteArray_BestEffort(string input)
-        {
-            var outputLength = input.Length / 2;
-            var output = new byte[outputLength];
-            var numeral = new char[2];
-            for (int i = 0; i < outputLength; i++)
-            {
-                input.CopyTo(i * 2, numeral, 0, 2);
-                output[i] = Convert.ToByte(new string(numeral), 16);
-            }
-            return output;
         }
 
         /// <summary>
