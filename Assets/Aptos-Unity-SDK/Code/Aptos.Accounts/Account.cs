@@ -51,10 +51,14 @@ namespace Aptos.Accounts
             AccountAddress = AccountAddress.FromKey(PublicKey);
         }
 
-        // TODO: Implement Account generate
-        public Account generate()
+        /// <summary>
+        /// Utility function to be in par with the other SDKS
+        /// , otherwise use the default constructor Account().
+        /// </summary>
+        /// <returns></returns> A new account.
+        public static Account Generate()
         {
-            throw new NotImplementedException();
+            return new Account();
         }
 
         /// <summary>
