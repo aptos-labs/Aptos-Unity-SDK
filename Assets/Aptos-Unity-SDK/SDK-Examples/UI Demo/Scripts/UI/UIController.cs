@@ -23,6 +23,7 @@ namespace Aptos.Unity.Sample.UI
         [SerializeField] private PanelTab accountTab;
         [SerializeField] private PanelTab sendTransactionTab;
         [SerializeField] private PanelTab mintNFTTab;
+        [SerializeField] private PanelTab nftLoaderTab;
         [SerializeField] private PanelTab addAccountTab;
 
         [Header("Infos")]
@@ -106,6 +107,7 @@ namespace Aptos.Unity.Sample.UI
             accountTab.DeActive(_empty);
             sendTransactionTab.DeActive(_empty);
             mintNFTTab.DeActive(_empty);
+            nftLoaderTab.DeActive(_empty);
 
             if (_empty)
             {
