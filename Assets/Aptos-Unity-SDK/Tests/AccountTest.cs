@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using Aptos.Accounts;
 using System;
-using Aptos.HdWallet;
 
 namespace Aptos.Unity.Test
 {
