@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Aptos.Accounts;
 using System;
+using Aptos.HdWallet;
 
 namespace Aptos.Unity.Test
 {
@@ -24,7 +25,6 @@ namespace Aptos.Unity.Test
             53, 227, 61, 165, 9, 30, 155, 11, 
             184, 241, 161, 18, 207, 12, 143, 245
         };
-
         private const string PublicKeyHex = "0x586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5";
 
         private static readonly byte[] PrivateKeyBytesInvalid = {
@@ -45,6 +45,23 @@ namespace Aptos.Unity.Test
         };
 
         private const string AccountAddressHex = "0x9f628c43d1c1c0f54683cf5ccbd2b944608df4ff2649841053b1790a4d7c187d";
+
+        private static readonly byte[] MessageUt8Bytes = {
+            87, 69, 76, 67, 79, 77, 69, 32, 
+            84, 79, 32, 65, 80, 84, 79, 83, 33 };
+        private const string Message = "WELCOME TO APTOS!";
+
+        private static readonly byte[] SignatureBytes =
+        {
+            170, 66, 187, 194, 169, 252, 117, 27,
+            238, 238, 59, 49, 43, 132, 82, 196,
+            69, 199, 212, 171, 134, 152, 3, 107,
+            12, 249, 242, 228, 106, 9, 139, 176,
+            44, 54, 159, 188, 141, 254, 253, 35,
+            26, 18, 141, 138, 75, 185, 173, 207,
+            228, 94, 7, 24, 139, 117, 140, 58,
+            211, 152, 215, 248, 78, 130, 239, 5
+        };
 
         [Test]
         public void GenerateKeysSuccess()
@@ -110,6 +127,29 @@ namespace Aptos.Unity.Test
             {
                 Account acc = new Account(PrivateKeyBytesInvalid, PublicKeyBytesInvalid);
             });
+        }
+
+        [Test]
+        public void AccountSignSuccess()
+        {
+            Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
+            byte[] signature = acc.Sign(MessageUt8Bytes);
+            Assert.AreEqual(signature, SignatureBytes, ToReadableByteArray(signature));
+        }
+
+        [Test]
+        public void AccountSignVerify()
+        {
+            Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
+            byte[] signature = acc.Sign(MessageUt8Bytes);
+            Assert.AreEqual(signature, SignatureBytes, ToReadableByteArray(signature));
+            bool verify = acc.Verify(MessageUt8Bytes, signature);
+            Assert.IsTrue(verify);
+        }
+
+        static public string ToReadableByteArray(byte[] bytes)
+        {
+            return string.Join(", ", bytes);
         }
     }
 }
