@@ -28,7 +28,7 @@ namespace Aptos.Accounts
             PrivateKey = new PrivateKey(Ed25519.ExpandedPrivateKeyFromSeed(seed));
             PublicKey = new PublicKey(Ed25519.PublicKeyFromSeed(seed));
             AccountAddress = AccountAddress.FromKey(PublicKey);
-            PrivateKeyShort = seed;
+            PrivateKeyShort = seed; // TODO: Trim private key; not default Chaos.NaCL is 64 bytes
         }
 
         /// <summary>

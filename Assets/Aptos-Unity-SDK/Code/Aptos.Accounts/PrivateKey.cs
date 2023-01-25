@@ -163,6 +163,26 @@ namespace Aptos.Accounts
             privateKey.CopyTo(KeyBytes.AsSpan());
         }
 
+        public static bool operator ==(PrivateKey lhs, PrivateKey rhs)
+        {
+
+            if (lhs is null)
+            {
+                if (rhs is null)
+                {
+                    return true;
+                }
+
+                // Only the left side is null.
+                return false;
+            }
+            // Equals handles case of null on right side.
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(PrivateKey lhs, PrivateKey rhs) => !(lhs == rhs);
+
+
         /// <summary>
         /// Sign a message using the current private key
         /// </summary>
