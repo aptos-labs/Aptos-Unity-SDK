@@ -63,6 +63,16 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void InvalidKeyGeneration()
+        {
+            Assert.Throws<ArgumentException>(delegate ()
+            {
+                PrivateKey privateKey = new PrivateKey(PrivateKeyBytesInvalid);
+                PublicKey publicKey = new PublicKey(PublicKeyBytesInvalid);
+            });
+        }
+
+        [Test]
         public void GenerateAccountAddressFromPublicKey()
         {
             PublicKey publicKey = new PublicKey(PublicKeyBytes);
@@ -94,7 +104,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void InvalidKeysInAccountCreation()
+        public void InvalidAccountCreationWithShorterKeys()
         {
             Assert.Throws<ArgumentException>(delegate ()
             {
