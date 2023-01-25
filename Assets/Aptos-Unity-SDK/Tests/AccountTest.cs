@@ -134,7 +134,7 @@ namespace Aptos.Unity.Test
         {
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
             byte[] signature = acc.Sign(MessageUt8Bytes);
-            Assert.AreEqual(signature, SignatureBytes, ToReadableByteArray(signature));
+            Assert.AreEqual(signature, SignatureBytes);
         }
 
         [Test]
@@ -142,14 +142,9 @@ namespace Aptos.Unity.Test
         {
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
             byte[] signature = acc.Sign(MessageUt8Bytes);
-            Assert.AreEqual(signature, SignatureBytes, ToReadableByteArray(signature));
+            Assert.AreEqual(signature, SignatureBytes);
             bool verify = acc.Verify(MessageUt8Bytes, signature);
             Assert.IsTrue(verify);
-        }
-
-        static public string ToReadableByteArray(byte[] bytes)
-        {
-            return string.Join(", ", bytes);
         }
     }
 }
