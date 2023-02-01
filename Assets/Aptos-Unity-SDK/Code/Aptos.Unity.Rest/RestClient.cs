@@ -3,6 +3,7 @@ using Aptos.Rest;
 using Aptos.Rest.Models;
 using Aptos.Rpc.Model;
 using Aptos.Unity.Rest.Model;
+using Aptos.Utilities.BCS;
 using Chaos.NaCl;
 using NBitcoin;
 using Newtonsoft.Json;
@@ -105,7 +106,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback"></param>
         /// <param name="accountAddress"></param>
         /// <returns></returns>
-        public IEnumerator GetAccountBalance(Action<string> callback, AccountAddress accountAddress)
+        public IEnumerator GetAccountBalance(Action<string> callback, Accounts.AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
             Uri accountsURI = new Uri(accountsURL);
@@ -140,7 +141,7 @@ namespace Aptos.Unity.Rest
         /// <param name="accountAddress"></param>
         /// <param name="resourceType"></param>
         /// <returns></returns>
-        public IEnumerator GetAccountResourceCollection(Action<ResourceCollection> callback, AccountAddress accountAddress, string resourceType)
+        public IEnumerator GetAccountResourceCollection(Action<ResourceCollection> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             // TODO: AccountResourceCoin
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -635,6 +636,44 @@ namespace Aptos.Unity.Rest
             callback(response);
         }
 
+        /// <summary>
+        /// TODO: Complete
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="sender"></param>
+        /// <param name="recipient"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public IEnumerator BCSTransfer(Action<string> callback, Account sender, string recipient, int amount)
+        {
+            Utilities.BCS.AccountAddress recipientArg = new Utilities.BCS.AccountAddress(recipient);
+            U64 amountArg = new U64((ulong)amount);
+
+            Utilities.BCS.AccountAddress accountAddress = new Utilities.BCS.AccountAddress("0x01");
+            ModuleId moduleId = new ModuleId(accountAddress, "coin");
+
+            ISerializable[] transactionArguments =
+            {
+                recipientArg,
+                amountArg
+            };
+
+            StructTag structTag = new StructTag(accountAddress, "aptos_coin", "AptosCoin", new ISerializableTag[0]);
+            ISerializableTag[] typeTags = new ISerializableTag[] { structTag };
+
+            EntryFunction entryFunction = new EntryFunction(
+                moduleId, 
+                "transfer",
+                new TagSequence(typeTags), 
+                new Utilities.BCS.Sequence(transactionArguments)
+            );
+
+            TransactionPayload txnPayload = new TransactionPayload();
+
+            yield return null;
+        }
+
+
         // TODO: BcsTransfer
 
         /// <summary>
@@ -967,7 +1006,7 @@ namespace Aptos.Unity.Rest
         }
 
         public IEnumerator OfferToken(Action<string> callback
-            , Account account, AccountAddress receiver, AccountAddress creator
+            , Account account, Accounts.AccountAddress receiver, Accounts.AccountAddress creator
             , string collectionName, string tokenName, string amount, string propertyVersion = "0")
         {
             Arguments arguments = new Arguments()
@@ -1075,7 +1114,7 @@ namespace Aptos.Unity.Rest
         }
 
         public IEnumerator ClaimToken(Action<string> callback
-            , Account account, AccountAddress sender, AccountAddress creator
+            , Account account, Accounts.AccountAddress sender, Accounts.AccountAddress creator
             , string collectionName, string tokenName, string propertyVersion = "0")
         {
             Arguments arguments = new Arguments()
@@ -1181,7 +1220,7 @@ namespace Aptos.Unity.Rest
         }
         // TODO: DirectTransferToken; ask about Create Multi Agent BCS Transaction
         public IEnumerator DirectTransferToken(Action<string> callback
-            , Account sender, Account receiver, AccountAddress receive, AccountAddress creatorsAddress
+            , Account sender, Account receiver, Accounts.AccountAddress receive, Accounts.AccountAddress creatorsAddress
             , string collectionName, string tokenName, string amount, string propertyVersion = "0")
         {
             Arguments arguments = new Arguments()
@@ -1290,7 +1329,7 @@ namespace Aptos.Unity.Rest
         #endregion
 
         #region Token Accessors
-        public IEnumerator GetToken(Action<string> callback, AccountAddress ownerAddress, AccountAddress creatorAddress,
+        public IEnumerator GetToken(Action<string> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
             string collectionName, string tokenName, string propertyVersion = "0")
         {
             string tokenStoreResourceResp = "";
@@ -1326,7 +1365,7 @@ namespace Aptos.Unity.Rest
             callback(tableItemResp);
         }
         public IEnumerator GetTokenBalance(Action<string> callback
-            , AccountAddress ownerAddress, AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
+            , Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
         {
             string tokenResp = "";
             Coroutine accountResourceCor = StartCoroutine(GetToken((returnResult) =>
@@ -1351,7 +1390,7 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName"></param>
         /// <param name="propertyVersion"></param>
         /// <returns></returns>
-        public IEnumerator GetTokenData(Action<string> callback, AccountAddress creator,
+        public IEnumerator GetTokenData(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, string propertyVersion = "0")
         {
             string collectionResourceResp = "";
@@ -1391,7 +1430,7 @@ namespace Aptos.Unity.Rest
             callback(tableItemResp);
         }
 
-        public IEnumerator GetCollection(Action<string> callback, AccountAddress creator,
+        public IEnumerator GetCollection(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string propertyVersion = "0")
         {
             string collectionResourceResp = "";
@@ -1419,7 +1458,7 @@ namespace Aptos.Unity.Rest
             callback(tableItemResp);
         }
 
-        public IEnumerator GetAccountResource(Action<string> callback, AccountAddress accountAddress, string resourceType)
+        public IEnumerator GetAccountResource(Action<string> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
