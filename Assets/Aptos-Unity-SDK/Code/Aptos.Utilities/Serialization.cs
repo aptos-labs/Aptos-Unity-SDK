@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization;
+using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -72,6 +73,23 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        public Serialization Serialize(Sequence args)
+        {
+            Debug.Log("*** Serializer Sequence .... " + args.Length);
+            SerializeU32AsUleb128((uint)args.Length);
+            foreach (ISerializable element in args.GetValues())
+            {
+                Console.WriteLine("VALUE: " + element);
+                Serialization s = new Serialization();
+                element.Serialize(s);
+                byte[] b = s.GetBytes();
+                Console.WriteLine("BYTES: " + ToReadableByteArray(b));
+                //SerializeBytes(b);
+                SerializeSingleSequenceBytes(b);
+            }
+            return this;
+        }
+
         /**
         * Serializes a string. UTF8 string is supported. Serializes the string's bytes length "l" first,
         * and then serializes "l" bytes of the string content.
@@ -93,11 +111,27 @@ namespace Aptos.Utilities.BCS
         **/
         public Serialization SerializeBytes(byte[] bytes)
         {
+            Debug.Log("*** Serializer Serialize Bytes .... " + bytes.Length);
             // Write the length of the bytes array
             SerializeU32AsUleb128((uint)bytes.Length);
             // Copy the bytes to the rest of the array
+            Debug.Log("*** Serializer Serialize Write Bytes .... " + ToReadableByteArray(bytes));
             output.Write(bytes);
             return this;
+        }
+
+        public Serialization SerializeSingleSequenceBytes(byte[] bytes)
+        {
+            // Write the length of the bytes array
+            //SerializeU32AsUleb128((uint)bytes.Length);
+            // Copy the bytes to the rest of the array
+            output.Write(bytes);
+            return this;
+        }
+
+        static public string ToReadableByteArray(byte[] bytes)
+        {
+            return string.Join(", ", bytes);
         }
 
         public Serialization WriteBytes(byte[] bytes)
