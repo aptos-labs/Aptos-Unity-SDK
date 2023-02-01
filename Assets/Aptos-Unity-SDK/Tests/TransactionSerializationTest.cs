@@ -18,6 +18,7 @@ public class TransactionSerializationTest
         return new EntryFunction(TestModuleId(), "some_function", new TagSequence(typeTags), new Sequence(args));
     }
 
+    #region General transaction tests
     [Test]
     public void SerializeAddress()
     {
@@ -165,6 +166,8 @@ public class TransactionSerializationTest
             102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 8, 35, 122, 8, 0, 0, 0, 0, 0
         }, res, ToReadableByteArray(res));
     }
+
+    #endregion
 
     #region Transaction with bool sequence
 
