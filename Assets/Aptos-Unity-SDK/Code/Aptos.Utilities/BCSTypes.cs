@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Runtime.Serialization;
 using System.Text;
 using Aptos.Utilities.BCS;
-
+using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -59,20 +59,66 @@ namespace Aptos.Utilities.BCS
     {
         ISerializable[] values;
 
+        public int Length
+        {
+            get
+            {
+                return values.Length;
+            }
+        }
+
+        public ISerializable[] GetValues()
+        {
+            return values;
+        }
+
         public Sequence(ISerializable[] serializable)
         {
             this.values = serializable;
         }
 
+        //public void Serialize(Serialization serializer)
+        //{
+        //    serializer.SerializeU32AsUleb128((uint)this.values.Length);
+        //    foreach (ISerializable element in this.values)
+        //    {
+        //        Serialization s = new Serialization();
+        //        element.Serialize(s);
+        //        byte[] b = s.GetBytes();
+        //        serializer.SerializeBytes(b);
+        //    }
+        //}
+
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.values.Length);
+
+            Debug.Log("LENTH OF ARGS: " + this.values.Length);
             foreach (ISerializable element in this.values)
             {
-                Serialization s = new Serialization();
-                element.Serialize(s);
-                byte[] b = s.GetBytes();
-                serializer.SerializeBytes(b);
+                Type elementType = element.GetType();
+                if (elementType == typeof(Sequence))
+                {
+                    Debug.Log("IF SEQUENCE");
+                    Serialization seqSerializer = new Serialization();
+                    //elementSer.SerializeU32AsUleb128((uint)this.values.Length);
+                    Sequence seq = (Sequence)element;
+                    seqSerializer.Serialize(seq);
+
+                    byte[] elementsBytes = seqSerializer.GetBytes();
+                    int sequenceLen = elementsBytes.Length;
+                    serializer.SerializeU32AsUleb128((uint)sequenceLen);
+                    Debug.Log("SEQUENCE BYTES LENGTH: " + sequenceLen);
+                    serializer.SerializeSingleSequenceBytes(elementsBytes);
+                }
+                else // TODO: Explore this case
+                {
+                    Debug.Log("NOT SEQUENCE");
+                    Serialization s = new Serialization();
+                    element.Serialize(s);
+                    byte[] b = s.GetBytes();
+                    serializer.SerializeBytes(b);
+                }
             }
         }
     }
@@ -88,6 +134,8 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE BYTE SEQUENCE ====== ");
+            Debug.Log("SERIALIZE BYTE SEQUENCE LENGTH ====== " + values.Length);
             serializer.SerializeU32AsUleb128((uint)this.values.Length);
             foreach (byte[] element in this.values)
             {
@@ -107,6 +155,7 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE STRING ====== ");
             serializer.Serialize(value);
         }
     }
@@ -122,6 +171,7 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE BYTES ====== ");
             serializer.Serialize(value);
         }
     }
@@ -137,6 +187,7 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE BOOL ====== ");
             serializer.Serialize(value);
         }
 
@@ -162,6 +213,7 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE U8 ====== ");
             serializer.Serialize(value);
         }
     }
@@ -182,6 +234,7 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE U64 ====== ");
             serializer.Serialize(value);
         }
     }
@@ -202,6 +255,7 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
+            Debug.Log("SERIALIZE U128 ====== ");
             serializer.Serialize(value);
         }
     }
