@@ -35,6 +35,14 @@ Two installation methods are provided: (1) installation through our `unitypackag
 - Faucet Client for Devnet
 
 ### Unity Support
+| Supported Version: | Tested |
+| -- | -- |
+| 2021.3.x | ✅ |
+| 2022.2.x | ✅ |
+
+| Windows | Mac  | iOS | Android | WebGL |
+| -- | -- | -- | -- | -- |
+| ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ### Dependencies
 - [Chaos.NaCl.Standard](https://www.nuget.org/packages/Chaos.NaCl.Standard/)
