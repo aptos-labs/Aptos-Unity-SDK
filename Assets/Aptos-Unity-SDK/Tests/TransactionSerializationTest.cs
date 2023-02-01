@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using Aptos.Utilities.BCS;
-using System.Numerics;
 
 public class TransactionSerializationTest
 {
@@ -403,27 +400,11 @@ public class TransactionSerializationTest
 
     #endregion
 
-    //[Test]
-    //public void SerializeTransactionWithArgs()
-    //{
-    //    Serialization s = new Serialization();
-    //    ISerializable[] args =
-    //    {
-    //        //new BString("wow"),
-    //        //new U64(555555),
-    //        //TestAddress(),
-    //        new Sequence(new[] { new Bool(false), new Bool(true), new Bool(false) }),
-    //    };
-    //    TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-    //    byte[] res = s.GetBytes();
-    //    Assert.AreEqual(new byte[]
-    //    {
-    //        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121,
-    //        95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1,
-    //        4, 3, 0, 1, 0
-    //    }, res, ToReadableByteArray(res));
-    //}
-
+    /// <summary>
+    /// Utility function to print out byte array
+    /// </summary>
+    /// <param name="bytes"></param>
+    /// <returns></returns>
     static public string ToReadableByteArray(byte[] bytes)
     {
         return string.Join(", ", bytes);
