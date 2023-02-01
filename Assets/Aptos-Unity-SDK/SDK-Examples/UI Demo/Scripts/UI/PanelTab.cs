@@ -39,8 +39,11 @@ namespace Aptos.Unity.Sample.UI
 
         public void DeActive(bool _lock)
         {
-            lockIcon.SetActive(_lock);
-            m_button.interactable = !_lock;
+            if (this.gameObject.activeSelf)
+            {
+                lockIcon.SetActive(_lock);
+                m_button.interactable = !_lock;
+            }
         }
 
         public void Selected()
@@ -56,13 +59,16 @@ namespace Aptos.Unity.Sample.UI
 
         public void UnSelected()
         {
-            isSelected = false;
+            if (this.gameObject.activeSelf)
+            {
+                isSelected = false;
 
-            targetPanel.SetActive(false);
+                targetPanel.SetActive(false);
 
-            ColorBlock _colorBlock = m_button.colors;
-            _colorBlock.normalColor = unselectedColor;
-            m_button.colors = _colorBlock;
+                ColorBlock _colorBlock = m_button.colors;
+                _colorBlock.normalColor = unselectedColor;
+                m_button.colors = _colorBlock;
+            }
         }
     }
 
