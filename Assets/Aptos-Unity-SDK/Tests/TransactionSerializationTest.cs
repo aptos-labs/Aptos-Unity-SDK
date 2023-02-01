@@ -138,9 +138,6 @@ public class TransactionSerializationTest
         ISerializable[] args =
         {
             new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
-            //new Sequence(new[] { new Bool(false), new Bool(true), new Bool(false) }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
         byte[] res = s.GetBytes();
@@ -156,10 +153,7 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
             new U64(555555),
-            //TestAddress(),
-            //new Sequence(new[] { new Bool(false), new Bool(true), new Bool(false) }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
         byte[] res = s.GetBytes();
@@ -188,9 +182,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(boolSequence),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -207,9 +198,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new Bool(false) }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -226,9 +214,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new Bool(false), new Bool(true)}),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -245,9 +230,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new Bool(false), new Bool(true), new Bool(false) }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -267,9 +249,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new BString("A") }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -286,9 +265,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new BString("A"), new BString("B") }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -305,9 +281,6 @@ public class TransactionSerializationTest
         Serialization s = new Serialization();
         ISerializable[] args =
         {
-            //new BString("wow"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new BString("A"), new BString("B"), new BString("C") }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -328,8 +301,6 @@ public class TransactionSerializationTest
         ISerializable[] args =
         {
             new BString("A"),
-            //new U64(555555),
-            //TestAddress(),
             new Sequence(new[] { new Bool(false) }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -348,7 +319,6 @@ public class TransactionSerializationTest
         {
             new BString("A"),
             new U64(1),
-            //TestAddress(),
             new Sequence(new[] { new Bool(false) }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
@@ -378,8 +348,21 @@ public class TransactionSerializationTest
         }, res, ToReadableByteArray(res));
     }
 
+    /// <summary>
+    /// Python Example:
+    /// 
+    /// addr = AccountAddress.from_hex("0x01")
+    /// txn = EntryFunction(mid, "some_function", [], [
+    ///     TransactionArgument("A", Serializer.str).encode(),
+    ///     TransactionArgument(1, Serializer.u64).encode(),
+    ///     TransactionArgument(addr, Serializer.struct).encode(),
+    ///     TransactionArgument([False], Serializer.sequence_serializer(Serializer.bool)).encode(),
+    ///     TransactionArgument([False, True], Serializer.sequence_serializer(Serializer.bool)).encode(),
+    ///     TransactionArgument(["A", "B", "C"], Serializer.sequence_serializer(Serializer.str)).encode()
+    /// ])
+    /// </summary>
     [Test]
-    public void SerializeTransactionWithOneStringOneIntOneAddressMultipleBoolArgSequence()
+    public void SerializeTransactionWithOneStringOneIntOneAddressMultipleArgSequences()
     {
         Serialization s = new Serialization();
         ISerializable[] args =
@@ -389,12 +372,13 @@ public class TransactionSerializationTest
             TestAddress(),
             new Sequence(new[] { new Bool(false) }),
             new Sequence(new[] { new Bool(false), new Bool(true) }),
+            new Sequence(new[] { new BString("A"), new BString("B"), new BString("C") }),
         };
         TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
         byte[] res = s.GetBytes();
         Assert.AreEqual(new byte[]
         {
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 5, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 3, 2, 0, 1
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 6, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 3, 2, 0, 1, 7, 3, 1, 65, 1, 66, 1, 67
         }, res, ToReadableByteArray(res));
     }
 
