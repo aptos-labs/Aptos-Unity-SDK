@@ -3,14 +3,13 @@ The Aptos Unity SDK is a .NET implementation of the [Aptos SDK](https://aptos.de
 The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the Unity game engine and the Aptos blockchain infrastructure.
 
 ## Getting Started
-To get started, you may check our [Quick Start Guide](#). A set of examples and templates is also provide for easy start.
-An accompanying README file can be found in the open-source repository which provides further details on the integration.
+To get started, you may check our [Quick Start Guide](#quick-start-video). A set of examples and templates is also provided in the `Assets/Aptos/Unity-SDK/SDK-Examples` directory. This accompanying README file provides further details on the SDK and integration.
 
 ### Installation
 Two installation methods are provided: (1) installation through our `unitypackage`, and (2) installation through the Unity Package Manager
 
 1. Install by `unitypackage`
-    1. Download the latest `Aptos.Unity.unitypackge` file from [Release](https://www.google.com/) 
+    1. Download the latest `Aptos.Unity.unitypackge` file from [Release](#) 
     2. Inside Unity, Click on `Assets` → `Import Packages` → `Custom Package.` and select the downloaded file.
 2. Install by Unity Package Manager
     1. Open [Unity Package Manager](https://docs.unity3d.com/Manual/upm-ui.html) window.
@@ -20,7 +19,7 @@ Two installation methods are provided: (1) installation through our `unitypackag
 
 **NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is common dependency. Prior versions of Unity require intalling Newtonsoft.
 
-## How To
+## Quick Start Video
 
 
 https://user-images.githubusercontent.com/25370590/216013906-ee46a940-ee91-4b7f-8e84-febfa315480e.mp4
