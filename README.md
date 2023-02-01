@@ -20,19 +20,23 @@ Two installation methods are provided: (1) installation through our `unitypackag
 
 **NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is common dependency. Prior versions of Unity require intalling Newtonsoft.
 
-## Examples
+## How To
 
 
 https://user-images.githubusercontent.com/25370590/216013906-ee46a940-ee91-4b7f-8e84-febfa315480e.mp4
 
 
-You can found Examples under `SDK-Examples/SDK Demo` and `SDK-Examples/UI Demo`. We will use the scene under `UI Demo` for the tutorial
+## Wallet Example Walthrough
 
-### Wallet
-![wallet_3](https://user-images.githubusercontent.com/25370590/216012383-c7c959f0-1fba-4b29-9452-dbfd9308cc61.jpg)
-![wallet_1](https://user-images.githubusercontent.com/25370590/216012379-ff59c611-8843-41ca-9853-6ab739361a2c.jpg)
-![wallet_2](https://user-images.githubusercontent.com/25370590/216012381-eaf8d10a-1063-421e-8748-c336ac212d65.jpg)
-Once you open up the demo scene, you will see all tab are locked except `Add Account` , you would have the choice to create and import wallet. 
+You can find a set of examples under `SDK-Examples/SDK Demo` and `SDK-Examples/UI Demo` directory. We will use the scene under `UI Demo` for this walkthrough.
+
+<img src="https://user-images.githubusercontent.com/25370590/216012383-c7c959f0-1fba-4b29-9452-dbfd9308cc61.jpg" alt="wallet_seedphrase1" width="400"/>
+
+<img src="https://user-images.githubusercontent.com/25370590/216012379-ff59c611-8843-41ca-9853-6ab739361a2c.jpg" alt="wallet_seedphrase2" width="400"/>
+
+<img src="https://user-images.githubusercontent.com/25370590/216012381-eaf8d10a-1063-421e-8748-c336ac212d65.jpg" alt="wallet_seedphrase3" width="400"/>
+
+Once you open  the demo scene, you will see all tab are locked except `Add Account` , you have the choice to create or import a wallet. 
 
 We currently store the mnemonics words in `PlayerPrefs`
 
@@ -46,10 +50,15 @@ PlayerPrefs.SetString(mnemonicsKey, mnemo.ToString());
 ```
 
 ### Account
-![Account_2](https://user-images.githubusercontent.com/25370590/216012625-3638c113-9b69-4fc0-950a-13daaaf4d27e.jpg)
-![Account_1](https://user-images.githubusercontent.com/25370590/216012623-17116053-fb58-4de5-84ee-f57d7a282a00.jpg)
 
-Once you create the wallet, you would be able to unlock rest of the panel, on `Account` Panel, you able to airdrop 1 APT to your account
+<img src="https://user-images.githubusercontent.com/25370590/216012625-3638c113-9b69-4fc0-950a-13daaaf4d27e.jpg" alt="wallet_account0" width="400"/>
+
+<img src="https://user-images.githubusercontent.com/25370590/216012623-17116053-fb58-4de5-84ee-f57d7a282a00.jpg" alt="wallet_account1" width="400"/>
+
+Once you create the wallet, you will be able to unlock rest of the panel, on `Account` Panel. 
+
+#### Airdrop
+You will also be able to airdrop 1 APT to your account
 
 ```csharp
 // Airdrop
@@ -64,7 +73,8 @@ Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) 
 yield return cor;
 ```
 
-And you able to create sub-wallet base from the same mnemonics words
+#### Deriviving Accounts from HD Wallet
+You can derive accounts from the HD Wallet by selecting an account index as follows:
 
 ```csharp
 // Create sub-wallets
@@ -79,10 +89,11 @@ for (int i = 0; i < accountNumLimit; i++)
 ```
 
 ### NFT Minter
-![NFTMinter_1](https://user-images.githubusercontent.com/25370590/216013385-f896bccf-4bb4-4c13-9b8d-18cc1aac9ee9.jpg)
-![NFTMinter_2](https://user-images.githubusercontent.com/25370590/216013383-134d56d8-101b-4fbe-8410-542e154405fc.jpg)
+<img src="https://user-images.githubusercontent.com/25370590/216013385-f896bccf-4bb4-4c13-9b8d-18cc1aac9ee9.jpg" alt="wallet_nft_minter0" width="400"/>
 
-On the `Mint NFT` tab, You can create NFT on your own. In order to do that, you would need to `Creat Collection` First, Then `Create NFT`
+<img src="https://user-images.githubusercontent.com/25370590/216013383-134d56d8-101b-4fbe-8410-542e154405fc.jpg" alt="wallet_nft_minter1" width="400"/>
+
+On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Creat Collection` first, then `Create NFT`.
 
 ```csharp
 // Create Collection
@@ -127,8 +138,9 @@ Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 ```
 
 ### Transaction Executer
-![Transaction Executer_1](https://user-images.githubusercontent.com/25370590/216013743-48dc3c1c-c180-4775-bf2a-51a6b9de1952.jpg)
-On `Send Transaction` panel, You can send token by paste the target address and token amount
+<img src="https://user-images.githubusercontent.com/25370590/216013743-48dc3c1c-c180-4775-bf2a-51a6b9de1952.jpg" alt="wallet_transaction_execution" width="400"/>
+
+On the `Send Transaction` panel, you can send tokens by pasting the recipient address and token amount.
 
 ```csharp
 string transferResult = "";
@@ -174,4 +186,4 @@ yield return cor;
 
 ## Support
 
-### Examples
+For additional support, please join our community [Discord Server](https://discord.gg/aptoslabs), and ask questions in the `#dev-discussion` channel.
