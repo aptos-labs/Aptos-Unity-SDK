@@ -20,6 +20,12 @@ Two installation methods are provided: (1) installation through our `unitypackag
 
 **NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is common dependency. Prior versions of Unity require intalling Newtonsoft.
 
+
+
+https://user-images.githubusercontent.com/25370590/216011102-e9c1fb39-fe6f-4f06-a603-ecf26a4e6986.mp4
+
+
+
 ## Technical Details
 
 ### Core Features
