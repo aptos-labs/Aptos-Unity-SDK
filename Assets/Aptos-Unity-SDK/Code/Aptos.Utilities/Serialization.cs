@@ -111,10 +111,15 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        /// <summary>
+        /// Serializes a list of values in a sequence.
+        /// Note that for sequences we first add the length for the entire sequence array,
+        ///     not the length of the byte array
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         public Serialization SerializeSingleSequenceBytes(byte[] bytes)
         {
-            // Write the length of the bytes array
-            //SerializeU32AsUleb128((uint)bytes.Length);
             // Copy the bytes to the rest of the array
             output.Write(bytes);
             return this;
