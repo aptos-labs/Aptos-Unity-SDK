@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Aptos.Utilities.BCS;
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace Aptos.Unity.Test
 {
@@ -108,6 +109,45 @@ namespace Aptos.Unity.Test
             148
             };
             Assert.AreEqual(exp, res);
+        }
+
+        [Test]
+        public void SerializeMapOne()
+        {
+            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            map.Add(new BString("x"), new U32(12345));
+            map.Add(new BString("b"), new U32(99234));
+            map.Add(new BString("c"), new U32(23829));
+
+            Serialization ser = new Serialization();
+            BCSMap bcsMap = new BCSMap(map);
+            bcsMap.Serialize(ser);
+        }
+
+        [Test]
+        public void SerializeMapTwo()
+        {
+            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            map.Add(new BString("b"), new U32(12345));
+            map.Add(new BString("x"), new U32(99234));
+            map.Add(new BString("c"), new U32(23829));
+
+            Serialization ser = new Serialization();
+            BCSMap bcsMap = new BCSMap(map);
+            bcsMap.Serialize(ser);
+        }
+
+        [Test]
+        public void SerializeMapThree()
+        {
+            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            map.Add(new BString("b"), new U32(99234));
+            map.Add(new BString("x"), new U32(12345));
+            map.Add(new BString("c"), new U32(23829));
+
+            Serialization ser = new Serialization();
+            BCSMap bcsMap = new BCSMap(map);
+            bcsMap.Serialize(ser);
         }
 
         [Test]
