@@ -99,15 +99,5 @@ namespace Aptos.Accounts
         {
             serializer.SerializeFixedBytes(this.Address);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public AccountAddress Deserialize()
-        {
-            // TODO: Implement Serialize
-            throw new NotImplementedException();
-        }
     }
 }
