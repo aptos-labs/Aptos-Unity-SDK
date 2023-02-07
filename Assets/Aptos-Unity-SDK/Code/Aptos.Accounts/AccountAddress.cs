@@ -67,16 +67,6 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Verifies string Address is a proper hex
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns></returns>
-        public static bool HexEnsure(string hex)
-        {
-            return Regex.Match(hex, "^#[0-9a-fA-F]{6}$").Success;
-        }
-
-        /// <summary>
         /// Generate an AccountAddress object from a given public key, byte array. 
         /// </summary>
         /// <param name="publicKey"></param>
