@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 namespace Aptos.Unity.Rest.Model
 {
     /// <summary>
-    /// Represents Account Resource for a Collection
+    /// Represents account resource for a collection.
     /// https://fullnode.mainnet.aptoslabs.com/v1/spec#/schemas/MoveResource
     /// </summary>
     [JsonObject]

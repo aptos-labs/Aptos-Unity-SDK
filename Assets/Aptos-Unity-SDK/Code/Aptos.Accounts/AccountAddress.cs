@@ -30,7 +30,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Convert Address bytes into hexadecimal string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String representation of account address</returns>
         public override string ToString()
         {
             return ToHexString();
@@ -51,7 +51,7 @@ namespace Aptos.Accounts
         /// Returns an AccountAddress object from a hexadecimal Address.
         /// </summary>
         /// <param name="address"></param> Hexadecimal representation of an Address.
-        /// <returns></returns>
+        /// <returns>An account address object</returns>
         public static AccountAddress FromHex(string address)
         {
             string addr = address;
@@ -70,7 +70,7 @@ namespace Aptos.Accounts
         /// Generate an AccountAddress object from a given public key, byte array. 
         /// </summary>
         /// <param name="publicKey"></param>
-        /// <returns></returns>
+        /// <returns>An account address object</returns>
         public static AccountAddress FromKey(byte[] publicKey)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
@@ -102,6 +102,10 @@ namespace Aptos.Accounts
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public AccountAddress Deserialize()
         {
             // TODO: Implement Serialize

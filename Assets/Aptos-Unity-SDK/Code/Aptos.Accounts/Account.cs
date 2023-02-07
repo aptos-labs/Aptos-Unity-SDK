@@ -55,7 +55,7 @@ namespace Aptos.Accounts
         /// Utility function to be in par with the other SDKS
         /// , otherwise use the default constructor Account().
         /// </summary>
-        /// <returns></returns> A new account.
+        /// <returns>A new account</returns>
         public static Account Generate()
         {
             return new Account();
@@ -64,7 +64,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Returns the Authentication Key for the associated account.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String representation of the authentication key</returns>
         public string AuthKey()
         {
             var pubKey = PublicKey;
@@ -77,7 +77,7 @@ namespace Aptos.Accounts
         /// </summary>
         /// <param name="message"></param> The signed message.
         /// <param name="signature"></param> The signature of the message
-        /// <returns></returns>
+        /// <returns>True is the signature is valid, False otherwise</returns>
         public bool Verify(byte[] message, byte[] signature)
         {
             return PublicKey.Verify(message, signature);
@@ -87,7 +87,7 @@ namespace Aptos.Accounts
         /// Sign a given byte array (data) with the current account's private key
         /// </summary>
         /// <param name="message"></param> The signature of the data.
-        /// <returns></returns>
+        /// <returns>The singed messaged in byte form</returns>
         public byte[] Sign(byte[] message)
         {
             return PrivateKey.Sign(message);

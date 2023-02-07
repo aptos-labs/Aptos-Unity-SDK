@@ -17,7 +17,7 @@ namespace Aptos.HdWallet.Utils
         /// Correct input: 586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5
         /// </summary>
         /// <param name="input"></param> Valid hexadecimal string
-        /// <returns></returns> Byte array representation of hexadecimal string
+        /// <returns>Byte array representation of hexadecimal string</returns>
         internal static byte[] HexStringToByteArray(this string input)
         {
             var outputLength = input.Length / 2;

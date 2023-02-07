@@ -41,6 +41,6 @@ namespace Aptos.Unity.Rest.Model
     public class Map
     {
         [JsonProperty("data", Required = Required.AllowNull)]
-        public string [] data { get; set; }
+        public string [] Data { get; set; }
     }
 }

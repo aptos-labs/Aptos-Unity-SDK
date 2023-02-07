@@ -1,4 +1,3 @@
-using Aptos.Unity.Rest.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -127,8 +126,6 @@ namespace Aptos.Unity.Rest.Model
 
             string[] argsString = transactionRequest.Payload.Arguments.ArgumentStrings;
             JArray jArguments = new JArray(argsString);
-
-            //jArguments.Add(argStrings);
 
             if (transactionRequest.Payload.Arguments.MutateSettings != null)
             {
