@@ -138,7 +138,7 @@ namespace Aptos.Unity.Sample.UI
 
         public IEnumerator AirDrop(int _amount)
         {
-            Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
                 Debug.Log("FAUCET RESPONSE: " + returnResult);
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress.ToString()
