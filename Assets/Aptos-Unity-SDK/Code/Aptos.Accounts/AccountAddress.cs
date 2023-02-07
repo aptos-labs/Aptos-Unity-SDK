@@ -77,8 +77,7 @@ namespace Aptos.Accounts
             var addressBytes = new byte[Ed25519.PublicKeySizeInBytes + 1]; // +1 to contain signature scheme byte
             Array.Copy(publicKey, 0, addressBytes, 0, Ed25519.PublicKeySizeInBytes); // copy 32 bytes only
 
-            // TODO: Turn signature scheme byte into CONSTANT
-            byte sigScheme = 0x00;
+            byte sigScheme = 0x00; // signature scheme byte
             addressBytes[publicKey.Length] = sigScheme; // Append signature scheme byte to the end
 
             sha256.BlockUpdate(addressBytes, 0, addressBytes.Length);
