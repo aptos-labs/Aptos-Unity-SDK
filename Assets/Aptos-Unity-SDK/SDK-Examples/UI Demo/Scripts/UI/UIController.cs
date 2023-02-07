@@ -248,7 +248,7 @@ namespace Aptos.Unity.Sample.UI
 
         public void CopyPrivateKey()
         {
-            CopyToClipboard(PlayerPrefs.GetString(AptosUILink.Instance.privateKey));
+            CopyToClipboard(AptosUILink.Instance.GetPrivateKey());
         }
 
         #endregion
