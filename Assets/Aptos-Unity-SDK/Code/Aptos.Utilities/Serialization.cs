@@ -78,7 +78,7 @@ namespace Aptos.Utilities.BCS
                 Serialization s = new Serialization();
                 element.Serialize(s);
                 byte[] b = s.GetBytes();
-                SerializeSingleSequenceBytes(b);
+                SerializeFixedBytes(b);
             }
             return this;
         }
@@ -118,7 +118,7 @@ namespace Aptos.Utilities.BCS
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public Serialization SerializeSingleSequenceBytes(byte[] bytes)
+        public Serialization SerializeFixedBytes(byte[] bytes)
         {
             // Copy the bytes to the rest of the array
             output.Write(bytes);

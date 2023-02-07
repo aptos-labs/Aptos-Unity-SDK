@@ -97,7 +97,7 @@ namespace Aptos.Accounts
         /// </summary>
         public void Serialize(Serialization serializer)
         {
-            serializer.SerializeSingleSequenceBytes(this.Address);
+            serializer.SerializeFixedBytes(this.Address);
         }
 
         /// <summary>
