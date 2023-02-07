@@ -197,6 +197,29 @@ namespace Aptos.Accounts
             return signature.Array;
         }
 
+        /// <inheritdoc cref="Equals(object)"/>
+        public override bool Equals(object obj)
+        {
+            if(obj is PrivateKey privateKey)
+            {
+                return privateKey.Key == this.Key;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc cref="GetHashCode"/>
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
+        /// <inheritdoc cref="ToString"/>
+        public override string ToString()
+        {
+            return Key;
+        }
+
         /// <summary>
         /// Convert a PrivateKey object to hexadecimal string representation of private key.
         /// </summary>
