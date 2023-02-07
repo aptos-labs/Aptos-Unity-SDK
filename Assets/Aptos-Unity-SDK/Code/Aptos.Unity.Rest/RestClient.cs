@@ -404,7 +404,36 @@ namespace Aptos.Unity.Rest
         #endregion
 
         #region Ledger Accessors
-        // TODO: Info
+        /// <summary>
+        /// Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.
+        /// </summary>
+        /// <param name="callback">Callback function</param>
+        /// <returns>(boolean, response) true if repsonse is successful, false otherwise.
+        /// </returns>
+        public IEnumerator GetInfo(Action<bool, string> callback)
+        {
+            UnityWebRequest request = UnityWebRequest.Get(Endpoint);
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                callback(false, request.error);
+            }
+            else if(request.responseCode >= 404)
+            {
+                callback(false, request.error);
+            }
+            else
+            {
+                callback(true, request.downloadHandler.text);
+            }
+
+            request.Dispose();
+        }
         #endregion
 
         #region Transactions
