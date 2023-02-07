@@ -70,44 +70,6 @@ namespace Aptos.Unity.Rest.Model
                         if (item["vm_status"] != null) transaction.VmStatus = (string)item["vm_status"];
                         if (item["accumulator_root_hash"] != null) transaction.AccumulatorRootHash = (string)item["accumulator_root_hash"];
 
-                        if (item["changes"] != null)
-                        {
-                            List<Change> changes = new List<Change>();
-
-                            // TODO: Complete TransactionConverter deserialization of Changes array
-                            JArray jChanges = new JArray(item["changes"]);
-                            foreach (var change in jChanges)
-                            {
-                                // TODO: onChage
-                                //JObject oChange = change.ToObject<JObject>();
-                                //string typeStr = oChange["type"].ToString();
-
-                                //if (typeStr.Equals("write_resource"))
-                                //{
-                                //    ChangeWriteResource changeWResource = new ChangeWriteResource();
-                                //    changeWResource.Type = (string)change["type"];
-                                //    changeWResource.StateKeyHash = (string)change["state_key_hash"];
-                                //    changeWResource.Address = (string)change["Address"];
-
-                                //    changes.Add(changeWResource);
-                                //}
-                                //else if (change["type"].Equals("write_table_item"))
-                                //{
-                                //    ChangeWriteResourceWriteTableItem changeWRWRT = new ChangeWriteResourceWriteTableItem();
-                                //    changeWRWRT.Type = (string)change["type"];
-                                //    changeWRWRT.StateKeyHash = (string)change["state_key_hash"];
-                                //    changeWRWRT.Handle = (string)change["handle"];
-                                //    changeWRWRT.Key = (string)change["key"];
-                                //    changeWRWRT.Value = (string)change["value"];
-                                //    changeWRWRT.Data = (string)change["data"];
-
-                                //    changes.Add(changeWRWRT);
-                                //}
-                            }
-
-                            transaction.Changes = changes.ToArray();
-                        }
-
                         return transaction;
                     }
                 }
