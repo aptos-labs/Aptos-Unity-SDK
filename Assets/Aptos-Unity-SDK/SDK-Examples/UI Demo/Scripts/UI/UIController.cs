@@ -145,7 +145,6 @@ namespace Aptos.Unity.Sample.UI
         {
             NotificationPanel np = Instantiate(notificationPrefab, notificationPanel).GetComponent<NotificationPanel>();
             np.Toggle(_success, _message);
-            Debug.Log("Operation: " + _success + " || Got Message: " + _message);
         }
 
         #endregion
@@ -257,7 +256,14 @@ namespace Aptos.Unity.Sample.UI
 
         public void SendToken()
         {
-            StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptoFloatToToken(float.Parse(sendAmountInput.text))));
+            if (receiverAddressInput.text == string.Empty || sendAmountInput.text == String.Empty)
+            {
+                ToggleNotification(false, "Please Fill Out All Required Fields");
+            }
+            else
+            {
+                StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptoFloatToToken(float.Parse(sendAmountInput.text))));
+            }
         }
 
         public void Airdrop(int _amount)
@@ -271,16 +277,35 @@ namespace Aptos.Unity.Sample.UI
 
         public void CreateCollection()
         {
-            StartCoroutine(AptosUILink.Instance.CreateCollection(
-                c_collectionNameInputField.text,
-                collectionDescriptionInputField.text,
-                collectionUriInputField.text
-                ));
+            if (c_collectionNameInputField.text == String.Empty || collectionDescriptionInputField.text == String.Empty || collectionUriInputField.text == String.Empty)
+            {
+                ToggleNotification(false, "Please Fill Out All Required Fields");
+            }
+            else
+            {
+                StartCoroutine(AptosUILink.Instance.CreateCollection(
+                    c_collectionNameInputField.text,
+                    collectionDescriptionInputField.text,
+                    collectionUriInputField.text
+                    ));
+            }
         }
 
         public void CreateNFT()
         {
-            StartCoroutine(AptosUILink.Instance.CreateNFT(
+            if (n_collectionNameInputField.text == String.Empty ||
+                tokenNameInputField.text == String.Empty ||
+                tokenDescriptionInputField.text == String.Empty ||
+                supplyInputField.text == String.Empty ||
+                maxInputField.text == String.Empty ||
+                tokenURIInputField.text == String.Empty ||
+                royaltyPointsInputField.text == String.Empty)
+            {
+                ToggleNotification(false, "Please Fill Out All Required Fields");
+            }
+            else
+            {
+                StartCoroutine(AptosUILink.Instance.CreateNFT(
                 n_collectionNameInputField.text,
                 tokenNameInputField.text,
                 tokenDescriptionInputField.text,
@@ -289,6 +314,7 @@ namespace Aptos.Unity.Sample.UI
                 tokenURIInputField.text,
                 Int32.Parse(royaltyPointsInputField.text)
                 ));
+            }
         }
 
         #endregion
