@@ -1,7 +1,7 @@
 using Chaos.NaCl;
 using System;
-using System.Text.RegularExpressions;
 using Aptos.HdWallet.Utils;
+using Aptos.Utilities.BCS;
 
 namespace Aptos.Accounts
 {
@@ -95,10 +95,9 @@ namespace Aptos.Accounts
         /// BCS is not a self-describing format.As such, in order to deserialize a message, 
         /// one must know the message type and layout ahead of time.
         /// </summary>
-        public void Serialize()
+        public void Serialize(Serialization serializer)
         {
-            // TODO: Implement Serialize
-            throw new NotImplementedException();
+            serializer.SerializeSingleSequenceBytes(this.Address);
         }
 
         /// <summary>
