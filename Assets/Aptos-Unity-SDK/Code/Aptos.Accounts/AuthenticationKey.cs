@@ -1,5 +1,6 @@
 using Aptos.Accounts.Types;
 using Chaos.NaCl;
+using System;
 
 namespace Aptos.Accounts
 {
@@ -41,8 +42,8 @@ namespace Aptos.Accounts
             byte[] pubKeyBytes = publicKey.ToBytes();
             byte[] bytes = new byte[pubKeyBytes.Length + 1];
 
-            bytes.SetValue(pubKeyBytes, 0);
-            bytes.SetValue(AuthenticationKey.MULTI_ED25519_SCHEME, pubKeyBytes.Length);
+            Array.Copy(pubKeyBytes, bytes, pubKeyBytes.Length);
+            bytes[pubKeyBytes.Length] = AuthenticationKey.MULTI_ED25519_SCHEME;
 
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
             sha256.BlockUpdate(bytes, 0, bytes.Length);
@@ -65,8 +66,8 @@ namespace Aptos.Accounts
             var pubKeyBytes = publicKey;
 
             byte[] bytes = new byte[pubKeyBytes.Length + 1];
-            bytes.SetValue(pubKeyBytes, 0);
-            bytes.SetValue(AuthenticationKey.ED25519_SCHEME, pubKeyBytes.Length);
+            Array.Copy(pubKeyBytes, bytes, pubKeyBytes.Length);
+            bytes[pubKeyBytes.Length] = AuthenticationKey.ED25519_SCHEME;
 
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
             sha256.BlockUpdate(bytes, 0, bytes.Length);
