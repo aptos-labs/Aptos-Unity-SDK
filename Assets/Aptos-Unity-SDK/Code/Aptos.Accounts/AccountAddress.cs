@@ -22,7 +22,7 @@ namespace Aptos.Accounts
         {
             if (address.Length != Length)
             {
-                throw new ArgumentException("Invalid length of address: ", nameof(address));
+                throw new ArgumentException("Address must be " + Length + " bytes");
             }
             this.Address = address;
         }
