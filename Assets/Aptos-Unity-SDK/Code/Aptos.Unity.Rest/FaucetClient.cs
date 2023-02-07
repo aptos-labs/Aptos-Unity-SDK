@@ -53,7 +53,7 @@ namespace Aptos.Unity.Rest
             }
             else
             {
-                callback(true, request.downloadHandler.text);
+                callback(true, "Funding succeeded!");
             }
 
             request.Dispose();
