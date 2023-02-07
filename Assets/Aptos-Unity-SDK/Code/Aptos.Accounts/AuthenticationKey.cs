@@ -26,7 +26,7 @@ namespace Aptos.Accounts
         {
             if (bytes.Length != AuthenticationKey.LENGTH)
             {
-                //TODO: throw new Error("Expected a byte array of length 32");
+                throw new ArgumentException("Byte array must be " + AuthenticationKey.LENGTH + " bytes");
             }
             this.bytes = bytes;
         }
