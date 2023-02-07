@@ -1242,7 +1242,7 @@ namespace Aptos.Unity.Rest
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
-                      creatorsAddress.ToHexString() // TODO: Check on Hex string output
+                      creatorsAddress.ToHexString()
                     , collectionName
                     , tokenName
                     , propertyVersion
