@@ -134,7 +134,6 @@ namespace Aptos.Unity.Sample.UI
                 else
                 {
                     AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log(acctResourceCoin.DataProp.Coin.Value);
                     onGetBalance?.Invoke(float.Parse(acctResourceCoin.DataProp.Coin.Value));
                 }
 
@@ -157,24 +156,24 @@ namespace Aptos.Unity.Sample.UI
             UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
         }
 
-        public IEnumerator SendToken(string targetAddress, int amount)
+        public IEnumerator SendToken(string _targetAddress, int _amount)
         {
-            string transferResult = "";
+            string transferResult = string.Empty;
             Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
             {
                 transferResult = _transferResult;
-            }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), targetAddress, amount));
+            }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), _targetAddress, _amount));
 
             yield return cor;
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)amount) + " APT to " + UIController.Instance.ShortenString(targetAddress, 4));
+            UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
         }
 
         public IEnumerator CreateCollection(string _collectionName, string _collectionDescription, string _collectionUri)
         {
-            string createCollectionResult = "";
+            string createCollectionResult = string.Empty;
             Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((returnResult) =>
             {
                 createCollectionResult = returnResult;
@@ -192,36 +191,28 @@ namespace Aptos.Unity.Sample.UI
 
         public IEnumerator CreateNFT(string _collectionName, string _tokenName, string _tokenDescription, int _supply, int _max, string _uri, int _royaltyPointsPerMillion)
         {
-            Debug.Log(" ==> " + _collectionName + " || " + _tokenName + " || " + _tokenDescription + " || " + _supply + " || " + _max + " || " + _uri + " || " + _royaltyPointsPerMillion + " || ");
-            if (_collectionName == string.Empty || _tokenName == string.Empty || _tokenDescription == string.Empty || _supply == -1 || _max == -1 || _uri == string.Empty || _royaltyPointsPerMillion == -1)
-            {
-                yield return null;
-            }
-            else
-            {
-                string createTokenResult = "";
-                Coroutine createTokenCor = StartCoroutine(
-                    RestClient.Instance.CreateToken((returnResult) =>
-                    {
-                        createTokenResult = returnResult;
-                    }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)),
-                    _collectionName,
-                    _tokenName,
-                    _tokenDescription,
-                    _supply,
-                    _max,
-                    _uri,
-                    _royaltyPointsPerMillion)
-                );
-                yield return createTokenCor;
+            string createTokenResult = string.Empty;
+            Coroutine createTokenCor = StartCoroutine(
+                RestClient.Instance.CreateToken((returnResult) =>
+                {
+                    createTokenResult = returnResult;
+                }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)),
+                _collectionName,
+                _tokenName,
+                _tokenDescription,
+                _supply,
+                _max,
+                _uri,
+                _royaltyPointsPerMillion)
+            );
+            yield return createTokenCor;
 
-                Debug.Log("Create Token Response: " + createTokenResult);
-                Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
-                string createTokenTxnHash = createTokenTxn.Hash;
-                Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
+            Debug.Log("Create Token Response: " + createTokenResult);
+            Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
+            string createTokenTxnHash = createTokenTxn.Hash;
+            Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 
-                UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
-            }
+            UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
         }
 
         public float AptoTokenToFloat(float _token)
