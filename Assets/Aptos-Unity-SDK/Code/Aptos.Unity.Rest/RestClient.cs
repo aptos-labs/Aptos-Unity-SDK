@@ -28,7 +28,7 @@ namespace Aptos.Unity.Rest
     {
         public static RestClient Instance { get; set; }
 
-        public static int transactionWaitInSeconds = 20;
+        public static int TransactionWaitInSeconds = 20;
 
         public Uri Endpoint { get; private set; }
 
@@ -510,11 +510,20 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Waits for Transaction query to return has or times out
+        /// Waits for Transaction query to return whether transaction has been confirmed in the blockchain.
+        /// Times out otherwise.
+        /// 
+        /// Queries for a given transaction hash (txnHash) using <see cref="TransactionPending"/>
+        /// by polling / looping until we find a "Success" transaction response 
+        /// , or until it times out after <see cref="TransactionWaitInSeconds"/>.
+        /// 
         /// </summary>
         /// <param name="callback"></param>
         /// <param name="txnHash"></param>
-        /// <returns></returns>
+        /// <returns>(bool, callback) 
+        /// -- true if the transaction hash was found after polling 
+        /// -- false if we did not find the transaction hash and timed out
+        /// </returns>
         public IEnumerator WaitForTransaction(Action<bool, string> callback, string txnHash)
         {
             bool transactionPending = true;
@@ -523,6 +532,7 @@ namespace Aptos.Unity.Rest
             {
                 Coroutine transactionPendingCor = StartCoroutine(TransactionPending((pending, response) => {
                     transactionPending = pending;
+                    // If transaction is NOT pending
                     if (!transactionPending)
                     {
                         Transaction transaction = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
@@ -536,20 +546,26 @@ namespace Aptos.Unity.Rest
 
                 yield return new WaitForSeconds(2f);
 
-                if (count > transactionWaitInSeconds)
+                if (count > TransactionWaitInSeconds)
                 {
-                    callback(true, "Response Timed Out");
+                    // Transaction hash wasn't found after n types
+                    callback(false, "Response Timed Out After Querying " + count + "Times");
                     break;
                 }
             }
         }
 
         /// <summary>
-        /// Query transactions by hash
+        /// Query to see if transaction has been 'confirmed' in the blockchain by using the transaction hash.
+        /// A 404 error will be returned if the transaction hasn't been confirmed.
+        /// Once the transaction is confirmed it will have a `pending_transaction` state.
         /// </summary>
         /// <param name="callback"></param>
         /// <param name="txnHash"></param>
-        /// <returns></returns>
+        /// <returns>(bool, string)
+        /// -- true if transaction is still pending / hasn't been found, meaning 404, error in response, or `pending_transaction` is true
+        /// -- false if transaction has been found, meaning `pending_transaction` is true
+        /// </returns>
         public IEnumerator TransactionPending(Action<bool, string> callback, string txnHash)
         {
             string accountsURL = Endpoint + "/transactions/by_hash/" + txnHash;
@@ -573,9 +589,9 @@ namespace Aptos.Unity.Rest
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
-            else if (request.responseCode == 400)
+            else if (request.responseCode >= 400)
             {
-                callback(true, "Transaction Call Error: " + request.responseCode + " ::: " + request.downloadHandler.text);
+                callback(true, "Transaction Call Error: " + request.responseCode + " : " + request.downloadHandler.text);
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
