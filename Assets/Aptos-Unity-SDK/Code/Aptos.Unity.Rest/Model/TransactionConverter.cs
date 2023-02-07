@@ -30,8 +30,8 @@ namespace Aptos.Unity.Rest.Model
             {
                 JObject item = JObject.Load(reader);
 
-                // TODO: Ask why failed transactions don't have a "type";
-                // A: There's the submission response, and there's the VM response -- user_transaction, transaction_pending
+                // NOTE: failed transactions don't have a "type";
+                // There's the submission response, and there's the VM response, e.g. user_transaction, transaction_pending
                 if (item["type"] == null && item["hash"] != null)
                 {
                     TransactionRequest transactionRequest = JsonConvert.DeserializeObject<TransactionRequest>(item.ToString(), new TransactionRequestConverter());
