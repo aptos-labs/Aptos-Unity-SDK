@@ -79,7 +79,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Fund Bob Account Through Devnet Faucet
-            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
                 Debug.Log("Faucet Response: " + returnResult);
             }, bobAddress.ToString(), 100000000, faucetEndpoint));

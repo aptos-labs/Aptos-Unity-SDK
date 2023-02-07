@@ -199,7 +199,7 @@ namespace Aptos.Accounts
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        /// <returns></returns>
+        /// <returns>True if public keys are equal. False is public keys are not equal.</returns>
         public static bool operator ==(PublicKey lhs, PublicKey rhs)
         {
             if (lhs is null)

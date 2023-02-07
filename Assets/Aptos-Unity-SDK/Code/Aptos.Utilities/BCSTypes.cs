@@ -105,7 +105,7 @@ namespace Aptos.Utilities.BCS
                     byte[] elementsBytes = seqSerializer.GetBytes();
                     int sequenceLen = elementsBytes.Length;
                     serializer.SerializeU32AsUleb128((uint)sequenceLen);
-                    serializer.SerializeSingleSequenceBytes(elementsBytes);
+                    serializer.SerializeFixedBytes(elementsBytes);
                 }
                 else // TODO: Explore this case
                 {
@@ -165,11 +165,11 @@ namespace Aptos.Utilities.BCS
             
             foreach(KeyValuePair<string, (byte[], byte[])> entry in byteMap)
             {
-                mapSerializer.SerializeSingleSequenceBytes(entry.Value.Item1);
-                mapSerializer.SerializeSingleSequenceBytes(entry.Value.Item2);
+                mapSerializer.SerializeFixedBytes(entry.Value.Item1);
+                mapSerializer.SerializeFixedBytes(entry.Value.Item2);
             }
 
-            serializer.SerializeSingleSequenceBytes(mapSerializer.GetBytes());
+            serializer.SerializeFixedBytes(mapSerializer.GetBytes());
         }
     }
 

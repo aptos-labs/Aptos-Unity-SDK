@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 namespace Aptos.Unity.Rest.Model
 {
     /// <summary>
-    /// Represents a Table Item Request
+    /// Represents a table item request
     /// </summary>
     [JsonObject]
     public class TableItemRequestTokenData

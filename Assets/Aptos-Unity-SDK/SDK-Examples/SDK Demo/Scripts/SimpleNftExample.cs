@@ -33,7 +33,7 @@ namespace Aptos.Unity.Sample
 
             #region Fund Alice Account Through Devnet Faucet
             AccountAddress aliceAddress = alice.AccountAddress;
-            Coroutine fundAliceAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine fundAliceAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
                 Debug.Log("Faucet Response: " + returnResult);
             }, aliceAddress.ToString(), 100000000, faucetEndpoint));
@@ -42,7 +42,7 @@ namespace Aptos.Unity.Sample
 
             #region Fund Bob Account Through Devnet Faucet
             AccountAddress bobAddress = bob.AccountAddress;
-            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
                 Debug.Log("Faucet Response: " + returnResult);
             }, bobAddress.ToString(), 100000000, faucetEndpoint));

@@ -26,7 +26,7 @@ namespace Aptos.Accounts
         {
             if (bytes.Length != AuthenticationKey.LENGTH)
             {
-                //TODO: throw new Error("Expected a byte array of length 32");
+                throw new ArgumentException("Byte array must be " + AuthenticationKey.LENGTH + " bytes");
             }
             this.bytes = bytes;
         }
@@ -36,7 +36,7 @@ namespace Aptos.Accounts
         /// `auth_key = sha3-256(p_1 | … | p_n | K | 0x01)`. `K` represents the K-of-N required for
         /// authenticating the transaction. `0x01` is the 1-byte scheme for multisig.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Authentication key object from a multi ED25519 key</returns>
         public static AuthenticationKey FromMultiEd25519PublicKey(MultiEd25519PublicKey publicKey)
         {
             byte[] pubKeyBytes = publicKey.ToBytes();
@@ -60,7 +60,7 @@ namespace Aptos.Accounts
         /// where | denotes concatenation. The 0x00 is the 1-byte single-signature scheme identifier.
         /// </summary>
         /// <param name="publicKey"></param>
-        /// <returns></returns>
+        /// <returns>Authentication key object</returns>
         public static AuthenticationKey FromEd25519PublicKey(byte[] publicKey)
         {
             var pubKeyBytes = publicKey;
@@ -80,7 +80,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Derives hexadecimal Address from authentication key array of bytes.
         /// </summary>
-        /// <returns></returns> A hexa string representation Address of the authentication key.
+        /// <returns>A hexa string representation Address of the authentication key</returns>
         public string DerivedAddress()
         {
             string hexString = CryptoBytes.ToHexStringLower(bytes);
