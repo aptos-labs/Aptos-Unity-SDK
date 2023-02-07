@@ -33,7 +33,7 @@ namespace Aptos.Unity.Rest.Model
         [JsonProperty("property_keys", Required = Required.AllowNull)]
         public string[] PropertyKeys { get; set; }
         [JsonProperty("property_values", Required = Required.AllowNull)]
-        public int[] PropertyValues { get; set; } // TODO: See Data Type for Property Values; array<string<hex>>
+        public int[] PropertyValues { get; set; }
         [JsonProperty("property_types", Required = Required.AllowNull)]
         public string[] PropertyTypes { get; set; }
     }
