@@ -45,7 +45,6 @@ namespace Aptos.Unity.Rest
             }
             else if (request.responseCode == 404)
             {
-                // TODO: Implememt Error Code deserializer for Faucet Client
                 callback(false, request.error);
             }
             else if (request.responseCode >= 400)
