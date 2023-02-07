@@ -16,14 +16,7 @@ namespace Aptos.Unity.Rest.Model
             return objectType == typeof(Transaction);
         }
 
-        /// <summary>
-        /// TODO: Handle return null -- perhaps throw error, but consider that this breaks Unity
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="objectType"></param>
-        /// <param name="existingValue"></param>
-        /// <param name="serializer"></param>
-        /// <returns></returns>
+        ///<inheritdoc cref="JsonConverter.ReadJson(JsonReader, Type, object?, JsonSerializer)"/>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartObject)
