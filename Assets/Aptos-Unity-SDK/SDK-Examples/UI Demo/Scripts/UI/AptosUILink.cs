@@ -10,7 +10,6 @@ using Aptos.Unity.Rest;
 using Newtonsoft.Json;
 using Aptos.Unity.Rest.Model;
 using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
 using Aptos.Accounts;
 
 namespace Aptos.Unity.Sample.UI
