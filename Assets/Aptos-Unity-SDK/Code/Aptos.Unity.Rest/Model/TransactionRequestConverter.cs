@@ -12,21 +12,13 @@ namespace Aptos.Unity.Rest.Model
     {
         public override bool CanConvert(Type objectType)
         {
-            //throw new NotImplementedException();
-            //return typeof(TransactionRequest.GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
             return (objectType == typeof(TransactionRequest));
         }
 
         /// <summary>
-        /// 
-        /// Using https://www.newtonsoft.com/json/help/html/queryinglinqtojson.htm
-        /// TODO: Clean Transaction creation logic, I believe that most properties will always show up there
+        /// Parses JSON string to a TransactionRequest object
+        /// <inheritdoc cref="JsonConverter.ReadJson(JsonReader, Type, object?, JsonSerializer)"/>
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="objectType"></param>
-        /// <param name="existingValue"></param>
-        /// <param name="serializer"></param>
-        /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             TransactionRequest transactionRequest = new TransactionRequest();
@@ -101,12 +93,8 @@ namespace Aptos.Unity.Rest.Model
         }
 
         /// <summary>
-        /// Reference: https://blog.bitscry.com/2017/08/31/single-or-array-json-converter/
-        /// https://www.newtonsoft.com/json/help/html/CustomJsonConverter.htm
+        /// <inheritdoc cref="JsonConverter.WriteJson(JsonWriter, object?, JsonSerializer)"/>
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="serializer"></param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             TransactionRequest transactionRequest = (TransactionRequest)value;
