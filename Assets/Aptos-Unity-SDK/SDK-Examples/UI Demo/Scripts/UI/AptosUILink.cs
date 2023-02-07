@@ -144,7 +144,6 @@ namespace Aptos.Unity.Sample.UI
         {
             Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
-                Debug.Log("FAUCET RESPONSE: " + returnResult);
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress.ToString()
                 , _amount
                 , faucetEndpoint));
@@ -181,10 +180,8 @@ namespace Aptos.Unity.Sample.UI
             _collectionName, _collectionDescription, _collectionUri));
             yield return createCollectionCor;
 
-            Debug.Log("Create Collection Response: " + createCollectionResult);
             Aptos.Unity.Rest.Model.Transaction createCollectionTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createCollectionResult, new TransactionConverter());
             string transactionHash = createCollectionTxn.Hash;
-            Debug.Log("Create Collection Hash: " + createCollectionTxn.Hash);
 
             UIController.Instance.ToggleNotification(true, "Successfully Create Collection: " + _collectionName);
         }
@@ -207,10 +204,8 @@ namespace Aptos.Unity.Sample.UI
             );
             yield return createTokenCor;
 
-            Debug.Log("Create Token Response: " + createTokenResult);
             Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
             string createTokenTxnHash = createTokenTxn.Hash;
-            Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 
             UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
         }
