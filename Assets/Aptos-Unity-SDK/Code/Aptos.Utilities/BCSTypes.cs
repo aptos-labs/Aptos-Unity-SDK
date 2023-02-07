@@ -168,7 +168,6 @@ namespace Aptos.Utilities.BCS
                 mapSerializer.SerializeSingleSequenceBytes(entry.Value.Item1);
                 mapSerializer.SerializeSingleSequenceBytes(entry.Value.Item2);
             }
-            //Debug.Log("OUTPUT: " + string.Join(", ", mapSerializer.GetBytes()));
 
             serializer.SerializeSingleSequenceBytes(mapSerializer.GetBytes());
         }
