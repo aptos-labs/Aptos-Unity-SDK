@@ -46,18 +46,18 @@ namespace Aptos.Unity.Sample.UI
         {
             if (isFade)
             {
-                for (float alpha = 1f; alpha >= 0; alpha -= 0.01f)
+                for (float alpha = 1f; alpha >= 0; alpha -= 0.1f)
                 {
                     canvasGroup.alpha = alpha;
-                    yield return null;
+                    yield return new WaitForFixedUpdate();
                 }
             }
             else
             {
-                for (float alpha = 0f; alpha <= 1; alpha += 0.01f)
+                for (float alpha = 0f; alpha <= 1; alpha += 0.1f)
                 {
                     canvasGroup.alpha = alpha;
-                    yield return null;
+                    yield return new WaitForFixedUpdate();
                 }
             }
         }
