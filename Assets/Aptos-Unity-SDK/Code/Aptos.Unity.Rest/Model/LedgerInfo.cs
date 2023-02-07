@@ -7,7 +7,7 @@ namespace Aptos.Unity.Rest.Model
     /// https://fullnode.mainnet.aptoslabs.com/v1/spec#/operations/get_ledger_info
     /// </summary>
     [JsonObject]
-    public class Info
+    public class LedgerInfo
     {
         [JsonProperty("chain_id", Required = Required.Always)]
         public int ChainId { get; private set; }
