@@ -21,10 +21,10 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Funds a Testnet Account
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="address"></param>
-        /// <param name="amount"></param>
-        /// <param name="endpoint"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="address">Address that will get funded.</param>
+        /// <param name="amount">Amount of APT requested.</param>
+        /// <param name="endpoint">Base URL for faucet.</param>
         /// <returns></returns>
         public IEnumerator FundAccount(Action<bool, string> callback, string address, int amount, string endpoint)
         {
