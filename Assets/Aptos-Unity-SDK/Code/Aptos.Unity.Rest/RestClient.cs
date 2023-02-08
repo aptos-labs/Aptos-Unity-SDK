@@ -884,7 +884,7 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
-            callback(txnRequestJson); //  TODO: Remove
+            //callback(txnRequestJson); //  TODO: Remove
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
