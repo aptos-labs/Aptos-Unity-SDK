@@ -126,7 +126,7 @@ namespace Aptos.Unity.Sample.UI
         {
             StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
-                if (returnResult == null)
+                if (!success)
                 {
                     //UIController.Instance.ToggleNotification(false, "Fail to Fetch the Balance");
                     onGetBalance?.Invoke(0.0f);
