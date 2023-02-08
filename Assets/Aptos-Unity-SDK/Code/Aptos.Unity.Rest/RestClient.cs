@@ -450,7 +450,7 @@ namespace Aptos.Unity.Rest
         /// <param name="sender"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public IEnumerator SubmitTransaction(Action<string> callback, Account sender, TransactionPayload payload)
+        public IEnumerator SubmitTransaction(Action<bool, string> callback, Account sender, TransactionPayload payload)
         {
             ///////////////////////////////////////////////////////////////////////
             // 1) Generate a transaction request
@@ -520,19 +520,18 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Submitting Transaction: " + request.error);
-                //return request.error;
-                callback(request.error);
+                callback(false, request.error);
             }
-            else if (request.responseCode == 404)
+            else if (request.responseCode >= 404)
             {
                 Debug.LogWarning("Transaction Response: " + request.responseCode);
-                callback("??????????????");
+                callback(false, "Error: " + request.responseCode);
             }
-            else
+            else // Either 200, or 202
             {
-                Debug.Log("RESPONSE CODE: " + request.responseCode);
+                Debug.Log("RESPONSE CODE: " + request.responseCode + " TEXT: " + request.downloadHandler.text);
                 string response = request.downloadHandler.text;
-                callback(response);
+                callback(true, response);
             }
 
             request.Dispose();
@@ -672,8 +671,10 @@ namespace Aptos.Unity.Rest
                 }
             };
 
+            bool success = false;
             string response = "";
-            Coroutine cor_response = StartCoroutine(SubmitTransaction((_response) => {
+            Coroutine cor_response = StartCoroutine(SubmitTransaction((_success, _response) => {
+                success = _success;
                 response = _response;
             }, sender, transferPayload));
             yield return cor_response;
