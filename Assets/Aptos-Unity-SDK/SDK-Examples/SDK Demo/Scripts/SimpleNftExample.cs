@@ -51,7 +51,7 @@ namespace Aptos.Unity.Sample
 
             #region Initial Coin Balances
             Debug.Log("<color=cyan>=== Initial Coin Balances ===</color>");
-            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -67,7 +67,7 @@ namespace Aptos.Unity.Sample
             }, aliceAddress));
             yield return getAliceBalanceCor1;
 
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((succes, returnResult) =>
             {
                 if (returnResult == null)
                 {

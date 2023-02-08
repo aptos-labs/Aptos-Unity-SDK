@@ -124,7 +124,7 @@ namespace Aptos.Unity.Sample.UI
 
         public void LoadCurrentWalletBalance()
         {
-            StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {

@@ -106,7 +106,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback"></param>
         /// <param name="accountAddress"></param>
         /// <returns></returns>
-        public IEnumerator GetAccountBalance(Action<string> callback, Accounts.AccountAddress accountAddress)
+        public IEnumerator GetAccountBalance(Action<bool, string> callback, Accounts.AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
             Uri accountsURI = new Uri(accountsURL);
@@ -120,15 +120,15 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Sending: " + request.error);
-                callback(null);
+                callback(false, "Connection error.");
             }
             else if (request.responseCode == 404)
             {
-                callback(null);
+                callback(false, "Resource not found.");
             }
             else
             {
-                callback(request.downloadHandler.text);
+                callback(true, request.downloadHandler.text);
             }
 
             request.Dispose();
