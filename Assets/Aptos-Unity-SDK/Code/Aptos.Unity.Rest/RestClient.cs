@@ -536,7 +536,6 @@ namespace Aptos.Unity.Rest
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
-            //TODO: Fix Error Responses
             request.SendWebRequest();
             while (!request.isDone)
             {
