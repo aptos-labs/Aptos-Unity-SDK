@@ -1,6 +1,5 @@
 using Aptos.Accounts;
 using Aptos.Rest;
-using Aptos.Rpc.Model;
 using Aptos.Unity.Rest.Model;
 using Aptos.Utilities.BCS;
 using Chaos.NaCl;
