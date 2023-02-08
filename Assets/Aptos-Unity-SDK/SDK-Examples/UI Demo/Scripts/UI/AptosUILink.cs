@@ -180,6 +180,9 @@ namespace Aptos.Unity.Sample.UI
             _collectionName, _collectionDescription, _collectionUri));
             yield return createCollectionCor;
 
+            yield return new WaitForSeconds(1f);
+            LoadCurrentWalletBalance();
+
             Aptos.Unity.Rest.Model.Transaction createCollectionTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createCollectionResult, new TransactionConverter());
             string transactionHash = createCollectionTxn.Hash;
 
@@ -203,6 +206,9 @@ namespace Aptos.Unity.Sample.UI
                 _royaltyPointsPerMillion)
             );
             yield return createTokenCor;
+
+            yield return new WaitForSeconds(1f);
+            LoadCurrentWalletBalance();
 
             Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
             string createTokenTxnHash = createTokenTxn.Hash;
