@@ -436,8 +436,6 @@ namespace Aptos.Unity.Rest
 
         #region Transactions
 
-        // TODO:  Simulate Transaction
-
         /// <summary>
         /// 1) Generates a transaction request
         /// 2) submits that to produce a raw transaction
@@ -640,12 +638,6 @@ namespace Aptos.Unity.Rest
 
         #endregion
 
-        #region Transaction Helpers
-        // TODO: CreateMultiAgentBCSTransaction
-        // TODO: CreateBcsTransaction
-        // TODO: CreateBcsSignedTransaction
-        #endregion
-
         #region Transaction Wrappers
         /// <summary>
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
@@ -716,9 +708,6 @@ namespace Aptos.Unity.Rest
 
             yield return null;
         }
-
-
-        // TODO: BcsTransfer
 
         /// <summary>
         /// Calls encode submission
@@ -884,7 +873,6 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
-            //callback(txnRequestJson); //  TODO: Remove
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
@@ -1262,7 +1250,7 @@ namespace Aptos.Unity.Rest
             request.Dispose();
             yield return null;
         }
-        // TODO: DirectTransferToken; ask about Create Multi Agent BCS Transaction
+
         public IEnumerator DirectTransferToken(Action<string> callback
             , Account sender, Account receiver, Accounts.AccountAddress receive, Accounts.AccountAddress creatorsAddress
             , string collectionName, string tokenName, string amount, string propertyVersion = "0")
