@@ -173,11 +173,14 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// 
+        /// Gets table item that represents a coin resource
+        /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see>
         /// </summary>
         /// <param name="callback"></param>
-        /// <param name="accountAddress"></param>
-        /// <param name="resourceType"></param>
+        /// <param name="handle"></param>
+        /// <param name="keyType"></param>
+        /// <param name="valueType"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
         {
@@ -219,17 +222,17 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get a standard table item at a specific ledger vevrsion from the table identified
-        /// by the handle {table_handle} in the path adn the "key" (TableItemRequest)
+        /// Get a  table item at a specific ledger version from the table identified
+        /// by the handle {table_handle} in the path and a [simple] "key" (TableItemRequest)
         /// provided by the request body.
         /// 
-        /// https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item
+        /// Further details are provider <see cref="https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item">here</see>
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="handle"></param> The identifier for the given table
-        /// <param name="keyType"></param> String representation of an on-chain Move tag that is exposed in the transaction
-        /// <param name="valueType"></param> String representation of an on-chain Move type value
-        /// <param name="key"></param>The value of the table item's key
+        /// <param name="callback">Callback function</param>
+        /// <param name="handle">The identifier for the given table</param>
+        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
+        /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
+        /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
         /// <returns></returns> Callback withthe response
         public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
         {
@@ -280,6 +283,31 @@ namespace Aptos.Unity.Rest
         /// Get a table item of a NFT
         /// <inheritdoc cref="RestClient.GetTableItem(Action{string}, string, string, string, string)"/>
         /// <param name="key"></param> A TokeIdRequest object that contains the token / collection info
+        /// 
+
+        /// <summary>
+        /// Get a  table item for a NFT from the table identified
+        /// by the handle {table_handle} in the path and a complex key provided by the request body.
+        /// 
+        /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see> for a get table item using a generic string key.
+        /// </summary>
+        /// <param name="callback">Callback function.</param>
+        /// <param name="handle">The identifier for the given table.</param>
+        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
+        /// <param name="valueType">String representation of an on-chain Move type value.</param>
+        /// <param name="key">A complex key object used to search for the table item. For example:
+        /// <code>
+        /// {
+        ///     "token_data_id":{
+        ///         "creator":"0xcd7820caacab04fbf1d7e563f4d329f06d2ce3140d654729d99258b5b68a27bf",
+        ///         "collection":"Alice's",
+        ///         "name":"Alice's first token"
+        ///     },
+        ///     "property_version":"0"
+        /// }
+        /// </code>
+        /// </param>
+        /// <returns></returns>
         public IEnumerator GetTableItemNFT(Action<string> callback, string handle, string keyType, string valueType, TokenIdRequest key)
         {
             TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
@@ -337,9 +365,16 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
-        /// Get a table item of a token data
-        /// <inheritdoc cref="RestClient.GetTableItem(Action{string}, string, string, string, string)"/>
-        /// <param name="key"></param> a TokenDataId object that contains the token / collection info
+        /// <summary>
+        ///  Get a table item that contains a token's (NFT) data.
+        ///  In this case we are using a complex key to retrieve the table item.
+        /// </summary>
+        /// <param name="callback">Callback function</param>
+        /// <param name="handle">The identifier for the given table.</param>
+        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
+        /// <param name="valueType">String representation of an on-chain Move type value.</param>
+        /// <param name="key">A complex key object used to search for the table item. In this case it's a TokenDataId object that contains the token / collection info</param>
+        /// <returns></returns>
         public IEnumerator GetTableItemTokenData(Action<string> callback, string handle, string keyType, string valueType, TokenDataId key)
         {
             TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
@@ -755,11 +790,11 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Create a NFT collection
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="sender"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="uri"></param>
+        /// <param name="callback">Callback function used after response is received</param>
+        /// <param name="sender">Creator of the collection</param>
+        /// <param name="collectionName">Name of collection</param>
+        /// <param name="collectionDescription">Description of the collection</param>
+        /// <param name="uri">Collection's URI</param>
         /// <returns></returns>
         public IEnumerator CreateCollection(Action<string> callback, Account sender, string collectionName, string collectionDescription, string uri)
         {
@@ -878,19 +913,20 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Create Non-Fungible Token (NFT)
-        /// https://github.com/aptos-labs/aptos-core/blob/main/aptos-move/framework/aptos-token/sources/token.move#L365
+        /// See token <see cref="https://github.com/aptos-labs/aptos-core/blob/main/aptos-move/framework/aptos-token/sources/token.move#L365">reference.</see>
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="sender"></param>
-        /// <param name="collectionName"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="supply"></param>
-        /// <param name="uri"></param>
-        /// <param name="royaltyPointsPerMillion"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="senderRoyaltyPayeeAddress">Creator of the token, also the account the that will receive royalties. </param>
+        /// <param name="collectionName">Name of the collection to which the token belongs to.</param>
+        /// <param name="tokenName">Name of the token</param>
+        /// <param name="description">Description of the token being minted</param>
+        /// <param name="supply">Token supply</param>
+        /// <param name="max">Max number of mints</param>
+        /// <param name="uri">URI of where the token's asset lives (e.g. JPEG)</param>
+        /// <param name="royaltyPointsPerMillion">Royalties defined in the millionths</param>
         /// <returns></returns>
         public IEnumerator CreateToken(Action<string> callback
-            , Account senderRoyaltyPayeeAddress, string collectionName, string name, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
+            , Account senderRoyaltyPayeeAddress, string collectionName, string tokenName, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
         {
             Arguments arguments = new Arguments()
             {
@@ -1108,6 +1144,17 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        /// <summary>
+        /// Claim a token that was offered by <paramref name="sender"/>
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="account">Account making the claim</param>
+        /// <param name="sender">Address of the sender of the non-fungible token (NFT)</param>
+        /// <param name="creator">Address of the creator of the token (NFT)</param>
+        /// <param name="collectionName">Name of the NFT collection</param>
+        /// <param name="tokenName">Name of the token</param>
+        /// <param name="propertyVersion">Token version, defaults to 0</param>
+        /// <returns></returns>
         public IEnumerator ClaimToken(Action<string> callback
             , Account account, Accounts.AccountAddress sender, Accounts.AccountAddress creator
             , string collectionName, string tokenName, string propertyVersion = "0")
@@ -1214,8 +1261,20 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        /// <summary>
+        /// Transfer tokens directly to a recipient.
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="sender">Account sending token.</param>
+        /// <param name="receiver">Account receiving token.</param>
+        /// <param name="creatorsAddress">Address of the token creator.</param>
+        /// <param name="collectionName">Name of the collection the token (NFT) belongs to.</param>
+        /// <param name="tokenName">Name of the token.</param>
+        /// <param name="amount">Amount of token being sent.</param>
+        /// <param name="propertyVersion">Version of the token.</param>
+        /// <returns></returns>
         public IEnumerator DirectTransferToken(Action<string> callback
-            , Account sender, Account receiver, Accounts.AccountAddress receive, Accounts.AccountAddress creatorsAddress
+            , Account sender, Account receiver, Accounts.AccountAddress creatorsAddress
             , string collectionName, string tokenName, string amount, string propertyVersion = "0")
         {
             Arguments arguments = new Arguments()
