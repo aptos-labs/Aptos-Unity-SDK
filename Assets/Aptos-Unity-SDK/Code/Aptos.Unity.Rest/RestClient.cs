@@ -50,10 +50,10 @@ namespace Aptos.Unity.Rest
         #region Account Accessors
 
         /// <summary>
-        /// Gets Account Details
+        /// Get Account Details.
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="accountAddress"></param>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
         public IEnumerator GetAccount(Action<string> callback, string accountAddress)
         {
@@ -102,7 +102,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get Account Balance
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress"></param>
         /// <returns></returns>
         public IEnumerator GetAccountBalance(Action<bool, string> callback, Accounts.AccountAddress accountAddress)
@@ -136,7 +136,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get Account Resource
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress"></param>
         /// <param name="resourceType"></param>
         /// <returns></returns>
@@ -176,7 +176,7 @@ namespace Aptos.Unity.Rest
         /// Gets table item that represents a coin resource
         /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see>
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="handle"></param>
         /// <param name="keyType"></param>
         /// <param name="valueType"></param>
@@ -228,7 +228,7 @@ namespace Aptos.Unity.Rest
         /// 
         /// Further details are provider <see cref="https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item">here</see>
         /// </summary>
-        /// <param name="callback">Callback function</param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="handle">The identifier for the given table</param>
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
         /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
@@ -291,7 +291,7 @@ namespace Aptos.Unity.Rest
         /// 
         /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see> for a get table item using a generic string key.
         /// </summary>
-        /// <param name="callback">Callback function.</param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="handle">The identifier for the given table.</param>
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
@@ -369,7 +369,7 @@ namespace Aptos.Unity.Rest
         ///  Get a table item that contains a token's (NFT) data.
         ///  In this case we are using a complex key to retrieve the table item.
         /// </summary>
-        /// <param name="callback">Callback function</param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="handle">The identifier for the given table.</param>
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
@@ -440,7 +440,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.
         /// </summary>
-        /// <param name="callback">Callback function</param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <returns>(boolean, response) true if repsonse is successful, false otherwise.
         /// </returns>
         public IEnumerator GetInfo(Action<bool, string> callback)
@@ -708,10 +708,10 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Calls encode submission
+        /// Encodes submission.
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="txnRequestJson"></param>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="txnRequestJson">Transaction request in JSON format.</param>
         /// <returns></returns>
         public IEnumerator EncodeSubmission(Action<string> callback, string txnRequestJson)
         {
@@ -748,6 +748,12 @@ namespace Aptos.Unity.Rest
             request.Dispose();
         }
 
+        /// <summary>
+        /// Encodes submission. See <see cref="EncodeSubmission(Action{string}, string)">EncodeSubmission</see>.
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="txnRequestJson">Transaction request in JSON format.</param>
+        /// <returns>A byte array representing the encoded submission.</returns>
         public IEnumerator EncodeSubmissionAsBytes(Action<byte[]> callback, string txnRequestJson)
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
@@ -790,7 +796,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Create a NFT collection
         /// </summary>
-        /// <param name="callback">Callback function used after response is received</param>
+        /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="sender">Creator of the collection</param>
         /// <param name="collectionName">Name of collection</param>
         /// <param name="collectionDescription">Description of the collection</param>
