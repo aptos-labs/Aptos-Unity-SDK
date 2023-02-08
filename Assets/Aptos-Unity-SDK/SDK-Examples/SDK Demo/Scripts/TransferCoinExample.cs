@@ -46,10 +46,21 @@ namespace Aptos.Unity.Sample
 
             #region REST Client Setup
             RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+
+            bool successLedgerInfo;
+            string result = "";
+            Coroutine ledgerInfoCor = StartCoroutine(RestClient.Instance.GetInfo((success, returnResult) =>
+            {
+                successLedgerInfo = success;
+                result = returnResult;
+            }));
+            yield return ledgerInfoCor;
+            LedgerInfo ledgerInfo = JsonConvert.DeserializeObject<LedgerInfo>(result);
+            Debug.Log("CHAIN ID: " + ledgerInfo.ChainId);
             #endregion
 
             #region Get Alice Account Balance
-            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -77,7 +88,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Alice Account Balance After Funding
-            Coroutine getAliceAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getAliceAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((success,returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -103,7 +114,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Bob Account Balance After Funding
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -158,7 +169,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Alice Account Balance After Transfer
-            Coroutine getAliceAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getAliceAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -176,7 +187,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Bob Account Balance After Transfer
-            Coroutine getBobAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getBobAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
