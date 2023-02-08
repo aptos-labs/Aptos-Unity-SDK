@@ -11,10 +11,14 @@ namespace Aptos.Accounts
     /// </summary>
     public class Account
     {
+        /// Private key representation
         public PrivateKey PrivateKey { get; set; }
+        /// Public key representation
         public PublicKey PublicKey { get; set; }
+        /// Account address representation
         public AccountAddress AccountAddress { get; set; }
 
+        /// 32-byte representation of the private key
         public byte[] PrivateKeyShort { get; }
 
         /// <summary>
@@ -76,8 +80,8 @@ namespace Aptos.Accounts
         /// <summary>
         /// Verify a given signed message with the current account's public key
         /// </summary>
-        /// <param name="message"></param> The signed message.
-        /// <param name="signature"></param> The signature of the message
+        /// <param name="message">The signed message.</param>
+        /// <param name="signature">The signature of the message.</param>
         /// <returns>True is the signature is valid, False otherwise</returns>
         public bool Verify(byte[] message, byte[] signature)
         {
