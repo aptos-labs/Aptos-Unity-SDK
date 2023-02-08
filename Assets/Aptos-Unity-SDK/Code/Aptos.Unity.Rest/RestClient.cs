@@ -81,8 +81,8 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Gets Account Sequence Number
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="accountAddress"></param>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
         public IEnumerator GetAccountSequenceNumber(Action<string> callback, string accountAddress)
         {
@@ -100,10 +100,10 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get Account Balance
+        /// Get Account Balance.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
-        /// <param name="accountAddress"></param>
+        /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
         public IEnumerator GetAccountBalance(Action<bool, string> callback, Accounts.AccountAddress accountAddress)
         {
@@ -137,8 +137,8 @@ namespace Aptos.Unity.Rest
         /// Get Account Resource
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
-        /// <param name="accountAddress"></param>
-        /// <param name="resourceType"></param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <param name="resourceType">Type of resource being queried for.</param>
         /// <returns></returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
@@ -477,7 +477,7 @@ namespace Aptos.Unity.Rest
         /// 3) signs the raw transaction
         /// 4) submits the signed transaction
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="sender"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
@@ -517,7 +517,7 @@ namespace Aptos.Unity.Rest
             }, txnRequestJson));
             yield return cor_encodedSubmission;
 
-            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
 
             ///////////////////////////////////////////////////////////////////////
             // 3) Signs the raw transaction
@@ -577,7 +577,7 @@ namespace Aptos.Unity.Rest
         /// , or until it times out after <see cref="TransactionWaitInSeconds"/>.
         /// 
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="txnHash"></param>
         /// <returns>(bool, callback) 
         /// -- true if the transaction hash was found after polling 
@@ -619,7 +619,7 @@ namespace Aptos.Unity.Rest
         /// A 404 error will be returned if the transaction hasn't been confirmed.
         /// Once the transaction is confirmed it will have a `pending_transaction` state.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="txnHash"></param>
         /// <returns>(bool, string)
         /// -- true if transaction is still pending / hasn't been found, meaning 404, error in response, or `pending_transaction` is true
@@ -678,7 +678,7 @@ namespace Aptos.Unity.Rest
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
         /// Returns the sequence number of the transaction used to transfer.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="sender"></param>
         /// <param name="to"></param>
         /// <param name="amount"></param>
@@ -862,7 +862,7 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             // STEP 3: Sign Ttransaction
             ///////////////////////////////////////////////////////////////////////
-            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
             byte[] signature = sender.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
@@ -989,7 +989,7 @@ namespace Aptos.Unity.Rest
             }, txnRequestJson));
             yield return cor_encodedSubmission;
 
-            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
             byte[] signature = senderRoyaltyPayeeAddress.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
@@ -1100,7 +1100,7 @@ namespace Aptos.Unity.Rest
             }, txnRequestJson));
             yield return cor_encodedSubmission;
 
-            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
             byte[] signature = account.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
@@ -1217,7 +1217,7 @@ namespace Aptos.Unity.Rest
             }, txnRequestJson));
             yield return cor_encodedSubmission;
 
-            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
             byte[] signature = account.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
@@ -1335,7 +1335,7 @@ namespace Aptos.Unity.Rest
             }, txnRequestJson));
             yield return cor_encodedSubmission;
 
-            byte[] toSign = StringToByteArrayTwo(encodedSubmission.Trim('"')[2..]);
+            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
             byte[] signature = sender.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
@@ -1424,6 +1424,17 @@ namespace Aptos.Unity.Rest
 
             callback(tableItemResp);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="ownerAddress"></param>
+        /// <param name="creatorAddress"></param>
+        /// <param name="collectionName"></param>
+        /// <param name="tokenName"></param>
+        /// <param name="propertyVersion"></param>
+        /// <returns></returns>
         public IEnumerator GetTokenBalance(Action<string> callback
             , Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
         {
@@ -1444,7 +1455,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Read Collection's token data table 
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="creator"></param>
         /// <param name="collectionName"></param>
         /// <param name="tokenName"></param>
@@ -1490,6 +1501,14 @@ namespace Aptos.Unity.Rest
             callback(tableItemResp);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="creator">Address of the creator.</param>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <param name="propertyVersion">Version of the token.</param>
+        /// <returns></returns>
         public IEnumerator GetCollection(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string propertyVersion = "0")
         {
@@ -1518,6 +1537,13 @@ namespace Aptos.Unity.Rest
             callback(tableItemResp);
         }
 
+        /// <summary>
+        /// Get a resource of a given type from an account.
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <param name="resourceType">Type of resource being queried for.</param>
+        /// <returns></returns>
         public IEnumerator GetAccountResource(Action<string> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -1568,24 +1594,11 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Turns a hexadecimal string to a byte array
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns></returns>
-        public byte[] StringToByteArray(string hex)
-        {
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
-        }
-
-        /// <summary>
         /// Second version of StringToByteArray
         /// </summary>
         /// <param name="hex"></param>
         /// <returns></returns>
-        public byte[] StringToByteArrayTwo(String hex)
+        public byte[] StringToByteArray(String hex)
         {
             int NumberChars = hex.Length;
             byte[] bytes = new byte[NumberChars / 2];
