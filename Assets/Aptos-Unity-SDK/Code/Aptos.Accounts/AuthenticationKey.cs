@@ -5,14 +5,14 @@ using System;
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// Represents an Authentication Key
-    /// During the account creation process, a 32-byte authentication key comes to exist first. 
-    /// This authentication key is then returned as it is as the 32-byte account Address.
+    /// Represents an Authentication Key \n
+    /// During the account creation process, a 32-byte authentication key comes to exist first. \n
+    /// This authentication key is then returned as it is as the 32-byte account Address. \n
     /// 
-    /// NOTE: Generating the authentication key for an account requires that you provide one of 
-    /// the below 1-byte signature scheme identifiers for this account, i.e., 
-    /// whether the account is a single signature or a multisig account:
-    /// https://aptos.dev/concepts/accounts/#account-Address
+    /// NOTE: Generating the authentication key for an account requires that you provide one of  \n
+    /// the below 1-byte signature scheme identifiers for this account, i.e., \n
+    /// whether the account is a single signature or a multisig account: \n
+    /// More info on account addresses found <see cref="https://aptos.dev/concepts/accounts/#account-Address">here</see>.
     /// </summary>
     public class AuthenticationKey
     {
@@ -20,6 +20,8 @@ namespace Aptos.Accounts
         public static byte MULTI_ED25519_SCHEME = 0x001;
         public static byte ED25519_SCHEME = 0x00;
         public static byte DERIVE_RESOURCE_ACCOUNT_SCHEME = 255;
+
+        /// Byte array representing authentication key
         public byte[] bytes;
 
         public AuthenticationKey(byte[] bytes)
@@ -32,9 +34,9 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Converts a K-of-N MultiEd25519PublicKey to AuthenticationKey with:
-        /// `auth_key = sha3-256(p_1 | … | p_n | K | 0x01)`. `K` represents the K-of-N required for
-        /// authenticating the transaction. `0x01` is the 1-byte scheme for multisig.
+        /// Converts a K-of-N MultiEd25519PublicKey to AuthenticationKey with: \n
+        /// `auth_key = sha3-256(p_1 | … | p_n | K | 0x01)`. `K` represents the K-of-N required for \n
+        /// authenticating the transaction. `0x01` is the 1-byte scheme for multisig. \n
         /// </summary>
         /// <returns>Authentication key object from a multi ED25519 key</returns>
         public static AuthenticationKey FromMultiEd25519PublicKey(MultiEd25519PublicKey publicKey)
@@ -55,11 +57,11 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Converts single Public Key (bytes) into Authentication Key
-        /// auth_key = sha3-256(pubkey_A | 0x00)
-        /// where | denotes concatenation. The 0x00 is the 1-byte single-signature scheme identifier.
+        /// Converts single Public Key (bytes) into Authentication Key \n
+        /// auth_key = sha3-256(pubkey_A | 0x00) \n
+        /// where | denotes concatenation. The 0x00 is the 1-byte single-signature scheme identifier. \n
         /// </summary>
-        /// <param name="publicKey"></param>
+        /// <param name="publicKey">Publick key, in byte array format, used to generate the authentication key</param>
         /// <returns>Authentication key object</returns>
         public static AuthenticationKey FromEd25519PublicKey(byte[] publicKey)
         {
