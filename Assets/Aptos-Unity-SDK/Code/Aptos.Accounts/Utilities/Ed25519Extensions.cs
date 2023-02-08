@@ -7,8 +7,8 @@ using System.Security.Cryptography;
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// https://github.com/hanswolff/ed25519/blob/master/Ed25519/Ed25519.cs
-    /// Turning into a static class
+    /// Utility functions for ED25519.
+    /// Original source found <see cref="https://github.com/hanswolff/ed25519/blob/master/Ed25519/Ed25519.cs">here</see>.
     /// </summary>
     public static class Ed25519Extensions
     {
