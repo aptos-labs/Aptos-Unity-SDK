@@ -209,7 +209,7 @@ namespace Aptos.Unity.Sample.UI
 
         void UpdateBalance(float _amount)
         {
-            balanceText.text = AptosUILink.Instance.AptoTokenToFloat(_amount).ToString("0.0000") + " APT";
+            balanceText.text = AptosUILink.Instance.AptosTokenToFloat(_amount).ToString("0.0000") + " APT";
         }
 
         public void Logout()
@@ -262,7 +262,7 @@ namespace Aptos.Unity.Sample.UI
             }
             else
             {
-                StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptoFloatToToken(float.Parse(sendAmountInput.text))));
+                StartCoroutine(AptosUILink.Instance.SendToken(receiverAddressInput.text, AptosUILink.Instance.AptosFloatToToken(float.Parse(sendAmountInput.text))));
             }
         }
 

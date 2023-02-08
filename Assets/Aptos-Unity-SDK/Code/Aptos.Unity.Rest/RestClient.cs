@@ -658,7 +658,7 @@ namespace Aptos.Unity.Rest
         /// <param name="to"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public IEnumerator Transfer(Action<string> callback, Account sender, string to, int amount)
+        public IEnumerator Transfer(Action<string> callback, Account sender, string to, long amount)
         {
             var transferPayload = new TransactionPayload()
             {

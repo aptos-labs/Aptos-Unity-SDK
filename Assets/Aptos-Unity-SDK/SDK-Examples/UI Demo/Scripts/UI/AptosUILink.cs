@@ -152,10 +152,10 @@ namespace Aptos.Unity.Sample.UI
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
+            UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptosTokenToFloat((float)_amount) + " APT");
         }
 
-        public IEnumerator SendToken(string _targetAddress, int _amount)
+        public IEnumerator SendToken(string _targetAddress, long _amount)
         {
             string transferResult = string.Empty;
             Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
@@ -167,7 +167,7 @@ namespace Aptos.Unity.Sample.UI
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
+            UIController.Instance.ToggleNotification(true, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
         }
 
         public IEnumerator CreateCollection(string _collectionName, string _collectionDescription, string _collectionUri)
@@ -210,14 +210,14 @@ namespace Aptos.Unity.Sample.UI
             UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
         }
 
-        public float AptoTokenToFloat(float _token)
+        public float AptosTokenToFloat(float _token)
         {
             return _token / 100000000f;
         }
 
-        public int AptoFloatToToken(float _amount)
+        public long AptosFloatToToken(float _amount)
         {
-            return (int)(_amount * 100000000f);
+            return Convert.ToInt64(_amount * 100000000);
         }
     }
 }
