@@ -673,43 +673,6 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// TODO: Complete
-        /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="sender"></param>
-        /// <param name="recipient"></param>
-        /// <param name="amount"></param>
-        /// <returns></returns>
-        public IEnumerator BCSTransfer(Action<string> callback, Account sender, string recipient, int amount)
-        {
-            Utilities.BCS.AccountAddress recipientArg = new Utilities.BCS.AccountAddress(recipient);
-            U64 amountArg = new U64((ulong)amount);
-
-            Utilities.BCS.AccountAddress accountAddress = new Utilities.BCS.AccountAddress("0x01");
-            ModuleId moduleId = new ModuleId(accountAddress, "coin");
-
-            ISerializable[] transactionArguments =
-            {
-                recipientArg,
-                amountArg
-            };
-
-            StructTag structTag = new StructTag(accountAddress, "aptos_coin", "AptosCoin", new ISerializableTag[0]);
-            ISerializableTag[] typeTags = new ISerializableTag[] { structTag };
-
-            EntryFunction entryFunction = new EntryFunction(
-                moduleId, 
-                "transfer",
-                new TagSequence(typeTags), 
-                new Utilities.BCS.Sequence(transactionArguments)
-            );
-
-            TransactionPayload txnPayload = new TransactionPayload();
-
-            yield return null;
-        }
-
-        /// <summary>
         /// Calls encode submission
         /// </summary>
         /// <param name="callback"></param>
