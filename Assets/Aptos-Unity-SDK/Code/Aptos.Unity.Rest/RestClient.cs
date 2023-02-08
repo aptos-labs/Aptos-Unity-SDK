@@ -1,6 +1,5 @@
 using Aptos.Accounts;
 using Aptos.Rest;
-using Aptos.Rest.Models;
 using Aptos.Rpc.Model;
 using Aptos.Unity.Rest.Model;
 using Aptos.Utilities.BCS;
@@ -143,7 +142,6 @@ namespace Aptos.Unity.Rest
         /// <returns></returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
-            // TODO: AccountResourceCoin
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
 
@@ -159,7 +157,7 @@ namespace Aptos.Unity.Rest
                 Debug.LogError("Error While Sending: " + request.error);
                 callback(null);
             }
-            if (request.responseCode == 404)
+            if (request.responseCode >= 404)
             {
                 Debug.LogError("Account Resource Not Found: " + request.error);
                 callback(null);
