@@ -433,13 +433,16 @@ namespace Aptos.Unity.Rest
         /// <summary>
         ///  Get a table item that contains a token's (NFT) data.
         ///  In this case we are using a complex key to retrieve the table item.
+        ///  
+        /// Note: we do not deserialize the response since the table item representation 
+        /// is only known by the developer requesting the table item and token data.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="handle">The identifier for the given table.</param>
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">A complex key object used to search for the table item. In this case it's a TokenDataId object that contains the token / collection info</param>
-        /// <returns></returns>
+        /// <returns>A JSON string to be serialized by the developer to a matching representation of data.</returns>
         public IEnumerator GetTableItemTokenData(Action<string> callback, string handle, string keyType, string valueType, TokenDataId key)
         {
             TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
@@ -1629,6 +1632,34 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Read Collection's token data table.
+        /// An example 
+        /// <code>
+        /// {
+        ///     "default_properties":{
+        ///         "map":{
+        ///             "data":[ ]
+        ///         }
+        ///     },
+        ///     "description":"Alice's simple token",
+        ///     "largest_property_version":"0",
+        ///     "maximum":"1",
+        ///     "mutability_config":{
+        ///         "description":false,
+        ///         "maximum":false,
+        ///         "properties":false,
+        ///         "royalty":false,
+        ///         "uri":false
+        ///     },
+        ///     "name":"Alice's first token",
+        ///     "royalty":{
+        ///         "payee_address":"0x3f99ffee67853e129173b9df0e2e9c6af6f08fe2a4417daf43df46ad957a8bbe",
+        ///         "royalty_points_denominator":"1000000",
+        ///         "royalty_points_numerator":"0"
+        ///     },
+        ///     "supply":"1",
+        ///     "uri":"https://aptos.dev/img/nyan.jpeg"
+        /// }
+        /// </code>
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="creator">Address of the creator.</param>
