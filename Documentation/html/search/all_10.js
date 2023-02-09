@@ -6,6 +6,8 @@ var searchData=
   ['resourcecollection_3',['ResourceCollection',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html',1,'Aptos.Unity.Rest.Model.ResourceCollection'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html#a1ed879c82c9c43b208f8f37a6bccf833',1,'Aptos.Unity.Rest.Model.ResourceCollection.ResourceCollection()']]],
   ['resourcecollection_2ecs_4',['ResourceCollection.cs',['../_resource_collection_8cs.html',1,'']]],
   ['resourcecollectionold_5',['ResourceCollectionOLD',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_o_l_d.html',1,'Aptos.Unity.Rest.Model.ResourceCollectionOLD'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_o_l_d.html#adc56c7dd2d4c22248730ad87394c14e5',1,'Aptos.Unity.Rest.Model.ResourceCollectionOLD.ResourceCollectionOLD()']]],
-  ['restclient_6',['RestClient',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html',1,'Aptos::Unity::Rest']]],
-  ['restclient_2ecs_7',['RestClient.cs',['../_rest_client_8cs.html',1,'']]]
+  ['responseinfo_6',['ResponseInfo',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html',1,'Aptos::Unity::Rest::Model']]],
+  ['responseinfo_2ecs_7',['ResponseInfo.cs',['../_response_info_8cs.html',1,'']]],
+  ['restclient_8',['RestClient',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html',1,'Aptos::Unity::Rest']]],
+  ['restclient_2ecs_9',['RestClient.cs',['../_rest_client_8cs.html',1,'']]]
 ];

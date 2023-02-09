@@ -27,9 +27,11 @@ var searchData=
   ['statechangehash_24',['StateChangeHash',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html#a9231180b4572748c1ffe3cbc20e97dc5',1,'Aptos::Unity::Rest::Model::Transaction']]],
   ['statecheckpointhash_25',['StateCheckpointHash',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html#a5732e69ed88f1b0991c3a043ecc3493f',1,'Aptos::Unity::Rest::Model::Transaction']]],
   ['statekeyhash_26',['StateKeyHash',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_change_write_resource.html#ab1a8c8da102c0d49dd65a5ef0e10c0a7',1,'Aptos.Unity.Rest.Model.ChangeWriteResource.StateKeyHash()'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_change_write_resource_write_table_item.html#abf71e7a5b0f061fa12a1d3c24bc49e34',1,'Aptos.Unity.Rest.Model.ChangeWriteResourceWriteTableItem.StateKeyHash()']]],
-  ['stringtobytearray_27',['StringToByteArray',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abc84f376cfca18c198998d545fa77a0c',1,'Aptos::Unity::Rest::RestClient']]],
-  ['struct_28',['STRUCT',['../namespace_aptos_1_1_utilities_1_1_b_c_s.html#aca7f9b089f0c4455bb61fcace317e9c6ab8223be2455e0ea5a0e63e8f018d6fc3',1,'Aptos::Utilities::BCS']]],
-  ['structtag_29',['StructTag',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html',1,'Aptos.Utilities.BCS.StructTag'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html#ad61c5e71b4856c1e23845d78a4d54e15',1,'Aptos.Utilities.BCS.StructTag.StructTag()']]],
-  ['submittransaction_30',['SubmitTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a6abeb070dad2ba63c533d45ed0082131',1,'Aptos::Unity::Rest::RestClient']]],
-  ['success_31',['Success',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html#a91a97492d08b1feb596a6b88ce0ded3b',1,'Aptos::Unity::Rest::Model::Transaction']]]
+  ['status_27',['Status',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html#ad8e0827f67dfc411ac6a64909eecdbe0',1,'Aptos::Unity::Rest::Model::ResponseInfo']]],
+  ['status_28',['status',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html#a9390bd5ec5390bbbe07d2fd96ae2b6a1',1,'Aptos::Unity::Rest::Model::ResponseInfo']]],
+  ['stringtobytearray_29',['StringToByteArray',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abc84f376cfca18c198998d545fa77a0c',1,'Aptos::Unity::Rest::RestClient']]],
+  ['struct_30',['STRUCT',['../namespace_aptos_1_1_utilities_1_1_b_c_s.html#aca7f9b089f0c4455bb61fcace317e9c6ab8223be2455e0ea5a0e63e8f018d6fc3',1,'Aptos::Utilities::BCS']]],
+  ['structtag_31',['StructTag',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html',1,'Aptos.Utilities.BCS.StructTag'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html#ad61c5e71b4856c1e23845d78a4d54e15',1,'Aptos.Utilities.BCS.StructTag.StructTag()']]],
+  ['submittransaction_32',['SubmitTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa77c0a1ef1c45608f8306f7a444d6409',1,'Aptos::Unity::Rest::RestClient']]],
+  ['success_33',['Success',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html#a91a97492d08b1feb596a6b88ce0ded3b',1,'Aptos.Unity.Rest.Model.Transaction.Success()'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html#ad8e0827f67dfc411ac6a64909eecdbe0a505a83f220c02df2f85c3810cd9ceb38',1,'Aptos.Unity.Rest.Model.ResponseInfo.Success()']]]
 ];
