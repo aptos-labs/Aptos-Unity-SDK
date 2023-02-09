@@ -165,16 +165,13 @@ namespace Aptos.Unity.Sample
 
             #region Wait For Transaction
             bool waitForTxnSuccess = false;
-            string txnResult = "";
             Coroutine waitForTransactionCor = StartCoroutine(
-                RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
                 {
-                    waitForTxnSuccess = pending;
-                    txnResult = transactionWaitResult;
-                    Debug.Log(transactionWaitResult);
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
                 }, transactionHash)
             );
-
             yield return waitForTransactionCor;
 
             if(!waitForTxnSuccess)

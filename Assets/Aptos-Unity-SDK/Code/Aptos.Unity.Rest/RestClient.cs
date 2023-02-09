@@ -170,7 +170,7 @@ namespace Aptos.Unity.Rest
             else
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
-                Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
+                Debug.Log("Account Resource Coin Value: " + acctResourceCoin.DataProp.Coin.Value);
 
                 AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
                 coin.Value = acctResourceCoin.DataProp.Coin.Value;
@@ -295,7 +295,7 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
         /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection.</param>
-        /// <returns></returns>
+        /// <returns>Calls <c>callback</c>function with a JSON object representing a table item.</returns>
         public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -365,7 +365,7 @@ namespace Aptos.Unity.Rest
         /// </code>
         /// </param>
         /// <returns></returns>
-        public IEnumerator GetTableItemNFT(Action<string> callback, string handle, string keyType, string valueType, TokenIdRequest key)
+        public IEnumerator GetTableItemNFT(Action<TableItemToken, ResponseInfo> callback, string handle, string keyType, string valueType, TokenIdRequest key)
         {
             TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
             {
@@ -390,10 +390,11 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResponseInfo responseInfo = new ResponseInfo();
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Sending: " + request.error);
-                callback(null);
+                callback(null, responseInfo);
             }
             if (request.responseCode == 404)
             {
@@ -409,13 +410,20 @@ namespace Aptos.Unity.Rest
                 tableItemToken.Id.TokenDataId.Name = key.TokenDataId.Name;
                 tableItemToken.Amount = "0";
 
-                string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
-                callback(tableItemTokenJson);
+                //string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = request.error;
+
+                callback(tableItemToken, responseInfo);
             }
             else
             {
                 string response = request.downloadHandler.text;
-                callback(response);
+                TableItemToken tableItemToken = tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+
+                callback(tableItemToken, responseInfo);
             }
 
             request.Dispose();
@@ -1265,8 +1273,6 @@ namespace Aptos.Unity.Rest
                 Arguments = arguments
             };
 
-            //string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
-
             string sequenceNumber = "";
 
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
@@ -1534,7 +1540,7 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns>Calls <c>callback</c> function with (boolean, string). </returns>
-        public IEnumerator GetToken(Action<bool, string> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
+        public IEnumerator GetToken(Action<TableItemToken, ResponseInfo> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
             bool success = false;
@@ -1548,9 +1554,13 @@ namespace Aptos.Unity.Rest
             }, ownerAddress, "0x3::token::TokenStore"));
             yield return accountResourceCor;
 
+            ResponseInfo responseInfo = new ResponseInfo();
+
             if(!success & responseCode != 404)
             {
-                callback(false, tokenStoreResourceResp);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = tokenStoreResourceResp;
+                callback(null, responseInfo);
                 yield break;
             }
 
@@ -1570,14 +1580,15 @@ namespace Aptos.Unity.Rest
 
             string tokenIdJson = JsonConvert.SerializeObject(tokenId);
 
-            string tableItemResp = "";
-            Coroutine getTableItemCor = StartCoroutine(GetTableItemNFT((returnResult) =>
+            TableItemToken tableItemToken = new TableItemToken();
+            Coroutine getTableItemCor = StartCoroutine(GetTableItemNFT((_tableItemToken, _responseInfo) =>
             {
-                tableItemResp = returnResult;
+                tableItemToken = _tableItemToken;
+                responseInfo = _responseInfo;
             }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenId));
             yield return getTableItemCor;
 
-            callback(true, tableItemResp);
+            callback(tableItemToken, responseInfo);
         }
 
         /// <summary>
@@ -1593,19 +1604,19 @@ namespace Aptos.Unity.Rest
         public IEnumerator GetTokenBalance(Action<string> callback
             , Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress, string collectionName, string tokenName, int propertyVersion = 0)
         {
-            bool success = false;
-            string tokenResp = "";
-            Coroutine accountResourceCor = StartCoroutine(GetToken((_success, returnResult) =>
+            TableItemToken tableItemToken = new TableItemToken();
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            Coroutine accountResourceCor = StartCoroutine(GetToken((_tableItemToken, _responseInfo) =>
             {
-                success = _success;
-                tokenResp = returnResult;
+                tableItemToken = _tableItemToken;
+                responseInfo = _responseInfo;
+
             }, ownerAddress, creatorAddress, collectionName, tokenName, propertyVersion));
             yield return accountResourceCor;
 
-            TableItemToken tableItemToken;
-            if (success)
+            if (responseInfo.status == ResponseInfo.Status.Success)
             {
-                tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
                 string tokenBalance = tableItemToken.Amount;
                 callback(tokenBalance);
             }
@@ -1723,7 +1734,9 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Get a resource of a given type from an account.
-        /// NOTE: The response is a complex object of unknown types since this is dependent on what the resource is.
+        /// NOTE: The response is a complex object of types only known to the developer writing the contracts.
+        /// This function return a string and expect the developer to deserialize it to an object.
+        /// See <see cref="GetAccountResourceCollection(Action{ResourceCollection, ResponseInfo}, AccountAddress, string)">GetAccountResourceCollection</see> for an example.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
