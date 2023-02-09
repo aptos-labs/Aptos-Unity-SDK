@@ -111,7 +111,7 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns></returns>
+        /// <returns>Sequence number as a string.</returns>
         public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
         {
             AccountData accountData = new AccountData();
@@ -188,7 +188,7 @@ namespace Aptos.Unity.Rest
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
         /// <returns></returns>
-        public IEnumerator GetAccountResourceCollection(Action<ResourceCollection> callback, Accounts.AccountAddress accountAddress, string resourceType)
+        public IEnumerator GetAccountResourceCollection(Action<ResourceCollection, ResponseInfo> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
@@ -200,22 +200,34 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResourceCollection resourceCollection = new ResourceCollection();
+            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo.message = "Error when getting account resource. ";
+
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Sending: " + request.error);
-                callback(null);
+
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message += request.error;
+                callback(null, responseInfo);
             }
 
             if (request.responseCode >= 400)
             {
                 Debug.LogError("Account Resource Not Found: " + request.error);
-                callback(null);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message += request.error;
+                callback(null, responseInfo);
                 yield break;
             }
             else
             {
                 ResourceCollection acctResource = JsonConvert.DeserializeObject<ResourceCollection>(request.downloadHandler.text);
-                callback(acctResource);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = request.downloadHandler.text;
+                callback(acctResource, responseInfo);
             }
 
             request.Dispose();
