@@ -54,7 +54,30 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
-        public IEnumerator GetAccount(Action<string> callback, AccountAddress accountAddress)
+        //public IEnumerator GetAccount(Action<string> callback, AccountAddress accountAddress)
+        //{
+        //    string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
+        //    Uri accountsURI = new Uri(accountsURL);
+        //    UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+        //    request.SendWebRequest();
+        //    while (!request.isDone)
+        //    {
+        //        yield return null;
+        //    }
+
+        //    if (request.result == UnityWebRequest.Result.ConnectionError)
+        //    {
+        //        callback(request.error);
+        //    }
+        //    else
+        //    {
+        //        callback(request.downloadHandler.text);
+        //    }
+
+        //    request.Dispose();
+        //}
+
+        public IEnumerator GetAccount(Action<AccountData, ResponseInfo> callback, AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
             Uri accountsURI = new Uri(accountsURL);
@@ -65,13 +88,34 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResponseInfo responseInfo = new ResponseInfo();
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                callback(request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+
+                callback(null, responseInfo);
+            }
+            else if(request.responseCode == 404)
+            {
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Not found";
+                callback(null, responseInfo);
+            }
+            else if(request.responseCode >= 400)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(null, responseInfo);
             }
             else
             {
-                callback(request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = null;
+
+                AccountData accountData = JsonConvert.DeserializeObject<AccountData>(request.downloadHandler.text);
+                callback(accountData, responseInfo);
             }
 
             request.Dispose();
@@ -83,19 +127,24 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
-        public IEnumerator GetAccountSequenceNumber(Action<string> callback, AccountAddress accountAddress)
+        public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
         {
-            string accountDataResp = "";
-
-            Coroutine cor = StartCoroutine(GetAccount((_accountDataResp) => {
-                accountDataResp = _accountDataResp;
+            AccountData accountData = new AccountData();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine cor = StartCoroutine(GetAccount((_accountData, _responseInfo) => {
+                accountData = _accountData;
+                responseInfo = _responseInfo;
             }, accountAddress));
             yield return cor;
 
-            AccountData accountData = JsonConvert.DeserializeObject<AccountData>(accountDataResp);
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+            }
+
             string sequenceNumber = accountData.SequenceNumber;
 
-            callback(sequenceNumber);
+            callback(sequenceNumber, responseInfo);
         }
 
         /// <summary>
