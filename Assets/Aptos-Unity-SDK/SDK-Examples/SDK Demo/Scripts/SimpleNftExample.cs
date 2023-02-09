@@ -92,7 +92,7 @@ namespace Aptos.Unity.Sample
             string tokenName = "Alice's first token";
             string tokenDescription = "Alice's simple token";
             string tokenUri = "https://aptos.dev/img/nyan.jpeg";
-            string propertyVersion = "0";
+            int propertyVersion = 0;
             #endregion
 
             #region Create Collection

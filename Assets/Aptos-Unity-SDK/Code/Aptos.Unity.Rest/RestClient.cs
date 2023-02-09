@@ -1168,7 +1168,7 @@ namespace Aptos.Unity.Rest
         /// <returns></returns>
         public IEnumerator ClaimToken(Action<string> callback
             , Account account, Accounts.AccountAddress sender, Accounts.AccountAddress creator
-            , string collectionName, string tokenName, string propertyVersion = "0")
+            , string collectionName, string tokenName, int propertyVersion = 0)
         {
             Arguments arguments = new Arguments()
             {
@@ -1177,7 +1177,7 @@ namespace Aptos.Unity.Rest
                     , creator.ToHexString()
                     , collectionName
                     , tokenName
-                    , propertyVersion
+                    , propertyVersion.ToString()
                 },
             };
 
@@ -1286,7 +1286,7 @@ namespace Aptos.Unity.Rest
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns></returns>
         public IEnumerator GetToken(Action<bool, string> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
-            string collectionName, string tokenName, string propertyVersion = "0")
+            string collectionName, string tokenName, int propertyVersion = 0)
         {
             bool success = false;
             long responseCode = 0;
@@ -1316,7 +1316,7 @@ namespace Aptos.Unity.Rest
                     Collection = collectionName,
                     Name = tokenName
                 },
-                PropertyVersion = propertyVersion
+                PropertyVersion = propertyVersion.ToString()
             };
 
             string tokenIdJson = JsonConvert.SerializeObject(tokenId);
@@ -1342,7 +1342,7 @@ namespace Aptos.Unity.Rest
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns>Token balance as a string.</returns>
         public IEnumerator GetTokenBalance(Action<string> callback
-            , Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
+            , Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress, string collectionName, string tokenName, int propertyVersion = 0)
         {
             bool success = false;
             string tokenResp = "";
@@ -1377,7 +1377,7 @@ namespace Aptos.Unity.Rest
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns></returns>
         public IEnumerator GetTokenData(Action<string> callback, Accounts.AccountAddress creator,
-            string collectionName, string tokenName, string propertyVersion = "0")
+            string collectionName, string tokenName, int propertyVersion = 0)
         {
             bool success = false;
             long responseCode = 0;
