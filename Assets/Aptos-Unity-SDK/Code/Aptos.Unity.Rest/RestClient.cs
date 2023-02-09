@@ -204,11 +204,8 @@ namespace Aptos.Unity.Rest
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.message = "Error when getting account resource. ";
 
-
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
-
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message += request.error;
                 callback(null, responseInfo);
@@ -216,9 +213,8 @@ namespace Aptos.Unity.Rest
 
             if (request.responseCode >= 400)
             {
-                Debug.LogError("Account Resource Not Found: " + request.error);
                 responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message += request.error;
+                responseInfo.message += "Account respurce not found. " + request.error;
                 callback(null, responseInfo);
                 yield break;
             }
@@ -244,7 +240,7 @@ namespace Aptos.Unity.Rest
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
         /// <returns>Calls <c>callback</c>function with an object representing the account resource that holds the coin's information.</returns>
-        public IEnumerator GetTableItemCoin(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
+        public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
             {
@@ -263,20 +259,26 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResponseInfo responseInfo = new ResponseInfo();
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
-                callback(null);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while sending request for table item. " + request.error;
+                callback(null, responseInfo);
             }
             if (request.responseCode == 404)
             {
-                Debug.LogError("Table Item Not Found: " + request.error);
-                callback(null);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Table item not found. " + request.error;
+                callback(null, responseInfo);
             }
             else
             {
-                //AccountResourceCollection acctResource = JsonConvert.DeserializeObject<AccountResourceCollection>(request.downloadHandler.text);
-                //callback(acctResource);
+                string response = request.downloadHandler.text;
+                AccountResourceCoin acctResource = JsonConvert.DeserializeObject<AccountResourceCoin>(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(acctResource, responseInfo);
             }
 
             request.Dispose();
