@@ -1079,7 +1079,7 @@ namespace Aptos.Unity.Rest
         /// <param name="max">Max number of mints</param>
         /// <param name="uri">URI of where the token's asset lives (e.g. JPEG)</param>
         /// <param name="royaltyPointsPerMillion">Royalties defined in the millionths</param>
-        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo). </returns>
+        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo).</returns>
         public IEnumerator CreateToken(Action<Transaction, ResponseInfo> callback
             , Account senderRoyaltyPayeeAddress, string collectionName, string tokenName, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
         {
@@ -1220,7 +1220,7 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="amount">Amount being offered.</param>
         /// <param name="propertyVersion">ersion of the token.</param>
-        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo). </returns>
+        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo).</returns>
         public IEnumerator OfferToken(Action<Transaction, ResponseInfo> callback
             , Account account, Accounts.AccountAddress receiver, Accounts.AccountAddress creator
             , string collectionName, string tokenName, string amount, int propertyVersion = 0)
@@ -1486,7 +1486,6 @@ namespace Aptos.Unity.Rest
             {
                 yield return null;
             }
-
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
