@@ -2,6 +2,7 @@ using Chaos.NaCl;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace Aptos.HdWallet.Utils
 {
@@ -10,6 +11,18 @@ namespace Aptos.HdWallet.Utils
     /// </summary>
     internal static class Utils
     {
+        /// <summary>
+        /// Check if it's a valid hex address.
+        /// </summary>
+        /// <param name="walletAddress"></param>
+        /// <returns>true if is a valid hex address, false otherwise.</returns>
+        public static bool IsValidAddress(string walletAddress)
+        {
+            string pattern = @"^0x[a-fA-F0-9]{40}$";
+            Regex rg = new Regex(pattern);
+            return rg.IsMatch(walletAddress);
+        }
+
         /// <summary>
         /// Converts a hexadecimal string to an array of bytes
         /// NOTE: string must not contain "0x"
