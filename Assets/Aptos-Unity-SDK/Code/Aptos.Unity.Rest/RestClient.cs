@@ -748,7 +748,7 @@ namespace Aptos.Unity.Rest
             if (!HdWallet.Utils.Utils.IsValidAddress(to))
             {
                 responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Recipient address is invalid.";
+                responseInfo.message = "Recipient address is invalid. " + to;
                 callback(null, responseInfo);
                 yield break;
             }
@@ -1562,7 +1562,7 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Read Collection's token data table 
+        /// Read Collection's token data table.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="creator">Address of the creator.</param>
@@ -1621,7 +1621,7 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// 
+        /// Get collection information.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="creator">Address of the creator.</param>
@@ -1668,6 +1668,7 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Get a resource of a given type from an account.
+        /// NOTE: The response is a complex object of unknown types since this is dependent on what the resource is.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
