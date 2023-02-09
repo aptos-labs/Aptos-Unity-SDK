@@ -18,7 +18,7 @@ namespace Aptos.HdWallet.Utils
         /// <returns>true if is a valid hex address, false otherwise.</returns>
         public static bool IsValidAddress(string walletAddress)
         {
-            string pattern = @"^0x[a-fA-F0-9]{40}$";
+            string pattern = @"^0x[a-fA-F0-9]{64}$";
             Regex rg = new Regex(pattern);
             return rg.IsMatch(walletAddress);
         }
