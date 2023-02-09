@@ -271,9 +271,9 @@ namespace Aptos.Unity.Sample
         IEnumerator WaitForTransaction(string txnHash)
         {
             Coroutine waitForTransactionCor = StartCoroutine(
-                RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
+                RestClient.Instance.WaitForTransaction((pending, _responseInfo) =>
                 {
-                    Debug.Log(transactionWaitResult);
+                    Debug.Log(_responseInfo.message);
                 }, txnHash)
             );
             yield return waitForTransactionCor;
