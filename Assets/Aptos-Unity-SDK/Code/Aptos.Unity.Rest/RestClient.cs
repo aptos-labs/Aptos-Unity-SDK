@@ -62,30 +62,6 @@ namespace Aptos.Unity.Rest
         /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
         /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
         /// </returns>
-        //public IEnumerator GetAccount(Action<string> callback, AccountAddress accountAddress)
-        //{
-        //    string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
-        //    Uri accountsURI = new Uri(accountsURL);
-        //    UnityWebRequest request = UnityWebRequest.Get(accountsURI);
-        //    request.SendWebRequest();
-        //    while (!request.isDone)
-        //    {
-        //        yield return null;
-        //    }
-
-        //    if (request.result == UnityWebRequest.Result.ConnectionError)
-        //    {
-        //        callback(request.error);
-        //    }
-        //    else
-        //    {
-        //        callback(request.downloadHandler.text);
-        //    }
-
-        //    request.Dispose();
-        //}
-
-
         public IEnumerator GetAccount(Action<AccountData, ResponseInfo> callback, AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
