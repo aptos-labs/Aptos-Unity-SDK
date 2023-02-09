@@ -1049,7 +1049,7 @@ namespace Aptos.Unity.Rest
         /// <returns></returns>
         public IEnumerator OfferToken(Action<string> callback
             , Account account, Accounts.AccountAddress receiver, Accounts.AccountAddress creator
-            , string collectionName, string tokenName, string amount, string propertyVersion = "0")
+            , string collectionName, string tokenName, string amount, int propertyVersion = 0)
         {
             Arguments arguments = new Arguments()
             {
@@ -1058,7 +1058,7 @@ namespace Aptos.Unity.Rest
                     , creator.ToHexString()
                     , collectionName
                     , tokenName
-                    , propertyVersion
+                    , propertyVersion.ToString()
                     , amount
 
                 }
@@ -1072,7 +1072,7 @@ namespace Aptos.Unity.Rest
                 Arguments = arguments
             };
 
-            string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
+            //string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
 
             string sequenceNumber = "";
 
