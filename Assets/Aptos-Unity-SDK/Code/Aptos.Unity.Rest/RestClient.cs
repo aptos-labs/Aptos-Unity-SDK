@@ -1338,21 +1338,30 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns></returns>
+        /// <returns>Token balance as a string.</returns>
         public IEnumerator GetTokenBalance(Action<string> callback
             , Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress, string collectionName, string tokenName, string propertyVersion = "0")
         {
+            bool success = false;
             string tokenResp = "";
-            Coroutine accountResourceCor = StartCoroutine(GetToken((returnResult) =>
+            Coroutine accountResourceCor = StartCoroutine(GetToken((_success, returnResult) =>
             {
+                success = _success;
                 tokenResp = returnResult;
             }, ownerAddress, creatorAddress, collectionName, tokenName, propertyVersion));
             yield return accountResourceCor;
 
-            TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
-            string tokenBalance = tableItemToken.Amount;
-
-            callback(tokenBalance);
+            TableItemToken tableItemToken;
+            if (success)
+            {
+                tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(tokenResp);
+                string tokenBalance = tableItemToken.Amount;
+                callback(tokenBalance);
+            }
+            else
+            {
+                callback("0");
+            }
             yield return null;
         }
 
@@ -1368,13 +1377,23 @@ namespace Aptos.Unity.Rest
         public IEnumerator GetTokenData(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, string propertyVersion = "0")
         {
+            bool success = false;
+            long responseCode = 0;
             string collectionResourceResp = "";
-            Coroutine accountResourceCor = StartCoroutine(GetAccountResource((returnResult) =>
+            Coroutine accountResourceCor = StartCoroutine(GetAccountResource((_success, _responseCode, returnResult) =>
             {
+                success = _success;
+                responseCode = _responseCode;
                 collectionResourceResp = returnResult;
             }, creator, "0x3::token::Collections"));
 
             yield return accountResourceCor;
+
+            if(!success)
+            {
+                callback("Account resource not found.");
+                yield break;
+            }
 
             Debug.Log("GetTokenData Collection: " + collectionResourceResp);
 
@@ -1416,12 +1435,22 @@ namespace Aptos.Unity.Rest
         public IEnumerator GetCollection(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string propertyVersion = "0")
         {
+            bool success = false;
+            long responseCode = 0;
             string collectionResourceResp = "";
-            Coroutine getAccountResourceCor = StartCoroutine(GetAccountResource((returnResult) =>
+            Coroutine getAccountResourceCor = StartCoroutine(GetAccountResource((_success, _responseCode, returnResult) =>
             {
+                success = _success;
+                responseCode = _responseCode;
                 collectionResourceResp = returnResult;
             }, creator, "0x3::token::Collections"));
             yield return getAccountResourceCor;
+
+            if(!success)
+            {
+                callback("Account resource not found");
+                yield break;
+            }
 
             ResourceCollection resourceCollection = JsonConvert.DeserializeObject<ResourceCollection>(collectionResourceResp);
             string tokenDataHandle = resourceCollection.DataProp.CollectionData.Handle;
