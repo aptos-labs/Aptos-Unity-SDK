@@ -51,37 +51,38 @@ namespace Aptos.Unity.Sample
 
             #region Initial Coin Balances
             Debug.Log("<color=cyan>=== Initial Coin Balances ===</color>");
-            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Alice Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
-
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, aliceAddress));
             yield return getAliceBalanceCor1;
 
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((succes, returnResult) =>
+            if (responseInfo.status == ResponseInfo.Status.Failed)
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Bob Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Bob Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
 
+            Debug.Log("Alice's Balance After Funding: " + coin.Value);
+
+
+            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, bobAddress));
             yield return getBobAccountBalance;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Bob's Balance After Funding: " + coin.Value);
             #endregion
 
             #region Collection & Token Naming Details
@@ -98,7 +99,6 @@ namespace Aptos.Unity.Sample
             #region Create Collection
             Debug.Log("<color=cyan>=== Creating Collection and Token ===</color>");
             Transaction createCollectionTxn = new Transaction();
-            ResponseInfo responseInfo = new ResponseInfo();
             Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((_createCollectionTxn, _responseInfo) =>
             {
                 createCollectionTxn = _createCollectionTxn;
