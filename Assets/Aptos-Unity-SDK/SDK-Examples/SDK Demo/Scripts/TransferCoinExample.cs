@@ -132,7 +132,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Have Alice give Bob 1_000 coins - Submit Transfer Transaction
-            Transaction transaction = new Transaction(null);
+            Transaction transaction = new Transaction();
             ResponseInfo responseInfo = new ResponseInfo();
             Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transaction, _responseInfo) =>
             {

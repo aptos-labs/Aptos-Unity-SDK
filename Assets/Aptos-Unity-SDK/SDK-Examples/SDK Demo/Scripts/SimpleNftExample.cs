@@ -97,7 +97,7 @@ namespace Aptos.Unity.Sample
 
             #region Create Collection
             Debug.Log("<color=cyan>=== Creating Collection and Token ===</color>");
-            Transaction createCollectionTxn = new Transaction(null);
+            Transaction createCollectionTxn = new Transaction();
             ResponseInfo responseInfo = new ResponseInfo();
             Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((_createCollectionTxn, _responseInfo) =>
             {
@@ -129,7 +129,7 @@ namespace Aptos.Unity.Sample
 
             #region Create Non-Fungible Token
             string createTokenResult = "";
-            Transaction createTokenTxn = new Transaction(null);
+            Transaction createTokenTxn = new Transaction();
             Coroutine createTokenCor = StartCoroutine(
                 RestClient.Instance.CreateToken((_createTokenTxn, _responseInfo) =>
                 {
@@ -197,7 +197,7 @@ namespace Aptos.Unity.Sample
             #region Transferring the Token to Bob
             Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
             string offerTokenResult = "";
-            Transaction offerTokenTxn = new Transaction(null);
+            Transaction offerTokenTxn = new Transaction();
             Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((_offerTokenTxn, _responseInfo) =>
             {
                 offerTokenTxn = _offerTokenTxn;
@@ -222,7 +222,7 @@ namespace Aptos.Unity.Sample
 
             #region Bob Claims Token
             Debug.Log("<color=cyan>=== Bob Claims Token ===</color>");
-            Transaction claimTokenTxn = new Transaction(null);
+            Transaction claimTokenTxn = new Transaction();
             Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((_claimTokenTxn, _responseInfo) =>
             {
                 claimTokenTxn = _claimTokenTxn;
