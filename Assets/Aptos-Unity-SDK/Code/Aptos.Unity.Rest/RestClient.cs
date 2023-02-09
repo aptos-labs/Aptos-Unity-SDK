@@ -49,11 +49,19 @@ namespace Aptos.Unity.Rest
         #region Account Accessors
 
         /// <summary>
-        /// Get Account Details.
+        /// Get Account Details.   
+        /// Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. 
+        /// If the ledger version is not specified in the request, the latest ledger version is used.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns></returns>
+        /// <returns>AccountData contains the account's:   
+        /// <c>sequence_number</c>, a string containing a 64-bit unsigned integer.   
+        /// Example: <code>32425224034</code>
+        /// <c>authentication_key</c> All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.
+        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
+        /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
+        /// </returns>
         //public IEnumerator GetAccount(Action<string> callback, AccountAddress accountAddress)
         //{
         //    string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
@@ -76,6 +84,7 @@ namespace Aptos.Unity.Rest
 
         //    request.Dispose();
         //}
+
 
         public IEnumerator GetAccount(Action<AccountData, ResponseInfo> callback, AccountAddress accountAddress)
         {
@@ -783,11 +792,24 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Encodes submission.
+        /// Encodes submission.   
+        /// This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner 
+        /// (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS.   
+        /// The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint. 
+        /// 
+        /// If you are using an SDK that has BCS support, such as the official Rust, TypeScript, or Python SDKs, you may use the BCS encoding instead of this endpoint.
+        /// 
+        /// To sign a message using the response from this endpoint:
+        /// - Decode the hex encoded string in the response to bytes.
+        /// - Sign the bytes to create the signature.
+        /// - Use that as the signature field in something like Ed25519Signature, which you then use to build a TransactionSignature.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="txnRequestJson">Transaction request in JSON format.</param>
-        /// <returns></returns>
+        /// <returns>All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.  
+        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
+        /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
+        /// </returns>
         public IEnumerator EncodeSubmission(Action<string> callback, string txnRequestJson)
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
