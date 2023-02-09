@@ -1030,7 +1030,7 @@ namespace Aptos.Unity.Rest
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
-                    collectionName, name, description, supply.ToString(),
+                    collectionName, tokenName, description, supply.ToString(),
                     max.ToString(), uri, senderRoyaltyPayeeAddress.AccountAddress.ToString(),
                     "1000000", royaltyPointsPerMillion.ToString()
                 },
