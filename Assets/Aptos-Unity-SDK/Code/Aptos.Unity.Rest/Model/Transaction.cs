@@ -12,6 +12,8 @@ namespace Aptos.Unity.Rest.Model
     {
         public Transaction(TransactionRequest transactionRequest) : base(transactionRequest) { }
 
+        public Transaction() { }
+
         [JsonProperty("type", Required = Required.AllowNull)]
         public string Type { get; set; }
 
