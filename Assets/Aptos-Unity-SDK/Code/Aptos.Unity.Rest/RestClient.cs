@@ -133,12 +133,12 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get Account Balance.
+        /// Get an account's balance.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
-        public IEnumerator GetAccountBalance(Action<bool, string> callback, Accounts.AccountAddress accountAddress)
+        public IEnumerator GetAccountBalance(Action<AccountResourceCoin.Coin, ResponseInfo> callback, Accounts.AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
             Uri accountsURI = new Uri(accountsURL);
@@ -149,18 +149,33 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResponseInfo responseInfo = new ResponseInfo();
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Sending: " + request.error);
-                callback(false, "Connection error.");
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Connection error. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                callback(false, "Resource not found.");
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Resource not found. " + request.error;
+
+                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+                coin.Value = "0";
+                callback(coin, responseInfo);
             }
             else
             {
-                callback(true, request.downloadHandler.text);
+                AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
+                Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
+
+                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+                coin.Value = acctResourceCoin.DataProp.Coin.Value;
+
+                callback(coin, responseInfo);
             }
 
             request.Dispose();

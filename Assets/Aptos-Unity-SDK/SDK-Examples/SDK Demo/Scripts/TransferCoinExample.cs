@@ -60,21 +60,25 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Alice Account Balance
-            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Alice Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
+                coin = _coin;
+                responseInfo = _responseInfo;
 
             }, aliceAddress));
             yield return getAliceBalanceCor1;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Alice's Balance Before Funding: " + coin.Value);
+
+
             #endregion
 
             string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
@@ -88,21 +92,22 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Alice Account Balance After Funding
-            Coroutine getAliceAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((success,returnResult) =>
+            Coroutine getAliceAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Alice Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
+                coin = _coin;
+                responseInfo = _responseInfo;
 
             }, aliceAddress));
             yield return getAliceAccountBalance2;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Alice's Balance After Funding: " + coin.Value);
+
             #endregion
 
             #region Fund Bob Account Through Devnet Faucet
@@ -114,29 +119,28 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Bob Account Balance After Funding
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Bob Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Bob Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
-
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, bobAddress));
             yield return getBobAccountBalance;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Bob's Balance After Funding: " + coin.Value);
+
             #endregion
 
             #region Have Alice give Bob 1_000 coins - Submit Transfer Transaction
-            Transaction transaction = new Transaction();
-            ResponseInfo responseInfo = new ResponseInfo();
+            Transaction transferTxn = new Transaction();
             Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transaction, _responseInfo) =>
             {
-                transaction = _transaction;
+                transferTxn = _transaction;
                 responseInfo = _responseInfo;
             }, alice, bob.AccountAddress.ToHexString(), 1000));
 
@@ -149,9 +153,8 @@ namespace Aptos.Unity.Sample
             }
 
             Debug.Log("Transfer Response: " + responseInfo.message);
-            //Transaction transaction = JsonConvert.DeserializeObject<Transaction>(transferResult, new TransactionConverter());
-            string transactionHash = transaction.Hash;
-            Debug.Log("Transfer Response Hash: " + transaction.Hash);
+            string transactionHash = transferTxn.Hash;
+            Debug.Log("Transfer Response Hash: " + transferTxn.Hash);
             #endregion
 
             #region Wait For Transaction
@@ -177,39 +180,38 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Alice Account Balance After Transfer
-            Coroutine getAliceAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            Coroutine getAliceAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Alice Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Alice Balance After Funding: " + acctResourceCoin.DataProp.Coin.Value);
-                }
-
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, aliceAddress));
             yield return getAliceAccountBalance3;
+
+            if(responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Alice Balance After Transfer: " + coin.Value);
             #endregion
 
             #region Get Bob Account Balance After Transfer
-            Coroutine getBobAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            Coroutine getBobAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Bob Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Bob Balance After Funding: " + acctResourceCoin.DataProp.Coin.Value);
-                }
-
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, bobAddress));
             yield return getBobAccountBalance2;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Bob Balance After Transfer: " + coin.Value);
+
             #endregion
         }
     }
