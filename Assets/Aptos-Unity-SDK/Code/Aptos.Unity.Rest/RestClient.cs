@@ -310,7 +310,6 @@ namespace Aptos.Unity.Rest
 
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
-            Debug.Log("GET TABLE ITEM URI: " + getTableItemURI);
 
             var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
@@ -326,12 +325,10 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
                 callback(null);
             }
             if (request.responseCode == 404)
             {
-                Debug.LogError("Table Item Not Found: " + request.error);
                 callback(null);
             }
             else
@@ -395,15 +392,12 @@ namespace Aptos.Unity.Rest
             ResponseInfo responseInfo = new ResponseInfo();
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while sending request for table item. " + request.error;
                 callback(null, responseInfo);
             }
             if (request.responseCode == 404)
             {
-                Debug.LogWarning("Table Item Not Found: " + request.error);
-
-                Debug.Log("CREATOR: " + key.TokenDataId.Creator + " COLLECTION: " + key.TokenDataId.Collection + " NAME: " + key.TokenDataId.Name);
-
                 TableItemToken tableItemToken = new TableItemToken();
                 tableItemToken.Id = new Aptos.Unity.Rest.Model.Id();
                 tableItemToken.Id.TokenDataId = new Aptos.Unity.Rest.Model.TokenDataId();
@@ -412,9 +406,8 @@ namespace Aptos.Unity.Rest
                 tableItemToken.Id.TokenDataId.Name = key.TokenDataId.Name;
                 tableItemToken.Amount = "0";
 
-                //string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
                 responseInfo.status = ResponseInfo.Status.Success;
-                responseInfo.message = request.error;
+                responseInfo.message = "Table item not found. " + request.error;
 
                 callback(tableItemToken, responseInfo);
             }
