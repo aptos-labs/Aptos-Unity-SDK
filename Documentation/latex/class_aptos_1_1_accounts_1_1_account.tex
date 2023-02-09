@@ -1,0 +1,196 @@
+\hypertarget{class_aptos_1_1_accounts_1_1_account}{}\doxysection{Aptos.\+Accounts.\+Account Class Reference}
+\label{class_aptos_1_1_accounts_1_1_account}\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+
+
+Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} Accounts An \mbox{\hyperlink{namespace_aptos}{Aptos}} account is represented by an extended private key , a public key and it\textquotesingle{}s athentication key.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_ab1a07e51cd8fd09bb441046bd8e7b8a4}{Account}} ()
+\begin{DoxyCompactList}\small\item\em Create a new \mbox{\hyperlink{namespace_aptos}{Aptos}} Account. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_aa7fe34e30e0ea3b39c32a7e4bef5b0c6}{Account}} (string private\+Key, string public\+Key)
+\begin{DoxyCompactList}\small\item\em Initialize an account with a given private and public keys. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_aff2c5ff4ebb06a766af6c05651864837}{Account}} (byte\mbox{[}$\,$\mbox{]} private\+Key, byte\mbox{[}$\,$\mbox{]} public\+Key)
+\item 
+string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_a2a7f36cd2f9b9cfcd691d2f9024aee04}{Auth\+Key}} ()
+\begin{DoxyCompactList}\small\item\em Returns the Authentication Key for the associated account. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_a71ee2161b2985d9065697239c06629d6}{Verify}} (byte\mbox{[}$\,$\mbox{]} message, byte\mbox{[}$\,$\mbox{]} signature)
+\begin{DoxyCompactList}\small\item\em Verify a given signed message with the current account\textquotesingle{}s public key. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_aa48f1cbff96bbb769cff996a81fb0b02}{Sign}} (byte\mbox{[}$\,$\mbox{]} message)
+\begin{DoxyCompactList}\small\item\em Sign a given byte array (data) with the current account\textquotesingle{}s private key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_a17c55c60e716a6247213786fa0417c44}{Generate}} ()
+\begin{DoxyCompactList}\small\item\em Utility function to be in par with the other SDKS , otherwise use the default constructor Account(). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_acbe014600de4becdcee96c9fa787a70b}{Private\+Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Private key representation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_a88b77f21fffe24eb57b4c0e94f873f98}{Public\+Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Public key representation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_a287ace27e8dc8ba0f5086016bd1f1f1b}{Account\+Address}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Account address representation. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_a94f79855d0118d90b9c74dc8949214d8}{Private\+Key\+Short}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em 32-\/byte representation of the private key \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} Accounts An \mbox{\hyperlink{namespace_aptos}{Aptos}} account is represented by an extended private key , a public key and it\textquotesingle{}s athentication key. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_ab1a07e51cd8fd09bb441046bd8e7b8a4}\label{class_aptos_1_1_accounts_1_1_account_ab1a07e51cd8fd09bb441046bd8e7b8a4}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!Account@{Account}}
+\index{Account@{Account}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{Account()}{Account()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Account.\+Account (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create a new \mbox{\hyperlink{namespace_aptos}{Aptos}} Account. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_aa7fe34e30e0ea3b39c32a7e4bef5b0c6}\label{class_aptos_1_1_accounts_1_1_account_aa7fe34e30e0ea3b39c32a7e4bef5b0c6}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!Account@{Account}}
+\index{Account@{Account}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{Account()}{Account()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Account.\+Account (\begin{DoxyParamCaption}\item[{string}]{private\+Key,  }\item[{string}]{public\+Key }\end{DoxyParamCaption})}
+
+
+
+Initialize an account with a given private and public keys. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em private\+Key} & The private key.\\
+\hline
+{\em public\+Key} & The public key.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_aff2c5ff4ebb06a766af6c05651864837}\label{class_aptos_1_1_accounts_1_1_account_aff2c5ff4ebb06a766af6c05651864837}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!Account@{Account}}
+\index{Account@{Account}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{Account()}{Account()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Account.\+Account (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{private\+Key,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{public\+Key }\end{DoxyParamCaption})}
+
+
+
+
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_a2a7f36cd2f9b9cfcd691d2f9024aee04}\label{class_aptos_1_1_accounts_1_1_account_a2a7f36cd2f9b9cfcd691d2f9024aee04}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!AuthKey@{AuthKey}}
+\index{AuthKey@{AuthKey}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{AuthKey()}{AuthKey()}}
+{\footnotesize\ttfamily string Aptos.\+Accounts.\+Account.\+Auth\+Key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the Authentication Key for the associated account. 
+
+\begin{DoxyReturn}{Returns}
+String representation of the authentication key
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_a17c55c60e716a6247213786fa0417c44}\label{class_aptos_1_1_accounts_1_1_account_a17c55c60e716a6247213786fa0417c44}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!Generate@{Generate}}
+\index{Generate@{Generate}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{Generate()}{Generate()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} Aptos.\+Accounts.\+Account.\+Generate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Utility function to be in par with the other SDKS , otherwise use the default constructor Account(). 
+
+\begin{DoxyReturn}{Returns}
+A new account
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_aa48f1cbff96bbb769cff996a81fb0b02}\label{class_aptos_1_1_accounts_1_1_account_aa48f1cbff96bbb769cff996a81fb0b02}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!Sign@{Sign}}
+\index{Sign@{Sign}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{Sign()}{Sign()}}
+{\footnotesize\ttfamily byte\mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Account.\+Sign (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{message }\end{DoxyParamCaption})}
+
+
+
+Sign a given byte array (data) with the current account\textquotesingle{}s private key. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & \\
+\hline
+\end{DoxyParams}
+The signature of the data. \begin{DoxyReturn}{Returns}
+The singed messaged in byte form
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_a71ee2161b2985d9065697239c06629d6}\label{class_aptos_1_1_accounts_1_1_account_a71ee2161b2985d9065697239c06629d6}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!Verify@{Verify}}
+\index{Verify@{Verify}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{Verify()}{Verify()}}
+{\footnotesize\ttfamily bool Aptos.\+Accounts.\+Account.\+Verify (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{message,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{signature }\end{DoxyParamCaption})}
+
+
+
+Verify a given signed message with the current account\textquotesingle{}s public key. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The signed message.\\
+\hline
+{\em signature} & The signature of the message.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True is the signature is valid, False otherwise
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_a287ace27e8dc8ba0f5086016bd1f1f1b}\label{class_aptos_1_1_accounts_1_1_account_a287ace27e8dc8ba0f5086016bd1f1f1b}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!AccountAddress@{AccountAddress}}
+\index{AccountAddress@{AccountAddress}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{AccountAddress}{AccountAddress}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} Aptos.\+Accounts.\+Account.\+Account\+Address\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Account address representation. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_acbe014600de4becdcee96c9fa787a70b}\label{class_aptos_1_1_accounts_1_1_account_acbe014600de4becdcee96c9fa787a70b}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!PrivateKey@{PrivateKey}}
+\index{PrivateKey@{PrivateKey}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{PrivateKey}{PrivateKey}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} Aptos.\+Accounts.\+Account.\+Private\+Key\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Private key representation. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_a94f79855d0118d90b9c74dc8949214d8}\label{class_aptos_1_1_accounts_1_1_account_a94f79855d0118d90b9c74dc8949214d8}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!PrivateKeyShort@{PrivateKeyShort}}
+\index{PrivateKeyShort@{PrivateKeyShort}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{PrivateKeyShort}{PrivateKeyShort}}
+{\footnotesize\ttfamily byte \mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Account.\+Private\+Key\+Short\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+32-\/byte representation of the private key 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_a88b77f21fffe24eb57b4c0e94f873f98}\label{class_aptos_1_1_accounts_1_1_account_a88b77f21fffe24eb57b4c0e94f873f98}} 
+\index{Aptos.Accounts.Account@{Aptos.Accounts.Account}!PublicKey@{PublicKey}}
+\index{PublicKey@{PublicKey}!Aptos.Accounts.Account@{Aptos.Accounts.Account}}
+\doxysubsubsection{\texorpdfstring{PublicKey}{PublicKey}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} Aptos.\+Accounts.\+Account.\+Public\+Key\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Public key representation. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+Accounts/\mbox{\hyperlink{_account_8cs}{Account.\+cs}}\end{DoxyCompactItemize}

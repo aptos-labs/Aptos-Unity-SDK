@@ -1,7 +1,7 @@
 using Chaos.NaCl;
 using System;
-using System.Text.RegularExpressions;
 using Aptos.HdWallet.Utils;
+using Aptos.Utilities.BCS;
 
 namespace Aptos.Accounts
 {
@@ -22,7 +22,7 @@ namespace Aptos.Accounts
         {
             if (address.Length != Length)
             {
-                // TODO: Throw Error
+                throw new ArgumentException("Address must be " + Length + " bytes");
             }
             this.Address = address;
         }
@@ -30,7 +30,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Convert Address bytes into hexadecimal string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String representation of account address</returns>
         public override string ToString()
         {
             return ToHexString();
@@ -51,7 +51,7 @@ namespace Aptos.Accounts
         /// Returns an AccountAddress object from a hexadecimal Address.
         /// </summary>
         /// <param name="address"></param> Hexadecimal representation of an Address.
-        /// <returns></returns>
+        /// <returns>An account address object</returns>
         public static AccountAddress FromHex(string address)
         {
             string addr = address;
@@ -67,28 +67,17 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Verifies string Address is a proper hex
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns></returns>
-        public static bool HexEnsure(string hex)
-        {
-            return Regex.Match(hex, "^#[0-9a-fA-F]{6}$").Success;
-        }
-
-        /// <summary>
         /// Generate an AccountAddress object from a given public key, byte array. 
         /// </summary>
         /// <param name="publicKey"></param>
-        /// <returns></returns>
+        /// <returns>An account address object</returns>
         public static AccountAddress FromKey(byte[] publicKey)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
             var addressBytes = new byte[Ed25519.PublicKeySizeInBytes + 1]; // +1 to contain signature scheme byte
             Array.Copy(publicKey, 0, addressBytes, 0, Ed25519.PublicKeySizeInBytes); // copy 32 bytes only
 
-            // TODO: Turn signature scheme byte into CONSTANT
-            byte sigScheme = 0x00;
+            byte sigScheme = 0x00; // signature scheme byte
             addressBytes[publicKey.Length] = sigScheme; // Append signature scheme byte to the end
 
             sha256.BlockUpdate(addressBytes, 0, addressBytes.Length);
@@ -106,16 +95,9 @@ namespace Aptos.Accounts
         /// BCS is not a self-describing format.As such, in order to deserialize a message, 
         /// one must know the message type and layout ahead of time.
         /// </summary>
-        public void Serialize()
+        public void Serialize(Serialization serializer)
         {
-            // TODO: Implement Serialize
-            throw new NotImplementedException();
-        }
-
-        public AccountAddress Deserialize()
-        {
-            // TODO: Implement Serialize
-            throw new NotImplementedException();
+            serializer.SerializeFixedBytes(this.Address);
         }
     }
 }

@@ -78,30 +78,33 @@ namespace Aptos.Utilities.BCS
                 Serialization s = new Serialization();
                 element.Serialize(s);
                 byte[] b = s.GetBytes();
-                SerializeSingleSequenceBytes(b);
+                SerializeFixedBytes(b);
             }
             return this;
         }
 
-        /**
-        * Serializes a string. UTF8 string is supported. Serializes the string's bytes length "l" first,
-        * and then serializes "l" bytes of the string content.
-        *
-        * BCS layout for "string": string_length | string_content. string_length is the bytes length of
-        * the string that is uleb128 encoded. string_length is a u32 integer.
-        **/
+        /// <summary>
+        /// Serializes a string. UTF8 string is supported. Serializes the string's bytes length "l" first,
+        /// and then serializes "l" bytes of the string content.
+        /// 
+        /// BCS layout for "string": string_length | string_content. string_length is the bytes length of
+        /// the string that is uleb128 encoded. string_length is a u32 integer.
+        /// </summary>
+        /// <param name="value">String value to serialize.</param>
+        /// <returns></returns>
         public Serialization SerializeString(string value)
         {
             SerializeBytes(System.Text.Encoding.UTF8.GetBytes(value));
             return this;
         }
 
-        /**
-         * Serializes an array of bytes.
-         *
-         * BCS layout for "bytes": bytes_length | bytes. bytes_length is the length of the bytes array that is
-         * uleb128 encoded. bytes_length is a u32 integer.
-        **/
+        /// <summary>
+        /// Serializes an array of bytes.
+        /// BCS layout for "bytes": bytes_length | bytes. bytes_length is the length of the bytes array that is
+        /// uleb128 encoded. bytes_length is a u32 integer.
+        /// </summary>
+        /// <param name="bytes">Byte array to serialize.</param>
+        /// <returns></returns>
         public Serialization SerializeBytes(byte[] bytes)
         {
             // Write the length of the bytes array
@@ -112,13 +115,14 @@ namespace Aptos.Utilities.BCS
         }
 
         /// <summary>
-        /// Serializes a list of values in a sequence.
+        /// Serializes a list of values represented in a byte array. 
+        /// This can be a sequence or a value represented as a byte array.
         /// Note that for sequences we first add the length for the entire sequence array,
-        ///     not the length of the byte array
+        /// not the length of the byte array.
         /// </summary>
-        /// <param name="bytes"></param>
+        /// <param name="bytes">Byte array to be serialized.</param>
         /// <returns></returns>
-        public Serialization SerializeSingleSequenceBytes(byte[] bytes)
+        public Serialization SerializeFixedBytes(byte[] bytes)
         {
             // Copy the bytes to the rest of the array
             output.Write(bytes);

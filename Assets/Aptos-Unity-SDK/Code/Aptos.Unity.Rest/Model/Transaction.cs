@@ -10,9 +10,7 @@ namespace Aptos.Unity.Rest.Model
     [JsonObject]
     public class Transaction : TransactionRequest
     {
-        public Transaction(TransactionRequest transactionRequest) : base(transactionRequest)
-        {
-        }
+        public Transaction(TransactionRequest transactionRequest) : base(transactionRequest) { }
 
         [JsonProperty("type", Required = Required.AllowNull)]
         public string Type { get; set; }
@@ -70,10 +68,7 @@ namespace Aptos.Unity.Rest.Model
     }
 
     [JsonObject]
-    public class ChangeWriteResourceAptosCoin : ChangeWriteResource
-    {
-
-    }
+    public class ChangeWriteResourceAptosCoin : ChangeWriteResource { }
 
     [JsonObject]
     public class ChangeWriteResourceAccount : ChangeWriteResource
@@ -81,18 +76,11 @@ namespace Aptos.Unity.Rest.Model
         [JsonProperty("authentication_key", Required = Required.Always)]
         public string AuthenticationKey { get; set; }
 
-        // TODO: coin_register_events
-
         [JsonProperty("guid_creation_num", Required = Required.Always)]
         public string GuidCreationNum { get; set; }
 
-        // TODO: key_rotation_events
-        // TODO: rotation_capability_offer
-
         [JsonProperty("sequence_number", Required = Required.Always)]
         public string SequenceNumber { get; set; }
-
-        // TODO: signer_capability_offer
     }
 
     [JsonObject]
@@ -111,7 +99,6 @@ namespace Aptos.Unity.Rest.Model
         [JsonProperty("value", Required = Required.Always)]
         public string Value { get; set; }
 
-        // TODO: Fix Data
         [JsonProperty("data", Required = Required.Always)]
         public string Data { get; set; }
     }

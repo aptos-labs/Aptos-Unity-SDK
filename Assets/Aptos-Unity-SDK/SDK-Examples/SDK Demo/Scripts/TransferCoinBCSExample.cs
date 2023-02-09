@@ -41,7 +41,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Alice Account Balance
-            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -61,7 +61,7 @@ namespace Aptos.Unity.Sample
             string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
             #region Get Alice Account Balance After Funding
-            Coroutine getAliceAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getAliceAccountBalance2 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
                 if (returnResult == null)
                 {
@@ -79,7 +79,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Fund Bob Account Through Devnet Faucet
-            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
                 Debug.Log("Faucet Response: " + returnResult);
             }, bobAddress.ToString(), 100000000, faucetEndpoint));
@@ -87,7 +87,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Get Bob Account Balance After Funding
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((succes, returnResult) =>
             {
                 if (returnResult == null)
                 {

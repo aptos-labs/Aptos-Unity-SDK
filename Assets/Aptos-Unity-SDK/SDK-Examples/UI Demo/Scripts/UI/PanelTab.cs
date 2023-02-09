@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Aptos.Unity.Sample.UI
 {
@@ -15,6 +16,10 @@ namespace Aptos.Unity.Sample.UI
 
         public bool isSelected;
 
+        //public TMP_Text contentText;
+        //[SerializeField] private Color selectedTextColor = new Color(0f, 0f, 0f);
+        //private Color unselectedTextColor;
+
         private Color selectedColor;
         private Color unselectedColor;
 
@@ -27,6 +32,8 @@ namespace Aptos.Unity.Sample.UI
 
             selectedColor = m_button.colors.selectedColor;
             unselectedColor = m_button.colors.normalColor;
+
+            //unselectedTextColor = contentText.color;
         }
 
         private void Start()
@@ -55,6 +62,8 @@ namespace Aptos.Unity.Sample.UI
             ColorBlock _colorBlock = m_button.colors;
             _colorBlock.normalColor = selectedColor;
             m_button.colors = _colorBlock;
+
+            //contentText.color = selectedTextColor;
         }
 
         public void UnSelected()
@@ -68,6 +77,8 @@ namespace Aptos.Unity.Sample.UI
                 ColorBlock _colorBlock = m_button.colors;
                 _colorBlock.normalColor = unselectedColor;
                 m_button.colors = _colorBlock;
+
+                //contentText.color = unselectedTextColor;
             }
         }
     }

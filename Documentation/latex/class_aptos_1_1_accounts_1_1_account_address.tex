@@ -1,0 +1,126 @@
+\hypertarget{class_aptos_1_1_accounts_1_1_account_address}{}\doxysection{Aptos.\+Accounts.\+Account\+Address Class Reference}
+\label{class_aptos_1_1_accounts_1_1_account_address}\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+
+
+Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} account address \href{https://aptos.dev/concepts/accounts}{\texttt{ https\+://aptos.\+dev/concepts/accounts}}.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_a6f0d22f01dc6250853bf1a245852c194}{Account\+Address}} (byte\mbox{[}$\,$\mbox{]} address)
+\begin{DoxyCompactList}\small\item\em Sets the bytes of an account Address. \end{DoxyCompactList}\item 
+override string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}{To\+String}} ()
+\begin{DoxyCompactList}\small\item\em Convert Address bytes into hexadecimal string. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_ac3d265821ce0834fb0f5882876ac973d}{To\+Hex\+String}} ()
+\begin{DoxyCompactList}\small\item\em Convert Address to hexadecimal string. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_aa92f3d61b439ddb872ed7b41e7710973}{Serialize}} (\mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} serializer)
+\begin{DoxyCompactList}\small\item\em \href{https://github.com/aptos-labs/bcs}{\texttt{ https\+://github.\+com/aptos-\/labs/bcs}} \href{https://aptos.dev/guides/creating-a-signed-transaction/\#bcs}{\texttt{ https\+://aptos.\+dev/guides/creating-\/a-\/signed-\/transaction/\#bcs}} Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-\/describing format.\+As such, in order to deserialize a message, one must know the message type and layout ahead of time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_a12e922b3b308ebe376a0e3fbb811ced8}{From\+Hex}} (string address)
+\begin{DoxyCompactList}\small\item\em Returns an Account\+Address object from a hexadecimal Address. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_a1fee8a26fb6effe9f0a17357d433497b}{From\+Key}} (byte\mbox{[}$\,$\mbox{]} public\+Key)
+\begin{DoxyCompactList}\small\item\em Generate an Account\+Address object from a given public key, byte array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} account address \href{https://aptos.dev/concepts/accounts}{\texttt{ https\+://aptos.\+dev/concepts/accounts}}. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_a6f0d22f01dc6250853bf1a245852c194}\label{class_aptos_1_1_accounts_1_1_account_address_a6f0d22f01dc6250853bf1a245852c194}} 
+\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!AccountAddress@{AccountAddress}}
+\index{AccountAddress@{AccountAddress}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+\doxysubsubsection{\texorpdfstring{AccountAddress()}{AccountAddress()}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Account\+Address.\+Account\+Address (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{address }\end{DoxyParamCaption})}
+
+
+
+Sets the bytes of an account Address. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em address} & \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_a12e922b3b308ebe376a0e3fbb811ced8}\label{class_aptos_1_1_accounts_1_1_account_address_a12e922b3b308ebe376a0e3fbb811ced8}} 
+\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!FromHex@{FromHex}}
+\index{FromHex@{FromHex}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+\doxysubsubsection{\texorpdfstring{FromHex()}{FromHex()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} Aptos.\+Accounts.\+Account\+Address.\+From\+Hex (\begin{DoxyParamCaption}\item[{string}]{address }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Returns an Account\+Address object from a hexadecimal Address. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em address} & \\
+\hline
+\end{DoxyParams}
+Hexadecimal representation of an Address. \begin{DoxyReturn}{Returns}
+An account address object
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_a1fee8a26fb6effe9f0a17357d433497b}\label{class_aptos_1_1_accounts_1_1_account_address_a1fee8a26fb6effe9f0a17357d433497b}} 
+\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!FromKey@{FromKey}}
+\index{FromKey@{FromKey}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+\doxysubsubsection{\texorpdfstring{FromKey()}{FromKey()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} Aptos.\+Accounts.\+Account\+Address.\+From\+Key (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{public\+Key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Generate an Account\+Address object from a given public key, byte array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em public\+Key} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An account address object
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_aa92f3d61b439ddb872ed7b41e7710973}\label{class_aptos_1_1_accounts_1_1_account_address_aa92f3d61b439ddb872ed7b41e7710973}} 
+\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily void Aptos.\+Accounts.\+Account\+Address.\+Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}}}]{serializer }\end{DoxyParamCaption})}
+
+
+
+\href{https://github.com/aptos-labs/bcs}{\texttt{ https\+://github.\+com/aptos-\/labs/bcs}} \href{https://aptos.dev/guides/creating-a-signed-transaction/\#bcs}{\texttt{ https\+://aptos.\+dev/guides/creating-\/a-\/signed-\/transaction/\#bcs}} Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-\/describing format.\+As such, in order to deserialize a message, one must know the message type and layout ahead of time. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_ac3d265821ce0834fb0f5882876ac973d}\label{class_aptos_1_1_accounts_1_1_account_address_ac3d265821ce0834fb0f5882876ac973d}} 
+\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!ToHexString@{ToHexString}}
+\index{ToHexString@{ToHexString}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+\doxysubsubsection{\texorpdfstring{ToHexString()}{ToHexString()}}
+{\footnotesize\ttfamily string Aptos.\+Accounts.\+Account\+Address.\+To\+Hex\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Convert Address to hexadecimal string. 
+
+\begin{DoxyReturn}{Returns}
+Address as hexadecimal string
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}\label{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}} 
+\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!ToString@{ToString}}
+\index{ToString@{ToString}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily override string Aptos.\+Accounts.\+Account\+Address.\+To\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Convert Address bytes into hexadecimal string. 
+
+\begin{DoxyReturn}{Returns}
+String representation of account address
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+Accounts/\mbox{\hyperlink{_account_address_8cs}{Account\+Address.\+cs}}\end{DoxyCompactItemize}

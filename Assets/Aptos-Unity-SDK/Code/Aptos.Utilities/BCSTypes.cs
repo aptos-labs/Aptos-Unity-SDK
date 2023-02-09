@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -10,6 +12,7 @@ namespace Aptos.Utilities.BCS
         BOOL, // int = 0
         U8, // int = 1
         U64, // int = 2
+        U32, // TODO: INSPECT WHERE TypeTag enum is leveraged
         U128, // int = 3
         ACCOUNT_ADDRESS, // int = 4
         SIGNER, // int = 5
@@ -74,18 +77,6 @@ namespace Aptos.Utilities.BCS
             this.values = serializable;
         }
 
-        //public void Serialize(Serialization serializer)
-        //{
-        //    serializer.SerializeU32AsUleb128((uint)this.values.Length);
-        //    foreach (ISerializable element in this.values)
-        //    {
-        //        Serialization s = new Serialization();
-        //        element.Serialize(s);
-        //        byte[] b = s.GetBytes();
-        //        serializer.SerializeBytes(b);
-        //    }
-        //}
-
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.values.Length);
@@ -102,7 +93,7 @@ namespace Aptos.Utilities.BCS
                     byte[] elementsBytes = seqSerializer.GetBytes();
                     int sequenceLen = elementsBytes.Length;
                     serializer.SerializeU32AsUleb128((uint)sequenceLen);
-                    serializer.SerializeSingleSequenceBytes(elementsBytes);
+                    serializer.SerializeFixedBytes(elementsBytes);
                 }
                 else // TODO: Explore this case
                 {
@@ -134,11 +125,47 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    public class BCSMap : ISerializable
+    {
+        Dictionary<BString, ISerializableTag> value;
+
+        public BCSMap(Dictionary<BString, ISerializableTag> value)
+        {
+            this.value = value;
+        }
+        public void Serialize(Serialization serializer)
+        {
+            Serialization mapSerializer = new Serialization();
+            SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
+            foreach (KeyValuePair<BString, ISerializableTag> entry in this.value)
+            {
+                Serialization keySerializer = new Serialization();
+                entry.Key.Serialize(keySerializer);
+                byte[] bKey = keySerializer.GetBytes();
+                
+                Serialization valSerializer = new Serialization();
+                entry.Value.Serialize(valSerializer);
+                byte[] bValue = valSerializer.GetBytes();
+
+                byteMap.Add(entry.Key.value, (bKey, bValue));
+            }
+            mapSerializer.SerializeU32AsUleb128((uint)byteMap.Count);
+            
+            foreach(KeyValuePair<string, (byte[], byte[])> entry in byteMap)
+            {
+                mapSerializer.SerializeFixedBytes(entry.Value.Item1);
+                mapSerializer.SerializeFixedBytes(entry.Value.Item2);
+            }
+
+            serializer.SerializeFixedBytes(mapSerializer.GetBytes());
+        }
+    }
+
     public class BString : ISerializable
     {
-        String value;
+        public string value;
 
-        public BString(String value)
+        public BString(string value)
         {
             this.value = value;
         }
@@ -204,6 +231,26 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    public class U32 : ISerializableTag
+    {
+        uint value;
+
+        public U32(uint value)
+        {
+            this.value = value;
+        }
+
+        public TypeTag Variant()
+        {
+            return TypeTag.U32;
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            serializer.Serialize(value);
+        }
+    }
+
     public class U64 : ISerializableTag
     {
         ulong value;
@@ -244,7 +291,6 @@ namespace Aptos.Utilities.BCS
         }
     }
 
-
     public class AccountAddress : ISerializableTag
     {
         byte[] value;
@@ -254,7 +300,7 @@ namespace Aptos.Utilities.BCS
             this.value = value;
         }
 
-        public AccountAddress(String address)
+        public AccountAddress(string address)
         {
             byte[] addressBytes = BigInteger
                 .Parse("00" + address.Replace("0x", ""), System.Globalization.NumberStyles.HexNumber).ToByteArray()
@@ -264,7 +310,7 @@ namespace Aptos.Utilities.BCS
             Array.Copy(addressBytes, 0, this.value, 32 - addressBytes.Length, addressBytes.Length);
         }
 
-        public String toHex()
+        public String ToHex()
         {
             StringBuilder sb = new StringBuilder();
             foreach (byte b in this.value)
@@ -286,11 +332,11 @@ namespace Aptos.Utilities.BCS
     public class StructTag : ISerializableTag
     {
         AccountAddress address;
-        String module;
-        String name;
+        string module;
+        string name;
         ISerializableTag[] typeArgs;
 
-        public StructTag(AccountAddress address, String module, String name, ISerializableTag[] typeArgs)
+        public StructTag(AccountAddress address, string module, string name, ISerializableTag[] typeArgs)
         {
             this.address = address;
             this.module = module;

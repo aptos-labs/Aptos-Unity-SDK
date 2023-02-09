@@ -21,12 +21,12 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Funds a Testnet Account
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="address"></param>
-        /// <param name="amount"></param>
-        /// <param name="endpoint"></param>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="address">Address that will get funded.</param>
+        /// <param name="amount">Amount of APT requested.</param>
+        /// <param name="endpoint">Base URL for faucet.</param>
         /// <returns></returns>
-        public IEnumerator FundAccount(Action<string> callback, string address, int amount, string endpoint)
+        public IEnumerator FundAccount(Action<bool, string> callback, string address, int amount, string endpoint)
         {
             string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
             Uri transactionsURI = new Uri(faucetURL);
@@ -41,21 +41,19 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.Log("Error While Submitting Transaction: " + request.error);
-                callback(request.error);
+                callback(false, request.error);
             }
             else if (request.responseCode == 404)
             {
-                // TODO: Implememt Error Code deserializer for Faucet Client
-                callback(request.error);
+                callback(false, request.error);
             }
-            else if (request.responseCode == 400)
+            else if (request.responseCode >= 400)
             {
-                Debug.Log(request.error);
+                callback(false, request.error);
             }
             else
             {
-                Debug.Log("Account Funded: " + address);
+                callback(true, "Funding succeeded!");
             }
 
             request.Dispose();

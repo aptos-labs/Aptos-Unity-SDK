@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Aptos.Rpc.Model
+namespace Aptos.Unity.Rest.Model
 {
     /// <summary>
     /// Represents Account Data object

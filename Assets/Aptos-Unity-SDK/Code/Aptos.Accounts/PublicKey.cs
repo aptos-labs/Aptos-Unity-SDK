@@ -6,7 +6,7 @@ using System;
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// Represents a 32-byte public key
+    /// Represents a 32-byte public key.
     /// </summary>
     public class PublicKey
     {
@@ -16,22 +16,22 @@ namespace Aptos.Accounts
         public const int KeyLength = 32;
 
         /// <summary>
-        /// Hex string representation of public key
+        /// Hex string representation of public key.
         /// </summary>
         private string _key;
 
         /// <summary>
-        /// Byte representation of public key
+        /// Byte representation of public key.
         /// </summary>
         private byte[] _keyBytes;
 
         /// <summary>
-        /// Base 58 string representation of public key
+        /// Base 58 string representation of public key.
         /// </summary>
         private string _keyBase58;
 
         /// <summary>
-        /// Byte representation of public key
+        /// Byte representation of public key.
         /// </summary>
         private byte[] _keyBytesBase58;
 
@@ -81,7 +81,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// The key as base-58 encoded string
         /// Base58 encoding scheme is used to facilitate switching 
-        /// from byte to alphanumeric text format (ASCII)
+        /// from byte to alphanumeric text format (ASCII).
         /// </summary>
         public string KeyBase58
         {
@@ -101,7 +101,7 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// The public key bytes
+        /// The public key bytes.
         /// </summary>
         public byte[] KeyBytesFromBase58
         {
@@ -134,9 +134,9 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Initializes the PublicKey object with a given hexadecimal representation of public key
+        /// Initializes the PublicKey object with a given hexadecimal representation of public .
         /// </summary>
-        /// <param name="key"></param> The public key as a hexadecimal string
+        /// <param name="key">The public key as a hexadecimal string.</param> 
         public PublicKey(string key)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
@@ -174,6 +174,7 @@ namespace Aptos.Accounts
             return KeyBytes.IsOnCurve();
         }
 
+        /// <inheritdoc cref="object.Equals(object)"/>
         public override bool Equals(object obj)
         {
             if (obj is PublicKey publicKey)
@@ -195,11 +196,11 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Compares two public key objects
+        /// Compares two public key objects.
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        /// <returns></returns>
+        /// <returns>True if public keys are equal. False is public keys are not equal.</returns>
         public static bool operator ==(PublicKey lhs, PublicKey rhs)
         {
             if (lhs is null)

@@ -19,28 +19,28 @@ namespace Aptos.Accounts
         public const int KeyLength = 64;
 
         /// <summary>
-        /// Hex string representation of pruvate key
+        /// Hex string representation of pruvate key.
         /// </summary>
         private string _key;
 
         /// <summary>
-        /// Byte representation of private key
+        /// Byte representation of private key.
         /// </summary>
         private byte[] _keyBytes;
 
         /// <summary>
-        /// String representation of private key
+        /// String representation of private key.
         /// </summary>
         private string _keyBase58;
 
         /// <summary>
-        /// Byte representation of private key
+        /// Byte representation of private key.
         /// </summary>
         private byte[] _keyBytesBase58;
 
         /// <summary>
-        /// The key as a 32-byte hexadecimal string (64 characters)
-        /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key
+        /// The key as a 32-byte hexadecimal string (64 characters) \n
+        /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key \n
         /// , then we slice it in half since the other half contains the public key.
         /// </summary>
         public string Key
@@ -49,7 +49,6 @@ namespace Aptos.Accounts
             {
                 if (_key == null && _keyBytes != null)
                 {
-                    //string addressHex = CryptoBytes.ToHexStringLower(_keyBytes.Slice(0, 32));
                     string addressHex = CryptoBytes.ToHexStringLower(_keyBytes);
                     _key = "0x" + addressHex;
                 }
@@ -131,7 +130,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Initializes the PrivateKey object with a given byte array.
         /// </summary>
-        /// <param name="privateKey"></param> Byte array representation of the private key
+        /// <param name="privateKey">Byte array representation of the private key.</param>
         public PrivateKey(byte[] privateKey)
         {
             if (privateKey == null)
@@ -145,7 +144,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Initializes the PrivateKey object with a given ASCII representation of private key
         /// </summary>
-        /// <param name="key"></param> The private key as a Base58 encoded string
+        /// <param name="key">The private key as a Base58 encoded string.</param>
         public PrivateKey(string key)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
@@ -163,6 +162,12 @@ namespace Aptos.Accounts
             privateKey.CopyTo(KeyBytes.AsSpan());
         }
 
+        /// <summary>
+        /// Compartor for two private keys.
+        /// </summary>
+        /// <param name="lhs">First private key in comparison..</param>
+        /// <param name="rhs">Second private key in comparison.</param>
+        /// <returns></returns>
         public static bool operator ==(PrivateKey lhs, PrivateKey rhs)
         {
 
@@ -184,7 +189,7 @@ namespace Aptos.Accounts
 
 
         /// <summary>
-        /// Sign a message using the current private key
+        /// Sign a message using the current private key.
         /// </summary>
         /// <param name="message">The message to sign, represented in bytes.</param>
         /// <returns>The signature generated for the message.</returns>
@@ -195,6 +200,29 @@ namespace Aptos.Accounts
                 new ArraySegment<byte>(message),
                 new ArraySegment<byte>(KeyBytes));
             return signature.Array;
+        }
+
+        /// <inheritdoc cref="Equals(object)"/>
+        public override bool Equals(object obj)
+        {
+            if(obj is PrivateKey privateKey)
+            {
+                return privateKey.Key == this.Key;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc cref="GetHashCode"/>
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
+        /// <inheritdoc cref="ToString"/>
+        public override string ToString()
+        {
+            return Key;
         }
 
         /// <summary>

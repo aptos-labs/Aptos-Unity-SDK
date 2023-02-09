@@ -26,15 +26,15 @@ namespace Aptos.Unity.Rest.Model
     [JsonObject]
     public class Arguments
     {
-        [JsonProperty("arguments", Required = Required.AllowNull)]
+        [JsonProperty("argument_strings", Required = Required.AllowNull)]
         public string[] ArgumentStrings { get; set; }
-        [JsonProperty("arguments", Required = Required.AllowNull)]
+        [JsonProperty("mutate_settings", Required = Required.AllowNull)]
         public bool[] MutateSettings { get; set; }
-        [JsonProperty("arguments", Required = Required.AllowNull)]
+        [JsonProperty("property_keys", Required = Required.AllowNull)]
         public string[] PropertyKeys { get; set; }
-        [JsonProperty("arguments", Required = Required.AllowNull)]
-        public int[] PropertyValues { get; set; } // TODO: See Data Type for Property Values; array<string<hex>>
-        [JsonProperty("arguments", Required = Required.AllowNull)]
+        [JsonProperty("property_values", Required = Required.AllowNull)]
+        public int[] PropertyValues { get; set; }
+        [JsonProperty("property_types", Required = Required.AllowNull)]
         public string[] PropertyTypes { get; set; }
     }
 }

@@ -10,7 +10,6 @@ using Aptos.Unity.Rest;
 using Newtonsoft.Json;
 using Aptos.Unity.Rest.Model;
 using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
 using Aptos.Accounts;
 
 namespace Aptos.Unity.Sample.UI
@@ -118,11 +117,16 @@ namespace Aptos.Unity.Sample.UI
             return addressList[PlayerPrefs.GetInt(currentAddressIndexKey)];
         }
 
+        public string GetPrivateKey()
+        {
+            return wallet.Account.PrivateKey;
+        }
+
         public void LoadCurrentWalletBalance()
         {
-            StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
             {
-                if (returnResult == null)
+                if (!success)
                 {
                     //UIController.Instance.ToggleNotification(false, "Fail to Fetch the Balance");
                     onGetBalance?.Invoke(0.0f);
@@ -130,7 +134,6 @@ namespace Aptos.Unity.Sample.UI
                 else
                 {
                     AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log(acctResourceCoin.DataProp.Coin.Value);
                     onGetBalance?.Invoke(float.Parse(acctResourceCoin.DataProp.Coin.Value));
                 }
 
@@ -139,9 +142,8 @@ namespace Aptos.Unity.Sample.UI
 
         public IEnumerator AirDrop(int _amount)
         {
-            Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
-                Debug.Log("FAUCET RESPONSE: " + returnResult);
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress.ToString()
                 , _amount
                 , faucetEndpoint));
@@ -150,27 +152,27 @@ namespace Aptos.Unity.Sample.UI
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
+            UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptosTokenToFloat((float)_amount) + " APT");
         }
 
-        public IEnumerator SendToken(string targetAddress, int amount)
+        public IEnumerator SendToken(string _targetAddress, long _amount)
         {
-            string transferResult = "";
+            string transferResult = string.Empty;
             Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
             {
                 transferResult = _transferResult;
-            }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), targetAddress, amount));
+            }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), _targetAddress, _amount));
 
             yield return cor;
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)amount) + " APT to " + UIController.Instance.ShortenString(targetAddress, 4));
+            UIController.Instance.ToggleNotification(true, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
         }
 
         public IEnumerator CreateCollection(string _collectionName, string _collectionDescription, string _collectionUri)
         {
-            string createCollectionResult = "";
+            string createCollectionResult = string.Empty;
             Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((returnResult) =>
             {
                 createCollectionResult = returnResult;
@@ -178,17 +180,18 @@ namespace Aptos.Unity.Sample.UI
             _collectionName, _collectionDescription, _collectionUri));
             yield return createCollectionCor;
 
-            Debug.Log("Create Collection Response: " + createCollectionResult);
+            yield return new WaitForSeconds(1f);
+            LoadCurrentWalletBalance();
+
             Aptos.Unity.Rest.Model.Transaction createCollectionTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createCollectionResult, new TransactionConverter());
             string transactionHash = createCollectionTxn.Hash;
-            Debug.Log("Create Collection Hash: " + createCollectionTxn.Hash);
 
             UIController.Instance.ToggleNotification(true, "Successfully Create Collection: " + _collectionName);
         }
 
         public IEnumerator CreateNFT(string _collectionName, string _tokenName, string _tokenDescription, int _supply, int _max, string _uri, int _royaltyPointsPerMillion)
         {
-            string createTokenResult = "";
+            string createTokenResult = string.Empty;
             Coroutine createTokenCor = StartCoroutine(
                 RestClient.Instance.CreateToken((returnResult) =>
                 {
@@ -204,22 +207,23 @@ namespace Aptos.Unity.Sample.UI
             );
             yield return createTokenCor;
 
-            Debug.Log("Create Token Response: " + createTokenResult);
+            yield return new WaitForSeconds(1f);
+            LoadCurrentWalletBalance();
+
             Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
             string createTokenTxnHash = createTokenTxn.Hash;
-            Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 
             UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
         }
 
-        public float AptoTokenToFloat(float _token)
+        public float AptosTokenToFloat(float _token)
         {
             return _token / 100000000f;
         }
 
-        public int AptoFloatToToken(float _amount)
+        public long AptosFloatToToken(float _amount)
         {
-            return (int)(_amount * 100000000f);
+            return Convert.ToInt64(_amount * 100000000);
         }
     }
 }
