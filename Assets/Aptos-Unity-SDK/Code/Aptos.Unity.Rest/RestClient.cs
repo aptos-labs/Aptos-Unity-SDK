@@ -1,13 +1,11 @@
 using Aptos.Accounts;
 using Aptos.Rest;
 using Aptos.Unity.Rest.Model;
-using Aptos.Utilities.BCS;
 using Chaos.NaCl;
 using NBitcoin;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -1276,7 +1274,7 @@ namespace Aptos.Unity.Rest
         #region Token Accessors
 
         /// <summary>
-        /// Get token information
+        /// Get token information.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="ownerAddress">Address of token owner.</param>
@@ -1285,15 +1283,25 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns></returns>
-        public IEnumerator GetToken(Action<string> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
+        public IEnumerator GetToken(Action<bool, string> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
             string collectionName, string tokenName, string propertyVersion = "0")
         {
+            bool success = false;
+            long responseCode = 0;
             string tokenStoreResourceResp = "";
-            Coroutine accountResourceCor = StartCoroutine(GetAccountResource((returnResult) =>
+            Coroutine accountResourceCor = StartCoroutine(GetAccountResource((_success, _responseCode, _returnResult) =>
             {
-                tokenStoreResourceResp = returnResult;
+                success = _success;
+                responseCode = _responseCode;
+                tokenStoreResourceResp = _returnResult;
             }, ownerAddress, "0x3::token::TokenStore"));
             yield return accountResourceCor;
+
+            if(!success & responseCode != 404)
+            {
+                callback(false, tokenStoreResourceResp);
+                yield break;
+            }
 
             AccountResourceTokenStore accountResource = JsonConvert.DeserializeObject<AccountResourceTokenStore>(tokenStoreResourceResp);
             string tokenStoreHandle = accountResource.DataProp.Tokens.Handle;
@@ -1318,7 +1326,7 @@ namespace Aptos.Unity.Rest
             }, tokenStoreHandle, "0x3::token::TokenId", "0x3::token::Token", tokenId));
             yield return getTableItemCor;
 
-            callback(tableItemResp);
+            callback(true, tableItemResp);
         }
 
         /// <summary>
@@ -1440,7 +1448,7 @@ namespace Aptos.Unity.Rest
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
         /// <returns></returns>
-        public IEnumerator GetAccountResource(Action<string> callback, Accounts.AccountAddress accountAddress, string resourceType)
+        public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
@@ -1454,16 +1462,16 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Sending: " + request.error);
-                callback("ERROR: Connection Error: " + request.error);
+                callback(false, 0, "ERROR: Connection Error: " + request.error);
             }
             else if (request.responseCode == 404)
             {
                 Debug.LogError("Error Not Found: " + request.error);
-                callback("ERROR: Resource Not Found: " + request.error);
+                callback(false, request.responseCode, "ERROR: Resource Not Found: " + request.error);
             }
             else
             {
-                callback(request.downloadHandler.text);
+                callback(true, request.responseCode, request.downloadHandler.text);
             }
 
             request.Dispose();
