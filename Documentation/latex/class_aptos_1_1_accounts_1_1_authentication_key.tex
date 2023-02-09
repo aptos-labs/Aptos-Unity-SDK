@@ -1,0 +1,161 @@
+\hypertarget{class_aptos_1_1_accounts_1_1_authentication_key}{}\doxysection{Aptos.\+Accounts.\+Authentication\+Key Class Reference}
+\label{class_aptos_1_1_accounts_1_1_authentication_key}\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+
+
+Represents an Authentication Key ~\newline
+During the account creation process, a 32-\/byte authentication key comes to exist first. ~\newline
+This authentication key is then returned as it is as the 32-\/byte account Address. ~\newline
+.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a355164a21c034b9765b63266740a7364}{Authentication\+Key}} (byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a4b75f20620c1171a548c80d9975b7743}{bytes}})
+\item 
+string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a1818ef4e92a54e4bc4c7947940432319}{Derived\+Address}} ()
+\begin{DoxyCompactList}\small\item\em Derives hexadecimal Address from authentication key array of bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key}{Authentication\+Key}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a294a6cb22da99e9d0d1892b9f3f0d44e}{From\+Multi\+Ed25519\+Public\+Key}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key}{Multi\+Ed25519\+Public\+Key}} public\+Key)
+\begin{DoxyCompactList}\small\item\em Converts a K-\/of-\/N Multi\+Ed25519\+Public\+Key to Authentication\+Key with\+: ~\newline
+{\ttfamily auth\+\_\+key = sha3-\/256(p\+\_\+1 $\vert$ … $\vert$ p\+\_\+n $\vert$ K $\vert$ 0x01)}. {\ttfamily K} represents the K-\/of-\/N required for ~\newline
+authenticating the transaction. {\ttfamily 0x01} is the 1-\/byte scheme for multisig. ~\newline
+. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key}{Authentication\+Key}} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a7ce3de004f59e9d447b6d152fad1577b}{From\+Ed25519\+Public\+Key}} (byte\mbox{[}$\,$\mbox{]} public\+Key)
+\begin{DoxyCompactList}\small\item\em Converts single Public Key (bytes) into Authentication Key ~\newline
+auth\+\_\+key = sha3-\/256(pubkey\+\_\+A $\vert$ 0x00) ~\newline
+where $\vert$ denotes concatenation. The 0x00 is the 1-\/byte single-\/signature scheme identifier. ~\newline
+. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a4b75f20620c1171a548c80d9975b7743}{bytes}}
+\begin{DoxyCompactList}\small\item\em Byte array representing authentication key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_aface63e70a5d5a7a80e07135bce556fb}{LENGTH}} = 32
+\item 
+static byte \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a6945c1ece6c533236fba5d9eb03152b0}{MULTI\+\_\+\+ED25519\+\_\+\+SCHEME}} = 0x001
+\item 
+static byte \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a8ccfa197dbeb7157761bf1341e713d9f}{ED25519\+\_\+\+SCHEME}} = 0x00
+\item 
+static byte \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key_a2ff40fbe83a9901d4e03c4676ad6cc44}{DERIVE\+\_\+\+RESOURCE\+\_\+\+ACCOUNT\+\_\+\+SCHEME}} = 255
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an Authentication Key ~\newline
+During the account creation process, a 32-\/byte authentication key comes to exist first. ~\newline
+This authentication key is then returned as it is as the 32-\/byte account Address. ~\newline
+. 
+
+NOTE\+: Generating the authentication key for an account requires that you provide one of ~\newline
+the below 1-\/byte signature scheme identifiers for this account, i.\+e., ~\newline
+whether the account is a single signature or a multisig account\+: ~\newline
+More info on account addresses found \mbox{\hyperlink{}{here}}. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a355164a21c034b9765b63266740a7364}\label{class_aptos_1_1_accounts_1_1_authentication_key_a355164a21c034b9765b63266740a7364}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!AuthenticationKey@{AuthenticationKey}}
+\index{AuthenticationKey@{AuthenticationKey}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{AuthenticationKey()}{AuthenticationKey()}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Authentication\+Key.\+Authentication\+Key (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{bytes }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a1818ef4e92a54e4bc4c7947940432319}\label{class_aptos_1_1_accounts_1_1_authentication_key_a1818ef4e92a54e4bc4c7947940432319}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!DerivedAddress@{DerivedAddress}}
+\index{DerivedAddress@{DerivedAddress}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{DerivedAddress()}{DerivedAddress()}}
+{\footnotesize\ttfamily string Aptos.\+Accounts.\+Authentication\+Key.\+Derived\+Address (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Derives hexadecimal Address from authentication key array of bytes. 
+
+\begin{DoxyReturn}{Returns}
+A hexa string representation Address of the authentication key
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a7ce3de004f59e9d447b6d152fad1577b}\label{class_aptos_1_1_accounts_1_1_authentication_key_a7ce3de004f59e9d447b6d152fad1577b}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!FromEd25519PublicKey@{FromEd25519PublicKey}}
+\index{FromEd25519PublicKey@{FromEd25519PublicKey}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{FromEd25519PublicKey()}{FromEd25519PublicKey()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key}{Authentication\+Key}} Aptos.\+Accounts.\+Authentication\+Key.\+From\+Ed25519\+Public\+Key (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{public\+Key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Converts single Public Key (bytes) into Authentication Key ~\newline
+auth\+\_\+key = sha3-\/256(pubkey\+\_\+A $\vert$ 0x00) ~\newline
+where $\vert$ denotes concatenation. The 0x00 is the 1-\/byte single-\/signature scheme identifier. ~\newline
+. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em public\+Key} & Publick key, in byte array format, used to generate the authentication key\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Authentication key object
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a294a6cb22da99e9d0d1892b9f3f0d44e}\label{class_aptos_1_1_accounts_1_1_authentication_key_a294a6cb22da99e9d0d1892b9f3f0d44e}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!FromMultiEd25519PublicKey@{FromMultiEd25519PublicKey}}
+\index{FromMultiEd25519PublicKey@{FromMultiEd25519PublicKey}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{FromMultiEd25519PublicKey()}{FromMultiEd25519PublicKey()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_authentication_key}{Authentication\+Key}} Aptos.\+Accounts.\+Authentication\+Key.\+From\+Multi\+Ed25519\+Public\+Key (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key}{Multi\+Ed25519\+Public\+Key}}}]{public\+Key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Converts a K-\/of-\/N Multi\+Ed25519\+Public\+Key to Authentication\+Key with\+: ~\newline
+{\ttfamily auth\+\_\+key = sha3-\/256(p\+\_\+1 $\vert$ … $\vert$ p\+\_\+n $\vert$ K $\vert$ 0x01)}. {\ttfamily K} represents the K-\/of-\/N required for ~\newline
+authenticating the transaction. {\ttfamily 0x01} is the 1-\/byte scheme for multisig. ~\newline
+. 
+
+\begin{DoxyReturn}{Returns}
+Authentication key object from a multi ED25519 key
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a4b75f20620c1171a548c80d9975b7743}\label{class_aptos_1_1_accounts_1_1_authentication_key_a4b75f20620c1171a548c80d9975b7743}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!bytes@{bytes}}
+\index{bytes@{bytes}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{bytes}{bytes}}
+{\footnotesize\ttfamily byte \mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Authentication\+Key.\+bytes}
+
+
+
+Byte array representing authentication key. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a2ff40fbe83a9901d4e03c4676ad6cc44}\label{class_aptos_1_1_accounts_1_1_authentication_key_a2ff40fbe83a9901d4e03c4676ad6cc44}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!DERIVE\_RESOURCE\_ACCOUNT\_SCHEME@{DERIVE\_RESOURCE\_ACCOUNT\_SCHEME}}
+\index{DERIVE\_RESOURCE\_ACCOUNT\_SCHEME@{DERIVE\_RESOURCE\_ACCOUNT\_SCHEME}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{DERIVE\_RESOURCE\_ACCOUNT\_SCHEME}{DERIVE\_RESOURCE\_ACCOUNT\_SCHEME}}
+{\footnotesize\ttfamily byte Aptos.\+Accounts.\+Authentication\+Key.\+DERIVE\+\_\+\+RESOURCE\+\_\+\+ACCOUNT\+\_\+\+SCHEME = 255\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a8ccfa197dbeb7157761bf1341e713d9f}\label{class_aptos_1_1_accounts_1_1_authentication_key_a8ccfa197dbeb7157761bf1341e713d9f}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!ED25519\_SCHEME@{ED25519\_SCHEME}}
+\index{ED25519\_SCHEME@{ED25519\_SCHEME}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{ED25519\_SCHEME}{ED25519\_SCHEME}}
+{\footnotesize\ttfamily byte Aptos.\+Accounts.\+Authentication\+Key.\+ED25519\+\_\+\+SCHEME = 0x00\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_aface63e70a5d5a7a80e07135bce556fb}\label{class_aptos_1_1_accounts_1_1_authentication_key_aface63e70a5d5a7a80e07135bce556fb}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!LENGTH@{LENGTH}}
+\index{LENGTH@{LENGTH}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{LENGTH}{LENGTH}}
+{\footnotesize\ttfamily int Aptos.\+Accounts.\+Authentication\+Key.\+LENGTH = 32\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_authentication_key_a6945c1ece6c533236fba5d9eb03152b0}\label{class_aptos_1_1_accounts_1_1_authentication_key_a6945c1ece6c533236fba5d9eb03152b0}} 
+\index{Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}!MULTI\_ED25519\_SCHEME@{MULTI\_ED25519\_SCHEME}}
+\index{MULTI\_ED25519\_SCHEME@{MULTI\_ED25519\_SCHEME}!Aptos.Accounts.AuthenticationKey@{Aptos.Accounts.AuthenticationKey}}
+\doxysubsubsection{\texorpdfstring{MULTI\_ED25519\_SCHEME}{MULTI\_ED25519\_SCHEME}}
+{\footnotesize\ttfamily byte Aptos.\+Accounts.\+Authentication\+Key.\+MULTI\+\_\+\+ED25519\+\_\+\+SCHEME = 0x001\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+Accounts/\mbox{\hyperlink{_authentication_key_8cs}{Authentication\+Key.\+cs}}\end{DoxyCompactItemize}

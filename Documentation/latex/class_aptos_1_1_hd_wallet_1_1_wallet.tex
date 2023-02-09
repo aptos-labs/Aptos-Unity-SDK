@@ -1,0 +1,177 @@
+\hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet}{}\doxysection{Aptos.\+Hd\+Wallet.\+Wallet Class Reference}
+\label{class_aptos_1_1_hd_wallet_1_1_wallet}\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+
+
+Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} wallet.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a5de2d1bd195034a667f12daccdf29c1d}{Wallet}} (Word\+Count word\+Count, Wordlist word\+List, string passphrase=\char`\"{}\char`\"{}, \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}} seed\+Mode=\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode.\+Ed25519\+Bip32}})
+\begin{DoxyCompactList}\small\item\em Initialize a wallet from passed word count and word list for the mnemonic and passphrase. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a7db67db4959f62d0688ce9bc383b7989}{Wallet}} (\mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a97143bcef63ab8580585c81baf3c298d}{Mnemonic}} mnemonic, string passphrase=\char`\"{}\char`\"{}, \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}} seed\+Mode=\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode.\+Ed25519\+Bip32}})
+\begin{DoxyCompactList}\small\item\em Initialize a wallet from the passed mnemonic and passphrase. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a342a9115c01167d1eef7454f7fdb9125}{Wallet}} (string mnemonic\+Words, Wordlist word\+List=null, string passphrase=\char`\"{}\char`\"{}, \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}} seed\+Mode=\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode.\+Ed25519\+Bip32}})
+\begin{DoxyCompactList}\small\item\em Initialize a wallet from the passed mnemonic and passphrase. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a775c3f130b41414a91913068089c758d}{Wallet}} (byte\mbox{[}$\,$\mbox{]} seed, string passphrase=\char`\"{}\char`\"{}, \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}} seed\+Mode=\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode.\+Ed25519\+Bip32}})
+\begin{DoxyCompactList}\small\item\em Initializes a wallet from the passed seed byte array. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} \mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a2d9d3e2b60a4d3468b048f677e4d7620}{Get\+Account}} (int index)
+\begin{DoxyCompactList}\small\item\em Gets the account at the passed index using the ed25519 bip32 derivation path. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a22970067745fbc76d5c0d44f6e550db4}{Derive\+Mnemonic\+Seed}} ()
+\begin{DoxyCompactList}\small\item\em Derive a seed from the passed mnemonic and/or passphrase, depending on Seed\+Mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} \mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a9b29f7111f55299c77d1922be38bdc37}{Account}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The key pair. \end{DoxyCompactList}\item 
+Mnemonic \mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a97143bcef63ab8580585c81baf3c298d}{Mnemonic}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The mnemonic words. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} wallet. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a5de2d1bd195034a667f12daccdf29c1d}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a5de2d1bd195034a667f12daccdf29c1d}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!Wallet@{Wallet}}
+\index{Wallet@{Wallet}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{Wallet()}{Wallet()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily Aptos.\+Hd\+Wallet.\+Wallet.\+Wallet (\begin{DoxyParamCaption}\item[{Word\+Count}]{word\+Count,  }\item[{Wordlist}]{word\+List,  }\item[{string}]{passphrase = {\ttfamily \char`\"{}\char`\"{}},  }\item[{\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}}}]{seed\+Mode = {\ttfamily \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode\+::\+Ed25519\+Bip32}}} }\end{DoxyParamCaption})}
+
+
+
+Initialize a wallet from passed word count and word list for the mnemonic and passphrase. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em word\+Count} & The mnemonic word count.\\
+\hline
+{\em word\+List} & The language of the mnemonic words.\\
+\hline
+{\em passphrase} & The passphrase.\\
+\hline
+{\em seed\+Mode} & The seed generation mode.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a7db67db4959f62d0688ce9bc383b7989}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a7db67db4959f62d0688ce9bc383b7989}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!Wallet@{Wallet}}
+\index{Wallet@{Wallet}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{Wallet()}{Wallet()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily Aptos.\+Hd\+Wallet.\+Wallet.\+Wallet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_hd_wallet_1_1_wallet_a97143bcef63ab8580585c81baf3c298d}{Mnemonic}}}]{mnemonic,  }\item[{string}]{passphrase = {\ttfamily \char`\"{}\char`\"{}},  }\item[{\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}}}]{seed\+Mode = {\ttfamily \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode\+::\+Ed25519\+Bip32}}} }\end{DoxyParamCaption})}
+
+
+
+Initialize a wallet from the passed mnemonic and passphrase. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mnemonic} & The mnemonic.\\
+\hline
+{\em passphrase} & The passphrase.\\
+\hline
+{\em seed\+Mode} & The seed generation mode.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a342a9115c01167d1eef7454f7fdb9125}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a342a9115c01167d1eef7454f7fdb9125}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!Wallet@{Wallet}}
+\index{Wallet@{Wallet}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{Wallet()}{Wallet()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily Aptos.\+Hd\+Wallet.\+Wallet.\+Wallet (\begin{DoxyParamCaption}\item[{string}]{mnemonic\+Words,  }\item[{Wordlist}]{word\+List = {\ttfamily null},  }\item[{string}]{passphrase = {\ttfamily \char`\"{}\char`\"{}},  }\item[{\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}}}]{seed\+Mode = {\ttfamily \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode\+::\+Ed25519\+Bip32}}} }\end{DoxyParamCaption})}
+
+
+
+Initialize a wallet from the passed mnemonic and passphrase. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mnemonic\+Words} & The mnemonic words.\\
+\hline
+{\em word\+List} & The language of the mnemonic words. Defaults to Word\+List.\+English.\\
+\hline
+{\em passphrase} & The passphrase.\\
+\hline
+{\em seed\+Mode} & The seed generation mode.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a775c3f130b41414a91913068089c758d}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a775c3f130b41414a91913068089c758d}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!Wallet@{Wallet}}
+\index{Wallet@{Wallet}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{Wallet()}{Wallet()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily Aptos.\+Hd\+Wallet.\+Wallet.\+Wallet (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{seed,  }\item[{string}]{passphrase = {\ttfamily \char`\"{}\char`\"{}},  }\item[{\mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22da}{Seed\+Mode}}}]{seed\+Mode = {\ttfamily \mbox{\hyperlink{namespace_aptos_1_1_hd_wallet_a8991cc0732a99894e1af7e3b34cd22daac642d95c562395f5d646766505118296}{Seed\+Mode\+::\+Ed25519\+Bip32}}} }\end{DoxyParamCaption})}
+
+
+
+Initializes a wallet from the passed seed byte array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em seed} & The seed used for key derivation.\\
+\hline
+{\em passphrase} & The passphrase.\\
+\hline
+{\em seed\+Mode} & The seed mode.\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a22970067745fbc76d5c0d44f6e550db4}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a22970067745fbc76d5c0d44f6e550db4}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!DeriveMnemonicSeed@{DeriveMnemonicSeed}}
+\index{DeriveMnemonicSeed@{DeriveMnemonicSeed}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{DeriveMnemonicSeed()}{DeriveMnemonicSeed()}}
+{\footnotesize\ttfamily byte\mbox{[}$\,$\mbox{]} Aptos.\+Hd\+Wallet.\+Wallet.\+Derive\+Mnemonic\+Seed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Derive a seed from the passed mnemonic and/or passphrase, depending on Seed\+Mode. 
+
+\begin{DoxyReturn}{Returns}
+The seed.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a2d9d3e2b60a4d3468b048f677e4d7620}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a2d9d3e2b60a4d3468b048f677e4d7620}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!GetAccount@{GetAccount}}
+\index{GetAccount@{GetAccount}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{GetAccount()}{GetAccount()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} Aptos.\+Hd\+Wallet.\+Wallet.\+Get\+Account (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+Gets the account at the passed index using the ed25519 bip32 derivation path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & The index of the account.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The account.
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a9b29f7111f55299c77d1922be38bdc37}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a9b29f7111f55299c77d1922be38bdc37}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!Account@{Account}}
+\index{Account@{Account}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{Account}{Account}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} Aptos.\+Hd\+Wallet.\+Wallet.\+Account\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The key pair. 
+
+\mbox{\Hypertarget{class_aptos_1_1_hd_wallet_1_1_wallet_a97143bcef63ab8580585c81baf3c298d}\label{class_aptos_1_1_hd_wallet_1_1_wallet_a97143bcef63ab8580585c81baf3c298d}} 
+\index{Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}!Mnemonic@{Mnemonic}}
+\index{Mnemonic@{Mnemonic}!Aptos.HdWallet.Wallet@{Aptos.HdWallet.Wallet}}
+\doxysubsubsection{\texorpdfstring{Mnemonic}{Mnemonic}}
+{\footnotesize\ttfamily Mnemonic Aptos.\+Hd\+Wallet.\+Wallet.\+Mnemonic\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The mnemonic words. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+HDWallet/\mbox{\hyperlink{_wallet_8cs}{Wallet.\+cs}}\end{DoxyCompactItemize}
