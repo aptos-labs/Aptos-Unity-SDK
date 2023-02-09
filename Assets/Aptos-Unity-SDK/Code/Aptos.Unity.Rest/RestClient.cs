@@ -156,10 +156,12 @@ namespace Aptos.Unity.Rest
                 Debug.LogError("Error While Sending: " + request.error);
                 callback(null);
             }
-            if (request.responseCode >= 404)
+
+            if (request.responseCode >= 400)
             {
                 Debug.LogError("Account Resource Not Found: " + request.error);
                 callback(null);
+                yield break;
             }
             else
             {
@@ -676,8 +678,15 @@ namespace Aptos.Unity.Rest
         /// <param name="to">Address of recipient.</param>
         /// <param name="amount">Amount of tokens.</param>
         /// <returns></returns>
-        public IEnumerator Transfer(Action<string> callback, Account sender, string to, long amount)
+        public IEnumerator Transfer(Action<bool, string> callback, Account sender, string to, long amount)
         {
+            // Check is address is valid
+            if(HdWallet.Utils.Utils.IsValidAddress(to))
+            {
+                callback(false, "Recipient address is invalid.");
+                yield break;
+            }
+
             var transferPayload = new TransactionPayload()
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
@@ -697,7 +706,7 @@ namespace Aptos.Unity.Rest
             }, sender, transferPayload));
             yield return cor_response;
 
-            callback(response);
+            callback(true, response);
         }
 
         /// <summary>
