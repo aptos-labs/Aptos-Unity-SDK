@@ -100,7 +100,7 @@ namespace Aptos.Unity.Rest
             else if(request.responseCode == 404)
             {
                 responseInfo.status = ResponseInfo.Status.NotFound;
-                responseInfo.message = "Not found";
+                responseInfo.message = "Account not found";
                 callback(null, responseInfo);
             }
             else if(request.responseCode >= 400)
@@ -526,17 +526,23 @@ namespace Aptos.Unity.Rest
         /// <param name="sender">Account submitting the transaction.</param>
         /// <param name="payload">Transaction payload.</param>
         /// <returns></returns>
-        public IEnumerator SubmitTransaction(Action<bool, string> callback, Account sender, TransactionPayload payload)
+        public IEnumerator SubmitTransaction(Action<bool, ResponseInfo> callback, Account sender, TransactionPayload payload)
         {
             ///////////////////////////////////////////////////////////////////////
             // 1) Generate a transaction request
             ///////////////////////////////////////////////////////////////////////
             string sequenceNumber = "";
-
-            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
                 sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
             }, sender.AccountAddress));
             yield return cor_sequenceNumber;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(false, responseInfo);
+            }
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
 
@@ -595,18 +601,26 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Submitting Transaction: " + request.error);
-                callback(false, request.error);
+
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting transaction. " + request.error;
+                callback(false, responseInfo);
             }
             else if (request.responseCode >= 404)
             {
                 Debug.LogWarning("Transaction Response: " + request.responseCode);
-                callback(false, "Error: " + request.responseCode);
+
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error 404 when submitting transaction.";
+                callback(false, responseInfo);
             }
             else // Either 200, or 202
             {
                 Debug.Log("RESPONSE CODE: " + request.responseCode + " TEXT: " + request.downloadHandler.text);
                 string response = request.downloadHandler.text;
-                callback(true, response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(true, responseInfo);
             }
 
             request.Dispose();
@@ -727,12 +741,15 @@ namespace Aptos.Unity.Rest
         /// <param name="to">Address of recipient.</param>
         /// <param name="amount">Amount of tokens.</param>
         /// <returns></returns>
-        public IEnumerator Transfer(Action<bool, string> callback, Account sender, string to, long amount)
+        public IEnumerator Transfer(Action<Transaction, ResponseInfo> callback, Account sender, string to, long amount)
         {
+            ResponseInfo responseInfo = new ResponseInfo();
             // Check is address is valid
-            if(HdWallet.Utils.Utils.IsValidAddress(to))
+            if (!HdWallet.Utils.Utils.IsValidAddress(to))
             {
-                callback(false, "Recipient address is invalid.");
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Recipient address is invalid.";
+                callback(null, responseInfo);
                 yield break;
             }
 
@@ -748,14 +765,21 @@ namespace Aptos.Unity.Rest
             };
 
             bool success = false;
-            string response = "";
-            Coroutine cor_response = StartCoroutine(SubmitTransaction((_success, _response) => {
+            Coroutine cor_response = StartCoroutine(SubmitTransaction((_success, _responseInfo) => {
                 success = _success;
-                response = _response;
+                responseInfo = _responseInfo;
             }, sender, transferPayload));
             yield return cor_response;
 
-            callback(true, response);
+            if(responseInfo.status == ResponseInfo.Status.Success)
+            {
+                Transaction transaction = JsonConvert.DeserializeObject<Transaction>(responseInfo.message, new TransactionConverter());
+                callback(transaction, responseInfo);
+            }
+            else
+            {
+                callback(null, responseInfo);
+            }
         }
 
         /// <summary>
@@ -853,7 +877,7 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionDescription">Description of the collection</param>
         /// <param name="uri">Collection's URI</param>
         /// <returns></returns>
-        public IEnumerator CreateCollection(Action<string> callback, Account sender, string collectionName, string collectionDescription, string uri)
+        public IEnumerator CreateCollection(Action<Transaction, ResponseInfo> callback, Account sender, string collectionName, string collectionDescription, string uri)
         {
             // STEP 1: Create Transaction Arguments
             Arguments arguments = new Arguments()
@@ -880,11 +904,19 @@ namespace Aptos.Unity.Rest
             // 1) Generate a transaction request
             ///////////////////////////////////////////////////////////////////////
             string sequenceNumber = "";
+            ResponseInfo responseInfo = new ResponseInfo();
 
-            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
                 sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
             }, sender.AccountAddress));
             yield return cor_sequenceNumber;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+                yield break;
+            }
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
 
@@ -946,22 +978,32 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Submitting Transaction: " + request.error);
-                //return request.error;
-                callback(request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting transaction. " + request.error; 
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                callback("??????????????");
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error. Response 404. " + request.error;
+                callback(null, responseInfo);
             }
-            //else if (request.responseCode == 400)
-            //{
-            //    // VM Error
-            //}
+            else if (request.responseCode >= 400)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error. Response 404. " + request.error;
+                callback(null, responseInfo);
+            }
             else
             {
                 Debug.Log("RESPONSE CODE: " + request.responseCode);
+
                 string response = request.downloadHandler.text;
-                callback(response);
+                Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(createCollectionTxn, responseInfo);
             }
 
             request.Dispose();
@@ -982,7 +1024,7 @@ namespace Aptos.Unity.Rest
         /// <param name="uri">URI of where the token's asset lives (e.g. JPEG)</param>
         /// <param name="royaltyPointsPerMillion">Royalties defined in the millionths</param>
         /// <returns></returns>
-        public IEnumerator CreateToken(Action<string> callback
+        public IEnumerator CreateToken(Action<Transaction, ResponseInfo> callback
             , Account senderRoyaltyPayeeAddress, string collectionName, string tokenName, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
         {
             Arguments arguments = new Arguments()
@@ -1009,11 +1051,19 @@ namespace Aptos.Unity.Rest
             string payloadJson = JsonConvert.SerializeObject(txnPayload, new TransactionPayloadConverter());
 
             string sequenceNumber = "";
+            ResponseInfo responseInfo = new ResponseInfo();
 
-            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
                 sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
             }, senderRoyaltyPayeeAddress.AccountAddress));
             yield return cor_sequenceNumber;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+                yield break;
+            }
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
 
@@ -1072,21 +1122,31 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Submitting Transaction: " + request.error);
-                callback(request.error);
+
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting transaction. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                callback("ERROR 404: " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Error. Response 404. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 400)
             {
-                callback("ERROR 400: " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Error. " + request.error + ". " + request.downloadHandler.text;
+                callback(null, responseInfo);
             }
             else
             {
                 Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
                 string response = request.downloadHandler.text;
-                callback(response);
+                Transaction createTokenTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(createTokenTxn, responseInfo);
             }
 
             request.Dispose();
@@ -1105,10 +1165,29 @@ namespace Aptos.Unity.Rest
         /// <param name="amount">Amount being offered.</param>
         /// <param name="propertyVersion">ersion of the token.</param>
         /// <returns></returns>
-        public IEnumerator OfferToken(Action<string> callback
+        public IEnumerator OfferToken(Action<Transaction, ResponseInfo> callback
             , Account account, Accounts.AccountAddress receiver, Accounts.AccountAddress creator
             , string collectionName, string tokenName, string amount, int propertyVersion = 0)
         {
+            ResponseInfo responseInfo = new ResponseInfo();
+            // Check is recipient address is valid
+            if (!HdWallet.Utils.Utils.IsValidAddress(receiver.ToString()))
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Recipient address is invalid.";
+                callback(null, responseInfo);
+                yield break;
+            }
+
+            // Check is creator address is valid
+            if (!HdWallet.Utils.Utils.IsValidAddress(creator.ToString()))
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Creator address is invalid.";
+                callback(null, responseInfo);
+                yield break;
+            }
+
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
@@ -1134,10 +1213,17 @@ namespace Aptos.Unity.Rest
 
             string sequenceNumber = "";
 
-            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
                 sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
             }, account.AccountAddress));
             yield return cor_sequenceNumber;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+                yield break;
+            }
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
 
@@ -1193,20 +1279,31 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Submitting Transaction: " + request.error);
-                callback(request.error);
+
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting transaction. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                callback("ERROR 404: " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Error. Response 404. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 400)
             {
-                callback("ERROR 400: " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Error. " + request.error + ". " + request.downloadHandler.text;
+                callback(null, responseInfo);
             }
             else
             {
                 string response = request.downloadHandler.text;
-                callback(response);
+                Transaction offerTokenTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+
+                callback(offerTokenTxn, responseInfo);
             }
 
             request.Dispose();
@@ -1224,10 +1321,30 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token</param>
         /// <param name="propertyVersion">Token version, defaults to 0</param>
         /// <returns></returns>
-        public IEnumerator ClaimToken(Action<string> callback
+        public IEnumerator ClaimToken(Action<Transaction, ResponseInfo> callback
             , Account account, Accounts.AccountAddress sender, Accounts.AccountAddress creator
             , string collectionName, string tokenName, int propertyVersion = 0)
         {
+
+            ResponseInfo responseInfo = new ResponseInfo();
+            // Check is sender address is valid
+            if (!HdWallet.Utils.Utils.IsValidAddress(sender.ToString()))
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Recipient address is invalid.";
+                callback(null, responseInfo);
+                yield break;
+            }
+
+            // Check is creator address is valid
+            if (!HdWallet.Utils.Utils.IsValidAddress(creator.ToString()))
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Creator address is invalid.";
+                callback(null, responseInfo);
+                yield break;
+            }
+
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
@@ -1251,10 +1368,17 @@ namespace Aptos.Unity.Rest
 
             string sequenceNumber = "";
 
-            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
                 sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
             }, account.AccountAddress));
             yield return cor_sequenceNumber;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+                yield break;
+            }
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
 
@@ -1307,23 +1431,35 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Error While Submitting Transaction: " + request.error);
-                callback(request.error);
+
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting transaction. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                callback("ERROR 404: " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Error. Response 404. " + request.error;
+                callback(null, responseInfo);
             }
             else if (request.responseCode == 400)
             {
-                callback("ERROR 400: " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Error. " + request.error + ". " + request.downloadHandler.text;
+                callback(null, responseInfo);
             }
             else
             {
                 string response = request.downloadHandler.text;
-                callback(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+
+                Transaction claimTokenTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+                callback(claimTokenTxn, responseInfo);
             }
 
             request.Dispose();
