@@ -47,21 +47,27 @@ namespace Aptos.Unity.Sample
             #region REST Client Setup
             RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
 
-            bool successLedgerInfo;
-            string result = "";
-            Coroutine ledgerInfoCor = StartCoroutine(RestClient.Instance.GetInfo((success, returnResult) =>
+            LedgerInfo ledgerInfo = new LedgerInfo();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine ledgerInfoCor = StartCoroutine(RestClient.Instance.GetInfo((_ledgerInfo, _responseInfo) =>
             {
-                successLedgerInfo = success;
-                result = returnResult;
+                ledgerInfo = _ledgerInfo;
+                responseInfo = _responseInfo;
             }));
             yield return ledgerInfoCor;
-            LedgerInfo ledgerInfo = JsonConvert.DeserializeObject<LedgerInfo>(result);
-            Debug.Log("CHAIN ID: " + ledgerInfo.ChainId);
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Chain ID: " + ledgerInfo.ChainId);
             #endregion
 
             #region Get Alice Account Balance
             AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
-            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo = new ResponseInfo();
             Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
                 coin = _coin;

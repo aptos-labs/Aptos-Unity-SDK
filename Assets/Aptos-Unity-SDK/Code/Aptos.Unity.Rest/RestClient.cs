@@ -137,7 +137,7 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>(AccountResourceCoin.Coin, ResponseInfo) - a representation of the coin, and an object containing the response information.</returns>
+        /// <returns>Calls <c>callback</c>function with (AccountResourceCoin.Coin, ResponseInfo) - a representation of the coin, and an object containing the response information.</returns>
         public IEnumerator GetAccountBalance(Action<AccountResourceCoin.Coin, ResponseInfo> callback, Accounts.AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
@@ -187,7 +187,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns>(ResourceCollection, ResponseInfo) an object representing a collection resource, and the response information </returns>
+        /// <returns>Calls <c>callback</c>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information </returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection, ResponseInfo> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -243,7 +243,7 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
-        /// <returns>An object representing the account resource that holds the coin's information.</returns>
+        /// <returns>Calls <c>callback</c>function with an object representing the account resource that holds the coin's information.</returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -500,7 +500,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <returns>(boolean, response) true if repsonse is successful, false otherwise.
         /// </returns>
-        public IEnumerator GetInfo(Action<bool, string> callback)
+        public IEnumerator GetInfo(Action<LedgerInfo, ResponseInfo> callback)
         {
             UnityWebRequest request = UnityWebRequest.Get(Endpoint);
             request.SendWebRequest();
@@ -509,17 +509,28 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            LedgerInfo ledgerInfo = new LedgerInfo();
+            ResponseInfo responseInfo = new ResponseInfo();
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                callback(false, request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(null, responseInfo);
             }
             else if(request.responseCode >= 404)
             {
-                callback(false, request.error);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = request.error;
+                callback(null, responseInfo);
             }
             else
             {
-                callback(true, request.downloadHandler.text);
+                string response = request.downloadHandler.text;
+                ledgerInfo = JsonConvert.DeserializeObject<LedgerInfo>(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(ledgerInfo, responseInfo);
             }
 
             request.Dispose();
