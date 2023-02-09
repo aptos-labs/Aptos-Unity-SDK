@@ -157,9 +157,11 @@ namespace Aptos.Unity.Sample.UI
 
         public IEnumerator SendToken(string _targetAddress, long _amount)
         {
+            bool success = false;
             string transferResult = string.Empty;
-            Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
+            Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_success, _transferResult) =>
             {
+                success = _success;
                 transferResult = _transferResult;
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), _targetAddress, _amount));
 

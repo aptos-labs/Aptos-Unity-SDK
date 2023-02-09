@@ -132,13 +132,21 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Have Alice give Bob 1_000 coins - Submit Transfer Transaction
+            bool success = false;
             string transferResult = "";
-            Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
+            Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_success, _transferResult) =>
             {
+                success = _success;
                 transferResult = _transferResult;
             }, alice, bob.AccountAddress.ToHexString(), 1000));
 
             yield return transferCor;
+
+            if(!success)
+            {
+                Debug.LogWarning("Transfer failed: " + transferResult);
+                yield break;
+            }
 
             Debug.Log("Transfer Response: " + transferResult);
             Transaction transaction = JsonConvert.DeserializeObject<Transaction>(transferResult, new TransactionConverter());
