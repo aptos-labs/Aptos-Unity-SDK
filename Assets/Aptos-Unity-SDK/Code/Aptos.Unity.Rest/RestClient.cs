@@ -54,9 +54,9 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
-        public IEnumerator GetAccount(Action<string> callback, string accountAddress)
+        public IEnumerator GetAccount(Action<string> callback, AccountAddress accountAddress)
         {
-            string accountsURL = Endpoint + "/accounts/" + accountAddress;
+            string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
             Uri accountsURI = new Uri(accountsURL);
             UnityWebRequest request = UnityWebRequest.Get(accountsURI);
             request.SendWebRequest();
@@ -83,7 +83,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns></returns>
-        public IEnumerator GetAccountSequenceNumber(Action<string> callback, string accountAddress)
+        public IEnumerator GetAccountSequenceNumber(Action<string> callback, AccountAddress accountAddress)
         {
             string accountDataResp = "";
 
@@ -486,7 +486,7 @@ namespace Aptos.Unity.Rest
 
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
-            }, sender.AccountAddress.ToString()));
+            }, sender.AccountAddress));
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -834,7 +834,7 @@ namespace Aptos.Unity.Rest
 
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
-            }, sender.AccountAddress.ToString()));
+            }, sender.AccountAddress));
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -963,7 +963,7 @@ namespace Aptos.Unity.Rest
 
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
-            }, senderRoyaltyPayeeAddress.AccountAddress.ToString()));
+            }, senderRoyaltyPayeeAddress.AccountAddress));
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -1087,7 +1087,7 @@ namespace Aptos.Unity.Rest
 
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
-            }, account.AccountAddress.ToString()));
+            }, account.AccountAddress));
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -1204,7 +1204,7 @@ namespace Aptos.Unity.Rest
 
             Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber) => {
                 sequenceNumber = _sequenceNumber;
-            }, account.AccountAddress.ToString()));
+            }, account.AccountAddress));
             yield return cor_sequenceNumber;
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
