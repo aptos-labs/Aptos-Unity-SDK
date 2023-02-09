@@ -187,7 +187,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns></returns>
+        /// <returns>(ResourceCollection, ResponseInfo) an object representing a collection resource, and the response information </returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection, ResponseInfo> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -243,7 +243,7 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
-        /// <returns></returns>
+        /// <returns>An object representing the account resource that holds the coin's information.</returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -295,7 +295,7 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
         /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection.</param>
-        /// <returns></returns> Callback withthe response
+        /// <returns></returns>
         public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -538,7 +538,7 @@ namespace Aptos.Unity.Rest
         /// <param name="sender">Account submitting the transaction.</param>
         /// <param name="payload">Transaction payload.</param>
         /// <returns></returns>
-        public IEnumerator SubmitTransaction(Action<bool, ResponseInfo> callback, Account sender, TransactionPayload payload)
+        public IEnumerator SubmitTransaction(Action<Transaction, ResponseInfo> callback, Account sender, TransactionPayload payload)
         {
             ///////////////////////////////////////////////////////////////////////
             // 1) Generate a transaction request
@@ -553,7 +553,7 @@ namespace Aptos.Unity.Rest
 
             if(responseInfo.status != ResponseInfo.Status.Success)
             {
-                callback(false, responseInfo);
+                callback(null, responseInfo);
             }
 
             var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
@@ -616,7 +616,7 @@ namespace Aptos.Unity.Rest
 
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error while submitting transaction. " + request.error;
-                callback(false, responseInfo);
+                callback(null, responseInfo);
             }
             else if (request.responseCode >= 404)
             {
@@ -624,15 +624,17 @@ namespace Aptos.Unity.Rest
 
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error 404 when submitting transaction.";
-                callback(false, responseInfo);
+                callback(null, responseInfo);
             }
             else // Either 200, or 202
             {
                 Debug.Log("RESPONSE CODE: " + request.responseCode + " TEXT: " + request.downloadHandler.text);
                 string response = request.downloadHandler.text;
+                Transaction transaction = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+
                 responseInfo.status = ResponseInfo.Status.Success;
                 responseInfo.message = response;
-                callback(true, responseInfo);
+                callback(transaction, responseInfo);
             }
 
             request.Dispose();
@@ -776,9 +778,10 @@ namespace Aptos.Unity.Rest
                 }
             };
 
-            bool success = false;
-            Coroutine cor_response = StartCoroutine(SubmitTransaction((_success, _responseInfo) => {
-                success = _success;
+            Transaction submitTxn = new Transaction();
+            responseInfo = new ResponseInfo();
+            Coroutine cor_response = StartCoroutine(SubmitTransaction((_submitTxn, _responseInfo) => {
+                submitTxn = _submitTxn;
                 responseInfo = _responseInfo;
             }, sender, transferPayload));
             yield return cor_response;
