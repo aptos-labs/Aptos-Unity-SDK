@@ -153,7 +153,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Connection error. " + request.error;
                 callback(null, responseInfo);
@@ -170,7 +169,6 @@ namespace Aptos.Unity.Rest
             else
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
-                Debug.Log("Account Resource Coin Value: " + acctResourceCoin.DataProp.Coin.Value);
 
                 AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
                 coin.Value = acctResourceCoin.DataProp.Coin.Value;
@@ -634,23 +632,18 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Submitting Transaction: " + request.error);
-
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error while submitting transaction. " + request.error;
                 callback(null, responseInfo);
             }
             else if (request.responseCode >= 404)
             {
-                Debug.LogWarning("Transaction Response: " + request.responseCode);
-
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error 404 when submitting transaction.";
                 callback(null, responseInfo);
             }
             else // Either 200, or 202
             {
-                Debug.Log("RESPONSE CODE: " + request.responseCode + " TEXT: " + request.downloadHandler.text);
                 string response = request.downloadHandler.text;
                 Transaction transaction = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
 
@@ -876,7 +869,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.Log("Error While Sending: " + request.error);
                 yield return null;
             }
             else if (request.responseCode == 404)
@@ -917,7 +909,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.Log("Error While Sending: " + request.error);
                 yield return null;
             }
             else if (request.responseCode == 404)
@@ -1046,7 +1037,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Submitting Transaction: " + request.error);
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error while submitting transaction. " + request.error; 
                 callback(null, responseInfo);
@@ -1065,8 +1055,6 @@ namespace Aptos.Unity.Rest
             }
             else
             {
-                Debug.Log("RESPONSE CODE: " + request.responseCode);
-
                 string response = request.downloadHandler.text;
                 Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
 
@@ -1172,8 +1160,6 @@ namespace Aptos.Unity.Rest
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
             txnRequestJson = txnRequestJson.Trim();
 
-            Debug.Log("TXN REQUEST JSON: " + txnRequestJson);
-
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
             var request = new UnityWebRequest(transactionsURI, "POST");
@@ -1190,8 +1176,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Submitting Transaction: " + request.error);
-
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error while submitting transaction. " + request.error;
                 callback(null, responseInfo);
@@ -1210,7 +1194,6 @@ namespace Aptos.Unity.Rest
             }
             else
             {
-                Debug.Log("CREATE NFT TOKEN RESPONSE CODE: " + request.responseCode);
                 string response = request.downloadHandler.text;
                 Transaction createTokenTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
                 responseInfo.status = ResponseInfo.Status.Success;
@@ -1345,8 +1328,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Submitting Transaction: " + request.error);
-
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error while submitting transaction. " + request.error;
                 callback(null, responseInfo);
@@ -1500,8 +1481,6 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Submitting Transaction: " + request.error);
-
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = "Error while submitting transaction. " + request.error;
                 callback(null, responseInfo);
@@ -1694,12 +1673,9 @@ namespace Aptos.Unity.Rest
                 yield break;
             }
 
-            Debug.Log("GetTokenData Collection: " + collectionResourceResp);
-
             ResourceCollection resourceCollection = JsonConvert.DeserializeObject<ResourceCollection>(collectionResourceResp);
             string tokenDataHandle = resourceCollection.DataProp.TokenData.Handle;
 
-            Debug.Log("TOKEN DATA HANDLE: " + tokenDataHandle);
             TokenDataId tokenDataId = new TokenDataId
             {
                 Creator = creator.ToHexString(),
@@ -1797,12 +1773,10 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
                 callback(false, 0, "ERROR: Connection Error: " + request.error);
             }
             else if (request.responseCode == 404)
             {
-                Debug.LogError("Error Not Found: " + request.error);
                 callback(false, request.responseCode, "ERROR: Resource Not Found: " + request.error);
             }
             else
