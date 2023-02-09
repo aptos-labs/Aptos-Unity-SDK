@@ -24,8 +24,10 @@ namespace Aptos.Unity.Rest
     {
         public static RestClient Instance { get; set; }
 
+        /// Amount of seconds to each during each polling cycle
         public static int TransactionWaitInSeconds = 20;
 
+        /// Based enpoint for REST API
         public Uri Endpoint { get; private set; }
 
         private void Awake()
