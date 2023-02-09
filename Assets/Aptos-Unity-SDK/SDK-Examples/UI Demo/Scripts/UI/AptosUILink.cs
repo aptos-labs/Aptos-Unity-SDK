@@ -125,16 +125,21 @@ namespace Aptos.Unity.Sample.UI
 
         public void LoadCurrentWalletBalance()
         {
-            StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (!success)
+                coin = _coin;
+                responseInfo = _responseInfo;
+
+                if(responseInfo.status != ResponseInfo.Status.Success)
                 {
                     onGetBalance?.Invoke(0.0f);
                 }
                 else
                 {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    onGetBalance?.Invoke(float.Parse(acctResourceCoin.DataProp.Coin.Value));
+                    onGetBalance?.Invoke(float.Parse(coin.Value));
                 }
 
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress));
