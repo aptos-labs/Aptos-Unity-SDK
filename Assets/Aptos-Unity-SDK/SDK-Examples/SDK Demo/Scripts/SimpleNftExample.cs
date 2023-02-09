@@ -97,15 +97,21 @@ namespace Aptos.Unity.Sample
 
             #region Create Collection
             Debug.Log("<color=cyan>=== Creating Collection and Token ===</color>");
-            string createCollectionResult = "";
-            Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((returnResult) =>
+            Transaction createCollectionTxn = new Transaction(null);
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((_createCollectionTxn, _responseInfo) =>
             {
-                createCollectionResult = returnResult;
+                createCollectionTxn = _createCollectionTxn;
+                responseInfo = _responseInfo;
             }, alice, collectionName, collectionDescription, collectionUri));
             yield return createCollectionCor;
 
-            Debug.Log("Create Collection Response: " + createCollectionResult);
-            Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(createCollectionResult, new TransactionConverter());
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Cannot create collection. " + responseInfo.message);
+            }
+
+            Debug.Log("Create Collection Response: " + responseInfo.message);
             string transactionHash = createCollectionTxn.Hash;
             Debug.Log("Create Collection Hash: " + createCollectionTxn.Hash);
             #endregion
@@ -123,16 +129,22 @@ namespace Aptos.Unity.Sample
 
             #region Create Non-Fungible Token
             string createTokenResult = "";
+            Transaction createTokenTxn = new Transaction(null);
             Coroutine createTokenCor = StartCoroutine(
-                RestClient.Instance.CreateToken((returnResult) =>
+                RestClient.Instance.CreateToken((_createTokenTxn, _responseInfo) =>
                 {
-                    createTokenResult = returnResult;
+                    createTokenTxn = _createTokenTxn;
+                    responseInfo = _responseInfo;
                 }, alice, collectionName, tokenName, tokenDescription, 1, 1, tokenUri, 0)
             );
             yield return createTokenCor;
 
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Error creating token. " + responseInfo.message);
+            }
+
             Debug.Log("Create Token Response: " + createTokenResult);
-            Transaction createTokenTxn = JsonConvert.DeserializeObject<Transaction>(createTokenResult, new TransactionConverter());
             string createTokenTxnHash = createTokenTxn.Hash;
             Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
             #endregion
@@ -185,15 +197,22 @@ namespace Aptos.Unity.Sample
             #region Transferring the Token to Bob
             Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
             string offerTokenResult = "";
-            Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((returnResult) =>
+            Transaction offerTokenTxn = new Transaction(null);
+            Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((_offerTokenTxn, _responseInfo) =>
             {
-                offerTokenResult = returnResult;
+                offerTokenTxn = _offerTokenTxn;
+                responseInfo = _responseInfo;
             }, alice, bob.AccountAddress, alice.AccountAddress, collectionName, tokenName, "1"));
 
             yield return offerTokenCor;
 
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Error offering token. " + responseInfo.message);
+                yield break;
+            }
+
             Debug.Log("Offer Token Response: " + offerTokenResult);
-            Transaction offerTokenTxn = JsonConvert.DeserializeObject<Transaction>(offerTokenResult, new TransactionConverter());
             string offerTokenTxnHash = offerTokenTxn.Hash;
             Debug.Log("Offer Token Hash: " + offerTokenTxnHash);
 
@@ -203,16 +222,16 @@ namespace Aptos.Unity.Sample
 
             #region Bob Claims Token
             Debug.Log("<color=cyan>=== Bob Claims Token ===</color>");
-            string claimTokenResult = "";
-            Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((returnResult) =>
+            Transaction claimTokenTxn = new Transaction(null);
+            Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((_claimTokenTxn, _responseInfo) =>
             {
-                claimTokenResult = returnResult;
+                claimTokenTxn = _claimTokenTxn;
+                responseInfo = _responseInfo;
             }, bob, alice.AccountAddress, alice.AccountAddress, collectionName, tokenName, propertyVersion));
 
             yield return claimTokenCor;
 
-            Debug.Log("Claim Token Response: " + claimTokenResult);
-            Transaction claimTokenTxn = JsonConvert.DeserializeObject<Transaction>(claimTokenResult, new TransactionConverter());
+            Debug.Log("Claim Token Response: " + responseInfo.message);
             string claimTokenTxnHash = claimTokenTxn.Hash;
             Debug.Log("Claim Token Hash: " + claimTokenTxnHash);
 
