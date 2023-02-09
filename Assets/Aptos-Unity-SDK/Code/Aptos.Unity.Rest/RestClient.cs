@@ -438,7 +438,7 @@ namespace Aptos.Unity.Rest
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">A complex key object used to search for the table item. In this case it's a TokenDataId object that contains the token / collection info</param>
         /// <returns>A JSON string to be serialized by the developer to a matching representation of data.</returns>
-        public IEnumerator GetTableItemTokenData(Action<string> callback, string handle, string keyType, string valueType, TokenDataId key)
+        public IEnumerator GetTableItemTokenData(Action<TableItemToken, ResponseInfo> callback, string handle, string keyType, string valueType, TokenDataId key)
         {
             TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
             {
@@ -463,14 +463,17 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResponseInfo responseInfo = new ResponseInfo();
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.LogError("Error While Sending: " + request.error);
-                callback(null);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while requesting table item. " + request.error;
+                callback(null, responseInfo);
             }
             if (request.responseCode == 404)
             {
-                Debug.LogError("Table Item Not Found: " + request.error);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Table item not found. " + request.error;
                 TableItemToken tableItemToken = new TableItemToken
                 {
                     Id = new Aptos.Unity.Rest.Model.Id
@@ -485,13 +488,17 @@ namespace Aptos.Unity.Rest
                     Amount = "0"
                 };
 
-                string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
-                callback(tableItemTokenJson);
+                //string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
+                callback(tableItemToken, responseInfo);
             }
             else
             {
                 string response = request.downloadHandler.text;
-                callback(response);
+                TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(response);
+
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(tableItemToken, responseInfo);
             }
 
             request.Dispose();
@@ -1662,7 +1669,7 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns></returns>
-        public IEnumerator GetTokenData(Action<string> callback, Accounts.AccountAddress creator,
+        public IEnumerator GetTokenData(Action<TableItemToken, ResponseInfo> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
             bool success = false;
@@ -1677,9 +1684,13 @@ namespace Aptos.Unity.Rest
 
             yield return accountResourceCor;
 
-            if(!success)
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            if (!success)
             {
-                callback("Account resource not found.");
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = collectionResourceResp;
+                callback(null, responseInfo);
                 yield break;
             }
 
@@ -1698,10 +1709,14 @@ namespace Aptos.Unity.Rest
 
             string tokenDataIdJson = JsonConvert.SerializeObject(tokenDataId);
 
-            string tableItemResp = "";
+            //string tableItemResp = "";
+            TableItemToken tableItemToken = new TableItemToken();
+
             Coroutine getTableItemCor = StartCoroutine(
-                GetTableItemTokenData(
-                    (returnResult) => { tableItemResp = returnResult;}
+                GetTableItemTokenData((_tableItemToken, _responseInfo) => {
+                    tableItemToken = _tableItemToken;
+                    responseInfo = _responseInfo;
+                }
                     , tokenDataHandle
                     , "0x3::token::TokenDataId"
                     , "0x3::token::TokenData"
@@ -1709,7 +1724,7 @@ namespace Aptos.Unity.Rest
                 );
 
             yield return getTableItemCor;
-            callback(tableItemResp);
+            callback(tableItemToken, responseInfo);
         }
 
         /// <summary>

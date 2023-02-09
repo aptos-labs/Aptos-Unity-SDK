@@ -184,13 +184,23 @@ namespace Aptos.Unity.Sample
             Debug.Log("Alice's NFT Token Balance: " + getTokenBalanceResultAlice);
 
             string getTokenDataResultAlice = "";
+            TableItemToken tableItemToken = new TableItemToken();
+
             Coroutine getTokenDataCor = StartCoroutine(
-                RestClient.Instance.GetTokenData((returnResult) =>
+                RestClient.Instance.GetTokenData((_tableItemToken, _responseInfo) =>
                 {
-                    getTokenDataResultAlice = returnResult;
+                    //getTokenDataResultAlice = returnResult;
+                    tableItemToken = _tableItemToken;
+                    responseInfo = _responseInfo;
                 }, aliceAddress, collectionName, tokenName, propertyVersion)
             );
             yield return getTokenDataCor;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Could not get toke data.");
+                yield break;
+            }
             Debug.Log("Alice's Token Data: " + getTokenDataResultAlice);
             #endregion
 
