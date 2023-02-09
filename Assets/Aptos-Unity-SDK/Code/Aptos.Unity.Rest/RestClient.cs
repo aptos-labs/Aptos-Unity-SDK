@@ -664,20 +664,23 @@ namespace Aptos.Unity.Rest
         /// -- true if the transaction hash was found after polling \n
         /// -- false if we did not find the transaction hash and timed out \n
         /// </returns>
-        public IEnumerator WaitForTransaction(Action<bool, string> callback, string txnHash)
+        public IEnumerator WaitForTransaction(Action<bool, ResponseInfo> callback, string txnHash)
         {
             bool transactionPending = true;
             int count = 0;
+            ResponseInfo responseInfo = new ResponseInfo();
             while (transactionPending)
             {
-                Coroutine transactionPendingCor = StartCoroutine(TransactionPending((pending, response) => {
-                    transactionPending = pending;
+                Coroutine transactionPendingCor = StartCoroutine(TransactionPending((_pending, _responseInfo) => {
+                    transactionPending = _pending;
                     // If transaction is NOT pending
                     if (!transactionPending)
                     {
-                        Transaction transaction = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
+                        Transaction transaction = JsonConvert.DeserializeObject<Transaction>(_responseInfo.message, new TransactionConverter());
                         if(transaction.GetType().GetProperty("Success") != null && transaction.Success) {
-                            callback(true, response);
+                            responseInfo.status = ResponseInfo.Status.Success;
+                            responseInfo.message = _responseInfo.message;
+                            callback(true, responseInfo);
                         }
                     }
                     count += 1;
@@ -689,7 +692,9 @@ namespace Aptos.Unity.Rest
                 if (count > TransactionWaitInSeconds)
                 {
                     // Transaction hash wasn't found after n types
-                    callback(false, "Response Timed Out After Querying " + count + "Times");
+                    responseInfo.status = ResponseInfo.Status.Failed;
+                    responseInfo.message = "Response Timed Out After Querying " + count + "Times";
+                    callback(false, responseInfo);
                     break;
                 }
             }
@@ -706,7 +711,7 @@ namespace Aptos.Unity.Rest
         /// -- true if transaction is still pending / hasn't been found, meaning 404, error in response, or `pending_transaction` is true \n
         /// -- false if transaction has been found, meaning `pending_transaction` is true \n
         /// </returns>
-        public IEnumerator TransactionPending(Action<bool, string> callback, string txnHash)
+        public IEnumerator TransactionPending(Action<bool, ResponseInfo> callback, string txnHash)
         {
             string accountsURL = Endpoint + "/transactions/by_hash/" + txnHash;
             Uri accountsURI = new Uri(accountsURL);
@@ -717,21 +722,32 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
+            ResponseInfo responseInfo = new ResponseInfo();
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                callback(true, "Connection Error");
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Connection error. " + request.error;
+
+                callback(true, responseInfo);
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
             else if (request.responseCode == 404)
             {
-                callback(true, "Transaction Not Found: " + request.responseCode);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Transaction Not Found: " + request.responseCode;
+
+                callback(true, responseInfo);
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
             else if (request.responseCode >= 400)
             {
-                callback(true, "Transaction Call Error: " + request.responseCode + " : " + request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Transaction Call Error: " + request.responseCode + " : " + request.downloadHandler.text;
+
+                callback(true, responseInfo);
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
             }
@@ -745,7 +761,10 @@ namespace Aptos.Unity.Rest
                     Debug.LogWarning("Transaction is Pending: " + request.downloadHandler.text);
                 }
 
-                callback(isPending, request.downloadHandler.text);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = request.downloadHandler.text;
+
+                callback(isPending, responseInfo);
 
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
