@@ -1719,12 +1719,13 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Get collection information.
+        /// This return a JSON representation that will be parsed by the developer that know the specific return types.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="creator">Address of the creator.</param>
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns></returns>
+        /// <returns>A JSON string representation of the collection information.</returns>
         public IEnumerator GetCollection(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string propertyVersion = "0")
         {
