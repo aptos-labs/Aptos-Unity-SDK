@@ -9,7 +9,9 @@ namespace Aptos.Unity.Rest.Model
             Success,
             Pending,
             NotFound,
-            Failed
+            Failed,
+            Warning
         }
     }
 }
+
