@@ -128,7 +128,6 @@ namespace Aptos.Unity.Sample.UI
             {
                 if (!success)
                 {
-                    //UIController.Instance.ToggleNotification(false, "Fail to Fetch the Balance");
                     onGetBalance?.Invoke(0.0f);
                 }
                 else
@@ -152,7 +151,7 @@ namespace Aptos.Unity.Sample.UI
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptosTokenToFloat((float)_amount) + " APT");
+            UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully Get Airdrop of " + AptosTokenToFloat((float)_amount) + " APT");
         }
 
         public IEnumerator SendToken(string _targetAddress, long _amount)
@@ -171,14 +170,17 @@ namespace Aptos.Unity.Sample.UI
 
             yield return cor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status == ResponseInfo.Status.Success)
             {
-                // TODO: Do something
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
+            }
+            else
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, responseInfo.message);
             }
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
         }
 
         public IEnumerator CreateCollection(string _collectionName, string _collectionDescription, string _collectionUri)
@@ -195,9 +197,13 @@ namespace Aptos.Unity.Sample.UI
             _collectionName, _collectionDescription, _collectionUri));
             yield return createCollectionCor;
 
-            if (responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status == ResponseInfo.Status.Success)
             {
-                // TODO: Do something
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully Create Collection: " + _collectionName);
+            }
+            else
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, responseInfo.message);
             }
 
             yield return new WaitForSeconds(1f);
@@ -205,8 +211,6 @@ namespace Aptos.Unity.Sample.UI
 
             //Aptos.Unity.Rest.Model.Transaction createCollectionTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createCollectionResult, new TransactionConverter());
             string transactionHash = createCollectionTxn.Hash;
-
-            UIController.Instance.ToggleNotification(true, "Successfully Create Collection: " + _collectionName);
         }
 
         public IEnumerator CreateNFT(string _collectionName, string _tokenName, string _tokenDescription, int _supply, int _max, string _uri, int _royaltyPointsPerMillion)
@@ -231,9 +235,13 @@ namespace Aptos.Unity.Sample.UI
             );
             yield return createTokenCor;
 
-            if (responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status == ResponseInfo.Status.Success)
             {
-                // TODO: Do something
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully Create NFT: " + _tokenName);
+            }
+            else
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, responseInfo.message);
             }
 
             yield return new WaitForSeconds(1f);
@@ -241,8 +249,6 @@ namespace Aptos.Unity.Sample.UI
 
             //Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
             string createTokenTxnHash = createTokenTxn.Hash;
-
-            UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
         }
 
         public float AptosTokenToFloat(float _token)

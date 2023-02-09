@@ -6,6 +6,7 @@ using System;
 using UnityEngine.UI;
 using Aptos.Unity.Rest;
 using Aptos.Rest;
+using Aptos.Unity.Rest.Model;
 
 namespace Aptos.Unity.Sample.UI
 {
@@ -89,7 +90,7 @@ namespace Aptos.Unity.Sample.UI
                 AptosUILink.Instance.InitWalletFromCache();
                 AddWalletAddressListUI(AptosUILink.Instance.addressList);
                 ToggleEmptyState(false);
-                ToggleNotification(true, "Successfully Import the Wallet");
+                ToggleNotification(ResponseInfo.Status.Success, "Successfully Import the Wallet");
             }
             else
             {
@@ -141,10 +142,10 @@ namespace Aptos.Unity.Sample.UI
             }
         }
 
-        public void ToggleNotification(bool _success, string _message)
+        public void ToggleNotification(ResponseInfo.Status status, string _message)
         {
             NotificationPanel np = Instantiate(notificationPrefab, notificationPanel).GetComponent<NotificationPanel>();
-            np.Toggle(_success, _message);
+            np.Toggle(status, _message);
         }
 
         #endregion
@@ -157,12 +158,12 @@ namespace Aptos.Unity.Sample.UI
             {
                 createdMnemonicInputField.text = PlayerPrefs.GetString(AptosUILink.Instance.mnemonicsKey);
                 ToggleEmptyState(false);
-                ToggleNotification(true, "Successfully Create the Wallet");
+                ToggleNotification(ResponseInfo.Status.Success, "Successfully Create the Wallet");
             }
             else
             {
                 ToggleEmptyState(true);
-                ToggleNotification(false, "Fail to Create the Wallet");
+                ToggleNotification(ResponseInfo.Status.Failed, "Fail to Create the Wallet");
             }
 
             AddWalletAddressListUI(AptosUILink.Instance.addressList);
@@ -174,12 +175,12 @@ namespace Aptos.Unity.Sample.UI
             {
                 AddWalletAddressListUI(AptosUILink.Instance.addressList);
                 ToggleEmptyState(false);
-                ToggleNotification(true, "Successfully Import the Wallet");
+                ToggleNotification(ResponseInfo.Status.Success, "Successfully Import the Wallet");
             }
             else
             {
                 ToggleEmptyState(true);
-                ToggleNotification(false, "Fail to Import the Wallet");
+                ToggleNotification(ResponseInfo.Status.Failed, "Fail to Import the Wallet");
             }
         }
 
@@ -237,7 +238,7 @@ namespace Aptos.Unity.Sample.UI
                     break;
             }
 
-            ToggleNotification(true, "Set Network to " + _target.options[_target.value].text);
+            ToggleNotification(ResponseInfo.Status.Success, "Set Network to " + _target.options[_target.value].text);
         }
 
         public void CopyMnemonicWords()
@@ -258,7 +259,7 @@ namespace Aptos.Unity.Sample.UI
         {
             if (receiverAddressInput.text == string.Empty || sendAmountInput.text == String.Empty)
             {
-                ToggleNotification(false, "Please Fill Out All Required Fields");
+                ToggleNotification(ResponseInfo.Status.Failed, "Please Fill Out All Required Fields");
             }
             else
             {
@@ -279,7 +280,7 @@ namespace Aptos.Unity.Sample.UI
         {
             if (c_collectionNameInputField.text == String.Empty || collectionDescriptionInputField.text == String.Empty || collectionUriInputField.text == String.Empty)
             {
-                ToggleNotification(false, "Please Fill Out All Required Fields");
+                ToggleNotification(ResponseInfo.Status.Failed, "Please Fill Out All Required Fields");
             }
             else
             {
@@ -301,7 +302,7 @@ namespace Aptos.Unity.Sample.UI
                 tokenURIInputField.text == String.Empty ||
                 royaltyPointsInputField.text == String.Empty)
             {
-                ToggleNotification(false, "Please Fill Out All Required Fields");
+                ToggleNotification(ResponseInfo.Status.Failed, "Please Fill Out All Required Fields");
             }
             else
             {
