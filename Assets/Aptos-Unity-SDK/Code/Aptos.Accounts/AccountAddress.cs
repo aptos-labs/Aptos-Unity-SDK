@@ -6,8 +6,8 @@ using Aptos.Utilities.BCS;
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// Represents an Aptos account address
-    /// https://aptos.dev/concepts/accounts
+    /// Represents an Aptos account address.
+    /// More details can her found <see cref="https://aptos.dev/concepts/accounts">here</see>.
     /// </summary>
     public class AccountAddress
     {
@@ -15,9 +15,9 @@ namespace Aptos.Accounts
         private readonly byte[] Address;
 
         /// <summary>
-        /// Sets the bytes of an account Address.
+        /// Initializes an account address by setting it's bytes.
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="address">Byte array representing address.</param>
         public AccountAddress(byte[] address)
         {
             if (address.Length != Length)
@@ -50,7 +50,7 @@ namespace Aptos.Accounts
         /// <summary>
         /// Returns an AccountAddress object from a hexadecimal Address.
         /// </summary>
-        /// <param name="address"></param> Hexadecimal representation of an Address.
+        /// <param name="address">Hexadecimal representation of an Address.</param>
         /// <returns>An account address object</returns>
         public static AccountAddress FromHex(string address)
         {
@@ -69,8 +69,8 @@ namespace Aptos.Accounts
         /// <summary>
         /// Generate an AccountAddress object from a given public key, byte array. 
         /// </summary>
-        /// <param name="publicKey"></param>
-        /// <returns>An account address object</returns>
+        /// <param name="publicKey">Byte array representing a public key.</param>
+        /// <returns>An account address object.</returns>
         public static AccountAddress FromKey(byte[] publicKey)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
@@ -88,8 +88,9 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// https://github.com/aptos-labs/bcs
-        /// https://aptos.dev/guides/creating-a-signed-transaction/#bcs
+        /// Reference implementation to BCS can be found <see cref="https://github.com/aptos-labs/bcs">here</see>.   
+        /// More details on creating a BCS signed transaction can be found <see cref="https://aptos.dev/guides/creating-a-signed-transaction/#bcs">here</see>.
+        ///
         /// Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. 
         /// See BCS for a description of the design goals of BCS.
         /// BCS is not a self-describing format.As such, in order to deserialize a message, 

@@ -5,9 +5,9 @@ using System;
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// Represents an Aptos Accounts
-    /// An Aptos account is represented by an extended private key
-    /// , a public key and it's athentication key
+    /// Represents an Aptos Accounts.   
+    /// An Aptos account is represented by an extended private key, 
+    /// a public key and it's athentication key.
     /// </summary>
     public class Account
     {
