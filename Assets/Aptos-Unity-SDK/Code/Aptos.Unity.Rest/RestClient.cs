@@ -170,7 +170,7 @@ namespace Aptos.Unity.Rest
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
 
-                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin(); GetAccountResource
+                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
                 coin.Value = acctResourceCoin.DataProp.Coin.Value;
 
                 callback(coin, responseInfo);
