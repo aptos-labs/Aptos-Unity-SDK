@@ -360,7 +360,7 @@ namespace Aptos.Unity.Rest
         /// }
         /// </code>
         /// </param>
-        /// <returns></returns>
+        /// <returns>(TableItemToken, ResponseInfo)</returns>
         public IEnumerator GetTableItemNFT(Action<TableItemToken, ResponseInfo> callback, string handle, string keyType, string valueType, TokenIdRequest key)
         {
             TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
@@ -1641,7 +1641,7 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns></returns>
+        /// <returns>(TableItemToken, ResponseInfo)</returns>
         public IEnumerator GetTokenData(Action<TableItemToken, ResponseInfo> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
@@ -1805,7 +1805,7 @@ namespace Aptos.Unity.Rest
         /// Convert byte array to string.
         /// </summary>
         /// <param name="hex">Hexadecimal string</param>
-        /// <returns></returns>
+        /// <returns>Byte array representing the hex string.</returns>
         public byte[] StringToByteArray(String hex)
         {
             int NumberChars = hex.Length;
@@ -1819,7 +1819,7 @@ namespace Aptos.Unity.Rest
         /// Turns byte array to hexadecimal string.
         /// </summary>
         /// <param name="bytes">Byte array</param>
-        /// <returns></returns>
+        /// <returns>String that represents byte array of hexadecials.</returns>
         public string ToHexadecimalRepresentation(byte[] bytes)
         {
             StringBuilder sb = new StringBuilder(bytes.Length << 1);
