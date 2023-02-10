@@ -21,12 +21,13 @@ namespace Aptos.Unity.Rest
     /// </summary>
     public class RestClient : MonoBehaviour
     {
+        /// Static instance of the REST client.
         public static RestClient Instance { get; set; }
 
-        /// Amount of seconds to each during each polling cycle
+        /// Amount of seconds to each during each polling cycle.
         public static int TransactionWaitInSeconds = 20;
 
-        /// Based enpoint for REST API
+        /// Based enpoint for REST API.
         public Uri Endpoint { get; private set; }
 
         private void Awake()
@@ -36,7 +37,7 @@ namespace Aptos.Unity.Rest
 
         #region Setup
         /// <summary>
-        /// Set Endpoint for RPC / REST call
+        /// Set Endpoint for RPC / REST call.
         /// </summary>
         /// <param name="url">Base URL for REST API.</param>
         public void SetEndPoint(string url)
