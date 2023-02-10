@@ -5,7 +5,6 @@ using TMPro;
 using System;
 using UnityEngine.UI;
 using Aptos.Unity.Rest;
-using Aptos.Rest;
 using Aptos.Unity.Rest.Model;
 
 namespace Aptos.Unity.Sample.UI
