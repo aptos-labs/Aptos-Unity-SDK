@@ -174,7 +174,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aff1ad182fff1bb7169ca4e0e75ab3357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types.  <br /></td></tr>
 <tr class="separator:aff1ad182fff1bb7169ca4e0e75ab3357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a4a0c19006d4e0cc6302c4b12cc565c81">GetAccountResource</a> (Action&lt; bool, long, string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> accountAddress, string resourceType)</td></tr>
-<tr class="memdesc:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a resource of a given type from an account. NOTE: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it to an object. See <a class="el" href="">GetAccountResourceCollection</a> for an example.  <br /></td></tr>
+<tr class="memdesc:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a resource of a given type from an account. NOTE: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it into an object. See <a class="el" href="">GetAccountResourceCollection</a> for an example.  <br /></td></tr>
 <tr class="separator:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc84f376cfca18c198998d545fa77a0c"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abc84f376cfca18c198998d545fa77a0c">StringToByteArray</a> (String hex)</td></tr>
 <tr class="memdesc:abc84f376cfca18c198998d545fa77a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert byte array to string.  <br /></td></tr>
@@ -192,6 +192,7 @@ Static Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a4765077e5b416c288d2299f20f759306"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html">RestClient</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a4765077e5b416c288d2299f20f759306">Instance</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a4765077e5b416c288d2299f20f759306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static instance of the REST client.  <br /></td></tr>
 <tr class="separator:a4765077e5b416c288d2299f20f759306"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a923a972898edd67745b64d60db12274f"><td class="memItemLeft" align="right" valign="top">Uri&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a923a972898edd67745b64d60db12274f">Endpoint</a><code> [get]</code></td></tr>
 <tr class="memdesc:a923a972898edd67745b64d60db12274f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Based enpoint for REST API.  <br /></td></tr>
@@ -621,7 +622,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get a resource of a given type from an account. NOTE: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it to an object. See <a class="el" href="">GetAccountResourceCollection</a> for an example. </p>
+<p>Get a resource of a given type from an account. NOTE: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it into an object. See <a class="el" href="">GetAccountResourceCollection</a> for an example. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used when response is received.</td></tr>
@@ -630,7 +631,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls a <code>callback</code> with (bool, long, string), bool - success boolean, long - error code, string - JSON response to be deserialized by the consumer of the function.</dd></dl>
 
 </div>
 </div>
@@ -675,7 +676,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information.</dd></dl>
 
 </div>
 </div>
@@ -979,7 +980,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(TableItemToken, ResponseInfo)</dd></dl>
 
 </div>
 </div>
@@ -1231,7 +1232,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(TableItemToken, ResponseInfo)</dd></dl>
 
 </div>
 </div>
@@ -1364,7 +1365,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Byte array representing the hex string.</dd></dl>
 
 </div>
 </div>
@@ -1440,7 +1441,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>String that represents byte array of hexadecials.</dd></dl>
 
 </div>
 </div>
@@ -1648,6 +1649,8 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Static instance of the REST client. </p>
 
 </div>
 </div>

@@ -70,7 +70,7 @@ IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abbc
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_aff1ad182fff1bb7169ca4e0e75ab3357}{Get\+Collection}} (Action$<$ string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string property\+Version=\char`\"{}0\char`\"{})
 \begin{DoxyCompactList}\small\item\em Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}{Get\+Account\+Resource}} (Action$<$ bool, long, string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} account\+Address, string resource\+Type)
-\begin{DoxyCompactList}\small\item\em Get a resource of a given type from an account. NOTE\+: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it to an object. See \mbox{\hyperlink{}{Get\+Account\+Resource\+Collection}} for an example. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Get a resource of a given type from an account. NOTE\+: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it into an object. See \mbox{\hyperlink{}{Get\+Account\+Resource\+Collection}} for an example. \end{DoxyCompactList}\item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abc84f376cfca18c198998d545fa77a0c}{String\+To\+Byte\+Array}} (String hex)
 \begin{DoxyCompactList}\small\item\em Convert byte array to string. \end{DoxyCompactList}\item 
 string \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_aae392b724fe31d094fbd5fc6133b1bea}{To\+Hexadecimal\+Representation}} (byte\mbox{[}$\,$\mbox{]} bytes)
@@ -84,7 +84,7 @@ static int \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a5919
 \begin{DoxyCompactItemize}
 \item 
 static \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}{Rest\+Client}} \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4765077e5b416c288d2299f20f759306}{Instance}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\item 
+\begin{DoxyCompactList}\small\item\em Static instance of the REST client. \end{DoxyCompactList}\item 
 Uri \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a923a972898edd67745b64d60db12274f}{Endpoint}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Based enpoint for REST API. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -305,7 +305,7 @@ Calls {\ttfamily callback}function with (Account\+Resource\+Coin.\+Coin, Respons
 
 
 
-Get a resource of a given type from an account. NOTE\+: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it to an object. See \mbox{\hyperlink{}{Get\+Account\+Resource\+Collection}} for an example. 
+Get a resource of a given type from an account. NOTE\+: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it into an object. See \mbox{\hyperlink{}{Get\+Account\+Resource\+Collection}} for an example. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -317,7 +317,7 @@ Get a resource of a given type from an account. NOTE\+: The response is a comple
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+Calls a {\ttfamily callback} with (bool, long, string), bool -\/ success boolean, long -\/ error code, string -\/ JSON response to be deserialized by the consumer of the function.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1f71708ebbde910882993525ed708a97}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1f71708ebbde910882993525ed708a97}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountResourceCollection@{GetAccountResourceCollection}}
@@ -339,7 +339,7 @@ Get Account Resource.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Calls {\ttfamily callback}function with (Resource\+Collection, Response\+Info) -\/ an object representing a collection resource, and the response information 
+Calls {\ttfamily callback}function with (Resource\+Collection, Response\+Info) -\/ an object representing a collection resource, and the response information.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_add97b3c9a88054e560a228fade4efa29}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_add97b3c9a88054e560a228fade4efa29}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountSequenceNumber@{GetAccountSequenceNumber}}
@@ -495,7 +495,7 @@ See \mbox{\hyperlink{}{Get\+Table\+Item}} for a get table item using a generic s
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+(Table\+Item\+Token, Response\+Info)
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a143a8f05b0fa46270b1def216548b0c7}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a143a8f05b0fa46270b1def216548b0c7}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTableItemTokenData@{GetTableItemTokenData}}
@@ -607,7 +607,7 @@ Read Collection\textquotesingle{}s token data table. An example.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+(Table\+Item\+Token, Response\+Info)
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a68eaf908f35e048128c9ec802c9ea451}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a68eaf908f35e048128c9ec802c9ea451}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!OfferToken@{OfferToken}}
@@ -672,7 +672,7 @@ Convert byte array to string.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+Byte array representing the hex string.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_afbbc6b5f8bc82d29aa070d03f714adad}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_afbbc6b5f8bc82d29aa070d03f714adad}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!SubmitTransaction@{SubmitTransaction}}
@@ -716,7 +716,7 @@ Turns byte array to hexadecimal string.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+String that represents byte array of hexadecials.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a008e04354c44777bd25403704382c2c9}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a008e04354c44777bd25403704382c2c9}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!TransactionPending@{TransactionPending}}
@@ -821,6 +821,10 @@ Based enpoint for REST API.
 \index{Instance@{Instance}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
 \doxysubsubsection{\texorpdfstring{Instance}{Instance}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}{Rest\+Client}} Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Instance\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Static instance of the REST client. 
 
 
 

@@ -8,5 +8,5 @@ var searchData=
   ['coin_5',['Coin',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin_1_1_coin.html',1,'Aptos::Unity::Rest::Model::AccountResourceCoin']]],
   ['collectiondata_6',['CollectionData',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_1_1_collection_data.html',1,'Aptos.Unity.Rest.Model.ResourceCollection.CollectionData'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_o_l_d_1_1_collection_data.html',1,'Aptos.Unity.Rest.Model.ResourceCollectionOLD.CollectionData']]],
   ['collectionevents_7',['CollectionEvents',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_1_1_collection_events.html',1,'Aptos.Unity.Rest.Model.ResourceCollection.CollectionEvents'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_o_l_d_1_1_collection_events.html',1,'Aptos.Unity.Rest.Model.ResourceCollectionOLD.CollectionEvents']]],
-  ['constants_8',['Constants',['../class_aptos_1_1_rest_1_1_constants.html',1,'Aptos::Rest']]]
+  ['constants_8',['Constants',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html',1,'Aptos::Unity::Rest']]]
 ];

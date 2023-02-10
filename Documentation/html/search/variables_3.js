@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['coin_5ftransfer_5ffunction_0',['COIN_TRANSFER_FUNCTION',['../class_aptos_1_1_rest_1_1_constants.html#a42da5e44d0b6acd5b04ac2e821b16a8c',1,'Aptos::Rest::Constants']]],
-  ['create_5fcollection_5fscript_1',['CREATE_COLLECTION_SCRIPT',['../class_aptos_1_1_rest_1_1_constants.html#af9a560aefba1a3e03ed0562865f623e2',1,'Aptos::Rest::Constants']]],
-  ['create_5ftoken_5fscript_5ffunction_2',['CREATE_TOKEN_SCRIPT_FUNCTION',['../class_aptos_1_1_rest_1_1_constants.html#a7b2e679da81f765ec54bdee5b4baba42',1,'Aptos::Rest::Constants']]]
+  ['coin_5ftransfer_5ffunction_0',['COIN_TRANSFER_FUNCTION',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#a8c2d3b908d0163ba14b5f6961b403cb7',1,'Aptos::Unity::Rest::Constants']]],
+  ['create_5fcollection_5fscript_1',['CREATE_COLLECTION_SCRIPT',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#ae704536f305ca4d4c10881bbaad4b5f1',1,'Aptos::Unity::Rest::Constants']]],
+  ['create_5ftoken_5fscript_5ffunction_2',['CREATE_TOKEN_SCRIPT_FUNCTION',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#a960ef0d3cefc8ebde833f8e09e313dfd',1,'Aptos::Unity::Rest::Constants']]]
 ];

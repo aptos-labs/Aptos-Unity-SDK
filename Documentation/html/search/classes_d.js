@@ -7,7 +7,7 @@ var searchData=
   ['tagsequence_4',['TagSequence',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_tag_sequence.html',1,'Aptos::Utilities::BCS']]],
   ['tokendata_5',['TokenData',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_1_1_token_data.html',1,'Aptos.Unity.Rest.Model.ResourceCollection.TokenData'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_o_l_d_1_1_token_data.html',1,'Aptos.Unity.Rest.Model.ResourceCollectionOLD.TokenData']]],
   ['tokendataid_6',['TokenDataId',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id.html',1,'Aptos::Unity::Rest::Model']]],
-  ['tokendataidrequest_7',['TokenDataIdRequest',['../class_aptos_1_1_rest_1_1_models_1_1_token_data_id_request.html',1,'Aptos::Rest::Models']]],
+  ['tokendataidrequest_7',['TokenDataIdRequest',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id_request.html',1,'Aptos::Unity::Rest::Model']]],
   ['tokenidrequest_8',['TokenIdRequest',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_id_request.html',1,'Aptos::Unity::Rest::Model']]],
   ['tokenproperties_9',['TokenProperties',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_properties.html',1,'Aptos::Unity::Rest::Model']]],
   ['tokens_10',['Tokens',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_token_store_1_1_tokens.html',1,'Aptos::Unity::Rest::Model::AccountResourceTokenStore']]],
