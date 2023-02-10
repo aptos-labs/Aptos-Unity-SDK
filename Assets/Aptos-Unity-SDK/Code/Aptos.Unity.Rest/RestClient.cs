@@ -762,11 +762,6 @@ namespace Aptos.Unity.Rest
                 var transactionResult = JsonConvert.DeserializeObject<Transaction>(request.downloadHandler.text, new TransactionConverter())!;
                 bool isPending = transactionResult.Type.Equals("pending_transaction");
 
-                if (isPending)
-                {
-                    Debug.LogWarning("Transaction is Pending: " + request.downloadHandler.text);
-                }
-
                 responseInfo.status = ResponseInfo.Status.Success;
                 responseInfo.message = request.downloadHandler.text;
 
