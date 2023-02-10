@@ -18,5 +18,5 @@ var searchData=
   ['sign_15',['Sign',['../class_aptos_1_1_accounts_1_1_account.html#aa48f1cbff96bbb769cff996a81fb0b02',1,'Aptos.Accounts.Account.Sign()'],['../class_aptos_1_1_accounts_1_1_private_key.html#ac0917eaf25d192905a5a52172ba0bfb9',1,'Aptos.Accounts.PrivateKey.Sign()']]],
   ['stringtobytearray_16',['StringToByteArray',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abc84f376cfca18c198998d545fa77a0c',1,'Aptos::Unity::Rest::RestClient']]],
   ['structtag_17',['StructTag',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html#ad61c5e71b4856c1e23845d78a4d54e15',1,'Aptos::Utilities::BCS::StructTag']]],
-  ['submittransaction_18',['SubmitTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa77c0a1ef1c45608f8306f7a444d6409',1,'Aptos::Unity::Rest::RestClient']]]
+  ['submittransaction_18',['SubmitTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#afbbc6b5f8bc82d29aa070d03f714adad',1,'Aptos::Unity::Rest::RestClient']]]
 ];

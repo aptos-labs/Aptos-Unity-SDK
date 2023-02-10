@@ -98,50 +98,53 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3cc61e446a977a836accf72776b0e679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Endpoint for RPC / REST call.  <br /></td></tr>
 <tr class="separator:a3cc61e446a977a836accf72776b0e679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2d0baa6c23e8fe41a3ba0c114a37ba1"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#ac2d0baa6c23e8fe41a3ba0c114a37ba1">GetAccount</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_data.html">AccountData</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">AccountAddress</a> accountAddress)</td></tr>
-<tr class="memdesc:ac2d0baa6c23e8fe41a3ba0c114a37ba1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Account Details.  <br /></td></tr>
+<tr class="memdesc:ac2d0baa6c23e8fe41a3ba0c114a37ba1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Account Details. <br  />
+ Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. If the ledger version is not specified in the request, the latest ledger version is used.  <br /></td></tr>
 <tr class="separator:ac2d0baa6c23e8fe41a3ba0c114a37ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add97b3c9a88054e560a228fade4efa29"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#add97b3c9a88054e560a228fade4efa29">GetAccountSequenceNumber</a> (Action&lt; string, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">AccountAddress</a> accountAddress)</td></tr>
 <tr class="memdesc:add97b3c9a88054e560a228fade4efa29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets Account Sequence Number.  <br /></td></tr>
 <tr class="separator:add97b3c9a88054e560a228fade4efa29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1a11084cebba101e03c7674ab2d223d"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa1a11084cebba101e03c7674ab2d223d">GetAccountBalance</a> (Action&lt; bool, string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> accountAddress)</td></tr>
-<tr class="memdesc:aa1a11084cebba101e03c7674ab2d223d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Account Balance.  <br /></td></tr>
-<tr class="separator:aa1a11084cebba101e03c7674ab2d223d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44ba8e4640107186dd019b111240fe83"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a44ba8e4640107186dd019b111240fe83">GetAccountResourceCollection</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html">ResourceCollection</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> accountAddress, string resourceType)</td></tr>
-<tr class="memdesc:a44ba8e4640107186dd019b111240fe83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Account Resource.  <br /></td></tr>
-<tr class="separator:a44ba8e4640107186dd019b111240fe83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01b125da3cd4abdc77638936db5f4b3a"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a01b125da3cd4abdc77638936db5f4b3a">GetTableItemCoin</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin.html">AccountResourceCoin</a> &gt; callback, string handle, string keyType, string valueType, string key)</td></tr>
-<tr class="memdesc:a01b125da3cd4abdc77638936db5f4b3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets table item that represents a coin resource See <a class="el" href="">GetTableItem</a>  <br /></td></tr>
-<tr class="separator:a01b125da3cd4abdc77638936db5f4b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a876a9811cd4942ff3e9b832ce0ef0f16"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a876a9811cd4942ff3e9b832ce0ef0f16">GetAccountBalance</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin_1_1_coin.html">AccountResourceCoin.Coin</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> accountAddress)</td></tr>
+<tr class="memdesc:a876a9811cd4942ff3e9b832ce0ef0f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an account's balance.  <br /></td></tr>
+<tr class="separator:a876a9811cd4942ff3e9b832ce0ef0f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f71708ebbde910882993525ed708a97"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a1f71708ebbde910882993525ed708a97">GetAccountResourceCollection</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html">ResourceCollection</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> accountAddress, string resourceType)</td></tr>
+<tr class="memdesc:a1f71708ebbde910882993525ed708a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Account Resource.  <br /></td></tr>
+<tr class="separator:a1f71708ebbde910882993525ed708a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43eb640df9b4a91fb3ed8e00142ef6f8"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a43eb640df9b4a91fb3ed8e00142ef6f8">GetTableItemCoin</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin.html">AccountResourceCoin</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, string handle, string keyType, string valueType, string key)</td></tr>
+<tr class="memdesc:a43eb640df9b4a91fb3ed8e00142ef6f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets table item that represents a coin resource See <a class="el" href="">GetTableItem</a>  <br /></td></tr>
+<tr class="separator:a43eb640df9b4a91fb3ed8e00142ef6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53c4cc366177befe5b48a8df7a342928"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a53c4cc366177befe5b48a8df7a342928">GetTableItem</a> (Action&lt; string &gt; callback, string handle, string keyType, string valueType, string key)</td></tr>
 <tr class="memdesc:a53c4cc366177befe5b48a8df7a342928"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a table item at a specific ledger version from the table identified by the handle {table_handle} in the path and a [simple] "key" (TableItemRequest) provided by the request body.  <br /></td></tr>
 <tr class="separator:a53c4cc366177befe5b48a8df7a342928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a621bf8a2a4905f28dee8a2e498de631a"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a621bf8a2a4905f28dee8a2e498de631a">GetTableItemNFT</a> (Action&lt; string &gt; callback, string handle, string keyType, string valueType, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_id_request.html">TokenIdRequest</a> key)</td></tr>
-<tr class="memdesc:a621bf8a2a4905f28dee8a2e498de631a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a table item for a NFT from the table identified by the handle {table_handle} in the path and a complex key provided by the request body.  <br /></td></tr>
-<tr class="separator:a621bf8a2a4905f28dee8a2e498de631a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf2953f3b9c54f5776e60102b6f5f485"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#adf2953f3b9c54f5776e60102b6f5f485">GetTableItemTokenData</a> (Action&lt; string &gt; callback, string handle, string keyType, string valueType, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id.html">TokenDataId</a> key)</td></tr>
-<tr class="memdesc:adf2953f3b9c54f5776e60102b6f5f485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a table item that contains a token's (NFT) data. In this case we are using a complex key to retrieve the table item.  <br /></td></tr>
-<tr class="separator:adf2953f3b9c54f5776e60102b6f5f485"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5e47b9855030dc48f2b431e68dac14d"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa5e47b9855030dc48f2b431e68dac14d">GetInfo</a> (Action&lt; bool, string &gt; callback)</td></tr>
-<tr class="memdesc:aa5e47b9855030dc48f2b431e68dac14d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.  <br /></td></tr>
-<tr class="separator:aa5e47b9855030dc48f2b431e68dac14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa77c0a1ef1c45608f8306f7a444d6409"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa77c0a1ef1c45608f8306f7a444d6409">SubmitTransaction</a> (Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account.html">Account</a> sender, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_payload.html">TransactionPayload</a> payload)</td></tr>
-<tr class="memdesc:aa77c0a1ef1c45608f8306f7a444d6409"><td class="mdescLeft">&#160;</td><td class="mdescRight">1) Generates a transaction request <br  />
+<tr class="memitem:ad7a256f133fd657658a6ef97ec4f70f3"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#ad7a256f133fd657658a6ef97ec4f70f3">GetTableItemNFT</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, string handle, string keyType, string valueType, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_id_request.html">TokenIdRequest</a> key)</td></tr>
+<tr class="memdesc:ad7a256f133fd657658a6ef97ec4f70f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a table item for a NFT from the table identified by the handle {table_handle} in the path and a complex key provided by the request body.  <br /></td></tr>
+<tr class="separator:ad7a256f133fd657658a6ef97ec4f70f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a143a8f05b0fa46270b1def216548b0c7"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a143a8f05b0fa46270b1def216548b0c7">GetTableItemTokenData</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, string handle, string keyType, string valueType, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id.html">TokenDataId</a> key)</td></tr>
+<tr class="memdesc:a143a8f05b0fa46270b1def216548b0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a table item that contains a token's (NFT) data. In this case we are using a complex key to retrieve the table item.  <br /></td></tr>
+<tr class="separator:a143a8f05b0fa46270b1def216548b0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97cd73cc5325c94ead65d92b33227402"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a97cd73cc5325c94ead65d92b33227402">GetInfo</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_ledger_info.html">LedgerInfo</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback)</td></tr>
+<tr class="memdesc:a97cd73cc5325c94ead65d92b33227402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.  <br /></td></tr>
+<tr class="separator:a97cd73cc5325c94ead65d92b33227402"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbbc6b5f8bc82d29aa070d03f714adad"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#afbbc6b5f8bc82d29aa070d03f714adad">SubmitTransaction</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html">Transaction</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account.html">Account</a> sender, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_payload.html">TransactionPayload</a> payload)</td></tr>
+<tr class="memdesc:afbbc6b5f8bc82d29aa070d03f714adad"><td class="mdescLeft">&#160;</td><td class="mdescRight">1) Generates a transaction request <br  />
 2) submits that to produce a raw transaction <br  />
 3) signs the raw transaction <br  />
 4) submits the signed transaction <br  />
  <br /></td></tr>
-<tr class="separator:aa77c0a1ef1c45608f8306f7a444d6409"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1cbb1b3856f609fea6134188d46abd3"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa1cbb1b3856f609fea6134188d46abd3">WaitForTransaction</a> (Action&lt; bool, string &gt; callback, string txnHash)</td></tr>
-<tr class="memdesc:aa1cbb1b3856f609fea6134188d46abd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for Transaction query to return whether transaction has been confirmed in the blockchain. Times out otherwise.  <br /></td></tr>
-<tr class="separator:aa1cbb1b3856f609fea6134188d46abd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3833419ac4edf8010e10289945ff3c1c"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a3833419ac4edf8010e10289945ff3c1c">TransactionPending</a> (Action&lt; bool, string &gt; callback, string txnHash)</td></tr>
-<tr class="memdesc:a3833419ac4edf8010e10289945ff3c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query to see if transaction has been 'confirmed' in the blockchain by using the transaction hash. A 404 error will be returned if the transaction hasn't been confirmed. Once the transaction is confirmed it will have a <code>pending_transaction</code> state.  <br /></td></tr>
-<tr class="separator:a3833419ac4edf8010e10289945ff3c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:afbbc6b5f8bc82d29aa070d03f714adad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75fd417c0f8430e31c742be93b7f43af"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a75fd417c0f8430e31c742be93b7f43af">WaitForTransaction</a> (Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, string txnHash)</td></tr>
+<tr class="memdesc:a75fd417c0f8430e31c742be93b7f43af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for Transaction query to return whether transaction has been confirmed in the blockchain. Times out otherwise.  <br /></td></tr>
+<tr class="separator:a75fd417c0f8430e31c742be93b7f43af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a008e04354c44777bd25403704382c2c9"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a008e04354c44777bd25403704382c2c9">TransactionPending</a> (Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, string txnHash)</td></tr>
+<tr class="memdesc:a008e04354c44777bd25403704382c2c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query to see if transaction has been 'confirmed' in the blockchain by using the transaction hash. A 404 error will be returned if the transaction hasn't been confirmed. Once the transaction is confirmed it will have a <code>pending_transaction</code> state.  <br /></td></tr>
+<tr class="separator:a008e04354c44777bd25403704382c2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3ab7709a0934da84f653dfcaa725759"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#ac3ab7709a0934da84f653dfcaa725759">Transfer</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html">Transaction</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account.html">Account</a> sender, string to, long amount)</td></tr>
 <tr class="memdesc:ac3ab7709a0934da84f653dfcaa725759"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer a given coin amount from a given Account to the recipient's account Address. Returns the sequence number of the transaction used to transfer.  <br /></td></tr>
 <tr class="separator:ac3ab7709a0934da84f653dfcaa725759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cf18be53aa45dadcca8952151b04a7b"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a9cf18be53aa45dadcca8952151b04a7b">EncodeSubmission</a> (Action&lt; string &gt; callback, string txnRequestJson)</td></tr>
-<tr class="memdesc:a9cf18be53aa45dadcca8952151b04a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encodes submission.  <br /></td></tr>
+<tr class="memdesc:a9cf18be53aa45dadcca8952151b04a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encodes submission. <br  />
+ This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS. <br  />
+ The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint.  <br /></td></tr>
 <tr class="separator:a9cf18be53aa45dadcca8952151b04a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fac6ed70feb2255509386f9ee9eade0"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a4fac6ed70feb2255509386f9ee9eade0">EncodeSubmissionAsBytes</a> (Action&lt; byte[]&gt; callback, string txnRequestJson)</td></tr>
 <tr class="memdesc:a4fac6ed70feb2255509386f9ee9eade0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encodes submission. See <a class="el" href="">EncodeSubmission</a>.  <br /></td></tr>
@@ -158,19 +161,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a416a790f9b8d8cb4d156bf65a8e8c5e8"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a416a790f9b8d8cb4d156bf65a8e8c5e8">ClaimToken</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html">Transaction</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account.html">Account</a> account, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> sender, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creator, string collectionName, string tokenName, int propertyVersion=0)</td></tr>
 <tr class="memdesc:a416a790f9b8d8cb4d156bf65a8e8c5e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Claim a token that was offered by <em>sender</em>   <br /></td></tr>
 <tr class="separator:a416a790f9b8d8cb4d156bf65a8e8c5e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eaabf41f21a5b3cd4ac8bc2be1768bd"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a3eaabf41f21a5b3cd4ac8bc2be1768bd">GetToken</a> (Action&lt; bool, string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> ownerAddress, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creatorAddress, string collectionName, string tokenName, int propertyVersion=0)</td></tr>
-<tr class="memdesc:a3eaabf41f21a5b3cd4ac8bc2be1768bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get token information.  <br /></td></tr>
-<tr class="separator:a3eaabf41f21a5b3cd4ac8bc2be1768bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a0f200bba6c1e424a49aea7b5581e3a"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a3a0f200bba6c1e424a49aea7b5581e3a">GetToken</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> ownerAddress, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creatorAddress, string collectionName, string tokenName, int propertyVersion=0)</td></tr>
+<tr class="memdesc:a3a0f200bba6c1e424a49aea7b5581e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get token information.  <br /></td></tr>
+<tr class="separator:a3a0f200bba6c1e424a49aea7b5581e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25fd56bbfea0309008b7b8290f3cdd1e"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a25fd56bbfea0309008b7b8290f3cdd1e">GetTokenBalance</a> (Action&lt; string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> ownerAddress, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creatorAddress, string collectionName, string tokenName, int propertyVersion=0)</td></tr>
 <tr class="memdesc:a25fd56bbfea0309008b7b8290f3cdd1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get balance for a given non-fungible token (NFT).  <br /></td></tr>
 <tr class="separator:a25fd56bbfea0309008b7b8290f3cdd1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ad0a811c44cb76fc2dfad2a2e999704"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a1ad0a811c44cb76fc2dfad2a2e999704">GetTokenData</a> (Action&lt; string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creator, string collectionName, string tokenName, int propertyVersion=0)</td></tr>
-<tr class="memdesc:a1ad0a811c44cb76fc2dfad2a2e999704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read Collection's token data table.  <br /></td></tr>
-<tr class="separator:a1ad0a811c44cb76fc2dfad2a2e999704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbcf0bb8800022e4e0c5776469a267db"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abbcf0bb8800022e4e0c5776469a267db">GetTokenData</a> (Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creator, string collectionName, string tokenName, int propertyVersion=0)</td></tr>
+<tr class="memdesc:abbcf0bb8800022e4e0c5776469a267db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read Collection's token data table. An example.  <br /></td></tr>
+<tr class="separator:abbcf0bb8800022e4e0c5776469a267db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff1ad182fff1bb7169ca4e0e75ab3357"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aff1ad182fff1bb7169ca4e0e75ab3357">GetCollection</a> (Action&lt; string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> creator, string collectionName, string propertyVersion=&quot;0&quot;)</td></tr>
+<tr class="memdesc:aff1ad182fff1bb7169ca4e0e75ab3357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types.  <br /></td></tr>
 <tr class="separator:aff1ad182fff1bb7169ca4e0e75ab3357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a4a0c19006d4e0cc6302c4b12cc565c81">GetAccountResource</a> (Action&lt; bool, long, string &gt; callback, <a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html">Accounts.AccountAddress</a> accountAddress, string resourceType)</td></tr>
-<tr class="memdesc:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a resource of a given type from an account.  <br /></td></tr>
+<tr class="memdesc:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a resource of a given type from an account. NOTE: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it to an object. See <a class="el" href="">GetAccountResourceCollection</a> for an example.  <br /></td></tr>
 <tr class="separator:a4a0c19006d4e0cc6302c4b12cc565c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc84f376cfca18c198998d545fa77a0c"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abc84f376cfca18c198998d545fa77a0c">StringToByteArray</a> (String hex)</td></tr>
 <tr class="memdesc:abc84f376cfca18c198998d545fa77a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert byte array to string.  <br /></td></tr>
@@ -266,7 +270,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (Transaction, Response).</dd></dl>
 
 </div>
 </div>
@@ -318,14 +322,14 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used after response is received.</td></tr>
-    <tr><td class="paramname">sender</td><td>Creator of the collection</td></tr>
-    <tr><td class="paramname">collectionName</td><td>Name of collection</td></tr>
-    <tr><td class="paramname">collectionDescription</td><td>Description of the collection</td></tr>
+    <tr><td class="paramname">sender</td><td>Creator of the collection.</td></tr>
+    <tr><td class="paramname">collectionName</td><td>Name of collection.</td></tr>
+    <tr><td class="paramname">collectionDescription</td><td>Description of the collection.</td></tr>
     <tr><td class="paramname">uri</td><td>Collection's URI</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code> function with (Transaction, ResponseInfo).</dd></dl>
 
 </div>
 </div>
@@ -412,7 +416,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code> function with (Transaction, ResponseInfo).</dd></dl>
 
 </div>
 </div>
@@ -442,7 +446,15 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Encodes submission. </p>
+<p>Encodes submission. <br  />
+ This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS. <br  />
+ The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint. </p>
+<p>If you are using an SDK that has BCS support, such as the official Rust, TypeScript, or Python SDKs, you may use the BCS encoding instead of this endpoint.</p>
+<p>To sign a message using the response from this endpoint:</p><ul>
+<li>Decode the hex encoded string in the response to bytes.</li>
+<li>Sign the bytes to create the signature.</li>
+<li>Use that as the signature field in something like Ed25519Signature, which you then use to build a TransactionSignature.</li>
+</ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used after response is received.</td></tr>
@@ -450,7 +462,10 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte. <br  />
+ Unlike the Address type, HexEncodedBytes will not trim any zeros. <br  />
+ Example: <div class="fragment"><div class="line">0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
@@ -488,7 +503,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A byte array representing the encoded submission.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with a byte array representing the encoded submission.</dd></dl>
 
 </div>
 </div>
@@ -518,7 +533,8 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get Account Details. </p>
+<p>Get Account Details. <br  />
+ Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. If the ledger version is not specified in the request, the latest ledger version is used. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used after response is received.</td></tr>
@@ -526,12 +542,17 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>AccountData contains the account's: <br  />
+ <code>sequence_number</code>, a string containing a 64-bit unsigned integer. <br  />
+ Example: <div class="fragment"><div class="line">32425224034</div>
+</div><!-- fragment --> <code>authentication_key</code> All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte. Unlike the Address type, HexEncodedBytes will not trim any zeros. <br  />
+ Example: <div class="fragment"><div class="line">0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="aa1a11084cebba101e03c7674ab2d223d" name="aa1a11084cebba101e03c7674ab2d223d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1a11084cebba101e03c7674ab2d223d">&#9670;&#160;</a></span>GetAccountBalance()</h2>
+<a id="a876a9811cd4942ff3e9b832ce0ef0f16" name="a876a9811cd4942ff3e9b832ce0ef0f16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a876a9811cd4942ff3e9b832ce0ef0f16">&#9670;&#160;</a></span>GetAccountBalance()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -539,7 +560,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetAccountBalance </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin_1_1_coin.html">AccountResourceCoin::Coin</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -556,7 +577,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get Account Balance. </p>
+<p>Get an account's balance. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used after response is received.</td></tr>
@@ -564,7 +585,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (AccountResourceCoin.Coin, ResponseInfo) - a representation of the coin, and an object containing the response information.</dd></dl>
 
 </div>
 </div>
@@ -600,7 +621,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get a resource of a given type from an account. </p>
+<p>Get a resource of a given type from an account. NOTE: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it to an object. See <a class="el" href="">GetAccountResourceCollection</a> for an example. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used when response is received.</td></tr>
@@ -613,8 +634,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a44ba8e4640107186dd019b111240fe83" name="a44ba8e4640107186dd019b111240fe83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44ba8e4640107186dd019b111240fe83">&#9670;&#160;</a></span>GetAccountResourceCollection()</h2>
+<a id="a1f71708ebbde910882993525ed708a97" name="a1f71708ebbde910882993525ed708a97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f71708ebbde910882993525ed708a97">&#9670;&#160;</a></span>GetAccountResourceCollection()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -622,7 +643,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetAccountResourceCollection </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html">ResourceCollection</a> &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html">ResourceCollection</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -654,7 +675,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information </dd></dl>
 
 </div>
 </div>
@@ -692,7 +713,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Sequence number as a string.</dd></dl>
 
 </div>
 </div>
@@ -733,6 +754,8 @@ Properties</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used when response is received.</td></tr>
@@ -742,12 +765,12 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A JSON string representation of the collection information.</dd></dl>
 
 </div>
 </div>
-<a id="aa5e47b9855030dc48f2b431e68dac14d" name="aa5e47b9855030dc48f2b431e68dac14d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5e47b9855030dc48f2b431e68dac14d">&#9670;&#160;</a></span>GetInfo()</h2>
+<a id="a97cd73cc5325c94ead65d92b33227402" name="a97cd73cc5325c94ead65d92b33227402"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97cd73cc5325c94ead65d92b33227402">&#9670;&#160;</a></span>GetInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -755,7 +778,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetInfo </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_ledger_info.html">LedgerInfo</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em></td><td>)</td>
           <td></td>
         </tr>
@@ -769,7 +792,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(boolean, response) true if repsonse is successful, false otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (boolean, response) true if repsonse is successful, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -829,13 +852,12 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
-<p>Callback withthe response </p>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with a JSON object representing a table item.</dd></dl>
 
 </div>
 </div>
-<a id="a01b125da3cd4abdc77638936db5f4b3a" name="a01b125da3cd4abdc77638936db5f4b3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01b125da3cd4abdc77638936db5f4b3a">&#9670;&#160;</a></span>GetTableItemCoin()</h2>
+<a id="a43eb640df9b4a91fb3ed8e00142ef6f8" name="a43eb640df9b4a91fb3ed8e00142ef6f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43eb640df9b4a91fb3ed8e00142ef6f8">&#9670;&#160;</a></span>GetTableItemCoin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -843,7 +865,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetTableItemCoin </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin.html">AccountResourceCoin</a> &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin.html">AccountResourceCoin</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -889,12 +911,12 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with an object representing the account resource that holds the coin's information.</dd></dl>
 
 </div>
 </div>
-<a id="a621bf8a2a4905f28dee8a2e498de631a" name="a621bf8a2a4905f28dee8a2e498de631a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a621bf8a2a4905f28dee8a2e498de631a">&#9670;&#160;</a></span>GetTableItemNFT()</h2>
+<a id="ad7a256f133fd657658a6ef97ec4f70f3" name="ad7a256f133fd657658a6ef97ec4f70f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7a256f133fd657658a6ef97ec4f70f3">&#9670;&#160;</a></span>GetTableItemNFT()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -902,7 +924,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetTableItemNFT </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -961,8 +983,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="adf2953f3b9c54f5776e60102b6f5f485" name="adf2953f3b9c54f5776e60102b6f5f485"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf2953f3b9c54f5776e60102b6f5f485">&#9670;&#160;</a></span>GetTableItemTokenData()</h2>
+<a id="a143a8f05b0fa46270b1def216548b0c7" name="a143a8f05b0fa46270b1def216548b0c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a143a8f05b0fa46270b1def216548b0c7">&#9670;&#160;</a></span>GetTableItemTokenData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -970,7 +992,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetTableItemTokenData </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -1006,6 +1028,7 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get a table item that contains a token's (NFT) data. In this case we are using a complex key to retrieve the table item. </p>
+<p>Note: we do not deserialize the response since the table item representation is only known by the developer requesting the table item and token data.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used after response is received.</td></tr>
@@ -1016,12 +1039,12 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A JSON string to be serialized by the developer to a matching representation of data.</dd></dl>
 
 </div>
 </div>
-<a id="a3eaabf41f21a5b3cd4ac8bc2be1768bd" name="a3eaabf41f21a5b3cd4ac8bc2be1768bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3eaabf41f21a5b3cd4ac8bc2be1768bd">&#9670;&#160;</a></span>GetToken()</h2>
+<a id="a3a0f200bba6c1e424a49aea7b5581e3a" name="a3a0f200bba6c1e424a49aea7b5581e3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a0f200bba6c1e424a49aea7b5581e3a">&#9670;&#160;</a></span>GetToken()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1029,7 +1052,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetToken </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -1082,7 +1105,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code> function with (boolean, string). </dd></dl>
 
 </div>
 </div>
@@ -1152,8 +1175,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ad0a811c44cb76fc2dfad2a2e999704" name="a1ad0a811c44cb76fc2dfad2a2e999704"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ad0a811c44cb76fc2dfad2a2e999704">&#9670;&#160;</a></span>GetTokenData()</h2>
+<a id="abbcf0bb8800022e4e0c5776469a267db" name="abbcf0bb8800022e4e0c5776469a267db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbcf0bb8800022e4e0c5776469a267db">&#9670;&#160;</a></span>GetTokenData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1161,7 +1184,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.GetTokenData </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token.html">TableItemToken</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -1196,7 +1219,8 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Read Collection's token data table. </p>
+<p>Read Collection's token data table. An example. </p>
+<p><code> { "default_properties":{ "map":{ "data":[ ] } }, "description":"Alice's simple token", "largest_property_version":"0", "maximum":"1", "mutability_config":{ "description":false, "maximum":false, "properties":false, "royalty":false, "uri":false }, "name":"Alice's first token", "royalty":{ "payee_address":"0x3f99ffee67853e129173b9df0e2e9c6af6f08fe2a4417daf43df46ad957a8bbe", "royalty_points_denominator":"1000000", "royalty_points_numerator":"0" }, "supply":"1", "uri":"https://aptos.dev/img/nyan.jpeg" } </code></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callback</td><td>Callback function used when response is received.</td></tr>
@@ -1287,7 +1311,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code> function with (Transaction, ResponseInfo).</dd></dl>
 
 </div>
 </div>
@@ -1344,8 +1368,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="aa77c0a1ef1c45608f8306f7a444d6409" name="aa77c0a1ef1c45608f8306f7a444d6409"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa77c0a1ef1c45608f8306f7a444d6409">&#9670;&#160;</a></span>SubmitTransaction()</h2>
+<a id="afbbc6b5f8bc82d29aa070d03f714adad" name="afbbc6b5f8bc82d29aa070d03f714adad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbbc6b5f8bc82d29aa070d03f714adad">&#9670;&#160;</a></span>SubmitTransaction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1353,7 +1377,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.SubmitTransaction </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
+          <td class="paramtype">Action&lt; <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html">Transaction</a>, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -1389,7 +1413,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (Transaction, ResponseInfo)</dd></dl>
 
 </div>
 </div>
@@ -1420,8 +1444,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a3833419ac4edf8010e10289945ff3c1c" name="a3833419ac4edf8010e10289945ff3c1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3833419ac4edf8010e10289945ff3c1c">&#9670;&#160;</a></span>TransactionPending()</h2>
+<a id="a008e04354c44777bd25403704382c2c9" name="a008e04354c44777bd25403704382c2c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a008e04354c44777bd25403704382c2c9">&#9670;&#160;</a></span>TransactionPending()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1429,7 +1453,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.TransactionPending </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -1454,7 +1478,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(bool, string) <br  />
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (bool, string) <br  />
 &ndash; true if transaction is still pending / hasn't been found, meaning 404, error in response, or <code>pending_transaction</code> is true <br  />
 &ndash; false if transaction has been found, meaning <code>pending_transaction</code> is true <br  />
 </dd></dl>
@@ -1509,12 +1533,12 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code>function with (Transaction, ResponseInfo) </dd></dl>
 
 </div>
 </div>
-<a id="aa1cbb1b3856f609fea6134188d46abd3" name="aa1cbb1b3856f609fea6134188d46abd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1cbb1b3856f609fea6134188d46abd3">&#9670;&#160;</a></span>WaitForTransaction()</h2>
+<a id="a75fd417c0f8430e31c742be93b7f43af" name="a75fd417c0f8430e31c742be93b7f43af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75fd417c0f8430e31c742be93b7f43af">&#9670;&#160;</a></span>WaitForTransaction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1522,7 +1546,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.RestClient.WaitForTransaction </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -1548,7 +1572,7 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(bool, callback) <br  />
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code> function with (bool, callback) <br  />
 &ndash; true if the transaction hash was found after polling <br  />
 &ndash; false if we did not find the transaction hash and timed out <br  />
 </dd></dl>

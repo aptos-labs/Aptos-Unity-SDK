@@ -32,6 +32,6 @@ var searchData=
   ['stringtobytearray_29',['StringToByteArray',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abc84f376cfca18c198998d545fa77a0c',1,'Aptos::Unity::Rest::RestClient']]],
   ['struct_30',['STRUCT',['../namespace_aptos_1_1_utilities_1_1_b_c_s.html#aca7f9b089f0c4455bb61fcace317e9c6ab8223be2455e0ea5a0e63e8f018d6fc3',1,'Aptos::Utilities::BCS']]],
   ['structtag_31',['StructTag',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html',1,'Aptos.Utilities.BCS.StructTag'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_struct_tag.html#ad61c5e71b4856c1e23845d78a4d54e15',1,'Aptos.Utilities.BCS.StructTag.StructTag()']]],
-  ['submittransaction_32',['SubmitTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aa77c0a1ef1c45608f8306f7a444d6409',1,'Aptos::Unity::Rest::RestClient']]],
+  ['submittransaction_32',['SubmitTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#afbbc6b5f8bc82d29aa070d03f714adad',1,'Aptos::Unity::Rest::RestClient']]],
   ['success_33',['Success',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction.html#a91a97492d08b1feb596a6b88ce0ded3b',1,'Aptos.Unity.Rest.Model.Transaction.Success()'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html#ad8e0827f67dfc411ac6a64909eecdbe0a505a83f220c02df2f85c3810cd9ceb38',1,'Aptos.Unity.Rest.Model.ResponseInfo.Success()']]]
 ];

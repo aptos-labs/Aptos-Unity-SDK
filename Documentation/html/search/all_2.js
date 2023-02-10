@@ -10,8 +10,7 @@ var searchData=
   ['bstring_7',['BString',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_b_string.html',1,'Aptos.Utilities.BCS.BString'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_b_string.html#adc0b9813245b2fcc4b841f5f6ab2c121',1,'Aptos.Utilities.BCS.BString.BString()']]],
   ['burnevent_8',['BurnEvent',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_token_store_1_1_data.html#a2c10dcc49431add4a0a99eaf38e24817',1,'Aptos::Unity::Rest::Model::AccountResourceTokenStore::Data']]],
   ['burnevents_9',['BurnEvents',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_token_store_1_1_burn_events.html',1,'Aptos::Unity::Rest::Model::AccountResourceTokenStore']]],
-  ['bytes_10',['Bytes',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes.html',1,'Aptos::Utilities::BCS']]],
+  ['bytes_10',['Bytes',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes.html',1,'Aptos.Utilities.BCS.Bytes'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes.html#a4556046cb55cf247801e344c8b557c5e',1,'Aptos.Utilities.BCS.Bytes.Bytes()']]],
   ['bytes_11',['bytes',['../class_aptos_1_1_accounts_1_1_authentication_key.html#a4b75f20620c1171a548c80d9975b7743',1,'Aptos::Accounts::AuthenticationKey']]],
-  ['bytes_12',['Bytes',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes.html#a4556046cb55cf247801e344c8b557c5e',1,'Aptos::Utilities::BCS::Bytes']]],
-  ['bytessequence_13',['BytesSequence',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes_sequence.html',1,'Aptos.Utilities.BCS.BytesSequence'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes_sequence.html#a203995efe54d8ec746dfeebda95546ce',1,'Aptos.Utilities.BCS.BytesSequence.BytesSequence()']]]
+  ['bytessequence_12',['BytesSequence',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes_sequence.html',1,'Aptos.Utilities.BCS.BytesSequence'],['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_bytes_sequence.html#a203995efe54d8ec746dfeebda95546ce',1,'Aptos.Utilities.BCS.BytesSequence.BytesSequence()']]]
 ];
