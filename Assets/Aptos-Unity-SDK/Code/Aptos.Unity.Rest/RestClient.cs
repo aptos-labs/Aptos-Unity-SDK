@@ -170,7 +170,7 @@ namespace Aptos.Unity.Rest
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
 
-                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin(); GetAccountResource
                 coin.Value = acctResourceCoin.DataProp.Coin.Value;
 
                 callback(coin, responseInfo);
@@ -185,7 +185,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns>Calls <c>callback</c>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information </returns>
+        /// <returns>Calls <c>callback</c>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information.</returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection, ResponseInfo> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -1747,13 +1747,13 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get a resource of a given type from an account.
         /// NOTE: The response is a complex object of types only known to the developer writing the contracts.
-        /// This function return a string and expect the developer to deserialize it to an object.
+        /// This function return a string and expect the developer to deserialize it into an object.
         /// See <see cref="GetAccountResourceCollection(Action{ResourceCollection, ResponseInfo}, AccountAddress, string)">GetAccountResourceCollection</see> for an example.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns></returns>
+        /// <returns>Calls a <c>callback</c> with (bool, long, string), bool - success boolean, long - error code, string - JSON response to be deserialized by the consumer of the function.</returns>
         public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
