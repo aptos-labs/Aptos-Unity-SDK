@@ -1,5 +1,8 @@
 namespace Aptos.Unity.Rest
 {
+    /// <summary>
+    /// A set of constants used globably across
+    /// </summary>
     public class Constants
     {
         public const string MAINNET_BASE_URL = "https://fullnode.mainnet.aptoslabs.com/v1";
