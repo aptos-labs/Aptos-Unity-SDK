@@ -198,7 +198,6 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
-            ResourceCollection resourceCollection = new ResourceCollection();
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.message = "Error when getting account resource. ";
 
@@ -424,8 +423,8 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        ///  Get a table item that contains a token's (NFT) data.
-        ///  In this case we are using a complex key to retrieve the table item.
+        /// Get a table item that contains a token's (NFT) data.
+        /// In this case we are using a complex key to retrieve the table item.
         ///  
         /// Note: we do not deserialize the response since the table item representation 
         /// is only known by the developer requesting the table item and token data.
