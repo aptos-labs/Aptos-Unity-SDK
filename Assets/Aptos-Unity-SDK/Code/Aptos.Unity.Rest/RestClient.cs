@@ -1,5 +1,4 @@
 using Aptos.Accounts;
-using Aptos.Rest;
 using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
 using NBitcoin;
