@@ -16,9 +16,13 @@ namespace Aptos.Accounts
     /// </summary>
     public class AuthenticationKey
     {
+        /// Byte length of authentication key.
         public static int LENGTH = 32;
+        /// Byte that represents multi-ed25519 scheme.
         public static byte MULTI_ED25519_SCHEME = 0x001;
+        /// Byte that represents single key ed25519 scheme.
         public static byte ED25519_SCHEME = 0x00;
+        /// Byte that represents derive resource account scheme.
         public static byte DERIVE_RESOURCE_ACCOUNT_SCHEME = 255;
 
         /// Byte array representing authentication key

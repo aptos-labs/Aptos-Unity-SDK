@@ -6,6 +6,5 @@ var searchData=
   ['accountresourcecoin_3',['AccountResourceCoin',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin.html#a17aff3a9aabca4d10b9a8f4529d49020',1,'Aptos::Unity::Rest::Model::AccountResourceCoin']]],
   ['accountresourcetokenstore_4',['AccountResourceTokenStore',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_token_store.html#a21ee22c46a6a84c57a108d4d04e0c6a3',1,'Aptos::Unity::Rest::Model::AccountResourceTokenStore']]],
   ['authenticationkey_5',['AuthenticationKey',['../class_aptos_1_1_accounts_1_1_authentication_key.html#a355164a21c034b9765b63266740a7364',1,'Aptos::Accounts::AuthenticationKey']]],
-  ['authenticator_6',['Authenticator',['../class_aptos_1_1_authenticator_1_1_authenticator.html#aa57cab57e88adfaf52ddcc1aab10d2de',1,'Aptos::Authenticator::Authenticator']]],
-  ['authkey_7',['AuthKey',['../class_aptos_1_1_accounts_1_1_account.html#a2a7f36cd2f9b9cfcd691d2f9024aee04',1,'Aptos::Accounts::Account']]]
+  ['authkey_6',['AuthKey',['../class_aptos_1_1_accounts_1_1_account.html#a2a7f36cd2f9b9cfcd691d2f9024aee04',1,'Aptos::Accounts::Account']]]
 ];

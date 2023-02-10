@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Aptos.HdWallet;
-using Aptos.Rest;
 using NBitcoin;
 using Unity.VisualScripting;
 using UnityEngine;

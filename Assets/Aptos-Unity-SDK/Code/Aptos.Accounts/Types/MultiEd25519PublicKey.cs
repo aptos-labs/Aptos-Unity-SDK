@@ -3,8 +3,8 @@ using Chaos.NaCl;
 namespace Aptos.Accounts.Types
 {
     /// <summary>
-    /// Represents a multi-signature public key
-    /// https://aptos.dev/guides/creating-a-signed-transaction/#multisignature-transactions
+    /// Represents a multi-signature public key.
+    /// More details can be found <see cref="https://aptos.dev/guides/creating-a-signed-transaction/#multisignature-transactions">here</see>.
     /// </summary>
     public class MultiEd25519PublicKey
     {

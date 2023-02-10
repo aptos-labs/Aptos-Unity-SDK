@@ -7,6 +7,5 @@ var searchData=
   ['accountresourcecollection_2ecs_4',['AccountResourceCollection.cs',['../_account_resource_collection_8cs.html',1,'']]],
   ['accountresourcetokenstore_2ecs_5',['AccountResourceTokenStore.cs',['../_account_resource_token_store_8cs.html',1,'']]],
   ['aptoserror_2ecs_6',['AptosError.cs',['../_aptos_error_8cs.html',1,'']]],
-  ['authenticationkey_2ecs_7',['AuthenticationKey.cs',['../_authentication_key_8cs.html',1,'']]],
-  ['authenticator_2ecs_8',['Authenticator.cs',['../_authenticator_8cs.html',1,'']]]
+  ['authenticationkey_2ecs_7',['AuthenticationKey.cs',['../_authentication_key_8cs.html',1,'']]]
 ];

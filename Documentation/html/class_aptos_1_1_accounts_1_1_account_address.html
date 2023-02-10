@@ -82,13 +82,13 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Represents an <a class="el" href="namespace_aptos.html">Aptos</a> account address <a href="https://aptos.dev/concepts/accounts">https://aptos.dev/concepts/accounts</a>.  
+<p>Represents an <a class="el" href="namespace_aptos.html">Aptos</a> account address. More details can her found <a class="el" href="">here</a>.  
  <a href="class_aptos_1_1_accounts_1_1_account_address.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f0d22f01dc6250853bf1a245852c194"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#a6f0d22f01dc6250853bf1a245852c194">AccountAddress</a> (byte[] address)</td></tr>
-<tr class="memdesc:a6f0d22f01dc6250853bf1a245852c194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the bytes of an account Address.  <br /></td></tr>
+<tr class="memdesc:a6f0d22f01dc6250853bf1a245852c194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an account address by setting it's bytes.  <br /></td></tr>
 <tr class="separator:a6f0d22f01dc6250853bf1a245852c194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9b62209a0db31e66715085454950d55"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#af9b62209a0db31e66715085454950d55">ToString</a> ()</td></tr>
 <tr class="memdesc:af9b62209a0db31e66715085454950d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert Address bytes into hexadecimal string.  <br /></td></tr>
@@ -97,7 +97,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac3d265821ce0834fb0f5882876ac973d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert Address to hexadecimal string.  <br /></td></tr>
 <tr class="separator:ac3d265821ce0834fb0f5882876ac973d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa92f3d61b439ddb872ed7b41e7710973"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#aa92f3d61b439ddb872ed7b41e7710973">Serialize</a> (<a class="el" href="class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization.html">Serialization</a> serializer)</td></tr>
-<tr class="memdesc:aa92f3d61b439ddb872ed7b41e7710973"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a href="https://github.com/aptos-labs/bcs">https://github.com/aptos-labs/bcs</a> <a href="https://aptos.dev/guides/creating-a-signed-transaction/#bcs">https://aptos.dev/guides/creating-a-signed-transaction/#bcs</a> Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-describing format.As such, in order to deserialize a message, one must know the message type and layout ahead of time.  <br /></td></tr>
+<tr class="memdesc:aa92f3d61b439ddb872ed7b41e7710973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference implementation to BCS can be found <a class="el" href="">here</a>. <br  />
+ More details on creating a BCS signed transaction can be found <a class="el" href="">here</a>.  <br /></td></tr>
 <tr class="separator:aa92f3d61b439ddb872ed7b41e7710973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -110,7 +111,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a1fee8a26fb6effe9f0a17357d433497b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Represents an <a class="el" href="namespace_aptos.html">Aptos</a> account address <a href="https://aptos.dev/concepts/accounts">https://aptos.dev/concepts/accounts</a>. </p>
+<div class="textblock"><p>Represents an <a class="el" href="namespace_aptos.html">Aptos</a> account address. More details can her found <a class="el" href="">here</a>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6f0d22f01dc6250853bf1a245852c194" name="a6f0d22f01dc6250853bf1a245852c194"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f0d22f01dc6250853bf1a245852c194">&#9670;&#160;</a></span>AccountAddress()</h2>
@@ -128,10 +129,10 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the bytes of an account Address. </p>
+<p>Initializes an account address by setting it's bytes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">address</td><td></td></tr>
+    <tr><td class="paramname">address</td><td>Byte array representing address.</td></tr>
   </table>
   </dd>
 </dl>
@@ -166,11 +167,11 @@ Static Public Member Functions</h2></td></tr>
 <p>Returns an AccountAddress object from a hexadecimal Address. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">address</td><td></td></tr>
+    <tr><td class="paramname">address</td><td>Hexadecimal representation of an Address.</td></tr>
   </table>
   </dd>
 </dl>
-<p>Hexadecimal representation of an Address. </p><dl class="section return"><dt>Returns</dt><dd>An account address object</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An account address object</dd></dl>
 
 </div>
 </div>
@@ -201,11 +202,11 @@ Static Public Member Functions</h2></td></tr>
 <p>Generate an AccountAddress object from a given public key, byte array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">publicKey</td><td></td></tr>
+    <tr><td class="paramname">publicKey</td><td>Byte array representing a public key.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An account address object</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An account address object.</dd></dl>
 
 </div>
 </div>
@@ -225,7 +226,9 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a href="https://github.com/aptos-labs/bcs">https://github.com/aptos-labs/bcs</a> <a href="https://aptos.dev/guides/creating-a-signed-transaction/#bcs">https://aptos.dev/guides/creating-a-signed-transaction/#bcs</a> Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-describing format.As such, in order to deserialize a message, one must know the message type and layout ahead of time. </p>
+<p>Reference implementation to BCS can be found <a class="el" href="">here</a>. <br  />
+ More details on creating a BCS signed transaction can be found <a class="el" href="">here</a>. </p>
+<p>Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-describing format.As such, in order to deserialize a message, one must know the message type and layout ahead of time. </p>
 
 </div>
 </div>

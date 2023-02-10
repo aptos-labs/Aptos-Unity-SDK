@@ -1,5 +1,4 @@
 using Aptos.Accounts;
-using Aptos.Rest;
 using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
 using NBitcoin;
@@ -22,12 +21,13 @@ namespace Aptos.Unity.Rest
     /// </summary>
     public class RestClient : MonoBehaviour
     {
+        /// Static instance of the REST client.
         public static RestClient Instance { get; set; }
 
-        /// Amount of seconds to each during each polling cycle
+        /// Amount of seconds to each during each polling cycle.
         public static int TransactionWaitInSeconds = 20;
 
-        /// Based enpoint for REST API
+        /// Based enpoint for REST API.
         public Uri Endpoint { get; private set; }
 
         private void Awake()
@@ -37,7 +37,7 @@ namespace Aptos.Unity.Rest
 
         #region Setup
         /// <summary>
-        /// Set Endpoint for RPC / REST call
+        /// Set Endpoint for RPC / REST call.
         /// </summary>
         /// <param name="url">Base URL for REST API.</param>
         public void SetEndPoint(string url)
@@ -170,7 +170,7 @@ namespace Aptos.Unity.Rest
             {
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
 
-                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+                AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin(); GetAccountResource
                 coin.Value = acctResourceCoin.DataProp.Coin.Value;
 
                 callback(coin, responseInfo);
@@ -185,7 +185,7 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns>Calls <c>callback</c>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information </returns>
+        /// <returns>Calls <c>callback</c>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information.</returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection, ResponseInfo> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -198,7 +198,6 @@ namespace Aptos.Unity.Rest
                 yield return null;
             }
 
-            ResourceCollection resourceCollection = new ResourceCollection();
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.message = "Error when getting account resource. ";
 
@@ -361,7 +360,7 @@ namespace Aptos.Unity.Rest
         /// }
         /// </code>
         /// </param>
-        /// <returns></returns>
+        /// <returns>(TableItemToken, ResponseInfo)</returns>
         public IEnumerator GetTableItemNFT(Action<TableItemToken, ResponseInfo> callback, string handle, string keyType, string valueType, TokenIdRequest key)
         {
             TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
@@ -424,8 +423,8 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        ///  Get a table item that contains a token's (NFT) data.
-        ///  In this case we are using a complex key to retrieve the table item.
+        /// Get a table item that contains a token's (NFT) data.
+        /// In this case we are using a complex key to retrieve the table item.
         ///  
         /// Note: we do not deserialize the response since the table item representation 
         /// is only known by the developer requesting the table item and token data.
@@ -761,11 +760,6 @@ namespace Aptos.Unity.Rest
             {
                 var transactionResult = JsonConvert.DeserializeObject<Transaction>(request.downloadHandler.text, new TransactionConverter())!;
                 bool isPending = transactionResult.Type.Equals("pending_transaction");
-
-                if (isPending)
-                {
-                    Debug.LogWarning("Transaction is Pending: " + request.downloadHandler.text);
-                }
 
                 responseInfo.status = ResponseInfo.Status.Success;
                 responseInfo.message = request.downloadHandler.text;
@@ -1647,7 +1641,7 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns></returns>
+        /// <returns>(TableItemToken, ResponseInfo)</returns>
         public IEnumerator GetTokenData(Action<TableItemToken, ResponseInfo> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
@@ -1753,13 +1747,13 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get a resource of a given type from an account.
         /// NOTE: The response is a complex object of types only known to the developer writing the contracts.
-        /// This function return a string and expect the developer to deserialize it to an object.
+        /// This function return a string and expect the developer to deserialize it into an object.
         /// See <see cref="GetAccountResourceCollection(Action{ResourceCollection, ResponseInfo}, AccountAddress, string)">GetAccountResourceCollection</see> for an example.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns></returns>
+        /// <returns>Calls a <c>callback</c> with (bool, long, string), bool - success boolean, long - error code, string - JSON response to be deserialized by the consumer of the function.</returns>
         public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -1811,7 +1805,7 @@ namespace Aptos.Unity.Rest
         /// Convert byte array to string.
         /// </summary>
         /// <param name="hex">Hexadecimal string</param>
-        /// <returns></returns>
+        /// <returns>Byte array representing the hex string.</returns>
         public byte[] StringToByteArray(String hex)
         {
             int NumberChars = hex.Length;
@@ -1825,7 +1819,7 @@ namespace Aptos.Unity.Rest
         /// Turns byte array to hexadecimal string.
         /// </summary>
         /// <param name="bytes">Byte array</param>
-        /// <returns></returns>
+        /// <returns>String that represents byte array of hexadecials.</returns>
         public string ToHexadecimalRepresentation(byte[] bytes)
         {
             StringBuilder sb = new StringBuilder(bytes.Length << 1);

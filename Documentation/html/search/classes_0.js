@@ -7,6 +7,5 @@ var searchData=
   ['accountresourcetokenstore_4',['AccountResourceTokenStore',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_token_store.html',1,'Aptos::Unity::Rest::Model']]],
   ['aptoserror_5',['AptosError',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_aptos_error.html',1,'Aptos::Unity::Rest::Model']]],
   ['arguments_6',['Arguments',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_arguments.html',1,'Aptos::Unity::Rest::Model']]],
-  ['authenticationkey_7',['AuthenticationKey',['../class_aptos_1_1_accounts_1_1_authentication_key.html',1,'Aptos::Accounts']]],
-  ['authenticator_8',['Authenticator',['../class_aptos_1_1_authenticator_1_1_authenticator.html',1,'Aptos::Authenticator']]]
+  ['authenticationkey_7',['AuthenticationKey',['../class_aptos_1_1_accounts_1_1_authentication_key.html',1,'Aptos::Accounts']]]
 ];

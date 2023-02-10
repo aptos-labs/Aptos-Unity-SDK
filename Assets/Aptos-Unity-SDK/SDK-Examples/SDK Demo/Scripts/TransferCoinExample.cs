@@ -1,6 +1,5 @@
 using Aptos.Accounts;
 using Aptos.HdWallet;
-using Aptos.Rest;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
 using NBitcoin;
