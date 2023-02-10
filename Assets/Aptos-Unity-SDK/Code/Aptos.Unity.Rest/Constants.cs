@@ -1,4 +1,4 @@
-namespace Aptos.Rest
+namespace Aptos.Unity.Rest
 {
     public class Constants
     {
