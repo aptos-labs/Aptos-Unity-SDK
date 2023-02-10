@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace Aptos.Utilities.BCS
+﻿namespace Aptos.Utilities.BCS
 {
-
+    /// <summary>
+    /// Representation of a Module ID.
+    /// </summary>
     public class ModuleId : ISerializable
     {
         public AccountAddress address;
@@ -22,6 +22,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of EntryFunction.
+    /// </summary>
     public class EntryFunction : ISerializable
     {
         ModuleId module;

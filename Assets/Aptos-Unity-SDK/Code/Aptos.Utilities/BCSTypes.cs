@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -36,6 +35,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a tag sequence.
+    /// </summary>
     public class TagSequence : ISerializable
     {
         ISerializableTag[] serializableTags;
@@ -55,6 +57,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a sequence
+    /// </summary>
     public class Sequence : ISerializable
     {
         ISerializable[] values;
@@ -106,6 +111,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a byte sequence.
+    /// </summary>
     public class BytesSequence : ISerializable
     {
         byte[][] values;
@@ -125,6 +133,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a map in BCS.
+    /// </summary>
     public class BCSMap : ISerializable
     {
         Dictionary<BString, ISerializableTag> value;
@@ -161,6 +172,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a string in BCS.
+    /// </summary>
     public class BString : ISerializable
     {
         public string value;
@@ -176,6 +190,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of Bytes in BCS.
+    /// </summary>
     public class Bytes : ISerializable
     {
         byte[] value;
@@ -191,6 +208,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a Boolean.
+    /// </summary>
     public class Bool : ISerializableTag
     {
         bool value;
@@ -211,6 +231,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of U8.
+    /// </summary>
     public class U8 : ISerializableTag
     {
         byte value;
@@ -231,6 +254,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a U32.
+    /// </summary>
     public class U32 : ISerializableTag
     {
         uint value;
@@ -251,6 +277,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of U64.
+    /// </summary>
     public class U64 : ISerializableTag
     {
         ulong value;
@@ -271,6 +300,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a U128.
+    /// </summary>
     public class U128 : ISerializableTag
     {
         BigInteger value;
@@ -291,6 +323,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of an account address.
+    /// </summary>
     public class AccountAddress : ISerializableTag
     {
         byte[] value;
@@ -329,6 +364,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a struct tag.
+    /// </summary>
     public class StructTag : ISerializableTag
     {
         AccountAddress address;

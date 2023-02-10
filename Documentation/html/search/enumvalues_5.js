@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vector_0',['VECTOR',['../namespace_aptos_1_1_utilities_1_1_b_c_s.html#aca7f9b089f0c4455bb61fcace317e9c6a87752381b583740610f1dfeb07fdad7e',1,'Aptos::Utilities::BCS']]]
+  ['pending_0',['Pending',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html#ad8e0827f67dfc411ac6a64909eecdbe0a2d13df6f8b5e4c5af9f87e0dc39df69d',1,'Aptos::Unity::Rest::Model::ResponseInfo']]]
 ];

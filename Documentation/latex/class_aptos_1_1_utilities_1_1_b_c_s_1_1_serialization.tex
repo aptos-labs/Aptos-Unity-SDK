@@ -1,30 +1,35 @@
 \hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{}\doxysection{Aptos.\+Utilities.\+BCS.\+Serialization Class Reference}
 \label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}\index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
+
+
+An implementation of BCS in C\#.  
+
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a275905635050d62a7493d9d7b660234f}{Serialization}} ()
 \item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a9ed8501cedbe6696c73cd01578519900}{Get\+Bytes}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Return the serialization buffer as a byte array. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a40d0097efa105dc0606e40849435310b}{Serialize}} (string value)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a string value. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_ad280f630e75f763e4926ec51a566f3a9}{Serialize}} (byte\mbox{[}$\,$\mbox{]} value)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a byte array. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a6335de99a86d0fea422d6ca9f567696b}{Serialize}} (bool value)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a boolean value. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a2077c9b413b52f2828cd3a58474ecd07}{Serialize}} (byte num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a single byte. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_af733447d87d278d3ceabd48bd769034e}{Serialize}} (ushort num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize an unsigned short value. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a69e2c78b052c876ff8d5b25077f20425}{Serialize}} (uint num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize an unsigned integer value. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_aa87895d4245b47ed7471bde6484ad64e}{Serialize}} (ulong num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize an unsigned long number. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a849b64005ed9d39f2d3bcac0eb0ecb63}{Serialize}} (Big\+Integer num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a big integer number. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a8bef042bd13f851d2c8c04ad9936675b}{Serialize}} (\mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_sequence}{Sequence}} args)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a sequence. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a503241176e48f90d937874550638a6d1}{Serialize\+String}} (string value)
 \begin{DoxyCompactList}\small\item\em Serializes a string. UTF8 string is supported. Serializes the string\textquotesingle{}s bytes length \char`\"{}l\char`\"{} first, and then serializes \char`\"{}l\char`\"{} bytes of the string content. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a10dfe433cdf9fe60e53d0ba141d95bf6}{Serialize\+Bytes}} (byte\mbox{[}$\,$\mbox{]} bytes)
@@ -32,32 +37,35 @@ byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a5759b20395cc1492bf933b4a5678b59f}{Serialize\+Fixed\+Bytes}} (byte\mbox{[}$\,$\mbox{]} bytes)
 \begin{DoxyCompactList}\small\item\em Serializes a list of values represented in a byte array. This can be a sequence or a value represented as a byte array. Note that for sequences we first add the length for the entire sequence array, not the length of the byte array. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_ae929d5bd5edcebd052de9ffc945c0156}{Write\+Bytes}} (byte\mbox{[}$\,$\mbox{]} bytes)
-\item 
+\begin{DoxyCompactList}\small\item\em Write an array bytes directly to the serialization buffer. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a7f155e9ec955a07541a31f90bf0b893d}{Serialize\+U32\+As\+Uleb128}} (uint value)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize an unsigned integer value. Usually used to serialize the length of values. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a03408858c9ad04fbaeab0cb5d7aee8c6}{Serialize\+Bool}} (bool value)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a boolean value. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_af71c3c9d127298559015946fbb8ab508}{Serialize\+U8}} (byte num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize a unsigned byte number. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a00135a949d9ec7114ae0918147abcb6f}{Serialize\+U16}} (ushort num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize unsigned short (U16). \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a222fd7108ca04a4c0010fabcddc93c49}{Serialize\+U32}} (uint num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize an unsigned integer number. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_aba0265e2d60fdf275fc1591547db697a}{Serialize\+U64}} (ulong num)
-\item 
+\begin{DoxyCompactList}\small\item\em Serialize an unsigned long number. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a340d6cac6b03c11b8fbe5108a8edc341}{Serialize\+U128}} (Big\+Integer value)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Serialize a big integer value. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 static string \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_abc74286446e7e028780a61bac4190736}{To\+Readable\+Byte\+Array}} (byte\mbox{[}$\,$\mbox{]} bytes)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Utility method to print a byte array. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
 Memory\+Stream \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a8d3dc40e5666395964a197f62b3e9b24}{output}}
 \end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+An implementation of BCS in C\#. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a275905635050d62a7493d9d7b660234f}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a275905635050d62a7493d9d7b660234f}} 
@@ -75,66 +83,193 @@ Memory\+Stream \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serializ
 \doxysubsubsection{\texorpdfstring{GetBytes()}{GetBytes()}}
 {\footnotesize\ttfamily byte\mbox{[}$\,$\mbox{]} Aptos.\+Utilities.\+BCS.\+Serialization.\+Get\+Bytes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
+
+
+Return the serialization buffer as a byte array. 
+
+\begin{DoxyReturn}{Returns}
+Serialization buffer as a byte array.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a849b64005ed9d39f2d3bcac0eb0ecb63}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a849b64005ed9d39f2d3bcac0eb0ecb63}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [1/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{Big\+Integer}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize a big integer number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & The big integer number to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a6335de99a86d0fea422d6ca9f567696b}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a6335de99a86d0fea422d6ca9f567696b}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [2/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{bool}]{value }\end{DoxyParamCaption})}
 
+
+
+Serialize a boolean value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Boolean value to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a2077c9b413b52f2828cd3a58474ecd07}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a2077c9b413b52f2828cd3a58474ecd07}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [3/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{byte}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize a single byte. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & Byte to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_ad280f630e75f763e4926ec51a566f3a9}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_ad280f630e75f763e4926ec51a566f3a9}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [4/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{value }\end{DoxyParamCaption})}
 
+
+
+Serialize a byte array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Byte array to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a8bef042bd13f851d2c8c04ad9936675b}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a8bef042bd13f851d2c8c04ad9936675b}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [5/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_sequence}{Sequence}}}]{args }\end{DoxyParamCaption})}
 
+
+
+Serialize a sequence. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em args} & The sequence to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a40d0097efa105dc0606e40849435310b}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a40d0097efa105dc0606e40849435310b}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [6/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{string}]{value }\end{DoxyParamCaption})}
 
+
+
+Serialize a string value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & String value to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a69e2c78b052c876ff8d5b25077f20425}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a69e2c78b052c876ff8d5b25077f20425}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [7/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{uint}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize an unsigned integer value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & The unsigned integer to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_aa87895d4245b47ed7471bde6484ad64e}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_aa87895d4245b47ed7471bde6484ad64e}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [8/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{ulong}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize an unsigned long number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & The unsigned long number to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_af733447d87d278d3ceabd48bd769034e}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_af733447d87d278d3ceabd48bd769034e}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!Serialize@{Serialize}}
 \index{Serialize@{Serialize}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}\hspace{0.1cm}{\footnotesize\ttfamily [9/9]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize (\begin{DoxyParamCaption}\item[{ushort}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize an unsigned short value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & The number to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a03408858c9ad04fbaeab0cb5d7aee8c6}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a03408858c9ad04fbaeab0cb5d7aee8c6}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeBool@{SerializeBool}}
 \index{SerializeBool@{SerializeBool}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{SerializeBool()}{SerializeBool()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+Bool (\begin{DoxyParamCaption}\item[{bool}]{value }\end{DoxyParamCaption})}
 
+
+
+Serialize a boolean value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Boolean value to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a10dfe433cdf9fe60e53d0ba141d95bf6}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a10dfe433cdf9fe60e53d0ba141d95bf6}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeBytes@{SerializeBytes}}
 \index{SerializeBytes@{SerializeBytes}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
@@ -151,7 +286,7 @@ Serializes an array of bytes. BCS layout for \char`\"{}bytes\char`\"{}\+: bytes\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+The current Serialization object.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a5759b20395cc1492bf933b4a5678b59f}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a5759b20395cc1492bf933b4a5678b59f}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeFixedBytes@{SerializeFixedBytes}}
@@ -169,7 +304,7 @@ Serializes a list of values represented in a byte array. This can be a sequence 
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+The current Serialization object.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a503241176e48f90d937874550638a6d1}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a503241176e48f90d937874550638a6d1}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeString@{SerializeString}}
@@ -189,7 +324,7 @@ BCS layout for \char`\"{}string\char`\"{}\+: string\+\_\+length $\vert$ string\+
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+The current Serialization object.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a340d6cac6b03c11b8fbe5108a8edc341}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a340d6cac6b03c11b8fbe5108a8edc341}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeU128@{SerializeU128}}
@@ -197,48 +332,144 @@ BCS layout for \char`\"{}string\char`\"{}\+: string\+\_\+length $\vert$ string\+
 \doxysubsubsection{\texorpdfstring{SerializeU128()}{SerializeU128()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+U128 (\begin{DoxyParamCaption}\item[{Big\+Integer}]{value }\end{DoxyParamCaption})}
 
+
+
+Serialize a big integer value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Big integer value to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a00135a949d9ec7114ae0918147abcb6f}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a00135a949d9ec7114ae0918147abcb6f}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeU16@{SerializeU16}}
 \index{SerializeU16@{SerializeU16}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{SerializeU16()}{SerializeU16()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+U16 (\begin{DoxyParamCaption}\item[{ushort}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize unsigned short (U16). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & Unsigned short number to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a222fd7108ca04a4c0010fabcddc93c49}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a222fd7108ca04a4c0010fabcddc93c49}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeU32@{SerializeU32}}
 \index{SerializeU32@{SerializeU32}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{SerializeU32()}{SerializeU32()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+U32 (\begin{DoxyParamCaption}\item[{uint}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize an unsigned integer number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & Unsigned integer number.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a7f155e9ec955a07541a31f90bf0b893d}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_a7f155e9ec955a07541a31f90bf0b893d}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeU32AsUleb128@{SerializeU32AsUleb128}}
 \index{SerializeU32AsUleb128@{SerializeU32AsUleb128}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{SerializeU32AsUleb128()}{SerializeU32AsUleb128()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+U32\+As\+Uleb128 (\begin{DoxyParamCaption}\item[{uint}]{value }\end{DoxyParamCaption})}
 
+
+
+Serialize an unsigned integer value. Usually used to serialize the length of values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Unsigned integer to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_aba0265e2d60fdf275fc1591547db697a}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_aba0265e2d60fdf275fc1591547db697a}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeU64@{SerializeU64}}
 \index{SerializeU64@{SerializeU64}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{SerializeU64()}{SerializeU64()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+U64 (\begin{DoxyParamCaption}\item[{ulong}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize an unsigned long number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & Unsigned long number to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_af71c3c9d127298559015946fbb8ab508}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_af71c3c9d127298559015946fbb8ab508}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!SerializeU8@{SerializeU8}}
 \index{SerializeU8@{SerializeU8}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{SerializeU8()}{SerializeU8()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Serialize\+U8 (\begin{DoxyParamCaption}\item[{byte}]{num }\end{DoxyParamCaption})}
 
+
+
+Serialize a unsigned byte number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & Byte to serialize.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_abc74286446e7e028780a61bac4190736}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_abc74286446e7e028780a61bac4190736}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!ToReadableByteArray@{ToReadableByteArray}}
 \index{ToReadableByteArray@{ToReadableByteArray}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{ToReadableByteArray()}{ToReadableByteArray()}}
 {\footnotesize\ttfamily static string Aptos.\+Utilities.\+BCS.\+Serialization.\+To\+Readable\+Byte\+Array (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{bytes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+Utility method to print a byte array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bytes} & Byte array to turn into string.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+String representation of a byte array.
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_ae929d5bd5edcebd052de9ffc945c0156}\label{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization_ae929d5bd5edcebd052de9ffc945c0156}} 
 \index{Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}!WriteBytes@{WriteBytes}}
 \index{WriteBytes@{WriteBytes}!Aptos.Utilities.BCS.Serialization@{Aptos.Utilities.BCS.Serialization}}
 \doxysubsubsection{\texorpdfstring{WriteBytes()}{WriteBytes()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} Aptos.\+Utilities.\+BCS.\+Serialization.\+Write\+Bytes (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{bytes }\end{DoxyParamCaption})}
 
+
+
+Write an array bytes directly to the serialization buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bytes} & Byte array to write to the serialization buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current Serialization object.
+\end{DoxyReturn}
 
 
 \doxysubsection{Member Data Documentation}

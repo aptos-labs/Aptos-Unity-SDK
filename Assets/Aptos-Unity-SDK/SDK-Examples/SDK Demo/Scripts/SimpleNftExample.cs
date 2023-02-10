@@ -51,37 +51,38 @@ namespace Aptos.Unity.Sample
 
             #region Initial Coin Balances
             Debug.Log("<color=cyan>=== Initial Coin Balances ===</color>");
-            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((success, returnResult) =>
+            AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Alice Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Alice Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
-
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, aliceAddress));
             yield return getAliceBalanceCor1;
 
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((succes, returnResult) =>
+            if (responseInfo.status == ResponseInfo.Status.Failed)
             {
-                if (returnResult == null)
-                {
-                    Debug.LogWarning("Account address not found, balance is 0");
-                    Debug.Log("Bob Balance: " + 0);
-                }
-                else
-                {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log("Bob Balance: " + acctResourceCoin.DataProp.Coin.Value);
-                }
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
 
+            Debug.Log("Alice's Balance After Funding: " + coin.Value);
+
+
+            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
             }, bobAddress));
             yield return getBobAccountBalance;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Bob's Balance After Funding: " + coin.Value);
             #endregion
 
             #region Collection & Token Naming Details
@@ -92,20 +93,25 @@ namespace Aptos.Unity.Sample
             string tokenName = "Alice's first token";
             string tokenDescription = "Alice's simple token";
             string tokenUri = "https://aptos.dev/img/nyan.jpeg";
-            string propertyVersion = "0";
+            int propertyVersion = 0;
             #endregion
 
             #region Create Collection
             Debug.Log("<color=cyan>=== Creating Collection and Token ===</color>");
-            string createCollectionResult = "";
-            Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((returnResult) =>
+            Transaction createCollectionTxn = new Transaction();
+            Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((_createCollectionTxn, _responseInfo) =>
             {
-                createCollectionResult = returnResult;
+                createCollectionTxn = _createCollectionTxn;
+                responseInfo = _responseInfo;
             }, alice, collectionName, collectionDescription, collectionUri));
             yield return createCollectionCor;
 
-            Debug.Log("Create Collection Response: " + createCollectionResult);
-            Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(createCollectionResult, new TransactionConverter());
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Cannot create collection. " + responseInfo.message);
+            }
+
+            Debug.Log("Create Collection Response: " + responseInfo.message);
             string transactionHash = createCollectionTxn.Hash;
             Debug.Log("Create Collection Hash: " + createCollectionTxn.Hash);
             #endregion
@@ -123,16 +129,22 @@ namespace Aptos.Unity.Sample
 
             #region Create Non-Fungible Token
             string createTokenResult = "";
+            Transaction createTokenTxn = new Transaction();
             Coroutine createTokenCor = StartCoroutine(
-                RestClient.Instance.CreateToken((returnResult) =>
+                RestClient.Instance.CreateToken((_createTokenTxn, _responseInfo) =>
                 {
-                    createTokenResult = returnResult;
+                    createTokenTxn = _createTokenTxn;
+                    responseInfo = _responseInfo;
                 }, alice, collectionName, tokenName, tokenDescription, 1, 1, tokenUri, 0)
             );
             yield return createTokenCor;
 
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Error creating token. " + responseInfo.message);
+            }
+
             Debug.Log("Create Token Response: " + createTokenResult);
-            Transaction createTokenTxn = JsonConvert.DeserializeObject<Transaction>(createTokenResult, new TransactionConverter());
             string createTokenTxnHash = createTokenTxn.Hash;
             Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
             #endregion
@@ -172,28 +184,45 @@ namespace Aptos.Unity.Sample
             Debug.Log("Alice's NFT Token Balance: " + getTokenBalanceResultAlice);
 
             string getTokenDataResultAlice = "";
+            TableItemToken tableItemToken = new TableItemToken();
+
             Coroutine getTokenDataCor = StartCoroutine(
-                RestClient.Instance.GetTokenData((returnResult) =>
+                RestClient.Instance.GetTokenData((_tableItemToken, _responseInfo) =>
                 {
-                    getTokenDataResultAlice = returnResult;
+                    //getTokenDataResultAlice = returnResult;
+                    tableItemToken = _tableItemToken;
+                    responseInfo = _responseInfo;
                 }, aliceAddress, collectionName, tokenName, propertyVersion)
             );
             yield return getTokenDataCor;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Could not get toke data.");
+                yield break;
+            }
             Debug.Log("Alice's Token Data: " + getTokenDataResultAlice);
             #endregion
 
             #region Transferring the Token to Bob
             Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
             string offerTokenResult = "";
-            Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((returnResult) =>
+            Transaction offerTokenTxn = new Transaction();
+            Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((_offerTokenTxn, _responseInfo) =>
             {
-                offerTokenResult = returnResult;
+                offerTokenTxn = _offerTokenTxn;
+                responseInfo = _responseInfo;
             }, alice, bob.AccountAddress, alice.AccountAddress, collectionName, tokenName, "1"));
 
             yield return offerTokenCor;
 
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Error offering token. " + responseInfo.message);
+                yield break;
+            }
+
             Debug.Log("Offer Token Response: " + offerTokenResult);
-            Transaction offerTokenTxn = JsonConvert.DeserializeObject<Transaction>(offerTokenResult, new TransactionConverter());
             string offerTokenTxnHash = offerTokenTxn.Hash;
             Debug.Log("Offer Token Hash: " + offerTokenTxnHash);
 
@@ -203,16 +232,16 @@ namespace Aptos.Unity.Sample
 
             #region Bob Claims Token
             Debug.Log("<color=cyan>=== Bob Claims Token ===</color>");
-            string claimTokenResult = "";
-            Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((returnResult) =>
+            Transaction claimTokenTxn = new Transaction();
+            Coroutine claimTokenCor = StartCoroutine(RestClient.Instance.ClaimToken((_claimTokenTxn, _responseInfo) =>
             {
-                claimTokenResult = returnResult;
+                claimTokenTxn = _claimTokenTxn;
+                responseInfo = _responseInfo;
             }, bob, alice.AccountAddress, alice.AccountAddress, collectionName, tokenName, propertyVersion));
 
             yield return claimTokenCor;
 
-            Debug.Log("Claim Token Response: " + claimTokenResult);
-            Transaction claimTokenTxn = JsonConvert.DeserializeObject<Transaction>(claimTokenResult, new TransactionConverter());
+            Debug.Log("Claim Token Response: " + responseInfo.message);
             string claimTokenTxnHash = claimTokenTxn.Hash;
             Debug.Log("Claim Token Hash: " + claimTokenTxnHash);
 
@@ -252,9 +281,9 @@ namespace Aptos.Unity.Sample
         IEnumerator WaitForTransaction(string txnHash)
         {
             Coroutine waitForTransactionCor = StartCoroutine(
-                RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
+                RestClient.Instance.WaitForTransaction((pending, _responseInfo) =>
                 {
-                    Debug.Log(transactionWaitResult);
+                    Debug.Log(_responseInfo.message);
                 }, txnHash)
             );
             yield return waitForTransactionCor;

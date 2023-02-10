@@ -10,7 +10,7 @@ namespace Aptos.Unity.Rest.Model
     public class AccountData
     {
         [JsonConstructor]
-        private AccountData() { }
+        public AccountData() { }
 
         [JsonProperty("sequence_number", Required = Required.Always)]
         public string SequenceNumber { get; private set; }
