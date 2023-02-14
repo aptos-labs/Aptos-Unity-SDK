@@ -19,7 +19,7 @@ namespace Aptos.Accounts
         public const int KeyLength = 64;
 
         /// <summary>
-        /// Hex string representation of pruvate key.
+        /// Hex string representation of private key.
         /// </summary>
         private string _key;
 
@@ -39,9 +39,9 @@ namespace Aptos.Accounts
         private byte[] _keyBytesBase58;
 
         /// <summary>
-        /// The key as a 32-byte hexadecimal string (64 characters) \n
-        /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key \n
-        /// , then we slice it in half since the other half contains the public key.
+        /// The key as a 32-byte hexadecimal string (64 characters).   
+        /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key,   
+        /// then we slice it in half since the other half contains the public key.
         /// </summary>
         public string Key
         {
@@ -63,19 +63,22 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// The key in bytes.
-        /// Checks if we have the hexadecimal string representation of a 64-byte extended
-        /// , then return the bytes accordingly.
+        /// The extended private key in bytes.
+        /// Checks if we have the hexadecimal string representation of a 64-byte extended key,   
+        /// then returns the bytes accordingly.
         /// </summary>
         public byte[] KeyBytes
         {
             get
             {
+                // if the private key bytes have not being initialized, but a 32-byte (64 character) string private has been set
                 if (_keyBytes == null && _key != null)
                 {
                     string key = _key;
-                    if (_key[0..2].Equals("0x")) { key = _key[2..]; }
-                    _keyBytes = key.HexStringToByteArray();
+                    if (_key[0..2].Equals("0x")) { key = _key[2..]; } // Trim the private key hex string
+
+                    byte[] seed = key.HexStringToByteArray(); // Turn private key hex string into byte to be used a seed to derive the extended key
+                    _keyBytes = Ed25519.ExpandedPrivateKeyFromSeed(seed);
                 }
                 return _keyBytes;
             }
@@ -128,9 +131,12 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Initializes the PrivateKey object with a given byte array.
+        /// Initializes the PrivateKey object with a 64 byte array that represents the expanded private key from seed.   
+        /// For example, using: <c>Ed25519.ExpandedPrivateKeyFromSeed(seed)</c>.   
+        /// This constructor is expected to be called from the <see cref="Account.Account()">Account</see> constructor.   
+        /// Note: To create a private key from a 32-byte string see <see cref="PrivateKey(string key)">PrivateKey(string key)</see>
         /// </summary>
-        /// <param name="privateKey">Byte array representation of the private key.</param>
+        /// <param name="privateKey">64-byte array representation of the private key.</param>
         public PrivateKey(byte[] privateKey)
         {
             if (privateKey == null)
@@ -142,18 +148,24 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Initializes the PrivateKey object with a given ASCII representation of private key
+        /// Initializes the PrivateKey object with a 64 character (32-byte) ASCII representation of a private key.   
+        /// Note: The undelying cryptographic library (Chaos.NaCL) uses an extended private key (64 byte) for fast computation.   
+        /// This hex string is used as a seed to create an extended private key when <see cref="KeyBytes">KeyBytes</see> is requested.
         /// </summary>
-        /// <param name="key">The private key as a Base58 encoded string.</param>
+        /// <param name="key">The private key as an ASCII encoded string.   
+        /// Example: <c>0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c</c></param>
         public PrivateKey(string key)
         {
+            if(!Utils.IsValidAddress(key))
+                throw new ArgumentException("Invalid key", nameof(key));
+
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
         /// <summary>
         /// Initialize the PrivateKey object from the given string.
         /// </summary>
-        /// <param name="key">The private key as base58 encoded byte array.</param>
+        /// <param name="key">The private key as a hex encoded byte array.</param>
         public PrivateKey(ReadOnlySpan<byte> privateKey)
         {
             if (privateKey.Length != KeyLength)
