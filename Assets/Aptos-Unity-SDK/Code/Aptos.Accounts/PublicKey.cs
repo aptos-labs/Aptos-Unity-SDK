@@ -136,9 +136,14 @@ namespace Aptos.Accounts
         /// <summary>
         /// Initializes the PublicKey object with a given hexadecimal representation of public .
         /// </summary>
-        /// <param name="key">The public key as a hexadecimal string.</param> 
+        /// <param name="key">The public key as a hexadecimal string.   
+        /// Example: <c>0x586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5</c>
+        /// </param> 
         public PublicKey(string key)
         {
+            if (!Utils.IsValidAddress(key))
+                throw new ArgumentException("Invalid key", nameof(key));
+
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
