@@ -776,7 +776,9 @@ namespace Aptos.Unity.Rest
         #region Transaction Wrappers
         /// <summary>
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
-        /// Returns the sequence number of the transaction used to transfer.
+        /// Returns the sequence number of the transaction used to transfer.   
+        /// 
+        /// NOTE: Recipient address must hold APT before hand, and or have been airdrop APT if testing on devnet.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="sender">Account executing the transfer.</param>
