@@ -173,7 +173,27 @@ namespace Aptos.Unity.Sample.UI
 
             if (responseInfo.status == ResponseInfo.Status.Success)
             {
-                UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
+                string transactionHash = transferTxn.Hash;
+                bool waitForTxnSuccess = false;
+                Coroutine waitForTransactionCor = StartCoroutine(
+                    RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                    {
+                        waitForTxnSuccess = _pending;
+                        responseInfo = _responseInfo;
+                    }, transactionHash)
+                );
+                yield return waitForTransactionCor;
+
+                if (waitForTxnSuccess)
+                {
+                    UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
+                    yield break;
+                }
+                else
+                {
+                    UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, "Send Token Transaction Failed");
+                }
+                
             }
             else
             {
