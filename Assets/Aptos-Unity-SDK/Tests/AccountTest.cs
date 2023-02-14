@@ -46,7 +46,7 @@ namespace Aptos.Unity.Test
         private const string AccountAddressHex = "0x9f628c43d1c1c0f54683cf5ccbd2b944608df4ff2649841053b1790a4d7c187d";
         private const string AccountAuthKeyHex = "0x9f628c43d1c1c0f54683cf5ccbd2b944608df4ff2649841053b1790a4d7c187d";
 
-        private static readonly byte[] MessageUt8Bytes = {
+        private static readonly byte[] MessageUtf8Bytes = {
             87, 69, 76, 67, 79, 77, 69, 32, 
             84, 79, 32, 65, 80, 84, 79, 83, 33 };
         private const string Message = "WELCOME TO APTOS!";
@@ -64,7 +64,7 @@ namespace Aptos.Unity.Test
         };
 
         [Test]
-        public void GenerateKeysSuccess()
+        public void GenerateKeysWithBytesSuccess()
         {
             PrivateKey privateKey = new PrivateKey(PrivateKeyBytes);
             PublicKey publicKey = new PublicKey(PublicKeyBytes);
@@ -77,6 +77,47 @@ namespace Aptos.Unity.Test
 
             Assert.AreEqual(privateKeyHex, PrivateKeyHex);
             Assert.AreEqual(publicKeyHex, PublicKeyHex);
+        }
+
+        [Test]
+        public void GenerateKeysWithStringSuccess()
+        {
+            PrivateKey privateKey = new PrivateKey(PrivateKeyHex);
+            PublicKey publicKey = new PublicKey(PublicKeyHex);
+
+            Assert.IsNotNull(privateKey.KeyBytes, "PrivateKey.KeyBytes != null");
+            Assert.IsNotNull(publicKey.KeyBytes, "PublicKey.KeyBytes != null");
+
+            Assert.AreEqual(privateKey.KeyBytes, PrivateKeyBytes);
+            Assert.AreEqual(publicKey.KeyBytes, PublicKeyBytes);
+
+            string privateKeyHex = privateKey.Key;
+            string publicKeyHex = publicKey;
+
+            Assert.AreEqual(privateKeyHex, PrivateKeyHex);
+            Assert.AreEqual(publicKeyHex, PublicKeyHex);
+        }
+
+        [Test]
+        public void PrivateKeyFromHexSignSuccess()
+        {
+            PrivateKey privateKey = new PrivateKey(PrivateKeyHex);
+            Assert.AreEqual(privateKey.Key, PrivateKeyHex);
+            Assert.AreEqual(privateKey.KeyBytes, PrivateKeyBytes);
+
+            byte[] signature = privateKey.Sign(MessageUtf8Bytes);
+            Assert.AreEqual(signature, SignatureBytes);
+        }
+
+        [Test]
+        public void PrivateKeyFromBytesSignSuccess()
+        {
+            PrivateKey privateKey = new PrivateKey(PrivateKeyBytes);
+            Assert.AreEqual(privateKey.Key, PrivateKeyHex);
+            Assert.AreEqual(privateKey.KeyBytes, PrivateKeyBytes);
+
+            byte[] signature = privateKey.Sign(MessageUtf8Bytes);
+            Assert.AreEqual(signature, SignatureBytes);
         }
 
         [Test]
@@ -141,7 +182,7 @@ namespace Aptos.Unity.Test
         public void AccountSignSuccess()
         {
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
-            byte[] signature = acc.Sign(MessageUt8Bytes);
+            byte[] signature = acc.Sign(MessageUtf8Bytes);
             Assert.AreEqual(signature, SignatureBytes);
         }
 
@@ -149,9 +190,9 @@ namespace Aptos.Unity.Test
         public void AccountSignVerify()
         {
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
-            byte[] signature = acc.Sign(MessageUt8Bytes);
+            byte[] signature = acc.Sign(MessageUtf8Bytes);
             Assert.AreEqual(signature, SignatureBytes);
-            bool verify = acc.Verify(MessageUt8Bytes, signature);
+            bool verify = acc.Verify(MessageUtf8Bytes, signature);
             Assert.IsTrue(verify);
         }
     }
