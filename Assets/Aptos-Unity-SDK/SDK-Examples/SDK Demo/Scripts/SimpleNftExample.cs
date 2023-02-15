@@ -119,7 +119,7 @@ namespace Aptos.Unity.Sample
             Coroutine waitForTransactionCor = StartCoroutine(
                 RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
                 {
-                    Debug.Log(transactionWaitResult);
+                    Debug.Log(transactionWaitResult.message);
                 }, transactionHash)
             );
             yield return waitForTransactionCor;
@@ -127,7 +127,6 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Create Non-Fungible Token
-            string createTokenResult = "";
             Transaction createTokenTxn = new Transaction();
             Coroutine createTokenCor = StartCoroutine(
                 RestClient.Instance.CreateToken((_createTokenTxn, _responseInfo) =>
@@ -143,7 +142,7 @@ namespace Aptos.Unity.Sample
                 Debug.LogError("Error creating token. " + responseInfo.message);
             }
 
-            Debug.Log("Create Token Response: " + createTokenResult);
+            Debug.Log("Create Token Response: " + responseInfo.message);
             string createTokenTxnHash = createTokenTxn.Hash;
             Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
             #endregion
