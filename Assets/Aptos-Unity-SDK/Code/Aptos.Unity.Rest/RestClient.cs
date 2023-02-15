@@ -423,11 +423,43 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get a table item that contains a token's (NFT) data.
+        /// Get a table item that contains a token's (NFT) metadata.
         /// In this case we are using a complex key to retrieve the table item.
         ///  
-        /// Note: we do not deserialize the response since the table item representation 
-        /// is only known by the developer requesting the table item and token data.
+        /// Note: the response received from the REST <c>/table</c>  for this methods
+        /// has a particular format specific to the SDK example.    
+        /// 
+        /// Developers will have to implement their own custom object's to match
+        /// the properties of the NFT, meaning the content in the table item.   
+        /// 
+        /// The response for <c>/table</c> in the SDK example has the following format:   
+        /// <code>
+        /// {
+        ///     "default_properties":{
+        ///         "map":{
+        ///             "data":[ ]
+        ///         }
+        ///     },
+        ///     "description":"Alice's simple token",
+        ///     "largest_property_version":"0",
+        ///     "maximum":"1",
+        ///     "mutability_config":{
+        ///         "description":false,
+        ///         "maximum":false,
+        ///         "properties":false,
+        ///         "royalty":false,
+        ///         "uri":false
+        ///     },
+        ///     "name":"Alice's first token",
+        ///     "royalty":{
+        ///         "payee_address":"0x8b8a8935cd90a87eaf47c7f309b6935e305e48b47f95982d65153b03032b3f33",
+        ///         "royalty_points_denominator":"1000000",
+        ///         "royalty_points_numerator":"0"
+        ///     },
+        ///     "supply":"1",
+        ///     "uri":"https://aptos.dev/img/nyan.jpeg"
+        /// }
+        /// </code>
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="handle">The identifier for the given table.</param>
@@ -435,7 +467,7 @@ namespace Aptos.Unity.Rest
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">A complex key object used to search for the table item. In this case it's a TokenDataId object that contains the token / collection info</param>
         /// <returns>A JSON string to be serialized by the developer to a matching representation of data.</returns>
-        public IEnumerator GetTableItemTokenData(Action<TableItemToken, ResponseInfo> callback, string handle, string keyType, string valueType, TokenDataId key)
+        public IEnumerator GetTableItemTokenData(Action<TableItemTokenMetadata, ResponseInfo> callback, string handle, string keyType, string valueType, TokenDataId key)
         {
             TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
             {
@@ -471,27 +503,13 @@ namespace Aptos.Unity.Rest
             {
                 responseInfo.status = ResponseInfo.Status.NotFound;
                 responseInfo.message = "Table item not found. " + request.error;
-                TableItemToken tableItemToken = new TableItemToken
-                {
-                    Id = new Aptos.Unity.Rest.Model.Id
-                    {
-                        TokenDataId =
-                        {
-                            Creator = key.Creator,
-                            Collection = key.Collection,
-                            Name = key.Name
-                        }
-                    },
-                    Amount = "0"
-                };
-
-                //string tableItemTokenJson = JsonConvert.SerializeObject(tableItemToken);
-                callback(tableItemToken, responseInfo);
+                callback(null, responseInfo);
             }
             else
             {
                 string response = request.downloadHandler.text;
-                TableItemToken tableItemToken = JsonConvert.DeserializeObject<TableItemToken>(response);
+                Debug.Log("GetTableItemTokenData: " + response);
+                TableItemTokenMetadata tableItemToken = JsonConvert.DeserializeObject<TableItemTokenMetadata>(response);
 
                 responseInfo.status = ResponseInfo.Status.Success;
                 responseInfo.message = response;
@@ -1644,7 +1662,7 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
         /// <returns>(TableItemToken, ResponseInfo)</returns>
-        public IEnumerator GetTokenData(Action<TableItemToken, ResponseInfo> callback, Accounts.AccountAddress creator,
+        public IEnumerator GetTokenData(Action<TableItemTokenMetadata, ResponseInfo> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
             bool success = false;
@@ -1681,12 +1699,11 @@ namespace Aptos.Unity.Rest
 
             string tokenDataIdJson = JsonConvert.SerializeObject(tokenDataId);
 
-            //string tableItemResp = "";
-            TableItemToken tableItemToken = new TableItemToken();
+            TableItemTokenMetadata tableItemTokenMetadata = new TableItemTokenMetadata();
 
             Coroutine getTableItemCor = StartCoroutine(
-                GetTableItemTokenData((_tableItemToken, _responseInfo) => {
-                    tableItemToken = _tableItemToken;
+                GetTableItemTokenData((_tableItemTokenMetadata, _responseInfo) => {
+                    tableItemTokenMetadata = _tableItemTokenMetadata;
                     responseInfo = _responseInfo;
                 }
                     , tokenDataHandle
@@ -1696,7 +1713,7 @@ namespace Aptos.Unity.Rest
                 );
 
             yield return getTableItemCor;
-            callback(tableItemToken, responseInfo);
+            callback(tableItemTokenMetadata, responseInfo);
         }
 
         /// <summary>
