@@ -97,7 +97,7 @@ namespace Aptos.Unity.Rest
             else
             {
                 responseInfo.status = ResponseInfo.Status.Success;
-                responseInfo.message = null;
+                responseInfo.message = request.downloadHandler.text;
 
                 AccountData accountData = JsonConvert.DeserializeObject<AccountData>(request.downloadHandler.text);
                 callback(accountData, responseInfo);
@@ -125,8 +125,10 @@ namespace Aptos.Unity.Rest
             if(responseInfo.status != ResponseInfo.Status.Success)
             {
                 callback(null, responseInfo);
+                yield break;
             }
 
+            Debug.Log(responseInfo.message);
             string sequenceNumber = accountData.SequenceNumber;
 
             callback(sequenceNumber, responseInfo);
