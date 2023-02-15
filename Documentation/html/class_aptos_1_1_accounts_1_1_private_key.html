@@ -90,10 +90,15 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae9227ef16339c4e49ecb69c7d34e03f3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_private_key.html#ae9227ef16339c4e49ecb69c7d34e03f3">PrivateKey</a> (byte[] privateKey)</td></tr>
-<tr class="memdesc:ae9227ef16339c4e49ecb69c7d34e03f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the PrivateKey object with a given byte array.  <br /></td></tr>
+<tr class="memdesc:ae9227ef16339c4e49ecb69c7d34e03f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the PrivateKey object with a 64 byte array that represents the expanded private key from seed. <br  />
+ For example, using: <code>Ed25519.ExpandedPrivateKeyFromSeed(seed)</code>. <br  />
+ This constructor is expected to be called from the <a class="el" href="">Account</a> constructor. <br  />
+ Note: To create a private key from a 32-byte string see <a class="el" href="">PrivateKey(string key)</a>  <br /></td></tr>
 <tr class="separator:ae9227ef16339c4e49ecb69c7d34e03f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a60fcf622010dddb48aafe27b222bbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_private_key.html#a6a60fcf622010dddb48aafe27b222bbd">PrivateKey</a> (string key)</td></tr>
-<tr class="memdesc:a6a60fcf622010dddb48aafe27b222bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the PrivateKey object with a given ASCII representation of private key.  <br /></td></tr>
+<tr class="memdesc:a6a60fcf622010dddb48aafe27b222bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the PrivateKey object with a 64 character (32-byte) ASCII representation of a private key. <br  />
+ Note: The undelying cryptographic library (Chaos.NaCL) uses an extended private key (64 byte) for fast computation. <br  />
+ This hex string is used as a seed to create an extended private key when <a class="el" href="">KeyBytes</a> is requested.  <br /></td></tr>
 <tr class="separator:a6a60fcf622010dddb48aafe27b222bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13b8ddeb484e8e2b14d208043be3ad5e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_private_key.html#a13b8ddeb484e8e2b14d208043be3ad5e">PrivateKey</a> (ReadOnlySpan&lt; byte &gt; privateKey)</td></tr>
 <tr class="memdesc:a13b8ddeb484e8e2b14d208043be3ad5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the PrivateKey object from the given string.  <br /></td></tr>
@@ -128,12 +133,13 @@ Static Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a59b7f70119de95cb3266408e8c772418"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_private_key.html#a59b7f70119de95cb3266408e8c772418">Key</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:a59b7f70119de95cb3266408e8c772418"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key as a 32-byte hexadecimal string (64 characters) <br  />
-NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key <br  />
-, then we slice it in half since the other half contains the public key.  <br /></td></tr>
+<tr class="memdesc:a59b7f70119de95cb3266408e8c772418"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key as a 32-byte hexadecimal string (64 characters). <br  />
+ NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key, <br  />
+ then we slice it in half since the other half contains the public key.  <br /></td></tr>
 <tr class="separator:a59b7f70119de95cb3266408e8c772418"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a179da93b090669037164241bdc04444d"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_private_key.html#a179da93b090669037164241bdc04444d">KeyBytes</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:a179da93b090669037164241bdc04444d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key in bytes. Checks if we have the hexadecimal string representation of a 64-byte extended , then return the bytes accordingly.  <br /></td></tr>
+<tr class="memdesc:a179da93b090669037164241bdc04444d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-byte extended key, <br  />
+ then returns the bytes accordingly.  <br /></td></tr>
 <tr class="separator:a179da93b090669037164241bdc04444d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fb3cf55bfd7bf3f96ab9f4ac702dc72"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_private_key.html#a7fb3cf55bfd7bf3f96ab9f4ac702dc72">KeyBase58</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a7fb3cf55bfd7bf3f96ab9f4ac702dc72"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key as base-58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII)  <br /></td></tr>
@@ -162,10 +168,13 @@ NOTE: We maintain the full 64-byte (128 characters) representation of the extend
       </table>
 </div><div class="memdoc">
 
-<p>Initializes the PrivateKey object with a given byte array. </p>
+<p>Initializes the PrivateKey object with a 64 byte array that represents the expanded private key from seed. <br  />
+ For example, using: <code>Ed25519.ExpandedPrivateKeyFromSeed(seed)</code>. <br  />
+ This constructor is expected to be called from the <a class="el" href="">Account</a> constructor. <br  />
+ Note: To create a private key from a 32-byte string see <a class="el" href="">PrivateKey(string key)</a> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">privateKey</td><td>Byte array representation of the private key.</td></tr>
+    <tr><td class="paramname">privateKey</td><td>64-byte array representation of the private key.</td></tr>
   </table>
   </dd>
 </dl>
@@ -188,10 +197,13 @@ NOTE: We maintain the full 64-byte (128 characters) representation of the extend
       </table>
 </div><div class="memdoc">
 
-<p>Initializes the PrivateKey object with a given ASCII representation of private key. </p>
+<p>Initializes the PrivateKey object with a 64 character (32-byte) ASCII representation of a private key. <br  />
+ Note: The undelying cryptographic library (Chaos.NaCL) uses an extended private key (64 byte) for fast computation. <br  />
+ This hex string is used as a seed to create an extended private key when <a class="el" href="">KeyBytes</a> is requested. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">key</td><td>The private key as a Base58 encoded string.</td></tr>
+    <tr><td class="paramname">key</td><td>The private key as an ASCII encoded string. <br  />
+ Example: <code>0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c</code></td></tr>
   </table>
   </dd>
 </dl>
@@ -217,7 +229,7 @@ NOTE: We maintain the full 64-byte (128 characters) representation of the extend
 <p>Initialize the PrivateKey object from the given string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">key</td><td>The private key as base58 encoded byte array.</td></tr>
+    <tr><td class="paramname">key</td><td>The private key as a hex encoded byte array.</td></tr>
   </table>
   </dd>
 </dl>
@@ -473,9 +485,9 @@ NOTE: We maintain the full 64-byte (128 characters) representation of the extend
 </table>
 </div><div class="memdoc">
 
-<p>The key as a 32-byte hexadecimal string (64 characters) <br  />
-NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key <br  />
-, then we slice it in half since the other half contains the public key. </p>
+<p>The key as a 32-byte hexadecimal string (64 characters). <br  />
+ NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key, <br  />
+ then we slice it in half since the other half contains the public key. </p>
 
 </div>
 </div>
@@ -523,7 +535,8 @@ NOTE: We maintain the full 64-byte (128 characters) representation of the extend
 </table>
 </div><div class="memdoc">
 
-<p>The key in bytes. Checks if we have the hexadecimal string representation of a 64-byte extended , then return the bytes accordingly. </p>
+<p>The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-byte extended key, <br  />
+ then returns the bytes accordingly. </p>
 
 </div>
 </div>

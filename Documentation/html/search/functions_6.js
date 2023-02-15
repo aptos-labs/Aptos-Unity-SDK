@@ -13,9 +13,9 @@ var searchData=
   ['gettableitem_10',['GetTableItem',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a53c4cc366177befe5b48a8df7a342928',1,'Aptos::Unity::Rest::RestClient']]],
   ['gettableitemcoin_11',['GetTableItemCoin',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a43eb640df9b4a91fb3ed8e00142ef6f8',1,'Aptos::Unity::Rest::RestClient']]],
   ['gettableitemnft_12',['GetTableItemNFT',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#ad7a256f133fd657658a6ef97ec4f70f3',1,'Aptos::Unity::Rest::RestClient']]],
-  ['gettableitemtokendata_13',['GetTableItemTokenData',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a143a8f05b0fa46270b1def216548b0c7',1,'Aptos::Unity::Rest::RestClient']]],
+  ['gettableitemtokendata_13',['GetTableItemTokenData',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a1fe8ad1328c3848dae5d7673fd8bba96',1,'Aptos::Unity::Rest::RestClient']]],
   ['gettoken_14',['GetToken',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a3a0f200bba6c1e424a49aea7b5581e3a',1,'Aptos::Unity::Rest::RestClient']]],
   ['gettokenbalance_15',['GetTokenBalance',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a25fd56bbfea0309008b7b8290f3cdd1e',1,'Aptos::Unity::Rest::RestClient']]],
-  ['gettokendata_16',['GetTokenData',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#abbcf0bb8800022e4e0c5776469a267db',1,'Aptos::Unity::Rest::RestClient']]],
+  ['gettokendata_16',['GetTokenData',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a364c951783cc0498419caf3b307126de',1,'Aptos::Unity::Rest::RestClient']]],
   ['getvalues_17',['GetValues',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_sequence.html#a38923a3ac1a7f5140c3a15f719381fb3',1,'Aptos::Utilities::BCS::Sequence']]]
 ];

@@ -22,7 +22,8 @@ IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac2d
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_add97b3c9a88054e560a228fade4efa29}{Get\+Account\+Sequence\+Number}} (Action$<$ string, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} account\+Address)
 \begin{DoxyCompactList}\small\item\em Gets Account Sequence Number. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a876a9811cd4942ff3e9b832ce0ef0f16}{Get\+Account\+Balance}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin_1_1_coin}{Account\+Resource\+Coin.\+Coin}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} account\+Address)
-\begin{DoxyCompactList}\small\item\em Get an account\textquotesingle{}s balance. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Get an account\textquotesingle{}s balance. ~\newline
+ \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1f71708ebbde910882993525ed708a97}{Get\+Account\+Resource\+Collection}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection}{Resource\+Collection}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} account\+Address, string resource\+Type)
 \begin{DoxyCompactList}\small\item\em Get Account Resource. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a43eb640df9b4a91fb3ed8e00142ef6f8}{Get\+Table\+Item\+Coin}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin}{Account\+Resource\+Coin}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, string key)
@@ -31,8 +32,8 @@ IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a53c
 \begin{DoxyCompactList}\small\item\em Get a table item at a specific ledger version from the table identified by the handle \{table\+\_\+handle\} in the path and a \mbox{[}simple\mbox{]} \char`\"{}key\char`\"{} (Table\+Item\+Request) provided by the request body. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ad7a256f133fd657658a6ef97ec4f70f3}{Get\+Table\+Item\+NFT}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_id_request}{Token\+Id\+Request}} key)
 \begin{DoxyCompactList}\small\item\em Get a table item for a NFT from the table identified by the handle \{table\+\_\+handle\} in the path and a complex key provided by the request body. \end{DoxyCompactList}\item 
-IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a143a8f05b0fa46270b1def216548b0c7}{Get\+Table\+Item\+Token\+Data}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id}{Token\+Data\+Id}} key)
-\begin{DoxyCompactList}\small\item\em Get a table item that contains a token\textquotesingle{}s (NFT) data. In this case we are using a complex key to retrieve the table item. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1fe8ad1328c3848dae5d7673fd8bba96}{Get\+Table\+Item\+Token\+Data}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id}{Token\+Data\+Id}} key)
+\begin{DoxyCompactList}\small\item\em Get a table item that contains a token\textquotesingle{}s (NFT) metadata. In this case we are using a complex key to retrieve the table item. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a97cd73cc5325c94ead65d92b33227402}{Get\+Info}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_ledger_info}{Ledger\+Info}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback)
 \begin{DoxyCompactList}\small\item\em Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_afbbc6b5f8bc82d29aa070d03f714adad}{Submit\+Transaction}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} sender, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_payload}{Transaction\+Payload}} payload)
@@ -46,7 +47,8 @@ IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a75f
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a008e04354c44777bd25403704382c2c9}{Transaction\+Pending}} (Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string txn\+Hash)
 \begin{DoxyCompactList}\small\item\em Query to see if transaction has been \textquotesingle{}confirmed\textquotesingle{} in the blockchain by using the transaction hash. A 404 error will be returned if the transaction hasn\textquotesingle{}t been confirmed. Once the transaction is confirmed it will have a {\ttfamily pending\+\_\+transaction} state. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac3ab7709a0934da84f653dfcaa725759}{Transfer}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} sender, string to, long amount)
-\begin{DoxyCompactList}\small\item\em Transfer a given coin amount from a given Account to the recipient\textquotesingle{}s account Address. Returns the sequence number of the transaction used to transfer. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Transfer a given coin amount from a given Account to the recipient\textquotesingle{}s account Address. Returns the sequence number of the transaction used to transfer. ~\newline
+ \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a9cf18be53aa45dadcca8952151b04a7b}{Encode\+Submission}} (Action$<$ string $>$ callback, string txn\+Request\+Json)
 \begin{DoxyCompactList}\small\item\em Encodes submission. ~\newline
  This endpoint accepts an Encode\+Submission\+Request, which internally is a User\+Transaction\+Request\+Inner (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS. ~\newline
@@ -65,7 +67,7 @@ IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3a0
 \begin{DoxyCompactList}\small\item\em Get token information. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a25fd56bbfea0309008b7b8290f3cdd1e}{Get\+Token\+Balance}} (Action$<$ string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} owner\+Address, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator\+Address, string collection\+Name, string token\+Name, int property\+Version=0)
 \begin{DoxyCompactList}\small\item\em Get balance for a given non-\/fungible token (NFT). \end{DoxyCompactList}\item 
-IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abbcf0bb8800022e4e0c5776469a267db}{Get\+Token\+Data}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string token\+Name, int property\+Version=0)
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a364c951783cc0498419caf3b307126de}{Get\+Token\+Data}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string token\+Name, int property\+Version=0)
 \begin{DoxyCompactList}\small\item\em Read Collection\textquotesingle{}s token data table. An example. \end{DoxyCompactList}\item 
 IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_aff1ad182fff1bb7169ca4e0e75ab3357}{Get\+Collection}} (Action$<$ string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string property\+Version=\char`\"{}0\char`\"{})
 \begin{DoxyCompactList}\small\item\em Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types. \end{DoxyCompactList}\item 
@@ -285,9 +287,13 @@ Account\+Data contains the account\textquotesingle{}s\+: ~\newline
 
 
 
-Get an account\textquotesingle{}s balance. 
+Get an account\textquotesingle{}s balance. ~\newline
+ 
 
+The {\ttfamily /account\texorpdfstring{$<$}{<}/\{address\}/resource/\{coin\+\_\+type\}c\texorpdfstring{$>$}{>} endpoint for Aptos\+Coin returns the following response\+: ~\newline
+ {\ttfamily  \{ \char`\"{}type\char`\"{}\+:\char`\"{}0x1\+::coin\+::\+Coin\+Store$<$0x1\+::aptos\+\_\+coin\+::\+Aptos\+Coin$>$\char`\"{}, \char`\"{}data\char`\"{}\+:\{ \char`\"{}coin\char`\"{}\+:\{ \char`\"{}value\char`\"{}\+:\char`\"{}3400034000\char`\"{} \}, \char`\"{}deposit\+\_\+events\char`\"{}\+:\{ \char`\"{}counter\char`\"{}\+:\char`\"{}68\char`\"{}, \char`\"{}guid\char`\"{}\+:\{ \char`\"{}id\char`\"{}\+:\{ \char`\"{}addr\char`\"{}\+:\char`\"{}0xd89fd73ef7c058ccf79fe4c1c38507d580354206a36ae03eea01ddfd3afeef07\char`\"{}, \char`\"{}creation\+\_\+num\char`\"{}\+:\char`\"{}2\char`\"{} \} \} \}, \char`\"{}frozen\char`\"{}\+:false, \char`\"{}withdraw\+\_\+events\char`\"{}\+:\{ \char`\"{}counter\char`\"{}\+:\char`\"{}0\char`\"{}, \char`\"{}guid\char`\"{}\+:\{ \char`\"{}id\char`\"{}\+:\{ \char`\"{}addr\char`\"{}\+:\char`\"{}0xd89fd73ef7c058ccf79fe4c1c38507d580354206a36ae03eea01ddfd3afeef07\char`\"{}, \char`\"{}creation\+\_\+num\char`\"{}\+:\char`\"{}3\char`\"{} \} \} \} \} \} }}
 
+{\ttfamily 
 \begin{DoxyParams}{Parameters}
 {\em callback} & Callback function used after response is received.\\
 \hline
@@ -297,7 +303,7 @@ Get an account\textquotesingle{}s balance.
 \begin{DoxyReturn}{Returns}
 Calls {\ttfamily callback}function with (Account\+Resource\+Coin.\+Coin, Response\+Info) -\/ a representation of the coin, and an object containing the response information.
 \end{DoxyReturn}
-\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}} 
+}\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountResource@{GetAccountResource}}
 \index{GetAccountResource@{GetAccountResource}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
 \doxysubsubsection{\texorpdfstring{GetAccountResource()}{GetAccountResource()}}
@@ -497,17 +503,24 @@ See \mbox{\hyperlink{}{Get\+Table\+Item}} for a get table item using a generic s
 \begin{DoxyReturn}{Returns}
 (Table\+Item\+Token, Response\+Info)
 \end{DoxyReturn}
-\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a143a8f05b0fa46270b1def216548b0c7}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a143a8f05b0fa46270b1def216548b0c7}} 
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1fe8ad1328c3848dae5d7673fd8bba96}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1fe8ad1328c3848dae5d7673fd8bba96}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTableItemTokenData@{GetTableItemTokenData}}
 \index{GetTableItemTokenData@{GetTableItemTokenData}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
 \doxysubsubsection{\texorpdfstring{GetTableItemTokenData()}{GetTableItemTokenData()}}
-{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Table\+Item\+Token\+Data (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{handle,  }\item[{string}]{key\+Type,  }\item[{string}]{value\+Type,  }\item[{\mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id}{Token\+Data\+Id}}}]{key }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Table\+Item\+Token\+Data (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{handle,  }\item[{string}]{key\+Type,  }\item[{string}]{value\+Type,  }\item[{\mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id}{Token\+Data\+Id}}}]{key }\end{DoxyParamCaption})}
 
 
 
-Get a table item that contains a token\textquotesingle{}s (NFT) data. In this case we are using a complex key to retrieve the table item. 
+Get a table item that contains a token\textquotesingle{}s (NFT) metadata. In this case we are using a complex key to retrieve the table item. 
 
-Note\+: we do not deserialize the response since the table item representation is only known by the developer requesting the table item and token data.
+Note\+: the response received from the REST {\ttfamily /table} for this methods has a particular format specific to the SDK example. ~\newline
+
+
+Developers will have to implement their own custom object\textquotesingle{}s to match the properties of the NFT, meaning the content in the table item. ~\newline
+
+
+The response for {\ttfamily /table} in the SDK example has the following format\+: ~\newline
+ {\ttfamily  \{ \char`\"{}default\+\_\+properties\char`\"{}\+:\{ \char`\"{}map\char`\"{}\+:\{ \char`\"{}data\char`\"{}\+:\mbox{[} \mbox{]} \} \}, \char`\"{}description\char`\"{}\+:\char`\"{}\+Alice\textquotesingle{}s simple token\char`\"{}, \char`\"{}largest\+\_\+property\+\_\+version\char`\"{}\+:\char`\"{}0\char`\"{}, \char`\"{}maximum\char`\"{}\+:\char`\"{}1\char`\"{}, \char`\"{}mutability\+\_\+config\char`\"{}\+:\{ \char`\"{}description\char`\"{}\+:false, \char`\"{}maximum\char`\"{}\+:false, \char`\"{}properties\char`\"{}\+:false, \char`\"{}royalty\char`\"{}\+:false, \char`\"{}uri\char`\"{}\+:false \}, \char`\"{}name\char`\"{}\+:\char`\"{}\+Alice\textquotesingle{}s first token\char`\"{}, \char`\"{}royalty\char`\"{}\+:\{ \char`\"{}payee\+\_\+address\char`\"{}\+:\char`\"{}0x8b8a8935cd90a87eaf47c7f309b6935e305e48b47f95982d65153b03032b3f33\char`\"{}, \char`\"{}royalty\+\_\+points\+\_\+denominator\char`\"{}\+:\char`\"{}1000000\char`\"{}, \char`\"{}royalty\+\_\+points\+\_\+numerator\char`\"{}\+:\char`\"{}0\char`\"{} \}, \char`\"{}supply\char`\"{}\+:\char`\"{}1\char`\"{}, \char`\"{}uri\char`\"{}\+:\char`\"{}https\+://aptos.\+dev/img/nyan.\+jpeg\char`\"{} \} }
 
 
 \begin{DoxyParams}{Parameters}
@@ -581,11 +594,11 @@ Get balance for a given non-\/fungible token (NFT).
 \begin{DoxyReturn}{Returns}
 Token balance as a string.
 \end{DoxyReturn}
-\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abbcf0bb8800022e4e0c5776469a267db}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abbcf0bb8800022e4e0c5776469a267db}} 
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a364c951783cc0498419caf3b307126de}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a364c951783cc0498419caf3b307126de}} 
 \index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTokenData@{GetTokenData}}
 \index{GetTokenData@{GetTokenData}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
 \doxysubsubsection{\texorpdfstring{GetTokenData()}{GetTokenData()}}
-{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Token\+Data (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Token\+Data (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 
 
@@ -749,7 +762,10 @@ Calls {\ttfamily callback}function with (bool, string) ~\newline
 
 
 
-Transfer a given coin amount from a given Account to the recipient\textquotesingle{}s account Address. Returns the sequence number of the transaction used to transfer. 
+Transfer a given coin amount from a given Account to the recipient\textquotesingle{}s account Address. Returns the sequence number of the transaction used to transfer. ~\newline
+ 
+
+NOTE\+: Recipient address must hold APT before hand, and or have been airdrop APT if testing on devnet.
 
 
 \begin{DoxyParams}{Parameters}

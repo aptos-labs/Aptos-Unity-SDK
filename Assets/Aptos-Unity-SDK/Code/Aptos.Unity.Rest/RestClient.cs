@@ -135,7 +135,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get an account's balance.    
         /// 
-        /// The <c>/account</{address}/resource/{coin_type}c> endpoint for AptosCoin returns the following response:   
+        /// The <c>/account</{address}/resource/{coin_type}</c> endpoint for AptosCoin returns the following response:     
         /// <code>
         /// {
         ///     "type":"0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>",

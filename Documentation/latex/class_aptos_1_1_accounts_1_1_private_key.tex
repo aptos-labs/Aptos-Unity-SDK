@@ -9,9 +9,14 @@ Represents a 64-\/byte extended private key. An extended private key is a requir
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_ae9227ef16339c4e49ecb69c7d34e03f3}{Private\+Key}} (byte\mbox{[}$\,$\mbox{]} private\+Key)
-\begin{DoxyCompactList}\small\item\em Initializes the Private\+Key object with a given byte array. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Initializes the Private\+Key object with a 64 byte array that represents the expanded private key from seed. ~\newline
+ For example, using\+: {\ttfamily Ed25519.\+Expanded\+Private\+Key\+From\+Seed(seed)}. ~\newline
+ This constructor is expected to be called from the \mbox{\hyperlink{}{Account}} constructor. ~\newline
+ Note\+: To create a private key from a 32-\/byte string see \mbox{\hyperlink{}{Private\+Key(string key)}} \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a6a60fcf622010dddb48aafe27b222bbd}{Private\+Key}} (string key)
-\begin{DoxyCompactList}\small\item\em Initializes the Private\+Key object with a given ASCII representation of private key. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Initializes the Private\+Key object with a 64 character (32-\/byte) ASCII representation of a private key. ~\newline
+ Note\+: The undelying cryptographic library (Chaos.\+Na\+CL) uses an extended private key (64 byte) for fast computation. ~\newline
+ This hex string is used as a seed to create an extended private key when \mbox{\hyperlink{}{Key\+Bytes}} is requested. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a13b8ddeb484e8e2b14d208043be3ad5e}{Private\+Key}} (Read\+Only\+Span$<$ byte $>$ private\+Key)
 \begin{DoxyCompactList}\small\item\em Initialize the Private\+Key object from the given string. \end{DoxyCompactList}\item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_ac0917eaf25d192905a5a52172ba0bfb9}{Sign}} (byte\mbox{[}$\,$\mbox{]} message)
@@ -40,11 +45,12 @@ const int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a1ede235120b
 \begin{DoxyCompactItemize}
 \item 
 string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a59b7f70119de95cb3266408e8c772418}{Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The key as a 32-\/byte hexadecimal string (64 characters) ~\newline
-NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key ~\newline
-, then we slice it in half since the other half contains the public key. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em The key as a 32-\/byte hexadecimal string (64 characters). ~\newline
+ NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key, ~\newline
+ then we slice it in half since the other half contains the public key. \end{DoxyCompactList}\item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}{Key\+Bytes}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended , then return the bytes accordingly. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended key, ~\newline
+ then returns the bytes accordingly. \end{DoxyCompactList}\item 
 string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a7fb3cf55bfd7bf3f96ab9f4ac702dc72}{Key\+Base58}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII) \end{DoxyCompactList}\item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_aac158c82bfd131f11f8feeaac676c04b}{Key\+Bytes\+From\+Base58}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
@@ -65,11 +71,14 @@ Note that the hexadecimal string representation is of the 32-\/byte private key 
 
 
 
-Initializes the Private\+Key object with a given byte array. 
+Initializes the Private\+Key object with a 64 byte array that represents the expanded private key from seed. ~\newline
+ For example, using\+: {\ttfamily Ed25519.\+Expanded\+Private\+Key\+From\+Seed(seed)}. ~\newline
+ This constructor is expected to be called from the \mbox{\hyperlink{}{Account}} constructor. ~\newline
+ Note\+: To create a private key from a 32-\/byte string see \mbox{\hyperlink{}{Private\+Key(string key)}} 
 
 
 \begin{DoxyParams}{Parameters}
-{\em private\+Key} & Byte array representation of the private key.\\
+{\em private\+Key} & 64-\/byte array representation of the private key.\\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a6a60fcf622010dddb48aafe27b222bbd}\label{class_aptos_1_1_accounts_1_1_private_key_a6a60fcf622010dddb48aafe27b222bbd}} 
@@ -80,11 +89,14 @@ Initializes the Private\+Key object with a given byte array.
 
 
 
-Initializes the Private\+Key object with a given ASCII representation of private key. 
+Initializes the Private\+Key object with a 64 character (32-\/byte) ASCII representation of a private key. ~\newline
+ Note\+: The undelying cryptographic library (Chaos.\+Na\+CL) uses an extended private key (64 byte) for fast computation. ~\newline
+ This hex string is used as a seed to create an extended private key when \mbox{\hyperlink{}{Key\+Bytes}} is requested. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em key} & The private key as a Base58 encoded string.\\
+{\em key} & The private key as an ASCII encoded string. ~\newline
+ Example\+: {\ttfamily 0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c}\\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a13b8ddeb484e8e2b14d208043be3ad5e}\label{class_aptos_1_1_accounts_1_1_private_key_a13b8ddeb484e8e2b14d208043be3ad5e}} 
@@ -99,7 +111,7 @@ Initialize the Private\+Key object from the given string.
 
 
 \begin{DoxyParams}{Parameters}
-{\em key} & The private key as base58 encoded byte array.\\
+{\em key} & The private key as a hex encoded byte array.\\
 \hline
 \end{DoxyParams}
 
@@ -221,9 +233,9 @@ Private key length.
 
 
 
-The key as a 32-\/byte hexadecimal string (64 characters) ~\newline
-NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key ~\newline
-, then we slice it in half since the other half contains the public key. 
+The key as a 32-\/byte hexadecimal string (64 characters). ~\newline
+ NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key, ~\newline
+ then we slice it in half since the other half contains the public key. 
 
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a7fb3cf55bfd7bf3f96ab9f4ac702dc72}\label{class_aptos_1_1_accounts_1_1_private_key_a7fb3cf55bfd7bf3f96ab9f4ac702dc72}} 
 \index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyBase58@{KeyBase58}}
@@ -243,7 +255,8 @@ The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate
 
 
 
-The key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended , then return the bytes accordingly. 
+The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended key, ~\newline
+ then returns the bytes accordingly. 
 
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_aac158c82bfd131f11f8feeaac676c04b}\label{class_aptos_1_1_accounts_1_1_private_key_aac158c82bfd131f11f8feeaac676c04b}} 
 \index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyBytesFromBase58@{KeyBytesFromBase58}}

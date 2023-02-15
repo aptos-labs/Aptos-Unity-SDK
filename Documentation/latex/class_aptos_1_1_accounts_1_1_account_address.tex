@@ -9,11 +9,9 @@ Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} account address. More de
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_a6f0d22f01dc6250853bf1a245852c194}{Account\+Address}} (byte\mbox{[}$\,$\mbox{]} address)
-\begin{DoxyCompactList}\small\item\em Initializes an account address by setting it\textquotesingle{}s bytes. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Initializes an account address by setting a 32-\/byte representation of an address. \end{DoxyCompactList}\item 
 override string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}{To\+String}} ()
 \begin{DoxyCompactList}\small\item\em Convert Address bytes into hexadecimal string. \end{DoxyCompactList}\item 
-string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_ac3d265821ce0834fb0f5882876ac973d}{To\+Hex\+String}} ()
-\begin{DoxyCompactList}\small\item\em Convert Address to hexadecimal string. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address_aa92f3d61b439ddb872ed7b41e7710973}{Serialize}} (\mbox{\hyperlink{class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization}{Serialization}} serializer)
 \begin{DoxyCompactList}\small\item\em Reference implementation to BCS can be found \mbox{\hyperlink{}{here}}. ~\newline
  More details on creating a BCS signed transaction can be found \mbox{\hyperlink{}{here}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -38,7 +36,7 @@ Represents an \mbox{\hyperlink{namespace_aptos}{Aptos}} account address. More de
 
 
 
-Initializes an account address by setting it\textquotesingle{}s bytes. 
+Initializes an account address by setting a 32-\/byte representation of an address. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -95,20 +93,7 @@ An account address object.
 Reference implementation to BCS can be found \mbox{\hyperlink{}{here}}. ~\newline
  More details on creating a BCS signed transaction can be found \mbox{\hyperlink{}{here}}. 
 
-Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-\/describing format.\+As such, in order to deserialize a message, one must know the message type and layout ahead of time. \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_ac3d265821ce0834fb0f5882876ac973d}\label{class_aptos_1_1_accounts_1_1_account_address_ac3d265821ce0834fb0f5882876ac973d}} 
-\index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!ToHexString@{ToHexString}}
-\index{ToHexString@{ToHexString}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
-\doxysubsubsection{\texorpdfstring{ToHexString()}{ToHexString()}}
-{\footnotesize\ttfamily string Aptos.\+Accounts.\+Account\+Address.\+To\+Hex\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-Convert Address to hexadecimal string. 
-
-\begin{DoxyReturn}{Returns}
-Address as hexadecimal string
-\end{DoxyReturn}
-\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}\label{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}} 
+Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-\/describing format.\+As such, in order to deserialize a message, one must know the message type and layout ahead of time. \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}\label{class_aptos_1_1_accounts_1_1_account_address_af9b62209a0db31e66715085454950d55}} 
 \index{Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}!ToString@{ToString}}
 \index{ToString@{ToString}!Aptos.Accounts.AccountAddress@{Aptos.Accounts.AccountAddress}}
 \doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}

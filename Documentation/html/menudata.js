@@ -106,8 +106,10 @@ var menudata={children:[
 {text:"n",url:"functions_prop.html#index_n"},
 {text:"o",url:"functions_prop.html#index_o"},
 {text:"p",url:"functions_prop.html#index_p"},
+{text:"r",url:"functions_prop.html#index_r"},
 {text:"s",url:"functions_prop.html#index_s"},
 {text:"t",url:"functions_prop.html#index_t"},
+{text:"u",url:"functions_prop.html#index_u"},
 {text:"v",url:"functions_prop.html#index_v"},
 {text:"w",url:"functions_prop.html#index_w"}]}]}]},
 {text:"Files",url:"files.html",children:[

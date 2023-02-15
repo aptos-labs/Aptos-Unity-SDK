@@ -88,14 +88,11 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f0d22f01dc6250853bf1a245852c194"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#a6f0d22f01dc6250853bf1a245852c194">AccountAddress</a> (byte[] address)</td></tr>
-<tr class="memdesc:a6f0d22f01dc6250853bf1a245852c194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an account address by setting it's bytes.  <br /></td></tr>
+<tr class="memdesc:a6f0d22f01dc6250853bf1a245852c194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an account address by setting a 32-byte representation of an address.  <br /></td></tr>
 <tr class="separator:a6f0d22f01dc6250853bf1a245852c194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9b62209a0db31e66715085454950d55"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#af9b62209a0db31e66715085454950d55">ToString</a> ()</td></tr>
 <tr class="memdesc:af9b62209a0db31e66715085454950d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert Address bytes into hexadecimal string.  <br /></td></tr>
 <tr class="separator:af9b62209a0db31e66715085454950d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3d265821ce0834fb0f5882876ac973d"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#ac3d265821ce0834fb0f5882876ac973d">ToHexString</a> ()</td></tr>
-<tr class="memdesc:ac3d265821ce0834fb0f5882876ac973d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert Address to hexadecimal string.  <br /></td></tr>
-<tr class="separator:ac3d265821ce0834fb0f5882876ac973d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa92f3d61b439ddb872ed7b41e7710973"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_account_address.html#aa92f3d61b439ddb872ed7b41e7710973">Serialize</a> (<a class="el" href="class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization.html">Serialization</a> serializer)</td></tr>
 <tr class="memdesc:aa92f3d61b439ddb872ed7b41e7710973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference implementation to BCS can be found <a class="el" href="">here</a>. <br  />
  More details on creating a BCS signed transaction can be found <a class="el" href="">here</a>.  <br /></td></tr>
@@ -129,7 +126,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initializes an account address by setting it's bytes. </p>
+<p>Initializes an account address by setting a 32-byte representation of an address. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">address</td><td>Byte array representing address.</td></tr>
@@ -229,26 +226,6 @@ Static Public Member Functions</h2></td></tr>
 <p>Reference implementation to BCS can be found <a class="el" href="">here</a>. <br  />
  More details on creating a BCS signed transaction can be found <a class="el" href="">here</a>. </p>
 <p>Binary Canonical Serialization (BCS) is a serialization format applied to the raw (unsigned) transaction. See BCS for a description of the design goals of BCS. BCS is not a self-describing format.As such, in order to deserialize a message, one must know the message type and layout ahead of time. </p>
-
-</div>
-</div>
-<a id="ac3d265821ce0834fb0f5882876ac973d" name="ac3d265821ce0834fb0f5882876ac973d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3d265821ce0834fb0f5882876ac973d">&#9670;&#160;</a></span>ToHexString()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string Aptos.Accounts.AccountAddress.ToHexString </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Convert Address to hexadecimal string. </p>
-<dl class="section return"><dt>Returns</dt><dd>Address as hexadecimal string</dd></dl>
 
 </div>
 </div>
