@@ -1,3 +1,4 @@
+using Aptos.Unity.Rest.Model;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -26,12 +27,14 @@ namespace Aptos.Unity.Rest
         /// <param name="amount">Amount of APT requested.</param>
         /// <param name="endpoint">Base URL for faucet.</param>
         /// <returns></returns>
-        public IEnumerator FundAccount(Action<bool, string> callback, string address, int amount, string endpoint)
+        public IEnumerator FundAccount(Action<bool, ResponseInfo> callback, string address, int amount, string endpoint)
         {
             string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
             Uri transactionsURI = new Uri(faucetURL);
             var request = new UnityWebRequest(transactionsURI, "POST");
             request.SetRequestHeader("Content-Type", "application/json");
+
+            ResponseInfo responseInfo = new ResponseInfo();
 
             request.SendWebRequest();
             while (!request.isDone)
@@ -41,19 +44,27 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                callback(false, request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(false, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                callback(false, request.error);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = request.error;
+                callback(false, responseInfo);
             }
             else if (request.responseCode >= 400)
             {
-                callback(false, request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(false, responseInfo);
             }
             else
             {
-                callback(true, "Funding succeeded!");
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = "Funding succeeded!";
+                callback(true, responseInfo);
             }
 
             request.Dispose();
