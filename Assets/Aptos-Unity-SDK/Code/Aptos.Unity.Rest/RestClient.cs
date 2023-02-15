@@ -133,7 +133,38 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get an account's balance.
+        /// Get an account's balance.    
+        /// 
+        /// The <c>/account</{address}/resource/{coin_type}c> endpoint for AptosCoin returns the following response:   
+        /// <code>
+        /// {
+        ///     "type":"0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>",
+        ///     "data":{
+        ///         "coin":{
+        ///             "value":"3400034000"
+        ///         },
+        ///         "deposit_events":{
+        ///             "counter":"68",
+        ///             "guid":{
+        ///                 "id":{
+        ///                     "addr":"0xd89fd73ef7c058ccf79fe4c1c38507d580354206a36ae03eea01ddfd3afeef07",
+        ///                     "creation_num":"2"
+        ///                 }
+        ///             }
+        ///         },
+        ///         "frozen":false,
+        ///         "withdraw_events":{
+        ///             "counter":"0",
+        ///             "guid":{
+        ///                 "id":{
+        ///                     "addr":"0xd89fd73ef7c058ccf79fe4c1c38507d580354206a36ae03eea01ddfd3afeef07",
+        ///                     "creation_num":"3"
+        ///                 }
+        ///             }
+        ///         }
+        ///     }
+        /// }
+        /// </code>
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
