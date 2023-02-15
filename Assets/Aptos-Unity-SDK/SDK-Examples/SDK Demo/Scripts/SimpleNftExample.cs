@@ -32,26 +32,46 @@ namespace Aptos.Unity.Sample
 
             #region Fund Alice Account Through Devnet Faucet
             AccountAddress aliceAddress = alice.AccountAddress;
-            Coroutine fundAliceAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
+
+            bool success = false;
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine fundAliceAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((_success, _responseInfo) =>
             {
-                Debug.Log("Faucet Response: " + returnResult);
+                success = _success;
+                responseInfo = _responseInfo;
             }, aliceAddress.ToString(), 100000000, faucetEndpoint));
             yield return fundAliceAccountCor;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Faucet funding for Alice failed: " + responseInfo.message);
+                yield break;
+            }
+
             #endregion
 
             #region Fund Bob Account Through Devnet Faucet
             AccountAddress bobAddress = bob.AccountAddress;
-            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
+
+            success = false;
+            responseInfo = new ResponseInfo();
+            Coroutine fundBobAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((_success, _responseInfo) =>
             {
-                Debug.Log("Faucet Response: " + returnResult);
+                success = _success;
+                responseInfo = _responseInfo;
             }, bobAddress.ToString(), 100000000, faucetEndpoint));
             yield return fundBobAccountCor;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Faucet funding for Bob failed: " + responseInfo.message);
+                yield break;
+            }
             #endregion
 
             #region Initial Coin Balances
             Debug.Log("<color=cyan>=== Initial Coin Balances ===</color>");
             AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
-            ResponseInfo responseInfo = new ResponseInfo();
             Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
                 coin = _coin;
