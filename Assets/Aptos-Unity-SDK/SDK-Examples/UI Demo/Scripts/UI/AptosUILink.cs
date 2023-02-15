@@ -187,7 +187,6 @@ namespace Aptos.Unity.Sample.UI
                 if (waitForTxnSuccess)
                 {
                     UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
-                    yield break;
                 }
                 else
                 {
