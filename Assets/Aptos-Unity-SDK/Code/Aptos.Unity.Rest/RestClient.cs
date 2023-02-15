@@ -128,7 +128,6 @@ namespace Aptos.Unity.Rest
                 yield break;
             }
 
-            Debug.Log(responseInfo.message);
             string sequenceNumber = accountData.SequenceNumber;
 
             callback(sequenceNumber, responseInfo);
