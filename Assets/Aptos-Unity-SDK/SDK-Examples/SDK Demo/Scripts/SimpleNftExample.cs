@@ -152,7 +152,7 @@ namespace Aptos.Unity.Sample
             waitForTransactionCor = StartCoroutine(
                 RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
                 {
-                    Debug.Log(transactionWaitResult);
+                    Debug.Log(transactionWaitResult.message);
                 }, createTokenTxnHash)
             );
             yield return waitForTransactionCor;
@@ -182,8 +182,7 @@ namespace Aptos.Unity.Sample
             yield return getTokenBalanceCor;
             Debug.Log("Alice's NFT Token Balance: " + getTokenBalanceResultAlice);
 
-            string getTokenDataResultAlice = "";
-            TableItemToken tableItemToken = new TableItemToken();
+            TableItemTokenMetadata tableItemToken = new TableItemTokenMetadata();
 
             Coroutine getTokenDataCor = StartCoroutine(
                 RestClient.Instance.GetTokenData((_tableItemToken, _responseInfo) =>
@@ -200,12 +199,13 @@ namespace Aptos.Unity.Sample
                 Debug.LogError("Could not get toke data.");
                 yield break;
             }
-            Debug.Log("Alice's Token Data: " + getTokenDataResultAlice);
+
+            Debug.Log("Alice's Token Data: " + JsonConvert.SerializeObject(tableItemToken));
+
             #endregion
 
             #region Transferring the Token to Bob
             Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
-            string offerTokenResult = "";
             Transaction offerTokenTxn = new Transaction();
             Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((_offerTokenTxn, _responseInfo) =>
             {
@@ -221,7 +221,8 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("Offer Token Response: " + offerTokenResult);
+            Debug.Log("Offer Token Response: " + responseInfo.message);
+            Debug.Log("Offer Sender: " + offerTokenTxn.Sender);
             string offerTokenTxnHash = offerTokenTxn.Hash;
             Debug.Log("Offer Token Hash: " + offerTokenTxnHash);
 
