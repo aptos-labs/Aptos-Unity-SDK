@@ -147,7 +147,7 @@ namespace Aptos.Unity.Sample
             {
                 transferTxn = _transaction;
                 responseInfo = _responseInfo;
-            }, alice, bob.AccountAddress.ToHexString(), 1000));
+            }, alice, bob.AccountAddress.ToString(), 1000));
 
             yield return transferCor;
 
