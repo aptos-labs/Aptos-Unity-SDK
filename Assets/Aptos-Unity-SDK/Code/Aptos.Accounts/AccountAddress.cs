@@ -12,10 +12,10 @@ namespace Aptos.Accounts
     public class AccountAddress
     {
         private static readonly int Length = 32;
-        private readonly byte[] Address;
+        private readonly byte[] AddressBytes;
 
         /// <summary>
-        /// Initializes an account address by setting it's bytes.
+        /// Initializes an account address by setting a 32-byte representation of an address
         /// </summary>
         /// <param name="address">Byte array representing address.</param>
         public AccountAddress(byte[] address)
@@ -24,7 +24,7 @@ namespace Aptos.Accounts
             {
                 throw new ArgumentException("Address must be " + Length + " bytes");
             }
-            this.Address = address;
+            this.AddressBytes = address;
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Aptos.Accounts
         /// Convert Address to hexadecimal string.
         /// </summary>
         /// <returns>Address as hexadecimal string</returns>
-        public string ToHexString()
+        private string ToHexString()
         {
-            string addressHex = BitConverter.ToString(Address); // Turn into hexadecimal string
+            string addressHex = BitConverter.ToString(AddressBytes); // Turn into hexadecimal string
             addressHex = addressHex.Replace("-", "").ToLowerInvariant(); // Remove '-' characters from hexa hash
             return "0x" + addressHex;
         }
@@ -98,7 +98,7 @@ namespace Aptos.Accounts
         /// </summary>
         public void Serialize(Serialization serializer)
         {
-            serializer.SerializeFixedBytes(this.Address);
+            serializer.SerializeFixedBytes(this.AddressBytes);
         }
     }
 }
