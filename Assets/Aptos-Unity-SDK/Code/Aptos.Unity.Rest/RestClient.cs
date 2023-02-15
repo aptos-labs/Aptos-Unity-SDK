@@ -1257,8 +1257,8 @@ namespace Aptos.Unity.Rest
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
-                      receiver.ToHexString()
-                    , creator.ToHexString()
+                      receiver.ToString()
+                    , creator.ToString()
                     , collectionName
                     , tokenName
                     , propertyVersion.ToString()
@@ -1410,8 +1410,8 @@ namespace Aptos.Unity.Rest
             Arguments arguments = new Arguments()
             {
                 ArgumentStrings = new string[] {
-                      sender.ToHexString()
-                    , creator.ToHexString()
+                      sender.ToString()
+                    , creator.ToString()
                     , collectionName
                     , tokenName
                     , propertyVersion.ToString()
@@ -1692,7 +1692,7 @@ namespace Aptos.Unity.Rest
 
             TokenDataId tokenDataId = new TokenDataId
             {
-                Creator = creator.ToHexString(),
+                Creator = creator.ToString(),
                 Collection = collectionName,
                 Name = tokenName
             };
