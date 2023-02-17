@@ -705,12 +705,12 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Waits for Transaction query to return whether transaction has been confirmed in the blockchain.
-        /// Times out otherwise.
+        /// A Coroutine that polls for a transaction hash until it is confimred in the blockchain
+        /// Times out if the transaction hash is not found after querying for N times.    
         /// 
+        /// Waits for a transaction query to respond whether a transaction submitted has been confirmed in the blockchain.
         /// Queries for a given transaction hash (txnHash) using <see cref="TransactionPending"/>
-        /// by polling / looping until we find a "Success" transaction response 
-        /// , or until it times out after <see cref="TransactionWaitInSeconds"/>.
+        /// by polling / looping until we find a "Success" transaction response, or until it times out after <see cref="TransactionWaitInSeconds"/>.
         /// 
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
@@ -721,38 +721,54 @@ namespace Aptos.Unity.Rest
         /// </returns>
         public IEnumerator WaitForTransaction(Action<bool, ResponseInfo> callback, string txnHash)
         {
-            bool transactionPending = true;
-            int count = 0;
+            int count = 0;  // Current attempt at querying for hash
+            bool isTxnPending = true; // Has the transaction been confirmed in the blockchain
+
+            bool isTxnSuccessful = false; // Was the transaction successful
             ResponseInfo responseInfo = new ResponseInfo();
-            while (transactionPending)
+            responseInfo.status = ResponseInfo.Status.Failed;
+
+            while (isTxnPending)
             {
-                Coroutine transactionPendingCor = StartCoroutine(TransactionPending((_pending, _responseInfo) => {
-                    transactionPending = _pending;
-                    // If transaction is NOT pending
-                    if (!transactionPending)
-                    {
-                        Transaction transaction = JsonConvert.DeserializeObject<Transaction>(_responseInfo.message, new TransactionConverter());
-                        if(transaction.GetType().GetProperty("Success") != null && transaction.Success) {
-                            responseInfo.status = ResponseInfo.Status.Success;
-                            responseInfo.message = _responseInfo.message;
-                            callback(true, responseInfo);
-                        }
-                    }
-                    count += 1;
+                ResponseInfo responseInfoTxnPending = new ResponseInfo();
 
+                // Check if the transaction hash can be found
+                Coroutine transactionPendingCor = StartCoroutine(TransactionPending((_isPending, _responseInfo) => {
+                    isTxnPending = _isPending;
+                    responseInfoTxnPending = _responseInfo;
                 }, txnHash));
+                yield return transactionPendingCor;
 
-                yield return new WaitForSeconds(2f);
+                // If transaction hash has been found in the blockchain (not "pending"), check if it was succesful
+                if (!isTxnPending)
+                {
+                    Transaction transaction = JsonConvert.DeserializeObject<Transaction>(responseInfoTxnPending.message, new TransactionConverter());
 
+                    // If the transaction has the "success" property, set the boolean response to true and break
+                    if (transaction.GetType().GetProperty("Success") != null && transaction.Success)
+                    {
+                        responseInfo.status = ResponseInfo.Status.Success;
+                        responseInfo.message = responseInfoTxnPending.message;
+
+                        isTxnSuccessful = true;
+                        break;
+                    }
+                }
+
+                // Timeout if the transaction is still pending (hash not found) and we have queried N times
+                // Set the boolean response to false, break -- we did not find the transaction
                 if (count > TransactionWaitInSeconds)
                 {
-                    // Transaction hash wasn't found after n types
-                    responseInfo.status = ResponseInfo.Status.Failed;
                     responseInfo.message = "Response Timed Out After Querying " + count + "Times";
-                    callback(false, responseInfo);
+                    isTxnSuccessful = false;
                     break;
                 }
+
+                count += 1;
+                yield return new WaitForSeconds(2f);
             }
+
+            callback(isTxnSuccessful, responseInfo);
         }
 
         /// <summary>
