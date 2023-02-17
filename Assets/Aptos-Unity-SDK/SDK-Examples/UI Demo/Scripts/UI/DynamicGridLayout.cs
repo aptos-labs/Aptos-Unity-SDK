@@ -3,35 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
-public class DynamicGridLayout : MonoBehaviour
+namespace Aptos.Unity.Sample.UI
 {
-    public int cellNum;
-    public float spacingCellPercentage;
-
-    private float spaceing;
-
-    void Start()
+    [ExecuteInEditMode]
+    public class DynamicGridLayout : MonoBehaviour
     {
-        Resize();
-    }
+        public int cellNum;
+        public float spacingCellPercentage;
 
-    private void Update()
-    {
-        Resize();
-    }
+        private float spaceing;
 
-    public void Resize()
-    {
-        float width = this.gameObject.GetComponent<RectTransform>().rect.width;
+        void Start()
+        {
+            Resize();
+        }
 
-        spaceing = (width / cellNum) / spacingCellPercentage;
-        width = width - ((cellNum - 1) * spaceing);
+        private void Update()
+        {
+            Resize();
+        }
 
-        Vector2 newSize = new Vector2(width / cellNum, width / cellNum);
-        Vector2 newSpacing = new Vector2(spaceing, spaceing);
+        public void Resize()
+        {
+            float width = this.gameObject.GetComponent<RectTransform>().rect.width;
 
-        this.gameObject.GetComponent<GridLayoutGroup>().cellSize = newSize;
-        this.gameObject.GetComponent<GridLayoutGroup>().spacing = newSpacing;
+            spaceing = (width / cellNum) / spacingCellPercentage;
+            width = width - ((cellNum - 1) * spaceing);
+
+            Vector2 newSize = new Vector2(width / cellNum, width / cellNum);
+            Vector2 newSpacing = new Vector2(spaceing, spaceing);
+
+            this.gameObject.GetComponent<GridLayoutGroup>().cellSize = newSize;
+            this.gameObject.GetComponent<GridLayoutGroup>().spacing = newSpacing;
+        }
     }
 }
