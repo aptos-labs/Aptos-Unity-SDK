@@ -540,7 +540,6 @@ namespace Aptos.Unity.Rest
             else
             {
                 string response = request.downloadHandler.text;
-                Debug.Log("GetTableItemTokenData: " + response);
                 TableItemTokenMetadata tableItemToken = JsonConvert.DeserializeObject<TableItemTokenMetadata>(response);
 
                 responseInfo.status = ResponseInfo.Status.Success;
