@@ -3,14 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Aptos.HdWallet;
 using NBitcoin;
-using Unity.VisualScripting;
 using UnityEngine;
 using Aptos.Unity.Rest;
-using Newtonsoft.Json;
 using Aptos.Unity.Rest.Model;
-using UnityEngine.UIElements;
-using Aptos.Accounts;
-using System.Transactions;
 
 namespace Aptos.Unity.Sample.UI
 {
