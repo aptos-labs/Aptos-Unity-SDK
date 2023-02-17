@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
-using UnityEngine.UI;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
 
