@@ -1,6 +1,6 @@
 # Aptos Unity SDK
 The Aptos Unity SDK is a .NET implementation of the [Aptos SDK](https://aptos.dev/sdks/index/), compatible with .NET Standard 2.0 and .NET 4.x for Unity. 
-The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the Unity game engine and the Aptos blockchain infrastructure.
+The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the Unity game engine and the Aptos blockchain infrastructure. An implementation of a desktop wallet application is provided as an example.
 
 ## Getting Started
 To get started, you may check our [Quick Start Guide](#quick-start-video). A set of examples is also provided in the `Assets/Aptos-Unity-SDK/SDK-Examples` directory. A local version of Doxygen-generated documentation for the classes can be found in `Assets/Aptos-Unity-SDK/Documentation/html/index.html`. A hosted version of the latter documentation can found in [here](https://aptos-unity-sdk-docs.netlify.app/).    
