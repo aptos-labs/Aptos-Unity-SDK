@@ -32,9 +32,9 @@ static bool \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_a37c52988c2
 static bool \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_aee7b19a3ea943c923d607a79c4ad7c9a}{operator!=}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} lhs, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} rhs)
 \item 
 static implicit \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_aab3d7ab088bea71147b8c12af096acb6}{operator string}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} public\+Key)
-\begin{DoxyCompactList}\small\item\em Convert a Public\+Key object to Base58 encoded string representatio public key. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Convert a Public\+Key object to hex encoded string representatio public key. \end{DoxyCompactList}\item 
 static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_a29c1b1922f6da160ab261e66092d2cca}{operator Public\+Key}} (string public\+Key)
-\begin{DoxyCompactList}\small\item\em Convert Base58 encoded string of a public key to Public\+Key object. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Convert Hex encoded string of a public key to Public\+Key object. \end{DoxyCompactList}\item 
 static implicit \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_a1d8c729c56e5b2127508f43e7d3e00c8}{operator byte\mbox{[}$\,$\mbox{]}}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} public\+Key)
 \begin{DoxyCompactList}\small\item\em Convert a Public\+Key object to a byte array representation of a public key. \end{DoxyCompactList}\item 
 static \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_ab7820d69c631d8d229ffd5dfe05921bf}{operator Public\+Key}} (byte\mbox{[}$\,$\mbox{]} key\+Bytes)
@@ -50,11 +50,7 @@ const int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_aa84db6fe623e
 string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_a57063cee09d226b70442b973837c0733}{Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em The key as a hexadecimal string. \end{DoxyCompactList}\item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_a11e3c6437857086afad49281742d2342}{Key\+Bytes}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The key in bytes. \end{DoxyCompactList}\item 
-string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_a9d4c36793b3b26526ebd4f79710fbb5a}{Key\+Base58}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII). \end{DoxyCompactList}\item 
-byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key_ad80f82569ab53597b6c93663c5a02463}{Key\+Bytes\+From\+Base58}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The public key bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The key in bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -184,11 +180,11 @@ Public\+Key object.
 
 
 
-Convert Base58 encoded string of a public key to Public\+Key object. 
+Convert Hex encoded string of a public key to Public\+Key object. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em public\+Key} & Base58 encoded string representing a public key.\\
+{\em public\+Key} & hex encoded string representing a public key.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -202,7 +198,7 @@ Public\+Key object.
 
 
 
-Convert a Public\+Key object to Base58 encoded string representatio public key. 
+Convert a Public\+Key object to hex encoded string representatio public key. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -210,7 +206,7 @@ Convert a Public\+Key object to Base58 encoded string representatio public key.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Base58 encoded string representing the public key.
+Hex encoded string representing the public key.
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_public_key_aee7b19a3ea943c923d607a79c4ad7c9a}\label{class_aptos_1_1_accounts_1_1_public_key_aee7b19a3ea943c923d607a79c4ad7c9a}} 
 \index{Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}!operator"!=@{operator"!=}}
@@ -290,16 +286,6 @@ Public key length.
 
 The key as a hexadecimal string. 
 
-\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_public_key_a9d4c36793b3b26526ebd4f79710fbb5a}\label{class_aptos_1_1_accounts_1_1_public_key_a9d4c36793b3b26526ebd4f79710fbb5a}} 
-\index{Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}!KeyBase58@{KeyBase58}}
-\index{KeyBase58@{KeyBase58}!Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}}
-\doxysubsubsection{\texorpdfstring{KeyBase58}{KeyBase58}}
-{\footnotesize\ttfamily string Aptos.\+Accounts.\+Public\+Key.\+Key\+Base58\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
-
-
-
-The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII). 
-
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_public_key_a11e3c6437857086afad49281742d2342}\label{class_aptos_1_1_accounts_1_1_public_key_a11e3c6437857086afad49281742d2342}} 
 \index{Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}!KeyBytes@{KeyBytes}}
 \index{KeyBytes@{KeyBytes}!Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}}
@@ -309,16 +295,6 @@ The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate
 
 
 The key in bytes. 
-
-\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_public_key_ad80f82569ab53597b6c93663c5a02463}\label{class_aptos_1_1_accounts_1_1_public_key_ad80f82569ab53597b6c93663c5a02463}} 
-\index{Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}!KeyBytesFromBase58@{KeyBytesFromBase58}}
-\index{KeyBytesFromBase58@{KeyBytesFromBase58}!Aptos.Accounts.PublicKey@{Aptos.Accounts.PublicKey}}
-\doxysubsubsection{\texorpdfstring{KeyBytesFromBase58}{KeyBytesFromBase58}}
-{\footnotesize\ttfamily byte \mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Public\+Key.\+Key\+Bytes\+From\+Base58\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
-
-
-
-The public key bytes. 
 
 
 

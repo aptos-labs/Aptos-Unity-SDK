@@ -119,10 +119,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aee7b19a3ea943c923d607a79c4ad7c9a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#aee7b19a3ea943c923d607a79c4ad7c9a">operator!=</a> (<a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html">PublicKey</a> lhs, <a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html">PublicKey</a> rhs)</td></tr>
 <tr class="separator:aee7b19a3ea943c923d607a79c4ad7c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab3d7ab088bea71147b8c12af096acb6"><td class="memItemLeft" align="right" valign="top">static implicit&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#aab3d7ab088bea71147b8c12af096acb6">operator string</a> (<a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html">PublicKey</a> publicKey)</td></tr>
-<tr class="memdesc:aab3d7ab088bea71147b8c12af096acb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a PublicKey object to Base58 encoded string representatio public key.  <br /></td></tr>
+<tr class="memdesc:aab3d7ab088bea71147b8c12af096acb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a PublicKey object to hex encoded string representatio public key.  <br /></td></tr>
 <tr class="separator:aab3d7ab088bea71147b8c12af096acb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29c1b1922f6da160ab261e66092d2cca"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#a29c1b1922f6da160ab261e66092d2cca">operator PublicKey</a> (string publicKey)</td></tr>
-<tr class="memdesc:a29c1b1922f6da160ab261e66092d2cca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert Base58 encoded string of a public key to PublicKey object.  <br /></td></tr>
+<tr class="memdesc:a29c1b1922f6da160ab261e66092d2cca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert Hex encoded string of a public key to PublicKey object.  <br /></td></tr>
 <tr class="separator:a29c1b1922f6da160ab261e66092d2cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d8c729c56e5b2127508f43e7d3e00c8"><td class="memItemLeft" align="right" valign="top">static implicit&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#a1d8c729c56e5b2127508f43e7d3e00c8">operator byte[]</a> (<a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html">PublicKey</a> publicKey)</td></tr>
 <tr class="memdesc:a1d8c729c56e5b2127508f43e7d3e00c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a PublicKey object to a byte array representation of a public key.  <br /></td></tr>
@@ -145,12 +145,6 @@ Properties</h2></td></tr>
 <tr class="memitem:a11e3c6437857086afad49281742d2342"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#a11e3c6437857086afad49281742d2342">KeyBytes</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a11e3c6437857086afad49281742d2342"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key in bytes.  <br /></td></tr>
 <tr class="separator:a11e3c6437857086afad49281742d2342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d4c36793b3b26526ebd4f79710fbb5a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#a9d4c36793b3b26526ebd4f79710fbb5a">KeyBase58</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:a9d4c36793b3b26526ebd4f79710fbb5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key as base-58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII).  <br /></td></tr>
-<tr class="separator:a9d4c36793b3b26526ebd4f79710fbb5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad80f82569ab53597b6c93663c5a02463"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_accounts_1_1_public_key.html#ad80f82569ab53597b6c93663c5a02463">KeyBytesFromBase58</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:ad80f82569ab53597b6c93663c5a02463"><td class="mdescLeft">&#160;</td><td class="mdescRight">The public key bytes.  <br /></td></tr>
-<tr class="separator:ad80f82569ab53597b6c93663c5a02463"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a 32-byte public key. </p>
@@ -388,10 +382,10 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Convert Base58 encoded string of a public key to PublicKey object. </p>
+<p>Convert Hex encoded string of a public key to PublicKey object. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">publicKey</td><td>Base58 encoded string representing a public key.</td></tr>
+    <tr><td class="paramname">publicKey</td><td>hex encoded string representing a public key.</td></tr>
   </table>
   </dd>
 </dl>
@@ -423,14 +417,14 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Convert a PublicKey object to Base58 encoded string representatio public key. </p>
+<p>Convert a PublicKey object to hex encoded string representatio public key. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">publicKey</td><td>The PublicKey object.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Base58 encoded string representing the public key.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Hex encoded string representing the public key.</dd></dl>
 
 </div>
 </div>
@@ -621,30 +615,6 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a9d4c36793b3b26526ebd4f79710fbb5a" name="a9d4c36793b3b26526ebd4f79710fbb5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d4c36793b3b26526ebd4f79710fbb5a">&#9670;&#160;</a></span>KeyBase58</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string Aptos.Accounts.PublicKey.KeyBase58</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The key as base-58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII). </p>
-
-</div>
-</div>
 <a id="a11e3c6437857086afad49281742d2342" name="a11e3c6437857086afad49281742d2342"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a11e3c6437857086afad49281742d2342">&#9670;&#160;</a></span>KeyBytes</h2>
 
@@ -666,30 +636,6 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The key in bytes. </p>
-
-</div>
-</div>
-<a id="ad80f82569ab53597b6c93663c5a02463" name="ad80f82569ab53597b6c93663c5a02463"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad80f82569ab53597b6c93663c5a02463">&#9670;&#160;</a></span>KeyBytesFromBase58</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">byte [] Aptos.Accounts.PublicKey.KeyBytesFromBase58</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The public key bytes. </p>
 
 </div>
 </div>

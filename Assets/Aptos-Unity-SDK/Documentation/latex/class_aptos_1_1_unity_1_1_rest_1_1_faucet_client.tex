@@ -14,7 +14,7 @@ Inheritance diagram for Aptos.\+Unity.\+Rest.\+Faucet\+Client\+:\begin{figure}[H
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client_accfd06ea11d2b50fbdbcc299d23c000e}{Fund\+Account}} (Action$<$ bool, string $>$ callback, string address, int amount, string endpoint)
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client_a0bd010aa3dfc1fc7ba6d0ed0826bb65e}{Fund\+Account}} (Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string address, int amount, string endpoint)
 \begin{DoxyCompactList}\small\item\em Funds a Testnet Account. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Properties}
 \begin{DoxyCompactItemize}
@@ -27,11 +27,11 @@ static \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client}{Faucet
 Faucet Client for claiming APT from Devnet NOTE\+: Does not work on Testnet. Testnet only supports airdrops through an authenticated URL. 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client_accfd06ea11d2b50fbdbcc299d23c000e}\label{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client_accfd06ea11d2b50fbdbcc299d23c000e}} 
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client_a0bd010aa3dfc1fc7ba6d0ed0826bb65e}\label{class_aptos_1_1_unity_1_1_rest_1_1_faucet_client_a0bd010aa3dfc1fc7ba6d0ed0826bb65e}} 
 \index{Aptos.Unity.Rest.FaucetClient@{Aptos.Unity.Rest.FaucetClient}!FundAccount@{FundAccount}}
 \index{FundAccount@{FundAccount}!Aptos.Unity.Rest.FaucetClient@{Aptos.Unity.Rest.FaucetClient}}
 \doxysubsubsection{\texorpdfstring{FundAccount()}{FundAccount()}}
-{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Faucet\+Client.\+Fund\+Account (\begin{DoxyParamCaption}\item[{Action$<$ bool, string $>$}]{callback,  }\item[{string}]{address,  }\item[{int}]{amount,  }\item[{string}]{endpoint }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Faucet\+Client.\+Fund\+Account (\begin{DoxyParamCaption}\item[{Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{address,  }\item[{int}]{amount,  }\item[{string}]{endpoint }\end{DoxyParamCaption})}
 
 
 
@@ -49,7 +49,8 @@ Funds a Testnet Account.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-
+Calls {\ttfamily callback} function with {\ttfamily (bool, Responsive\+Info)}\+: ~\newline
+A boolean stating that the request for funding was successful, and an object containg the response details
 \end{DoxyReturn}
 
 
