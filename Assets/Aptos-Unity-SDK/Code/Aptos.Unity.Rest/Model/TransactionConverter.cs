@@ -12,7 +12,6 @@ namespace Aptos.Unity.Rest.Model
     {
         public override bool CanConvert(Type objectType)
         {
-            //throw new NotImplementedException();
             return objectType == typeof(Transaction);
         }
 

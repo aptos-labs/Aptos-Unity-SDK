@@ -1,6 +1,5 @@
 using Aptos.HdWallet.Utils;
 using Chaos.NaCl;
-using NBitcoin.DataEncoders;
 using System;
 
 namespace Aptos.Accounts
