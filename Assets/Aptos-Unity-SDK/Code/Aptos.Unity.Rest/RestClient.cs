@@ -55,12 +55,14 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>AccountData contains the account's:   
+        /// <returns>Calls <c>callback</c> function with <c>(AccountData, ResponseInfo)</c>: \n
+        /// An object that contains the account's:   
         /// <c>sequence_number</c>, a string containing a 64-bit unsigned integer.   
         /// Example: <code>32425224034</code>
         /// <c>authentication_key</c> All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.
         /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
-        /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
+        /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>, it is null if the request fails \n
+        /// and a response object that contains the response details.
         /// </returns>
         public IEnumerator GetAccount(Action<AccountData, ResponseInfo> callback, AccountAddress accountAddress)
         {
@@ -111,7 +113,8 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>Sequence number as a string.</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(string, ResponseInfo)</c>: \n
+        /// A Sequence number as a string - null if the request fails, and a response object containing the response details. </returns>
         public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
         {
             AccountData accountData = new AccountData();
@@ -169,7 +172,8 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>Calls <c>callback</c>function with (AccountResourceCoin.Coin, ResponseInfo) - a representation of the coin, and an object containing the response information.</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoin.Coin, ResponseInfo)</c>: \n 
+        /// A representation of the coin, and an object containing the response details.</returns>
         public IEnumerator GetAccountBalance(Action<AccountResourceCoin.Coin, ResponseInfo> callback, Accounts.AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
@@ -217,7 +221,8 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns>Calls <c>callback</c>function with (ResourceCollection, ResponseInfo) - an object representing a collection resource, and the response information.</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(ResourceCollection, ResponseInfo)</c>:\n
+        /// An object representing a collection resource - null if the request fails, and a response object contains the response details.</returns>
         public IEnumerator GetAccountResourceCollection(Action<ResourceCollection, ResponseInfo> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -268,7 +273,8 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
-        /// <returns>Calls <c>callback</c>function with an object representing the account resource that holds the coin's information.</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n 
+        /// An object representing the account resource that holds the coin's information - null if the request fails, and a response object the contains the response details.</returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -326,7 +332,7 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
         /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection.</param>
-        /// <returns>Calls <c>callback</c>function with a JSON object representing a table item.</returns>
+        /// <returns>Calls <c>callback</c> function with a JSON object representing a table item - null if the request fails.</returns>
         public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
         {
             TableItemRequest tableItemRequest = new TableItemRequest
@@ -392,7 +398,9 @@ namespace Aptos.Unity.Rest
         /// }
         /// </code>
         /// </param>
-        /// <returns>(TableItemToken, ResponseInfo)</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(TableItemToken, ResponseInfo)</c>: \n
+        /// An object containing the details of the token - null if the request fails, and a response object containing the response details.
+        /// </returns>
         public IEnumerator GetTableItemNFT(Action<TableItemToken, ResponseInfo> callback, string handle, string keyType, string valueType, TokenIdRequest key)
         {
             TableItemRequestNFT tableItemRequest = new TableItemRequestNFT
@@ -498,7 +506,9 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">A complex key object used to search for the table item. In this case it's a TokenDataId object that contains the token / collection info</param>
-        /// <returns>A JSON string to be serialized by the developer to a matching representation of data.</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(TableItemTokenMetadata, ResponseInfo)</c>: \n
+        /// An object that represent the NFT's metadata - null if the request fails, and a response object with the response details.
+        /// </returns>
         public IEnumerator GetTableItemTokenData(Action<TableItemTokenMetadata, ResponseInfo> callback, string handle, string keyType, string valueType, TokenDataId key)
         {
             TableItemRequestTokenData tableItemRequest = new TableItemRequestTokenData
@@ -557,7 +567,8 @@ namespace Aptos.Unity.Rest
         /// Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
-        /// <returns>Calls <c>callback</c>function with (boolean, response) true if repsonse is successful, false otherwise. </returns>
+        /// <returns>Calls <c>callback</c>function with <c>(LedgerInfo, response)</c>: \n 
+        /// An object that contains the chain details - null if the request fails, and a response object that contains the response details. </returns>
         public IEnumerator GetInfo(Action<LedgerInfo, ResponseInfo> callback)
         {
             UnityWebRequest request = UnityWebRequest.Get(Endpoint);
@@ -605,7 +616,9 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="sender">Account submitting the transaction.</param>
         /// <param name="payload">Transaction payload.</param>
-        /// <returns>Calls <c>callback</c>function with (Transaction, ResponseInfo)</returns>
+        /// <returns>Calls <c>callback</c>function with <c>(Transaction, ResponseInfo)</c>:\n
+        /// An object that represents the transaction submitted - null if the transaction fails, and a response object with the response detials.
+        /// </returns>
         public IEnumerator SubmitTransaction(Action<Transaction, ResponseInfo> callback, Account sender, TransactionPayload payload)
         {
             ///////////////////////////////////////////////////////////////////////
@@ -714,9 +727,12 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="txnHash">Transaction hash.</param>
-        /// <returns>Calls <c>callback</c> function with (bool, callback) \n
-        /// -- true if the transaction hash was found after polling \n
+        /// <returns>Calls <c>callback</c> function with (bool, ResponseInfo): \n
+        /// A boolean that is: \n
+        /// -- true if the transaction hash was found after polling and the transaction was succesfully commited in the blockhain \n
         /// -- false if we did not find the transaction hash and timed out \n
+        /// 
+        /// A response object that contains the response details.
         /// </returns>
         public IEnumerator WaitForTransaction(Action<bool, ResponseInfo> callback, string txnHash)
         {
@@ -777,9 +793,12 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="txnHash">Transaction hash being queried for.</param>
-        /// <returns>Calls <c>callback</c>function with (bool, string) \n
+        /// <returns>Calls <c>callback</c>function with <c>(bool, ResponseInfo)</c>: \n
+        /// A boolean that is: \n
         /// -- true if transaction is still pending / hasn't been found, meaning 404, error in response, or `pending_transaction` is true \n
         /// -- false if transaction has been found, meaning `pending_transaction` is true \n
+        /// 
+        /// A response object that contains the response details.
         /// </returns>
         public IEnumerator TransactionPending(Action<bool, ResponseInfo> callback, string txnHash)
         {
@@ -849,7 +868,9 @@ namespace Aptos.Unity.Rest
         /// <param name="sender">Account executing the transfer.</param>
         /// <param name="to">Address of recipient.</param>
         /// <param name="amount">Amount of tokens.</param>
-        /// <returns>Calls <c>callback</c>function with (Transaction, ResponseInfo) </returns>
+        /// <returns>Calls <c>callback</c>function with <c>(Transaction, ResponseInfo)</c>: \n
+        /// An object the represents the transaction submitted - null if the transfer failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator Transfer(Action<Transaction, ResponseInfo> callback, Account sender, string to, long amount)
         {
             ResponseInfo responseInfo = new ResponseInfo();
@@ -907,7 +928,9 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="txnRequestJson">Transaction request in JSON format.</param>
-        /// <returns>All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.  
+        /// <returns>
+        /// Calls <c>callback</c> function with: \n
+        /// All bytes (Vec) data that is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.  
         /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
         /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
         /// </returns>
@@ -997,7 +1020,9 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of collection.</param>
         /// <param name="collectionDescription">Description of the collection.</param>
         /// <param name="uri">Collection's URI</param>
-        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo).</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(Transaction, ResponseInfo)</c>: \n
+        /// An object the represents the transaction submitted - null if the transaction to create a collection failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator CreateCollection(Action<Transaction, ResponseInfo> callback, Account sender, string collectionName, string collectionDescription, string uri)
         {
             // STEP 1: Create Transaction Arguments
@@ -1141,7 +1166,9 @@ namespace Aptos.Unity.Rest
         /// <param name="max">Max number of mints</param>
         /// <param name="uri">URI of where the token's asset lives (e.g. JPEG)</param>
         /// <param name="royaltyPointsPerMillion">Royalties defined in the millionths</param>
-        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo).</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(Transaction, ResponseInfo)</c>: \n
+        /// An object the represents the transaction submitted - null if the transaction to create a token failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator CreateToken(Action<Transaction, ResponseInfo> callback
             , Account senderRoyaltyPayeeAddress, string collectionName, string tokenName, string description, int supply, int max, string uri, int royaltyPointsPerMillion)
         {
@@ -1277,7 +1304,9 @@ namespace Aptos.Unity.Rest
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="amount">Amount being offered.</param>
         /// <param name="propertyVersion">ersion of the token.</param>
-        /// <returns>Calls <c>callback</c> function with (Transaction, ResponseInfo).</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(Transaction, ResponseInfo)</c>: \n
+        /// An object the represents the transaction submitted - null if the transaction to offer a token failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator OfferToken(Action<Transaction, ResponseInfo> callback
             , Account account, Accounts.AccountAddress receiver, Accounts.AccountAddress creator
             , string collectionName, string tokenName, string amount, int propertyVersion = 0)
@@ -1429,7 +1458,9 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of the NFT collection</param>
         /// <param name="tokenName">Name of the token</param>
         /// <param name="propertyVersion">Token version, defaults to 0</param>
-        /// <returns>Calls <c>callback</c>function with (Transaction, Response).</returns>
+        /// <returns>Calls <c>callback</c>function with <c>(Transaction, ResponseInfo)</c>: \n
+        /// An object the represents the transaction submitted - null if the transaction to claim a token failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator ClaimToken(Action<Transaction, ResponseInfo> callback
             , Account account, Accounts.AccountAddress sender, Accounts.AccountAddress creator
             , string collectionName, string tokenName, int propertyVersion = 0)
@@ -1584,7 +1615,9 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns>Calls <c>callback</c> function with (boolean, string). </returns>
+        /// <returns>Calls <c>callback</c> function with <c>(TableItemToken, ResponseInfo)</c>: \n
+        /// An object the represents the transaction submitted - null if the transaction to get a token failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator GetToken(Action<TableItemToken, ResponseInfo> callback, Accounts.AccountAddress ownerAddress, Accounts.AccountAddress creatorAddress,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
@@ -1708,7 +1741,9 @@ namespace Aptos.Unity.Rest
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="tokenName">Name of the token.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns>(TableItemToken, ResponseInfo)</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(TableItemToken, ResponseInfo)</c>: \n
+        /// An object the represents the NFT's token metadata - null if the transaction to get a token failed, and a response object that contains the response details.
+        /// </returns>
         public IEnumerator GetTokenData(Action<TableItemTokenMetadata, ResponseInfo> callback, Accounts.AccountAddress creator,
             string collectionName, string tokenName, int propertyVersion = 0)
         {
@@ -1771,7 +1806,7 @@ namespace Aptos.Unity.Rest
         /// <param name="creator">Address of the creator.</param>
         /// <param name="collectionName">Name of the collection.</param>
         /// <param name="propertyVersion">Version of the token.</param>
-        /// <returns>A JSON string representation of the collection information.</returns>
+        /// <returns>A JSON string representation of the collection information - null if the request fails.</returns>
         public IEnumerator GetCollection(Action<string> callback, Accounts.AccountAddress creator,
             string collectionName, string propertyVersion = "0")
         {
@@ -1819,7 +1854,10 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns>Calls a <c>callback</c> with (bool, long, string), bool - success boolean, long - error code, string - JSON response to be deserialized by the consumer of the function.</returns>
+        /// <returns>Calls <c>callback</c> function with <c>(bool, long, string)</c>: \n
+        /// -- bool: success boolean \n
+        /// -- long: - error code, string - JSON response to be deserialized by the consumer of the function\n
+        /// -- string: - the response which may contain the resource details</returns>
         public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
@@ -1846,9 +1884,6 @@ namespace Aptos.Unity.Rest
 
             request.Dispose();
         }
-        #endregion
-
-        #region Package Publishing
         #endregion
 
         #region Utilities
