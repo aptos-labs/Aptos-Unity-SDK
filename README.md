@@ -47,7 +47,16 @@ PlayerPrefs.SetString(mnemonicsKey, mnemo.ToString());
 <img src="https://user-images.githubusercontent.com/25370590/219818398-89e6a085-ce94-42aa-a0a3-558ed4c133ac.jpg" alt="wallet_account1" width="400"/>
 <br />
 
-Once you create the wallet, you will be able to unlock rest of the panel, on `Account` Panel. 
+Once you create the wallet, you will be able to unlock rest of the panel, on `Account` Panel.    
+
+In code you can derive an account from the wallet object or generate a new one as follows:
+
+```csharp
+// Create new account
+
+Account alice = new Account();
+AccountAddress aliceAddress = alice.AccountAddress;
+```
 
 #### Airdrop
 You will also be able to airdrop 1 APT to your account
@@ -55,14 +64,24 @@ You will also be able to airdrop 1 APT to your account
 ```csharp
 // Airdrop
 
-Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
-{
-    Debug.Log("FAUCET RESPONSE: " + returnResult);
-}, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress.ToString()
-    , _amount
-    , faucetEndpoint));
+bool success = false;
+ResponseInfo responseInfo = new ResponseInfo();
 
-yield return cor;
+Coroutine fundAliceAccountCor = StartCoroutine(
+    FaucetClient.Instance.FundAccount((_success, _responseInfo) =>
+    {
+        success = _success;
+        responseInfo = _responseInfo;
+    }, aliceAddress.ToString(), 100000000, faucetEndpoint));
+
+yield return fundAliceAccountCor;
+
+// Check if funding the account was succesful
+if(responseInfo.status != ResponseInfo.Status.Success)
+{
+    Debug.LogError("Faucet funding for Alice failed: " + responseInfo.message);
+    yield break;
+}
 ```
 
 #### Deriviving Accounts from HD Wallet
@@ -70,6 +89,9 @@ You can derive accounts from the HD Wallet by selecting an account index as foll
 
 ```csharp
 // Create sub-wallets
+
+Mnemonic mnemo = new Mnemonic(Wordlist.English, WordCount.Twelve);
+wallet = new Wallet(mnemo);
 
 for (int i = 0; i < accountNumLimit; i++)
 {
@@ -87,46 +109,80 @@ for (int i = 0; i < accountNumLimit; i++)
 <img src="https://user-images.githubusercontent.com/25370590/219818959-ba93a155-0e2f-4b06-8795-431a7583f669.jpg" alt="wallet_nft_minter1" width="400"/>
 <br />
 
-On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Creat Collection` first, then `Create NFT`.
+On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Creat Collection` first, then `Create NFT`. Note that you must confirm that the creation of the collection was sucessful before creating the token, you can use the `WaitForTransaction` corouting for this.
 
 ```csharp
 // Create Collection
 
-string createCollectionResult = "";
-Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((returnResult) =>
-{
-    createCollectionResult = returnResult;
-}, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)),
-_collectionName, _collectionDescription, _collectionUri));
+string collectionName = "Alice's";
+string collectionDescription = "Alice's simple collection";
+string collectionUri = "https://aptos.dev";
+
+Transaction createCollectionTxn = new Transaction();
+
+Coroutine createCollectionCor = StartCoroutine(
+    RestClient.Instance.CreateCollection((_createCollectionTxn, _responseInfo) =>
+    {
+        createCollectionTxn = _createCollectionTxn;
+        responseInfo = _responseInfo;
+    }, alice, collectionName, collectionDescription, collectionUri));
 yield return createCollectionCor;
 
-Debug.Log("Create Collection Response: " + createCollectionResult);
-Aptos.Unity.Rest.Model.Transaction createCollectionTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createCollectionResult, new TransactionConverter());
+// Check if collection creation was successful 
+if(responseInfo.status != ResponseInfo.Status.Success)
+{
+    Debug.LogError("Cannot create collection. " + responseInfo.message);
+}
+
+// Check response and transaction hash
+Debug.Log("Create Collection Response: " + responseInfo.message);
 string transactionHash = createCollectionTxn.Hash;
 Debug.Log("Create Collection Hash: " + createCollectionTxn.Hash);
 ```
 
+```csharp 
+// Wait for Transaction
+bool waitForTxnSuccess = false;
+Coroutine waitForTransactionCor = StartCoroutine(
+    RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+    {
+        waitForTxnSuccess = _pending;
+        responseInfo = _responseInfo;
+    }, transactionHash)
+);
+yield return waitForTransactionCor;
+
+if(!waitForTxnSuccess)
+{
+    Debug.LogWarning("Transaction was not found.");
+}
+
+```
+
+
 ```csharp
 // Create NFT
 
-string createTokenResult = "";
+string tokenName = "Alice's first token";
+string tokenDescription = "Alice's simple token";
+string tokenUri = "https://aptos.dev/img/nyan.jpeg";
+
+Transaction createTokenTxn = new Transaction();
 Coroutine createTokenCor = StartCoroutine(
-    RestClient.Instance.CreateToken((returnResult) =>
+    RestClient.Instance.CreateToken((_createTokenTxn, _responseInfo) =>
     {
-        createTokenResult = returnResult;
-    }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)),
-    _collectionName,
-    _tokenName,
-    _tokenDescription,
-    _supply,
-    _max,
-    _uri,
-    _royaltyPointsPerMillion)
+        createTokenTxn = _createTokenTxn;
+        responseInfo = _responseInfo;
+    }, alice, collectionName, tokenName, tokenDescription, 1, 1, tokenUri, 0)
 );
 yield return createTokenCor;
 
-Debug.Log("Create Token Response: " + createTokenResult);
-Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
+if(responseInfo.status != ResponseInfo.Status.Success)
+{
+    Debug.LogError("Error creating token. " + responseInfo.message);
+}
+
+Debug.Log("Create Token Response: " + responseInfo.message);
 string createTokenTxnHash = createTokenTxn.Hash;
 Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 ```
@@ -138,13 +194,26 @@ Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 On the `Send Transaction` panel, you can send tokens by pasting the recipient address and token amount.
 
 ```csharp
-string transferResult = "";
-Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
-{
-    transferResult = _transferResult;
-}, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), targetAddress, amount));
 
-yield return cor;
+Transaction transferTxn = new Transaction();
+Coroutine transferCor = StartCoroutine(
+    RestClient.Instance.Transfer((_transaction, _responseInfo) => {
+        transferTxn = _transaction;
+        responseInfo = _responseInfo;
+    }, alice, bob.AccountAddress.ToString(), 1000));
+
+yield return transferCor;
+
+if(responseInfo.status != ResponseInfo.Status.Success)
+{
+    Debug.LogWarning("Transfer failed: " + responseInfo.message);
+    yield break;
+}
+
+Debug.Log("Transfer Response: " + responseInfo.message);
+string transactionHash = transferTxn.Hash;
+Debug.Log("Transfer Response Hash: " + transferTxn.Hash);
+
 ```
 
 ## Technical Details
