@@ -16,7 +16,9 @@ This accompanying README file provides further details on the SDK and integratio
 
 ## Quick Start Video
 
-https://user-images.githubusercontent.com/25370590/219819120-92cb2aa0-e685-4eac-bcb9-942a0cc4157f.mp4
+
+https://user-images.githubusercontent.com/25370590/216013906-ee46a940-ee91-4b7f-8e84-febfa315480e.mp4
+
 
 ## Wallet Example Walthrough
 
