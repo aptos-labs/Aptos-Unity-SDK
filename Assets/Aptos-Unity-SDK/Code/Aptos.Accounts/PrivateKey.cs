@@ -29,16 +29,6 @@ namespace Aptos.Accounts
         private byte[] _keyBytes;
 
         /// <summary>
-        /// String representation of private key.
-        /// </summary>
-        private string _keyBase58;
-
-        /// <summary>
-        /// Byte representation of private key.
-        /// </summary>
-        private byte[] _keyBytesBase58;
-
-        /// <summary>
         /// The key as a 32-byte hexadecimal string (64 characters).   
         /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key,   
         /// then we slice it in half since the other half contains the public key.
@@ -83,47 +73,6 @@ namespace Aptos.Accounts
                 return _keyBytes;
             }
 
-            set
-            {
-                _keyBytes = value;
-            }
-        }
-
-        /// <summary>
-        /// The key as base-58 encoded string
-        /// Base58 encoding scheme is used to facilitate switching 
-        /// from byte to alphanumeric text format (ASCII)
-        /// </summary>
-        public string KeyBase58
-        {
-            get
-            {
-                if (_keyBase58 == null && _keyBytes != null)
-                {
-                    _keyBase58 = Encoders.Base58.EncodeData(_keyBytes);
-                }
-                return _keyBase58;
-            }
-
-            set
-            {
-                _keyBase58 = value;
-            }
-        }
-
-        /// <summary>
-        /// The private key bytes
-        /// </summary>
-        public byte[] KeyBytesFromBase58
-        {
-            get
-            {
-                if (_keyBytes == null && _keyBase58 != null)
-                {
-                    _keyBytes = Encoders.Base58.DecodeData(_keyBase58);
-                }
-                return _keyBytes;
-            }
             set
             {
                 _keyBytes = value;
