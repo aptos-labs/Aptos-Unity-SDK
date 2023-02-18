@@ -26,7 +26,8 @@ namespace Aptos.Unity.Rest
         /// <param name="address">Address that will get funded.</param>
         /// <param name="amount">Amount of APT requested.</param>
         /// <param name="endpoint">Base URL for faucet.</param>
-        /// <returns></returns>
+        /// <returns>Calls <c>callback</c> function with <c>(bool, ResponsiveInfo)</c>: \n
+        /// A boolean stating that the request for funding was successful, and an object containg the response details</returns>
         public IEnumerator FundAccount(Action<bool, ResponseInfo> callback, string address, int amount, string endpoint)
         {
             string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
