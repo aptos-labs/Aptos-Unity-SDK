@@ -148,7 +148,7 @@ namespace Aptos.Unity.Sample
 
             if (!waitForTxnSuccess)
             {
-                Debug.LogWarning("Transaction was not found. Breaking out of example", gameObject);
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
                 yield break;
             }
 
@@ -187,7 +187,7 @@ namespace Aptos.Unity.Sample
 
             if (!waitForTxnSuccess)
             {
-                Debug.LogWarning("Transaction was not found. Breaking out of example", gameObject);
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
                 yield break;
             }
             #endregion
@@ -312,6 +312,12 @@ namespace Aptos.Unity.Sample
             yield return null;
         }
 
+        /// <summary>
+        /// Utility coroutine that abstracts a call to WaitForTransaction
+        /// and does not check if the transaction was successful
+        /// </summary>
+        /// <param name="txnHash"></param>
+        /// <returns>Nothing is return</returns>
         IEnumerator WaitForTransaction(string txnHash)
         {
             Coroutine waitForTransactionCor = StartCoroutine(
