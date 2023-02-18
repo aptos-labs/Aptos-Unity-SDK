@@ -245,7 +245,7 @@ namespace Aptos.Unity.Sample
             {
                 offerTokenTxn = _offerTokenTxn;
                 responseInfo = _responseInfo;
-            }, alice, bob.AccountAddress, alice.AccountAddress, collectionName, tokenName, "1"));
+            }, alice, bob.AccountAddress, alice.AccountAddress, collectionName, tokenName, 1));
 
             yield return offerTokenCor;
 

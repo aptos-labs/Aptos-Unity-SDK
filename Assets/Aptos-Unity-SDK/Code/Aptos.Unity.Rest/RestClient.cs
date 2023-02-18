@@ -1309,7 +1309,7 @@ namespace Aptos.Unity.Rest
         /// </returns>
         public IEnumerator OfferToken(Action<Transaction, ResponseInfo> callback
             , Account account, Accounts.AccountAddress receiver, Accounts.AccountAddress creator
-            , string collectionName, string tokenName, string amount, int propertyVersion = 0)
+            , string collectionName, string tokenName, int amount, int propertyVersion = 0)
         {
             ResponseInfo responseInfo = new ResponseInfo();
             // Check is recipient address is valid
@@ -1338,7 +1338,7 @@ namespace Aptos.Unity.Rest
                     , collectionName
                     , tokenName
                     , propertyVersion.ToString()
-                    , amount
+                    , amount.ToString()
 
                 }
             };
