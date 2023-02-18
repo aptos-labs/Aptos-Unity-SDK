@@ -136,13 +136,21 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Wait For Transaction
+            bool waitForTxnSuccess = false;
             Coroutine waitForTransactionCor = StartCoroutine(
-                RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
                 {
-                    Debug.Log(transactionWaitResult.message);
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
                 }, transactionHash)
             );
             yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example", gameObject);
+                yield break;
+            }
 
             #endregion
 
@@ -169,12 +177,19 @@ namespace Aptos.Unity.Sample
 
             #region Wait For Transaction
             waitForTransactionCor = StartCoroutine(
-                RestClient.Instance.WaitForTransaction((pending, transactionWaitResult) =>
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
                 {
-                    Debug.Log(transactionWaitResult.message);
-                }, createTokenTxnHash)
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
             );
             yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example", gameObject);
+                yield break;
+            }
             #endregion
 
             #region Get Collection
