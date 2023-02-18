@@ -3,9 +3,7 @@ The Aptos Unity SDK is a .NET implementation of the [Aptos SDK](https://aptos.de
 The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the Unity game engine and the Aptos blockchain infrastructure.
 
 ## Getting Started
-To get started, you may check our [Quick Start Guide](#quick-start-video). A set of examples is also provided in the `Assets/Aptos-Unity-SDK/SDK-Examples` directory. A local version of Doxygen-generated documentation for the classes can be found in `Assets/Aptos-Unity-SDK/Documentation/html/index.html`. A hosted version of the latter documentation can found in [here](https://aptos-unity-sdk-docs.netlify.app/).    
-
-This accompanying README file provides further details on the SDK and integration. 
+To get started, you may check our [Quick Start Guide](#quick-start-video). A set of examples and templates is also provided in the `Assets/Aptos/Unity-SDK/SDK-Examples` directory. This accompanying README file provides further details on the SDK and integration.
 
 ### Installation
 
@@ -16,19 +14,17 @@ This accompanying README file provides further details on the SDK and integratio
 
 ## Quick Start Video
 
-
-https://user-images.githubusercontent.com/25370590/216013906-ee46a940-ee91-4b7f-8e84-febfa315480e.mp4
-
+https://user-images.githubusercontent.com/25370590/219819120-92cb2aa0-e685-4eac-bcb9-942a0cc4157f.mp4
 
 ## Wallet Example Walthrough
 
 You can find a set of examples under `SDK-Examples/SDK Demo` and `SDK-Examples/UI Demo` directory. We will use the scene under `UI Demo` for this walkthrough.
 
-<img src="https://user-images.githubusercontent.com/25370590/216012383-c7c959f0-1fba-4b29-9452-dbfd9308cc61.jpg" alt="wallet_seedphrase1" width="400"/>   
+<img src="https://user-images.githubusercontent.com/25370590/219817969-86709825-0b32-44c7-86bf-5699b4163369.jpg" alt="wallet_seedphrase1" width="400"/>   
 <br />
-<img src="https://user-images.githubusercontent.com/25370590/216012379-ff59c611-8843-41ca-9853-6ab739361a2c.jpg" alt="wallet_seedphrase2" width="400"/>   
+<img src="https://user-images.githubusercontent.com/25370590/219817970-19ce6c72-ccbd-4a99-a466-4c9603cb6bf5.jpg" alt="wallet_seedphrase2" width="400"/>   
 <br />
-<img src="https://user-images.githubusercontent.com/25370590/216012381-eaf8d10a-1063-421e-8748-c336ac212d65.jpg" alt="wallet_seedphrase3" width="400"/>   
+<img src="https://user-images.githubusercontent.com/25370590/219817971-780048bf-be5c-4709-8437-13477a81e929.jpg" alt="wallet_seedphrase3" width="400"/>   
 <br />
 
 Once you open  the demo scene, you will see all tab are locked except `Add Account` , you have the choice to create or import a wallet. 
@@ -46,9 +42,9 @@ PlayerPrefs.SetString(mnemonicsKey, mnemo.ToString());
 
 ### Account
 
-<img src="https://user-images.githubusercontent.com/25370590/216012625-3638c113-9b69-4fc0-950a-13daaaf4d27e.jpg" alt="wallet_account0" width="400"/>
+<img src="https://user-images.githubusercontent.com/25370590/219818548-ab6755a8-b080-4535-a3cf-76379acd4577.jpg" alt="wallet_account0" width="400"/>
 <br />
-<img src="https://user-images.githubusercontent.com/25370590/216012623-17116053-fb58-4de5-84ee-f57d7a282a00.jpg" alt="wallet_account1" width="400"/>
+<img src="https://user-images.githubusercontent.com/25370590/219818398-89e6a085-ce94-42aa-a0a3-558ed4c133ac.jpg" alt="wallet_account1" width="400"/>
 <br />
 
 Once you create the wallet, you will be able to unlock rest of the panel, on `Account` Panel.    
@@ -107,9 +103,10 @@ for (int i = 0; i < accountNumLimit; i++)
 ```
 
 ### NFT Minter
-<img src="https://user-images.githubusercontent.com/25370590/216013385-f896bccf-4bb4-4c13-9b8d-18cc1aac9ee9.jpg" alt="wallet_nft_minter0" width="400"/>
+
+<img src="https://user-images.githubusercontent.com/25370590/219818958-b40df62a-a54e-4b5e-8ea8-4a166197a19a.jpg" alt="wallet_nft_minter0" width="400"/>
 <br />
-<img src="https://user-images.githubusercontent.com/25370590/216013383-134d56d8-101b-4fbe-8410-542e154405fc.jpg" alt="wallet_nft_minter1" width="400"/>
+<img src="https://user-images.githubusercontent.com/25370590/219818959-ba93a155-0e2f-4b06-8795-431a7583f669.jpg" alt="wallet_nft_minter1" width="400"/>
 <br />
 
 On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Creat Collection` first, then `Create NFT`. Note that you must confirm that the creation of the collection was sucessful before creating the token, you can use the `WaitForTransaction` corouting for this.
@@ -191,7 +188,7 @@ Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 ```
 
 ### Transaction Executer
-<img src="https://user-images.githubusercontent.com/25370590/216013743-48dc3c1c-c180-4775-bf2a-51a6b9de1952.jpg" alt="wallet_transaction_execution" width="400"/>
+<img src="https://user-images.githubusercontent.com/25370590/219819044-c9c594f4-921e-4b40-bad1-c2155988c5ac.jpg" alt="wallet_transaction_execution" width="400"/>
 <br />
 
 On the `Send Transaction` panel, you can send tokens by pasting the recipient address and token amount.
