@@ -1641,9 +1641,13 @@ namespace Aptos.Unity.Rest
 
             ResponseInfo responseInfo = new ResponseInfo();
 
-            if(!success & responseCode != 404)
+            if (!success)
             {
-                responseInfo.status = ResponseInfo.Status.NotFound;
+                if (responseCode == 404)
+                    responseInfo.status = ResponseInfo.Status.NotFound;
+                else
+                    responseInfo.status = ResponseInfo.Status.Failed;
+
                 responseInfo.message = tokenStoreResourceResp;
                 callback(null, responseInfo);
                 yield break;
