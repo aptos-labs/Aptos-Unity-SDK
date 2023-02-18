@@ -93,9 +93,9 @@ Inheritance diagram for Aptos.Unity.Rest.FaucetClient:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:accfd06ea11d2b50fbdbcc299d23c000e"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_faucet_client.html#accfd06ea11d2b50fbdbcc299d23c000e">FundAccount</a> (Action&lt; bool, string &gt; callback, string address, int amount, string endpoint)</td></tr>
-<tr class="memdesc:accfd06ea11d2b50fbdbcc299d23c000e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funds a Testnet Account.  <br /></td></tr>
-<tr class="separator:accfd06ea11d2b50fbdbcc299d23c000e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bd010aa3dfc1fc7ba6d0ed0826bb65e"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_faucet_client.html#a0bd010aa3dfc1fc7ba6d0ed0826bb65e">FundAccount</a> (Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt; callback, string address, int amount, string endpoint)</td></tr>
+<tr class="memdesc:a0bd010aa3dfc1fc7ba6d0ed0826bb65e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funds a Testnet Account.  <br /></td></tr>
+<tr class="separator:a0bd010aa3dfc1fc7ba6d0ed0826bb65e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -105,8 +105,8 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Faucet Client for claiming APT from Devnet NOTE: Does not work on Testnet. Testnet only supports airdrops through an authenticated URL. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="accfd06ea11d2b50fbdbcc299d23c000e" name="accfd06ea11d2b50fbdbcc299d23c000e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#accfd06ea11d2b50fbdbcc299d23c000e">&#9670;&#160;</a></span>FundAccount()</h2>
+<a id="a0bd010aa3dfc1fc7ba6d0ed0826bb65e" name="a0bd010aa3dfc1fc7ba6d0ed0826bb65e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bd010aa3dfc1fc7ba6d0ed0826bb65e">&#9670;&#160;</a></span>FundAccount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -114,7 +114,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">IEnumerator Aptos.Unity.Rest.FaucetClient.FundAccount </td>
           <td>(</td>
-          <td class="paramtype">Action&lt; bool, string &gt;&#160;</td>
+          <td class="paramtype">Action&lt; bool, <a class="el" href="class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html">ResponseInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -153,7 +153,8 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calls <code>callback</code> function with <code>(bool, ResponsiveInfo)</code>: <br  />
+A boolean stating that the request for funding was successful, and an object containg the response details</dd></dl>
 
 </div>
 </div>

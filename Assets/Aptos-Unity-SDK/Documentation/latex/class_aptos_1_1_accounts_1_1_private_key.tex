@@ -50,11 +50,7 @@ string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a59b7f70119de95
  then we slice it in half since the other half contains the public key. \end{DoxyCompactList}\item 
 byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}{Key\+Bytes}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended key, ~\newline
- then returns the bytes accordingly. \end{DoxyCompactList}\item 
-string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a7fb3cf55bfd7bf3f96ab9f4ac702dc72}{Key\+Base58}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII) \end{DoxyCompactList}\item 
-byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_aac158c82bfd131f11f8feeaac676c04b}{Key\+Bytes\+From\+Base58}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
-\begin{DoxyCompactList}\small\item\em The private key bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+ then returns the bytes accordingly. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -237,16 +233,6 @@ The key as a 32-\/byte hexadecimal string (64 characters). ~\newline
  NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key, ~\newline
  then we slice it in half since the other half contains the public key. 
 
-\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a7fb3cf55bfd7bf3f96ab9f4ac702dc72}\label{class_aptos_1_1_accounts_1_1_private_key_a7fb3cf55bfd7bf3f96ab9f4ac702dc72}} 
-\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyBase58@{KeyBase58}}
-\index{KeyBase58@{KeyBase58}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
-\doxysubsubsection{\texorpdfstring{KeyBase58}{KeyBase58}}
-{\footnotesize\ttfamily string Aptos.\+Accounts.\+Private\+Key.\+Key\+Base58\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
-
-
-
-The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate switching from byte to alphanumeric text format (ASCII) 
-
 \mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}\label{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}} 
 \index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyBytes@{KeyBytes}}
 \index{KeyBytes@{KeyBytes}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
@@ -257,16 +243,6 @@ The key as base-\/58 encoded string Base58 encoding scheme is used to facilitate
 
 The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended key, ~\newline
  then returns the bytes accordingly. 
-
-\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_aac158c82bfd131f11f8feeaac676c04b}\label{class_aptos_1_1_accounts_1_1_private_key_aac158c82bfd131f11f8feeaac676c04b}} 
-\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyBytesFromBase58@{KeyBytesFromBase58}}
-\index{KeyBytesFromBase58@{KeyBytesFromBase58}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
-\doxysubsubsection{\texorpdfstring{KeyBytesFromBase58}{KeyBytesFromBase58}}
-{\footnotesize\ttfamily byte \mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Private\+Key.\+Key\+Bytes\+From\+Base58\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
-
-
-
-The private key bytes. 
 
 
 
