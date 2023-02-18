@@ -433,6 +433,7 @@ namespace Aptos.Unity.Rest
                 responseInfo.message = "Error while sending request for table item. " + request.error;
                 callback(null, responseInfo);
             }
+
             if (request.responseCode == 404)
             {
                 TableItemToken tableItemToken = new TableItemToken();
@@ -447,6 +448,12 @@ namespace Aptos.Unity.Rest
                 responseInfo.message = "Table item not found. " + request.error;
 
                 callback(tableItemToken, responseInfo);
+            }
+            else if (request.responseCode >= 400)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(null, responseInfo);
             }
             else
             {
