@@ -9,7 +9,7 @@ This accompanying README file provides further details on the SDK and integratio
 
 ### Installation
 
-1. Download the latest `aptos-unity-sdk-xx.unitypackge` file from [Release](https://github.com/aptos-labs/Aptos-Unity-SDK/releases) 
+1. Download the latest `aptos-unity-sdk-xx.unitypackage` file from [Release](https://github.com/aptos-labs/Aptos-Unity-SDK/releases) 
 2. Inside Unity, Click on `Assets` → `Import Packages` → `Custom Package.` and select the downloaded file.
 
 **NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is a common dependency. Prior versions of Unity require installing Newtonsoft.
@@ -24,15 +24,19 @@ You can find a set of examples under `SDK-Examples/SDK Demo` and `SDK-Examples/U
 
 <img src="https://user-images.githubusercontent.com/25370590/219817969-86709825-0b32-44c7-86bf-5699b4163369.jpg" alt="wallet_seedphrase1" width="400"/>   
 <br />
+
+Once you open  the demo scene, you will see all tab are locked except `Add Account` , you have the choice to create or import a wallet.
+
+<br />
+
 <img src="https://user-images.githubusercontent.com/25370590/219817970-19ce6c72-ccbd-4a99-a466-4c9603cb6bf5.jpg" alt="wallet_seedphrase2" width="400"/>   
 <br />
 <img src="https://user-images.githubusercontent.com/25370590/219817971-780048bf-be5c-4709-8437-13477a81e929.jpg" alt="wallet_seedphrase3" width="400"/>   
 <br />
 
-Once you open  the demo scene, you will see all tab are locked except `Add Account` , you have the choice to create or import a wallet. 
+Note that we currently store the mnemonics words in `PlayerPrefs`.   
 
-We currently store the mnemonics words in `PlayerPrefs`
-
+In code, you can create a wallet as follows:
 ```csharp
 // Create Wallet
 
@@ -41,18 +45,40 @@ wallet = new Wallet(mnemo);
 
 PlayerPrefs.SetString(mnemonicsKey, mnemo.ToString());
 ```
+This wallet object can be used to derive multiple accounts which show in code further down.
 
 ### Account
 
 <img src="https://user-images.githubusercontent.com/25370590/219818548-ab6755a8-b080-4535-a3cf-76379acd4577.jpg" alt="wallet_account0" width="400"/>
 <br />
-<img src="https://user-images.githubusercontent.com/25370590/219818398-89e6a085-ce94-42aa-a0a3-558ed4c133ac.jpg" alt="wallet_account1" width="400"/>
-<br />
 
 Once you create the wallet, you will be able to unlock rest of the panel, on `Account` Panel.    
 
-In code you can derive an account from the wallet object or generate a new one as follows:
+<br />
 
+<img src="https://user-images.githubusercontent.com/25370590/219818398-89e6a085-ce94-42aa-a0a3-558ed4c133ac.jpg" alt="wallet_account1" width="400"/>
+<br />
+
+
+#### Deriviving Accounts from HD Wallet
+In code, you can derive accounts from the HD Wallet by selecting an account index as follows:
+
+```csharp
+// Create sub-wallets
+
+Mnemonic mnemo = new Mnemonic(Wordlist.English, WordCount.Twelve);
+wallet = new Wallet(mnemo);
+
+for (int i = 0; i < accountNumLimit; i++)
+{
+    var account = wallet.GetAccount(i);
+    var addr = account.AccountAddress.ToString();
+
+    addressList.Add(addr);
+} 
+```
+
+You can also generate an account from a random seed / private key as follows:
 ```csharp
 // Create new account
 
@@ -61,7 +87,7 @@ AccountAddress aliceAddress = alice.AccountAddress;
 ```
 
 #### Airdrop
-You will also be able to airdrop 1 APT to your account
+When using Devent , you can airdrop 1 APT to your account address as follows:
 
 ```csharp
 // Airdrop
@@ -86,24 +112,6 @@ if(responseInfo.status != ResponseInfo.Status.Success)
 }
 ```
 
-#### Deriviving Accounts from HD Wallet
-You can derive accounts from the HD Wallet by selecting an account index as follows:
-
-```csharp
-// Create sub-wallets
-
-Mnemonic mnemo = new Mnemonic(Wordlist.English, WordCount.Twelve);
-wallet = new Wallet(mnemo);
-
-for (int i = 0; i < accountNumLimit; i++)
-{
-    var account = wallet.GetAccount(i);
-    var addr = account.AccountAddress.ToString();
-
-    addressList.Add(addr);
-} 
-```
-
 ### NFT Minter
 
 <img src="https://user-images.githubusercontent.com/25370590/219818958-b40df62a-a54e-4b5e-8ea8-4a166197a19a.jpg" alt="wallet_nft_minter0" width="400"/>
@@ -111,7 +119,9 @@ for (int i = 0; i < accountNumLimit; i++)
 <img src="https://user-images.githubusercontent.com/25370590/219818959-ba93a155-0e2f-4b06-8795-431a7583f669.jpg" alt="wallet_nft_minter1" width="400"/>
 <br />
 
-On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Creat Collection` first, then `Create NFT`. Note that you must confirm that the creation of the collection was sucessful before creating the token, you can use the `WaitForTransaction` corouting for this.
+On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Create Collection` first, then `Create NFT`.   
+
+ Note that you must confirm that the creation of the collection was sucessful before creating the token, you can use the `WaitForTransaction` corouting for this.
 
 ```csharp
 // Create Collection
@@ -190,12 +200,16 @@ Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
 ```
 
 ### Transaction Executer
+On the `Send Transaction` panel, you can send tokens by pasting the recipient address and token amount.
+<br />
 <img src="https://user-images.githubusercontent.com/25370590/219819044-c9c594f4-921e-4b40-bad1-c2155988c5ac.jpg" alt="wallet_transaction_execution" width="400"/>
 <br />
 
-On the `Send Transaction` panel, you can send tokens by pasting the recipient address and token amount.
+Below we demonstrate how to send APT to another account.
 
 ```csharp
+Account alice = new Account();
+Account bob = new Account();
 
 Transaction transferTxn = new Transaction();
 Coroutine transferCor = StartCoroutine(
@@ -248,7 +262,6 @@ Debug.Log("Transfer Response Hash: " + transferTxn.Hash);
 - Newtonsoft.Json
 - NBitcoin.7.0.22
 - [Portable.BouncyCastle](https://www.nuget.org/packages/Portable.BouncyCastle)
-- Zxing
 
 ## Support
 
