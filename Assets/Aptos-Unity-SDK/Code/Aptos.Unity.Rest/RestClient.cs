@@ -1874,7 +1874,11 @@ namespace Aptos.Unity.Rest
             }
             else if (request.responseCode == 404)
             {
-                callback(false, request.responseCode, "ERROR: Resource Not Found: " + request.error);
+                callback(false, request.responseCode, request.error);
+            }
+            else if (request.responseCode >= 400)
+            {
+                callback(false, request.responseCode, request.error);
             }
             else
             {
