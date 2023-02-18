@@ -1805,10 +1805,9 @@ namespace Aptos.Unity.Rest
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="creator">Address of the creator.</param>
         /// <param name="collectionName">Name of the collection.</param>
-        /// <param name="propertyVersion">Version of the token.</param>
         /// <returns>A JSON string representation of the collection information - null if the request fails.</returns>
         public IEnumerator GetCollection(Action<string> callback, Accounts.AccountAddress creator,
-            string collectionName, string propertyVersion = "0")
+            string collectionName)
         {
             bool success = false;
             long responseCode = 0;
