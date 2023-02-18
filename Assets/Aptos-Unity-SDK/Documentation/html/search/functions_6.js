@@ -7,7 +7,7 @@ var searchData=
   ['getaccountresourcecollection_4',['GetAccountResourceCollection',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a1f71708ebbde910882993525ed708a97',1,'Aptos::Unity::Rest::RestClient']]],
   ['getaccountsequencenumber_5',['GetAccountSequenceNumber',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#add97b3c9a88054e560a228fade4efa29',1,'Aptos::Unity::Rest::RestClient']]],
   ['getbytes_6',['GetBytes',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization.html#a9ed8501cedbe6696c73cd01578519900',1,'Aptos::Utilities::BCS::Serialization']]],
-  ['getcollection_7',['GetCollection',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#aff1ad182fff1bb7169ca4e0e75ab3357',1,'Aptos::Unity::Rest::RestClient']]],
+  ['getcollection_7',['GetCollection',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a4f187f56b61af0d26b8cbc812981c04f',1,'Aptos::Unity::Rest::RestClient']]],
   ['gethashcode_8',['GetHashCode',['../class_aptos_1_1_accounts_1_1_private_key.html#ab8580d0145681a9b1436dfe9696270ef',1,'Aptos.Accounts.PrivateKey.GetHashCode()'],['../class_aptos_1_1_accounts_1_1_public_key.html#ac039566624e0fc47de8533dbd4b7666e',1,'Aptos.Accounts.PublicKey.GetHashCode()']]],
   ['getinfo_9',['GetInfo',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a97cd73cc5325c94ead65d92b33227402',1,'Aptos::Unity::Rest::RestClient']]],
   ['gettableitem_10',['GetTableItem',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a53c4cc366177befe5b48a8df7a342928',1,'Aptos::Unity::Rest::RestClient']]],
