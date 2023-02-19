@@ -1,4 +1,5 @@
 using Aptos.HdWallet.Utils;
+using Aptos.Utilities.BCS;
 using Chaos.NaCl;
 using System;
 
@@ -116,6 +117,15 @@ namespace Aptos.Accounts
         public bool Verify(byte[] message, byte[] signature)
         {
             return Ed25519.Verify(signature, message, KeyBytes);
+        }
+
+        /// <summary>
+        /// Serialize public key
+        /// </summary>
+        /// <param name="serializer">Serializer object</param>
+        public void Serialize(Serialization serializer)
+        {
+            serializer.SerializeBytes(this.KeyBytes);
         }
 
         /// <summary>
