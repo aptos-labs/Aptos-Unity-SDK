@@ -1,0 +1,116 @@
+\hypertarget{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key}{}\doxysection{Aptos.\+Accounts.\+Types.\+Multi\+Ed25519\+Public\+Key Class Reference}
+\label{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key}\index{Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}}
+
+
+Represents a multi-\/signature public key. More details can be found \mbox{\hyperlink{}{here}}.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_afe62aa944edd5db1d1359971629c17b2}{Multi\+Ed25519\+Public\+Key}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}}\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a829544c96ebc679a84008f792a44a81a}{Public\+Keys}}, int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a2322914e085805ce3626e1e660bb399e}{threshold}})
+\begin{DoxyCompactList}\small\item\em Public key for a K-\/of-\/N multisig transaction. A K-\/of-\/N multisig transaction means that for such a ~\newline
+transaction to be executed, at least K out of the N authorized signers have signed the transaction ~\newline
+and passed the check conducted by the chain. ~\newline
+ See \mbox{\hyperlink{}{Creating a Signed Transaction}}. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a9bf78baeeb85321f9371ec67ffc4eca8}{To\+Bytes}} ()
+\begin{DoxyCompactList}\small\item\em Converts a Multi\+Ed25519\+Public\+Key into bytes ~\newline
+with\+: \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_ab0168d78dd1a2a76d62c3ba4fc72b84f}{MAX\+\_\+\+SIGNATURES\+\_\+\+SUPPORTED}} = 32
+\begin{DoxyCompactList}\small\item\em Max number of signature supported. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}}\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a829544c96ebc679a84008f792a44a81a}{Public\+Keys}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em List of public keys. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a2322914e085805ce3626e1e660bb399e}{threshold}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The max number of keys accepted in the multi-\/sig. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a multi-\/signature public key. More details can be found \mbox{\hyperlink{}{here}}. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_afe62aa944edd5db1d1359971629c17b2}\label{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_afe62aa944edd5db1d1359971629c17b2}} 
+\index{Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}!MultiEd25519PublicKey@{MultiEd25519PublicKey}}
+\index{MultiEd25519PublicKey@{MultiEd25519PublicKey}!Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}}
+\doxysubsubsection{\texorpdfstring{MultiEd25519PublicKey()}{MultiEd25519PublicKey()}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Types.\+Multi\+Ed25519\+Public\+Key.\+Multi\+Ed25519\+Public\+Key (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}}\mbox{[}$\,$\mbox{]}}]{Public\+Keys,  }\item[{int}]{threshold }\end{DoxyParamCaption})}
+
+
+
+Public key for a K-\/of-\/N multisig transaction. A K-\/of-\/N multisig transaction means that for such a ~\newline
+transaction to be executed, at least K out of the N authorized signers have signed the transaction ~\newline
+and passed the check conducted by the chain. ~\newline
+ See \mbox{\hyperlink{}{Creating a Signed Transaction}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Public\+Keys} & List of public keys used to create the multi-\/sig\\
+\hline
+{\em threshold} & The max number of keys accepted in the multi-\/sig.\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a9bf78baeeb85321f9371ec67ffc4eca8}\label{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a9bf78baeeb85321f9371ec67ffc4eca8}} 
+\index{Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}!ToBytes@{ToBytes}}
+\index{ToBytes@{ToBytes}!Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}}
+\doxysubsubsection{\texorpdfstring{ToBytes()}{ToBytes()}}
+{\footnotesize\ttfamily byte\mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Types.\+Multi\+Ed25519\+Public\+Key.\+To\+Bytes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Converts a Multi\+Ed25519\+Public\+Key into bytes ~\newline
+with\+: 
+
+{\ttfamily bytes = p1\+\_\+bytes $\vert$ ... $\vert$ pn\+\_\+bytes $\vert$ threshold}.
+
+\begin{DoxyReturn}{Returns}
+Byte array representing multi-\/sign public key.
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_ab0168d78dd1a2a76d62c3ba4fc72b84f}\label{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_ab0168d78dd1a2a76d62c3ba4fc72b84f}} 
+\index{Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}!MAX\_SIGNATURES\_SUPPORTED@{MAX\_SIGNATURES\_SUPPORTED}}
+\index{MAX\_SIGNATURES\_SUPPORTED@{MAX\_SIGNATURES\_SUPPORTED}!Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}}
+\doxysubsubsection{\texorpdfstring{MAX\_SIGNATURES\_SUPPORTED}{MAX\_SIGNATURES\_SUPPORTED}}
+{\footnotesize\ttfamily int Aptos.\+Accounts.\+Types.\+Multi\+Ed25519\+Public\+Key.\+MAX\+\_\+\+SIGNATURES\+\_\+\+SUPPORTED = 32\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Max number of signature supported. 
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a829544c96ebc679a84008f792a44a81a}\label{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a829544c96ebc679a84008f792a44a81a}} 
+\index{Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}!PublicKeys@{PublicKeys}}
+\index{PublicKeys@{PublicKeys}!Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}}
+\doxysubsubsection{\texorpdfstring{PublicKeys}{PublicKeys}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_public_key}{Public\+Key}} \mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Types.\+Multi\+Ed25519\+Public\+Key.\+Public\+Keys\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+List of public keys. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a2322914e085805ce3626e1e660bb399e}\label{class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key_a2322914e085805ce3626e1e660bb399e}} 
+\index{Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}!threshold@{threshold}}
+\index{threshold@{threshold}!Aptos.Accounts.Types.MultiEd25519PublicKey@{Aptos.Accounts.Types.MultiEd25519PublicKey}}
+\doxysubsubsection{\texorpdfstring{threshold}{threshold}}
+{\footnotesize\ttfamily int Aptos.\+Accounts.\+Types.\+Multi\+Ed25519\+Public\+Key.\+threshold\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The max number of keys accepted in the multi-\/sig. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+Accounts/\+Types/\mbox{\hyperlink{_multi_ed25519_public_key_8cs}{Multi\+Ed25519\+Public\+Key.\+cs}}\end{DoxyCompactItemize}

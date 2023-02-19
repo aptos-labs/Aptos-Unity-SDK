@@ -1,16 +1,14 @@
-﻿using System;
-using Aptos.Utilities.BCS;
-
-
-namespace Aptos.Utilities.BCS
+﻿namespace Aptos.Utilities.BCS
 {
-
+    /// <summary>
+    /// Representation of a Module ID.
+    /// </summary>
     public class ModuleId : ISerializable
     {
         public AccountAddress address;
-        public String name;
+        public string name;
 
-        public ModuleId(AccountAddress address, String name)
+        public ModuleId(AccountAddress address, string name)
         {
             // TODO: assert on length of an address- and make it it's own type
             this.address = address;
@@ -24,14 +22,17 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of EntryFunction.
+    /// </summary>
     public class EntryFunction : ISerializable
     {
         ModuleId module;
-        String function;
+        string function;
         TagSequence typeArgs;
         Sequence args;
 
-        public EntryFunction(ModuleId module, String function, TagSequence typeArgs, Sequence args)
+        public EntryFunction(ModuleId module, string function, TagSequence typeArgs, Sequence args)
         {
             this.module = module;
             this.function = function;

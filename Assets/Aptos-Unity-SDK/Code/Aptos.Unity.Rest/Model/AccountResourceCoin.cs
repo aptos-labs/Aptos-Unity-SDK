@@ -10,9 +10,7 @@ namespace Aptos.Unity.Rest.Model
     public class AccountResourceCoin
     {
         [JsonConstructor]
-        public AccountResourceCoin()
-        {
-        }
+        public AccountResourceCoin() { }
 
         [JsonProperty("type", Required = Required.Always)]
         public string Type { get; set; }

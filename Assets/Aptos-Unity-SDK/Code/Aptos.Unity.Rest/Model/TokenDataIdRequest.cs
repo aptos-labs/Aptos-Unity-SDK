@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Aptos.Rest.Models
+namespace Aptos.Unity.Rest.Model
 {
     public class TokenDataIdRequest
     {

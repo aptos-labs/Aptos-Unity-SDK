@@ -1,12 +1,11 @@
 using Aptos.HdWallet.Utils;
 using Chaos.NaCl;
-using NBitcoin.DataEncoders;
 using System;
 
 namespace Aptos.Accounts
 {
     /// <summary>
-    /// Represents a 32-byte public key
+    /// Represents a 32-byte public key.
     /// </summary>
     public class PublicKey
     {
@@ -16,24 +15,14 @@ namespace Aptos.Accounts
         public const int KeyLength = 32;
 
         /// <summary>
-        /// Hex string representation of public key
+        /// Hex string representation of public key.
         /// </summary>
         private string _key;
 
         /// <summary>
-        /// Byte representation of public key
+        /// Byte representation of public key.
         /// </summary>
         private byte[] _keyBytes;
-
-        /// <summary>
-        /// Base 58 string representation of public key
-        /// </summary>
-        private string _keyBase58;
-
-        /// <summary>
-        /// Byte representation of public key
-        /// </summary>
-        private byte[] _keyBytesBase58;
 
         /// <summary>
         /// The key as a hexadecimal string
@@ -79,47 +68,6 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// The key as base-58 encoded string
-        /// Base58 encoding scheme is used to facilitate switching 
-        /// from byte to alphanumeric text format (ASCII)
-        /// </summary>
-        public string KeyBase58
-        {
-            get
-            {
-                if (_keyBase58 == null && _keyBytesBase58 != null)
-                {
-                    _keyBase58 = Encoders.Base58.EncodeData(_keyBytesBase58);
-                }
-                return _keyBase58;
-            }
-            
-            set
-            {
-                _keyBase58 = value;
-            }
-        }
-
-        /// <summary>
-        /// The public key bytes
-        /// </summary>
-        public byte[] KeyBytesFromBase58
-        {
-            get
-            {
-                if (_keyBytesBase58 == null && _keyBase58 != null)
-                {
-                    _keyBytesBase58 = Encoders.Base58.DecodeData(_keyBase58);
-                }
-                return _keyBytesBase58;
-            }
-            set
-            {
-                _keyBytesBase58 = value;
-            }
-        }
-
-        /// <summary>
         /// Initializes the PublicKey object with a given byte array.
         /// </summary>
         /// <param name="publicKey">The public key as byte array.</param>
@@ -134,11 +82,16 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Initializes the PublicKey object with a given hexadecimal representation of public key
+        /// Initializes the PublicKey object with a given hexadecimal representation of public .
         /// </summary>
-        /// <param name="key"></param> The public key as a hexadecimal string
+        /// <param name="key">The public key as a hexadecimal string.   
+        /// Example: <c>0x586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5</c>
+        /// </param> 
         public PublicKey(string key)
         {
+            if (!Utils.IsValidAddress(key))
+                throw new ArgumentException("Invalid key", nameof(key));
+
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
@@ -174,6 +127,7 @@ namespace Aptos.Accounts
             return KeyBytes.IsOnCurve();
         }
 
+        /// <inheritdoc cref="object.Equals(object)"/>
         public override bool Equals(object obj)
         {
             if (obj is PublicKey publicKey)
@@ -195,11 +149,11 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Compares two public key objects
+        /// Compares two public key objects.
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        /// <returns></returns>
+        /// <returns>True if public keys are equal. False is public keys are not equal.</returns>
         public static bool operator ==(PublicKey lhs, PublicKey rhs)
         {
             if (lhs is null)
@@ -218,19 +172,19 @@ namespace Aptos.Accounts
         } 
 
         /// <summary>
-        /// Convert a PublicKey object to Base58 encoded string representatio public key.
+        /// Convert a PublicKey object to hex encoded string representatio public key.
         /// </summary>
         /// <param name="publicKey">The PublicKey object.</param>
-        /// <returns>Base58 encoded string representing the public key.</returns>
+        /// <returns>Hex encoded string representing the public key.</returns>
         public static implicit operator string(PublicKey publicKey)
         {
             return publicKey.Key;
         }
 
         /// <summary>
-        /// Convert Base58 encoded string of a public key to PublicKey object.
+        /// Convert Hex encoded string of a public key to PublicKey object.
         /// </summary>
-        /// <param name="publicKey">Base58 encoded string representing a public key.</param>
+        /// <param name="publicKey">hex encoded string representing a public key.</param>
         /// <returns>PublicKey object.</returns>
         public static explicit operator PublicKey(string publicKey)
         {

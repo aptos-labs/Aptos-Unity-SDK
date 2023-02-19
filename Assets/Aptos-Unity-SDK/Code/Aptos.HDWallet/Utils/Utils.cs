@@ -2,14 +2,30 @@ using Chaos.NaCl;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace Aptos.HdWallet.Utils
 {
     /// <summary>
     /// Implements utility methods to be used in the wallet.
     /// </summary>
-    internal static class Utils
+    public  static class Utils
     {
+        /// <summary>
+        /// Check if it's a valid hex address.
+        /// </summary>
+        /// <param name="walletAddress"></param>
+        /// <returns>true if is a valid hex address, false otherwise.</returns>
+        public static bool IsValidAddress(string walletAddress)
+        {
+            if (walletAddress[0..2].Equals("0x"))
+                walletAddress = walletAddress[2..];
+
+            string pattern = @"[a-fA-F0-9]{64}$";
+            Regex rg = new Regex(pattern);
+            return rg.IsMatch(walletAddress);
+        }
+
         /// <summary>
         /// Converts a hexadecimal string to an array of bytes
         /// NOTE: string must not contain "0x"
@@ -17,7 +33,7 @@ namespace Aptos.HdWallet.Utils
         /// Correct input: 586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5
         /// </summary>
         /// <param name="input"></param> Valid hexadecimal string
-        /// <returns></returns> Byte array representation of hexadecimal string
+        /// <returns>Byte array representation of hexadecimal string</returns>
         internal static byte[] HexStringToByteArray(this string input)
         {
             var outputLength = input.Length / 2;

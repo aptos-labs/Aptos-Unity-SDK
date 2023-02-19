@@ -3,7 +3,8 @@ using Newtonsoft.Json;
 namespace Aptos.Unity.Rest.Model
 {
     /// <summary>
-    /// Represents Gas Estimate response
+    /// Represents a gas estimation response.
+    /// https://fullnode.mainnet.aptoslabs.com/v1/spec#/schemas/GasEstimation
     /// </summary>
     [JsonObject]
     public class GasEstimation

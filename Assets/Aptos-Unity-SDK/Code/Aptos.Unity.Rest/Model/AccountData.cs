@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Aptos.Rpc.Model
+namespace Aptos.Unity.Rest.Model
 {
     /// <summary>
     /// Represents Account Data object
@@ -10,7 +10,7 @@ namespace Aptos.Rpc.Model
     public class AccountData
     {
         [JsonConstructor]
-        private AccountData() { }
+        public AccountData() { }
 
         [JsonProperty("sequence_number", Required = Required.Always)]
         public string SequenceNumber { get; private set; }

@@ -1,3 +1,4 @@
+using Aptos.Unity.Rest.Model;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -21,17 +22,20 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Funds a Testnet Account
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="address"></param>
-        /// <param name="amount"></param>
-        /// <param name="endpoint"></param>
-        /// <returns></returns>
-        public IEnumerator FundAccount(Action<string> callback, string address, int amount, string endpoint)
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="address">Address that will get funded.</param>
+        /// <param name="amount">Amount of APT requested.</param>
+        /// <param name="endpoint">Base URL for faucet.</param>
+        /// <returns>Calls <c>callback</c> function with <c>(bool, ResponsiveInfo)</c>: \n
+        /// A boolean stating that the request for funding was successful, and an object containg the response details</returns>
+        public IEnumerator FundAccount(Action<bool, ResponseInfo> callback, string address, int amount, string endpoint)
         {
             string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
             Uri transactionsURI = new Uri(faucetURL);
             var request = new UnityWebRequest(transactionsURI, "POST");
             request.SetRequestHeader("Content-Type", "application/json");
+
+            ResponseInfo responseInfo = new ResponseInfo();
 
             request.SendWebRequest();
             while (!request.isDone)
@@ -41,21 +45,27 @@ namespace Aptos.Unity.Rest
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.Log("Error While Submitting Transaction: " + request.error);
-                callback(request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(false, responseInfo);
             }
             else if (request.responseCode == 404)
             {
-                // TODO: Implememt Error Code deserializer for Faucet Client
-                callback(request.error);
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = request.error;
+                callback(false, responseInfo);
             }
-            else if (request.responseCode == 400)
+            else if (request.responseCode >= 400)
             {
-                Debug.Log(request.error);
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = request.error;
+                callback(false, responseInfo);
             }
             else
             {
-                Debug.Log("Account Funded: " + address);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = "Funding succeeded!";
+                callback(true, responseInfo);
             }
 
             request.Dispose();

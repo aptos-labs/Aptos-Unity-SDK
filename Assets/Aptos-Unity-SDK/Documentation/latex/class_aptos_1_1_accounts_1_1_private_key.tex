@@ -1,0 +1,251 @@
+\hypertarget{class_aptos_1_1_accounts_1_1_private_key}{}\doxysection{Aptos.\+Accounts.\+Private\+Key Class Reference}
+\label{class_aptos_1_1_accounts_1_1_private_key}\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+
+
+Represents a 64-\/byte extended private key. An extended private key is a requirement from Choas.\+Na\+Cl.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_ae9227ef16339c4e49ecb69c7d34e03f3}{Private\+Key}} (byte\mbox{[}$\,$\mbox{]} private\+Key)
+\begin{DoxyCompactList}\small\item\em Initializes the Private\+Key object with a 64 byte array that represents the expanded private key from seed. ~\newline
+ For example, using\+: {\ttfamily Ed25519.\+Expanded\+Private\+Key\+From\+Seed(seed)}. ~\newline
+ This constructor is expected to be called from the \mbox{\hyperlink{}{Account}} constructor. ~\newline
+ Note\+: To create a private key from a 32-\/byte string see \mbox{\hyperlink{}{Private\+Key(string key)}} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a6a60fcf622010dddb48aafe27b222bbd}{Private\+Key}} (string key)
+\begin{DoxyCompactList}\small\item\em Initializes the Private\+Key object with a 64 character (32-\/byte) ASCII representation of a private key. ~\newline
+ Note\+: The undelying cryptographic library (Chaos.\+Na\+CL) uses an extended private key (64 byte) for fast computation. ~\newline
+ This hex string is used as a seed to create an extended private key when \mbox{\hyperlink{}{Key\+Bytes}} is requested. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a13b8ddeb484e8e2b14d208043be3ad5e}{Private\+Key}} (Read\+Only\+Span$<$ byte $>$ private\+Key)
+\begin{DoxyCompactList}\small\item\em Initialize the Private\+Key object from the given string. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_ac0917eaf25d192905a5a52172ba0bfb9}{Sign}} (byte\mbox{[}$\,$\mbox{]} message)
+\begin{DoxyCompactList}\small\item\em Sign a message using the current private key. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a9b25980aeb1f5e51d650d851a7305573}{Equals}} (object obj)
+\item 
+override int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_ab8580d0145681a9b1436dfe9696270ef}{Get\+Hash\+Code}} ()
+\item 
+override string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a3f6eaa896b3aeda4bb1fa1e600230b62}{To\+String}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a8153f8fee2d91354225eb908075ca1c1}{operator==}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} lhs, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} rhs)
+\begin{DoxyCompactList}\small\item\em Compartor for two private keys. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a140cf49bab6d6229553b2f5e1fb14eb5}{operator!=}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} lhs, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} rhs)
+\item 
+static implicit \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a19608c483861da28ae538126a4e4db6b}{operator string}} (\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}} private\+Key)
+\begin{DoxyCompactList}\small\item\em Convert a Private\+Key object to hexadecimal string representation of private key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const int \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a1ede235120bf982582f8d4a6ee9d7ccf}{Key\+Length}} = 64
+\begin{DoxyCompactList}\small\item\em Private key length. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a59b7f70119de95cb3266408e8c772418}{Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The key as a 32-\/byte hexadecimal string (64 characters). ~\newline
+ NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key, ~\newline
+ then we slice it in half since the other half contains the public key. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}{Key\+Bytes}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended key, ~\newline
+ then returns the bytes accordingly. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a 64-\/byte extended private key. An extended private key is a requirement from Choas.\+Na\+Cl. 
+
+Note that the hexadecimal string representation is of the 32-\/byte private key on it\textquotesingle{}s own. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_ae9227ef16339c4e49ecb69c7d34e03f3}\label{class_aptos_1_1_accounts_1_1_private_key_ae9227ef16339c4e49ecb69c7d34e03f3}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!PrivateKey@{PrivateKey}}
+\index{PrivateKey@{PrivateKey}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{PrivateKey()}{PrivateKey()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Private\+Key.\+Private\+Key (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{private\+Key }\end{DoxyParamCaption})}
+
+
+
+Initializes the Private\+Key object with a 64 byte array that represents the expanded private key from seed. ~\newline
+ For example, using\+: {\ttfamily Ed25519.\+Expanded\+Private\+Key\+From\+Seed(seed)}. ~\newline
+ This constructor is expected to be called from the \mbox{\hyperlink{}{Account}} constructor. ~\newline
+ Note\+: To create a private key from a 32-\/byte string see \mbox{\hyperlink{}{Private\+Key(string key)}} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em private\+Key} & 64-\/byte array representation of the private key.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a6a60fcf622010dddb48aafe27b222bbd}\label{class_aptos_1_1_accounts_1_1_private_key_a6a60fcf622010dddb48aafe27b222bbd}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!PrivateKey@{PrivateKey}}
+\index{PrivateKey@{PrivateKey}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{PrivateKey()}{PrivateKey()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Private\+Key.\+Private\+Key (\begin{DoxyParamCaption}\item[{string}]{key }\end{DoxyParamCaption})}
+
+
+
+Initializes the Private\+Key object with a 64 character (32-\/byte) ASCII representation of a private key. ~\newline
+ Note\+: The undelying cryptographic library (Chaos.\+Na\+CL) uses an extended private key (64 byte) for fast computation. ~\newline
+ This hex string is used as a seed to create an extended private key when \mbox{\hyperlink{}{Key\+Bytes}} is requested. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & The private key as an ASCII encoded string. ~\newline
+ Example\+: {\ttfamily 0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c}\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a13b8ddeb484e8e2b14d208043be3ad5e}\label{class_aptos_1_1_accounts_1_1_private_key_a13b8ddeb484e8e2b14d208043be3ad5e}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!PrivateKey@{PrivateKey}}
+\index{PrivateKey@{PrivateKey}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{PrivateKey()}{PrivateKey()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Aptos.\+Accounts.\+Private\+Key.\+Private\+Key (\begin{DoxyParamCaption}\item[{Read\+Only\+Span$<$ byte $>$}]{private\+Key }\end{DoxyParamCaption})}
+
+
+
+Initialize the Private\+Key object from the given string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & The private key as a hex encoded byte array.\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a9b25980aeb1f5e51d650d851a7305573}\label{class_aptos_1_1_accounts_1_1_private_key_a9b25980aeb1f5e51d650d851a7305573}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!Equals@{Equals}}
+\index{Equals@{Equals}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily override bool Aptos.\+Accounts.\+Private\+Key.\+Equals (\begin{DoxyParamCaption}\item[{object}]{obj }\end{DoxyParamCaption})}
+
+
+
+
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_ab8580d0145681a9b1436dfe9696270ef}\label{class_aptos_1_1_accounts_1_1_private_key_ab8580d0145681a9b1436dfe9696270ef}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!GetHashCode@{GetHashCode}}
+\index{GetHashCode@{GetHashCode}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{GetHashCode()}{GetHashCode()}}
+{\footnotesize\ttfamily override int Aptos.\+Accounts.\+Private\+Key.\+Get\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a19608c483861da28ae538126a4e4db6b}\label{class_aptos_1_1_accounts_1_1_private_key_a19608c483861da28ae538126a4e4db6b}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!operator string@{operator string}}
+\index{operator string@{operator string}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{operator string()}{operator string()}}
+{\footnotesize\ttfamily static implicit Aptos.\+Accounts.\+Private\+Key.\+operator string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}}}]{private\+Key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Convert a Private\+Key object to hexadecimal string representation of private key. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em private\+Key} & The Private\+Key object.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Hexadecimal string representing the private key.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a140cf49bab6d6229553b2f5e1fb14eb5}\label{class_aptos_1_1_accounts_1_1_private_key_a140cf49bab6d6229553b2f5e1fb14eb5}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily static bool Aptos.\+Accounts.\+Private\+Key.\+operator!= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}}}]{lhs,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}}}]{rhs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a8153f8fee2d91354225eb908075ca1c1}\label{class_aptos_1_1_accounts_1_1_private_key_a8153f8fee2d91354225eb908075ca1c1}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!operator==@{operator==}}
+\index{operator==@{operator==}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily static bool Aptos.\+Accounts.\+Private\+Key.\+operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}}}]{lhs,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_private_key}{Private\+Key}}}]{rhs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Compartor for two private keys. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lhs} & First private key in comparison..\\
+\hline
+{\em rhs} & Second private key in comparison.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_ac0917eaf25d192905a5a52172ba0bfb9}\label{class_aptos_1_1_accounts_1_1_private_key_ac0917eaf25d192905a5a52172ba0bfb9}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!Sign@{Sign}}
+\index{Sign@{Sign}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{Sign()}{Sign()}}
+{\footnotesize\ttfamily byte\mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Private\+Key.\+Sign (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{message }\end{DoxyParamCaption})}
+
+
+
+Sign a message using the current private key. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The message to sign, represented in bytes.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The signature generated for the message.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a3f6eaa896b3aeda4bb1fa1e600230b62}\label{class_aptos_1_1_accounts_1_1_private_key_a3f6eaa896b3aeda4bb1fa1e600230b62}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!ToString@{ToString}}
+\index{ToString@{ToString}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily override string Aptos.\+Accounts.\+Private\+Key.\+To\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a1ede235120bf982582f8d4a6ee9d7ccf}\label{class_aptos_1_1_accounts_1_1_private_key_a1ede235120bf982582f8d4a6ee9d7ccf}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyLength@{KeyLength}}
+\index{KeyLength@{KeyLength}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{KeyLength}{KeyLength}}
+{\footnotesize\ttfamily const int Aptos.\+Accounts.\+Private\+Key.\+Key\+Length = 64\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Private key length. 
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a59b7f70119de95cb3266408e8c772418}\label{class_aptos_1_1_accounts_1_1_private_key_a59b7f70119de95cb3266408e8c772418}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!Key@{Key}}
+\index{Key@{Key}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{Key}{Key}}
+{\footnotesize\ttfamily string Aptos.\+Accounts.\+Private\+Key.\+Key\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The key as a 32-\/byte hexadecimal string (64 characters). ~\newline
+ NOTE\+: We maintain the full 64-\/byte (128 characters) representation of the extended private key, ~\newline
+ then we slice it in half since the other half contains the public key. 
+
+\mbox{\Hypertarget{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}\label{class_aptos_1_1_accounts_1_1_private_key_a179da93b090669037164241bdc04444d}} 
+\index{Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}!KeyBytes@{KeyBytes}}
+\index{KeyBytes@{KeyBytes}!Aptos.Accounts.PrivateKey@{Aptos.Accounts.PrivateKey}}
+\doxysubsubsection{\texorpdfstring{KeyBytes}{KeyBytes}}
+{\footnotesize\ttfamily byte \mbox{[}$\,$\mbox{]} Aptos.\+Accounts.\+Private\+Key.\+Key\+Bytes\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The extended private key in bytes. Checks if we have the hexadecimal string representation of a 64-\/byte extended key, ~\newline
+ then returns the bytes accordingly. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+Accounts/\mbox{\hyperlink{_private_key_8cs}{Private\+Key.\+cs}}\end{DoxyCompactItemize}

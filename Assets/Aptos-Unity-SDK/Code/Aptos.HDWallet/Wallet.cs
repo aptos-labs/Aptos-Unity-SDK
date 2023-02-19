@@ -108,11 +108,6 @@ namespace Aptos.HdWallet
             InitializeFirstAccount();
         }
 
-        // TODO: Add Verify(message, sig, accountIndex)
-        // TODO: Add Verify(message,sig)
-        // TODO: Sign(message, accountIndex)
-        // TODO: Sign(message)
-
         /// <summary>
         /// Gets the account at the passed index using the ed25519 bip32 derivation path.
         /// </summary>

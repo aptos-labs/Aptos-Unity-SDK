@@ -1,0 +1,872 @@
+\hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}{}\doxysection{Aptos.\+Unity.\+Rest.\+Rest\+Client Class Reference}
+\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+
+
+The \mbox{\hyperlink{namespace_aptos}{Aptos}} REST Client contains a set of \mbox{[}standalone\mbox{]} Coroutines that can started within any Unity script.  
+
+
+Inheritance diagram for Aptos.\+Unity.\+Rest.\+Rest\+Client\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3cc61e446a977a836accf72776b0e679}{Set\+End\+Point}} (string url)
+\begin{DoxyCompactList}\small\item\em Set Endpoint for RPC / REST call. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac2d0baa6c23e8fe41a3ba0c114a37ba1}{Get\+Account}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_data}{Account\+Data}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} account\+Address)
+\begin{DoxyCompactList}\small\item\em Get Account Details. ~\newline
+ Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. If the ledger version is not specified in the request, the latest ledger version is used. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_add97b3c9a88054e560a228fade4efa29}{Get\+Account\+Sequence\+Number}} (Action$<$ string, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}} account\+Address)
+\begin{DoxyCompactList}\small\item\em Gets Account Sequence Number. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a876a9811cd4942ff3e9b832ce0ef0f16}{Get\+Account\+Balance}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin_1_1_coin}{Account\+Resource\+Coin.\+Coin}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} account\+Address)
+\begin{DoxyCompactList}\small\item\em Get an account\textquotesingle{}s balance. ~\newline
+ \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1f71708ebbde910882993525ed708a97}{Get\+Account\+Resource\+Collection}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection}{Resource\+Collection}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} account\+Address, string resource\+Type)
+\begin{DoxyCompactList}\small\item\em Get Account Resource. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a43eb640df9b4a91fb3ed8e00142ef6f8}{Get\+Table\+Item\+Coin}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin}{Account\+Resource\+Coin}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, string key)
+\begin{DoxyCompactList}\small\item\em Gets table item that represents a coin resource See \mbox{\hyperlink{}{Get\+Table\+Item}} \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a53c4cc366177befe5b48a8df7a342928}{Get\+Table\+Item}} (Action$<$ string $>$ callback, string handle, string key\+Type, string value\+Type, string key)
+\begin{DoxyCompactList}\small\item\em Get a table item at a specific ledger version from the table identified by the handle \{table\+\_\+handle\} in the path and a \mbox{[}simple\mbox{]} \char`\"{}key\char`\"{} (Table\+Item\+Request) provided by the request body. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ad7a256f133fd657658a6ef97ec4f70f3}{Get\+Table\+Item\+NFT}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_id_request}{Token\+Id\+Request}} key)
+\begin{DoxyCompactList}\small\item\em Get a table item for a NFT from the table identified by the handle \{table\+\_\+handle\} in the path and a complex key provided by the request body. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1fe8ad1328c3848dae5d7673fd8bba96}{Get\+Table\+Item\+Token\+Data}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string handle, string key\+Type, string value\+Type, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id}{Token\+Data\+Id}} key)
+\begin{DoxyCompactList}\small\item\em Get a table item that contains a token\textquotesingle{}s (NFT) metadata. In this case we are using a complex key to retrieve the table item. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a97cd73cc5325c94ead65d92b33227402}{Get\+Info}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_ledger_info}{Ledger\+Info}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback)
+\begin{DoxyCompactList}\small\item\em Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_afbbc6b5f8bc82d29aa070d03f714adad}{Submit\+Transaction}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} sender, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_payload}{Transaction\+Payload}} payload)
+\begin{DoxyCompactList}\small\item\em 1) Generates a transaction request ~\newline
+2) submits that to produce a raw transaction ~\newline
+3) signs the raw transaction ~\newline
+4) submits the signed transaction ~\newline
+\end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a75fd417c0f8430e31c742be93b7f43af}{Wait\+For\+Transaction}} (Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string txn\+Hash)
+\begin{DoxyCompactList}\small\item\em A Coroutine that polls for a transaction hash until it is confimred in the blockchain Times out if the transaction hash is not found after querying for N times. ~\newline
+ \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a008e04354c44777bd25403704382c2c9}{Transaction\+Pending}} (Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, string txn\+Hash)
+\begin{DoxyCompactList}\small\item\em Query to see if transaction has been \textquotesingle{}confirmed\textquotesingle{} in the blockchain by using the transaction hash. A 404 error will be returned if the transaction hasn\textquotesingle{}t been confirmed. Once the transaction is confirmed it will have a {\ttfamily pending\+\_\+transaction} state. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac3ab7709a0934da84f653dfcaa725759}{Transfer}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} sender, string to, long amount)
+\begin{DoxyCompactList}\small\item\em Transfer a given coin amount from a given Account to the recipient\textquotesingle{}s account Address. Returns the sequence number of the transaction used to transfer. ~\newline
+ \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a9cf18be53aa45dadcca8952151b04a7b}{Encode\+Submission}} (Action$<$ string $>$ callback, string txn\+Request\+Json)
+\begin{DoxyCompactList}\small\item\em Encodes submission. ~\newline
+ This endpoint accepts an Encode\+Submission\+Request, which internally is a User\+Transaction\+Request\+Inner (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS. ~\newline
+ The client can then use this to create a transaction signature to be used in a Submit\+Transaction\+Request, which it then passes to the /transactions POST endpoint. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4fac6ed70feb2255509386f9ee9eade0}{Encode\+Submission\+As\+Bytes}} (Action$<$ byte\mbox{[}$\,$\mbox{]}$>$ callback, string txn\+Request\+Json)
+\begin{DoxyCompactList}\small\item\em Encodes submission. See \mbox{\hyperlink{}{Encode\+Submission}}. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a957d5fd02ec19f888199bcb2ee8f9cb2}{Create\+Collection}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} sender, string collection\+Name, string collection\+Description, string uri)
+\begin{DoxyCompactList}\small\item\em Create a NFT collection. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ab63d0c2ebc1a158edadfaa345835774c}{Create\+Token}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} sender\+Royalty\+Payee\+Address, string collection\+Name, string token\+Name, string description, int supply, int max, string uri, int royalty\+Points\+Per\+Million)
+\begin{DoxyCompactList}\small\item\em Create Non-\/\+Fungible Token (NFT) See token \mbox{\hyperlink{}{reference.}} \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a2ea5434d1cce09f77504947918a40cb2}{Offer\+Token}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} account, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} receiver, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string token\+Name, int amount, int property\+Version=0)
+\begin{DoxyCompactList}\small\item\em Offer a token to a given address. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a416a790f9b8d8cb4d156bf65a8e8c5e8}{Claim\+Token}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}} account, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} sender, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string token\+Name, int property\+Version=0)
+\begin{DoxyCompactList}\small\item\em Claim a token that was offered by {\itshape sender}  \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3a0f200bba6c1e424a49aea7b5581e3a}{Get\+Token}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} owner\+Address, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator\+Address, string collection\+Name, string token\+Name, int property\+Version=0)
+\begin{DoxyCompactList}\small\item\em Get token information. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a25fd56bbfea0309008b7b8290f3cdd1e}{Get\+Token\+Balance}} (Action$<$ string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} owner\+Address, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator\+Address, string collection\+Name, string token\+Name, int property\+Version=0)
+\begin{DoxyCompactList}\small\item\em Get balance for a given non-\/fungible token (NFT). \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a364c951783cc0498419caf3b307126de}{Get\+Token\+Data}} (Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name, string token\+Name, int property\+Version=0)
+\begin{DoxyCompactList}\small\item\em Read Collection\textquotesingle{}s token data table. An example. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4f187f56b61af0d26b8cbc812981c04f}{Get\+Collection}} (Action$<$ string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} creator, string collection\+Name)
+\begin{DoxyCompactList}\small\item\em Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types. \end{DoxyCompactList}\item 
+IEnumerator \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}{Get\+Account\+Resource}} (Action$<$ bool, long, string $>$ callback, \mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts.\+Account\+Address}} account\+Address, string resource\+Type)
+\begin{DoxyCompactList}\small\item\em Get a resource of a given type from an account. NOTE\+: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it into an object. See \mbox{\hyperlink{}{Get\+Account\+Resource\+Collection}} for an example. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abc84f376cfca18c198998d545fa77a0c}{String\+To\+Byte\+Array}} (String hex)
+\begin{DoxyCompactList}\small\item\em Convert byte array to string. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_aae392b724fe31d094fbd5fc6133b1bea}{To\+Hexadecimal\+Representation}} (byte\mbox{[}$\,$\mbox{]} bytes)
+\begin{DoxyCompactList}\small\item\em Turns byte array to hexadecimal string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a59197cfe4ddeadc2577878cd3d650664}{Transaction\+Wait\+In\+Seconds}} = 20
+\begin{DoxyCompactList}\small\item\em Amount of seconds to each during each polling cycle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}{Rest\+Client}} \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4765077e5b416c288d2299f20f759306}{Instance}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Static instance of the REST client. \end{DoxyCompactList}\item 
+Uri \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a923a972898edd67745b64d60db12274f}{Endpoint}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Based enpoint for REST API. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespace_aptos}{Aptos}} REST Client contains a set of \mbox{[}standalone\mbox{]} Coroutines that can started within any Unity script. 
+
+Consideration must be placed into the wait time required for a transaction to be committed into the blockchain. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a416a790f9b8d8cb4d156bf65a8e8c5e8}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a416a790f9b8d8cb4d156bf65a8e8c5e8}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!ClaimToken@{ClaimToken}}
+\index{ClaimToken@{ClaimToken}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{ClaimToken()}{ClaimToken()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Claim\+Token (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}}}]{account,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{sender,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Claim a token that was offered by {\itshape sender}  
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em account} & Account making the claim\\
+\hline
+{\em sender} & Address of the sender of the non-\/fungible token (NFT)\\
+\hline
+{\em creator} & Address of the creator of the token (NFT)\\
+\hline
+{\em collection\+Name} & Name of the NFT collection\\
+\hline
+{\em token\+Name} & Name of the token\\
+\hline
+{\em property\+Version} & Token version, defaults to 0\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback}function with {\ttfamily (Transaction, Response\+Info)}\+: ~\newline
+An object the represents the transaction submitted -\/ null if the transaction to claim a token failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a957d5fd02ec19f888199bcb2ee8f9cb2}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a957d5fd02ec19f888199bcb2ee8f9cb2}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!CreateCollection@{CreateCollection}}
+\index{CreateCollection@{CreateCollection}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{CreateCollection()}{CreateCollection()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Create\+Collection (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}}}]{sender,  }\item[{string}]{collection\+Name,  }\item[{string}]{collection\+Description,  }\item[{string}]{uri }\end{DoxyParamCaption})}
+
+
+
+Create a NFT collection. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em sender} & Creator of the collection.\\
+\hline
+{\em collection\+Name} & Name of collection.\\
+\hline
+{\em collection\+Description} & Description of the collection.\\
+\hline
+{\em uri} & Collection\textquotesingle{}s URI\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Transaction, Response\+Info)}\+: ~\newline
+An object the represents the transaction submitted -\/ null if the transaction to create a collection failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ab63d0c2ebc1a158edadfaa345835774c}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ab63d0c2ebc1a158edadfaa345835774c}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!CreateToken@{CreateToken}}
+\index{CreateToken@{CreateToken}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{CreateToken()}{CreateToken()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Create\+Token (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}}}]{sender\+Royalty\+Payee\+Address,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{string}]{description,  }\item[{int}]{supply,  }\item[{int}]{max,  }\item[{string}]{uri,  }\item[{int}]{royalty\+Points\+Per\+Million }\end{DoxyParamCaption})}
+
+
+
+Create Non-\/\+Fungible Token (NFT) See token \mbox{\hyperlink{}{reference.}} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em sender\+Royalty\+Payee\+Address} & Creator of the token, also the account the that will receive royalties. \\
+\hline
+{\em collection\+Name} & Name of the collection to which the token belongs to.\\
+\hline
+{\em token\+Name} & Name of the token\\
+\hline
+{\em description} & Description of the token being minted\\
+\hline
+{\em supply} & Token supply\\
+\hline
+{\em max} & Max number of mints\\
+\hline
+{\em uri} & URI of where the token\textquotesingle{}s asset lives (e.\+g. JPEG)\\
+\hline
+{\em royalty\+Points\+Per\+Million} & Royalties defined in the millionths\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Transaction, Response\+Info)}\+: ~\newline
+An object the represents the transaction submitted -\/ null if the transaction to create a token failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a9cf18be53aa45dadcca8952151b04a7b}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a9cf18be53aa45dadcca8952151b04a7b}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!EncodeSubmission@{EncodeSubmission}}
+\index{EncodeSubmission@{EncodeSubmission}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{EncodeSubmission()}{EncodeSubmission()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Encode\+Submission (\begin{DoxyParamCaption}\item[{Action$<$ string $>$}]{callback,  }\item[{string}]{txn\+Request\+Json }\end{DoxyParamCaption})}
+
+
+
+Encodes submission. ~\newline
+ This endpoint accepts an Encode\+Submission\+Request, which internally is a User\+Transaction\+Request\+Inner (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS. ~\newline
+ The client can then use this to create a transaction signature to be used in a Submit\+Transaction\+Request, which it then passes to the /transactions POST endpoint. 
+
+If you are using an SDK that has BCS support, such as the official Rust, Type\+Script, or Python SDKs, you may use the BCS encoding instead of this endpoint.
+
+To sign a message using the response from this endpoint\+:
+\begin{DoxyItemize}
+\item Decode the hex encoded string in the response to bytes.
+\item Sign the bytes to create the signature.
+\item Use that as the signature field in something like Ed25519\+Signature, which you then use to build a Transaction\+Signature.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em txn\+Request\+Json} & Transaction request in JSON format.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with\+: ~\newline
+All bytes (Vec) data that is represented as hex-\/encoded string prefixed with 0x and fulfilled with two hex digits per byte. ~\newline
+ Unlike the Address type, Hex\+Encoded\+Bytes will not trim any zeros. ~\newline
+ Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1}
+
+\end{DoxyCode}
+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4fac6ed70feb2255509386f9ee9eade0}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4fac6ed70feb2255509386f9ee9eade0}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!EncodeSubmissionAsBytes@{EncodeSubmissionAsBytes}}
+\index{EncodeSubmissionAsBytes@{EncodeSubmissionAsBytes}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{EncodeSubmissionAsBytes()}{EncodeSubmissionAsBytes()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Encode\+Submission\+As\+Bytes (\begin{DoxyParamCaption}\item[{Action$<$ byte\mbox{[}$\,$\mbox{]}$>$}]{callback,  }\item[{string}]{txn\+Request\+Json }\end{DoxyParamCaption})}
+
+
+
+Encodes submission. See \mbox{\hyperlink{}{Encode\+Submission}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em txn\+Request\+Json} & Transaction request in JSON format.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback}function with a byte array representing the encoded submission.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac2d0baa6c23e8fe41a3ba0c114a37ba1}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac2d0baa6c23e8fe41a3ba0c114a37ba1}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccount@{GetAccount}}
+\index{GetAccount@{GetAccount}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetAccount()}{GetAccount()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Account (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_data}{Account\+Data}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}}}]{account\+Address }\end{DoxyParamCaption})}
+
+
+
+Get Account Details. ~\newline
+ Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. If the ledger version is not specified in the request, the latest ledger version is used. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em account\+Address} & Address of the account.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Account\+Data, Response\+Info)}\+: ~\newline
+An object that contains the account\textquotesingle{}s\+: ~\newline
+ {\ttfamily sequence\+\_\+number}, a string containing a 64-\/bit unsigned integer. ~\newline
+ Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{32425224034}
+
+\end{DoxyCode}
+ {\ttfamily authentication\+\_\+key} All bytes (Vec) data is represented as hex-\/encoded string prefixed with 0x and fulfilled with two hex digits per byte. Unlike the Address type, Hex\+Encoded\+Bytes will not trim any zeros. ~\newline
+ Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1}
+
+\end{DoxyCode}
+, it is null if the request fails ~\newline
+and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a876a9811cd4942ff3e9b832ce0ef0f16}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a876a9811cd4942ff3e9b832ce0ef0f16}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountBalance@{GetAccountBalance}}
+\index{GetAccountBalance@{GetAccountBalance}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetAccountBalance()}{GetAccountBalance()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Account\+Balance (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin_1_1_coin}{Account\+Resource\+Coin\+::\+Coin}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{account\+Address }\end{DoxyParamCaption})}
+
+
+
+Get an account\textquotesingle{}s balance. ~\newline
+ 
+
+The {\ttfamily /account\texorpdfstring{$<$}{<}/\{address\}/resource/\{coin\+\_\+type\}} endpoint for Aptos\+Coin returns the following response\+: ~\newline
+ {\ttfamily  \{ \char`\"{}type\char`\"{}\+:\char`\"{}0x1\+::coin\+::\+Coin\+Store$<$0x1\+::aptos\+\_\+coin\+::\+Aptos\+Coin$>$\char`\"{}, \char`\"{}data\char`\"{}\+:\{ \char`\"{}coin\char`\"{}\+:\{ \char`\"{}value\char`\"{}\+:\char`\"{}3400034000\char`\"{} \}, \char`\"{}deposit\+\_\+events\char`\"{}\+:\{ \char`\"{}counter\char`\"{}\+:\char`\"{}68\char`\"{}, \char`\"{}guid\char`\"{}\+:\{ \char`\"{}id\char`\"{}\+:\{ \char`\"{}addr\char`\"{}\+:\char`\"{}0xd89fd73ef7c058ccf79fe4c1c38507d580354206a36ae03eea01ddfd3afeef07\char`\"{}, \char`\"{}creation\+\_\+num\char`\"{}\+:\char`\"{}2\char`\"{} \} \} \}, \char`\"{}frozen\char`\"{}\+:false, \char`\"{}withdraw\+\_\+events\char`\"{}\+:\{ \char`\"{}counter\char`\"{}\+:\char`\"{}0\char`\"{}, \char`\"{}guid\char`\"{}\+:\{ \char`\"{}id\char`\"{}\+:\{ \char`\"{}addr\char`\"{}\+:\char`\"{}0xd89fd73ef7c058ccf79fe4c1c38507d580354206a36ae03eea01ddfd3afeef07\char`\"{}, \char`\"{}creation\+\_\+num\char`\"{}\+:\char`\"{}3\char`\"{} \} \} \} \} \} }
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em account\+Address} & Address of the account.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Account\+Resource\+Coin.\+Coin, Response\+Info)}\+: ~\newline
+ A representation of the coin, and an object containing the response details.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4a0c19006d4e0cc6302c4b12cc565c81}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountResource@{GetAccountResource}}
+\index{GetAccountResource@{GetAccountResource}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetAccountResource()}{GetAccountResource()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Account\+Resource (\begin{DoxyParamCaption}\item[{Action$<$ bool, long, string $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{account\+Address,  }\item[{string}]{resource\+Type }\end{DoxyParamCaption})}
+
+
+
+Get a resource of a given type from an account. NOTE\+: The response is a complex object of types only known to the developer writing the contracts. This function return a string and expect the developer to deserialize it into an object. See \mbox{\hyperlink{}{Get\+Account\+Resource\+Collection}} for an example. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em account\+Address} & Address of the account.\\
+\hline
+{\em resource\+Type} & Type of resource being queried for.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (bool, long, string)}\+: ~\newline
+-- bool\+: success boolean ~\newline
+-- long\+: -\/ error code, string -\/ JSON response to be deserialized by the consumer of the function~\newline
+-- string\+: -\/ the response which may contain the resource details
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1f71708ebbde910882993525ed708a97}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1f71708ebbde910882993525ed708a97}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountResourceCollection@{GetAccountResourceCollection}}
+\index{GetAccountResourceCollection@{GetAccountResourceCollection}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetAccountResourceCollection()}{GetAccountResourceCollection()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Account\+Resource\+Collection (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection}{Resource\+Collection}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{account\+Address,  }\item[{string}]{resource\+Type }\end{DoxyParamCaption})}
+
+
+
+Get Account Resource. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em account\+Address} & Address of the account.\\
+\hline
+{\em resource\+Type} & Type of resource being queried for.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Resource\+Collection, Response\+Info)}\+:~\newline
+An object representing a collection resource -\/ null if the request fails, and a response object contains the response details.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_add97b3c9a88054e560a228fade4efa29}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_add97b3c9a88054e560a228fade4efa29}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetAccountSequenceNumber@{GetAccountSequenceNumber}}
+\index{GetAccountSequenceNumber@{GetAccountSequenceNumber}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetAccountSequenceNumber()}{GetAccountSequenceNumber()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Account\+Sequence\+Number (\begin{DoxyParamCaption}\item[{Action$<$ string, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Account\+Address}}}]{account\+Address }\end{DoxyParamCaption})}
+
+
+
+Gets Account Sequence Number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em account\+Address} & Address of the account.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (string, Response\+Info)}\+: ~\newline
+A Sequence number as a string -\/ null if the request fails, and a response object containing the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4f187f56b61af0d26b8cbc812981c04f}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4f187f56b61af0d26b8cbc812981c04f}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetCollection@{GetCollection}}
+\index{GetCollection@{GetCollection}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetCollection()}{GetCollection()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Collection (\begin{DoxyParamCaption}\item[{Action$<$ string $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator,  }\item[{string}]{collection\+Name }\end{DoxyParamCaption})}
+
+
+
+Get collection information. This return a JSON representation that will be parsed by the developer that know the specific return types. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em creator} & Address of the creator.\\
+\hline
+{\em collection\+Name} & Name of the collection.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A JSON string representation of the collection information -\/ null if the request fails.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a97cd73cc5325c94ead65d92b33227402}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a97cd73cc5325c94ead65d92b33227402}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetInfo@{GetInfo}}
+\index{GetInfo@{GetInfo}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetInfo()}{GetInfo()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Info (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_ledger_info}{Ledger\+Info}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback }\end{DoxyParamCaption})}
+
+
+
+Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback}function with {\ttfamily (Ledger\+Info, response)}\+: ~\newline
+ An object that contains the chain details -\/ null if the request fails, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a53c4cc366177befe5b48a8df7a342928}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a53c4cc366177befe5b48a8df7a342928}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTableItem@{GetTableItem}}
+\index{GetTableItem@{GetTableItem}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetTableItem()}{GetTableItem()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Table\+Item (\begin{DoxyParamCaption}\item[{Action$<$ string $>$}]{callback,  }\item[{string}]{handle,  }\item[{string}]{key\+Type,  }\item[{string}]{value\+Type,  }\item[{string}]{key }\end{DoxyParamCaption})}
+
+
+
+Get a table item at a specific ledger version from the table identified by the handle \{table\+\_\+handle\} in the path and a \mbox{[}simple\mbox{]} \char`\"{}key\char`\"{} (Table\+Item\+Request) provided by the request body. 
+
+Further details are provider \mbox{\hyperlink{}{here}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em handle} & The identifier for the given table\\
+\hline
+{\em key\+Type} & String representation of an on-\/chain Move tag that is exposed in the transaction, e.\+g. \char`\"{}0x1\+::string\+::\+String\char`\"{}\\
+\hline
+{\em value\+Type} & String representation of an on-\/chain Move type value, e.\+g. \char`\"{}0x3\+::token\+::\+Collection\+Data\char`\"{}\\
+\hline
+{\em key} & The value of the table item\textquotesingle{}s key, e.\+g. the name of a collection.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with a JSON object representing a table item -\/ null if the request fails.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a43eb640df9b4a91fb3ed8e00142ef6f8}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a43eb640df9b4a91fb3ed8e00142ef6f8}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTableItemCoin@{GetTableItemCoin}}
+\index{GetTableItemCoin@{GetTableItemCoin}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetTableItemCoin()}{GetTableItemCoin()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Table\+Item\+Coin (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_coin}{Account\+Resource\+Coin}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{handle,  }\item[{string}]{key\+Type,  }\item[{string}]{value\+Type,  }\item[{string}]{key }\end{DoxyParamCaption})}
+
+
+
+Gets table item that represents a coin resource See \mbox{\hyperlink{}{Get\+Table\+Item}} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em handle} & The identifier for the given table.\\
+\hline
+{\em key\+Type} & String representation of an on-\/chain Move tag that is exposed in the transaction.\\
+\hline
+{\em value\+Type} & String representation of an on-\/chain Move type value.\\
+\hline
+{\em key} & The value of the table item\textquotesingle{}s key, e.\+g. the name of a collection\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Account\+Resource\+Coing, Response\+Info)}\+:~\newline
+ An object representing the account resource that holds the coin\textquotesingle{}s information -\/ null if the request fails, and a response object the contains the response details.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ad7a256f133fd657658a6ef97ec4f70f3}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ad7a256f133fd657658a6ef97ec4f70f3}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTableItemNFT@{GetTableItemNFT}}
+\index{GetTableItemNFT@{GetTableItemNFT}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetTableItemNFT()}{GetTableItemNFT()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Table\+Item\+NFT (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{handle,  }\item[{string}]{key\+Type,  }\item[{string}]{value\+Type,  }\item[{\mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_id_request}{Token\+Id\+Request}}}]{key }\end{DoxyParamCaption})}
+
+
+
+Get a table item for a NFT from the table identified by the handle \{table\+\_\+handle\} in the path and a complex key provided by the request body. 
+
+See \mbox{\hyperlink{}{Get\+Table\+Item}} for a get table item using a generic string key.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em handle} & The identifier for the given table.\\
+\hline
+{\em key\+Type} & String representation of an on-\/chain Move tag that is exposed in the transaction.\\
+\hline
+{\em value\+Type} & String representation of an on-\/chain Move type value.\\
+\hline
+{\em key} & A complex key object used to search for the table item. For example\+: 
+\begin{DoxyCode}{1}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}token\_data\_id"{}}:\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}creator"{}}:\textcolor{stringliteral}{"{}0xcd7820caacab04fbf1d7e563f4d329f06d2ce3140d654729d99258b5b68a27bf"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}collection"{}}:\textcolor{stringliteral}{"{}Alice's"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}name"{}}:\textcolor{stringliteral}{"{}Alice's\ first\ token"{}}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}property\_version"{}}:\textcolor{stringliteral}{"{}0"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Table\+Item\+Token, Response\+Info)}\+: ~\newline
+An object containing the details of the token -\/ null if the request fails, and a response object containing the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1fe8ad1328c3848dae5d7673fd8bba96}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a1fe8ad1328c3848dae5d7673fd8bba96}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTableItemTokenData@{GetTableItemTokenData}}
+\index{GetTableItemTokenData@{GetTableItemTokenData}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetTableItemTokenData()}{GetTableItemTokenData()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Table\+Item\+Token\+Data (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{handle,  }\item[{string}]{key\+Type,  }\item[{string}]{value\+Type,  }\item[{\mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_token_data_id}{Token\+Data\+Id}}}]{key }\end{DoxyParamCaption})}
+
+
+
+Get a table item that contains a token\textquotesingle{}s (NFT) metadata. In this case we are using a complex key to retrieve the table item. 
+
+Note\+: the response received from the REST {\ttfamily /table} for this methods has a particular format specific to the SDK example. ~\newline
+
+
+Developers will have to implement their own custom object\textquotesingle{}s to match the properties of the NFT, meaning the content in the table item. ~\newline
+
+
+The response for {\ttfamily /table} in the SDK example has the following format\+: ~\newline
+ {\ttfamily  \{ \char`\"{}default\+\_\+properties\char`\"{}\+:\{ \char`\"{}map\char`\"{}\+:\{ \char`\"{}data\char`\"{}\+:\mbox{[} \mbox{]} \} \}, \char`\"{}description\char`\"{}\+:\char`\"{}\+Alice\textquotesingle{}s simple token\char`\"{}, \char`\"{}largest\+\_\+property\+\_\+version\char`\"{}\+:\char`\"{}0\char`\"{}, \char`\"{}maximum\char`\"{}\+:\char`\"{}1\char`\"{}, \char`\"{}mutability\+\_\+config\char`\"{}\+:\{ \char`\"{}description\char`\"{}\+:false, \char`\"{}maximum\char`\"{}\+:false, \char`\"{}properties\char`\"{}\+:false, \char`\"{}royalty\char`\"{}\+:false, \char`\"{}uri\char`\"{}\+:false \}, \char`\"{}name\char`\"{}\+:\char`\"{}\+Alice\textquotesingle{}s first token\char`\"{}, \char`\"{}royalty\char`\"{}\+:\{ \char`\"{}payee\+\_\+address\char`\"{}\+:\char`\"{}0x8b8a8935cd90a87eaf47c7f309b6935e305e48b47f95982d65153b03032b3f33\char`\"{}, \char`\"{}royalty\+\_\+points\+\_\+denominator\char`\"{}\+:\char`\"{}1000000\char`\"{}, \char`\"{}royalty\+\_\+points\+\_\+numerator\char`\"{}\+:\char`\"{}0\char`\"{} \}, \char`\"{}supply\char`\"{}\+:\char`\"{}1\char`\"{}, \char`\"{}uri\char`\"{}\+:\char`\"{}https\+://aptos.\+dev/img/nyan.\+jpeg\char`\"{} \} }
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used after response is received.\\
+\hline
+{\em handle} & The identifier for the given table.\\
+\hline
+{\em key\+Type} & String representation of an on-\/chain Move tag that is exposed in the transaction.\\
+\hline
+{\em value\+Type} & String representation of an on-\/chain Move type value.\\
+\hline
+{\em key} & A complex key object used to search for the table item. In this case it\textquotesingle{}s a Token\+Data\+Id object that contains the token / collection info\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Table\+Item\+Token\+Metadata, Response\+Info)}\+: ~\newline
+An object that represent the NFT\textquotesingle{}s metadata -\/ null if the request fails, and a response object with the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3a0f200bba6c1e424a49aea7b5581e3a}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3a0f200bba6c1e424a49aea7b5581e3a}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetToken@{GetToken}}
+\index{GetToken@{GetToken}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetToken()}{GetToken()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Token (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token}{Table\+Item\+Token}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{owner\+Address,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator\+Address,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Get token information. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em owner\+Address} & Address of token owner.\\
+\hline
+{\em creator\+Address} & Address of token creator.\\
+\hline
+{\em collection\+Name} & Name of the collection.\\
+\hline
+{\em token\+Name} & Name of the token.\\
+\hline
+{\em property\+Version} & Version of the token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Table\+Item\+Token, Response\+Info)}\+: ~\newline
+An object the represents the transaction submitted -\/ null if the transaction to get a token failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a25fd56bbfea0309008b7b8290f3cdd1e}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a25fd56bbfea0309008b7b8290f3cdd1e}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTokenBalance@{GetTokenBalance}}
+\index{GetTokenBalance@{GetTokenBalance}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetTokenBalance()}{GetTokenBalance()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Token\+Balance (\begin{DoxyParamCaption}\item[{Action$<$ string $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{owner\+Address,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator\+Address,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Get balance for a given non-\/fungible token (NFT). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em owner\+Address} & Address of token owner.\\
+\hline
+{\em creator\+Address} & Address of token creator.\\
+\hline
+{\em collection\+Name} & Name of the collection.\\
+\hline
+{\em token\+Name} & Name of the token.\\
+\hline
+{\em property\+Version} & Version of the token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Token balance as a string.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a364c951783cc0498419caf3b307126de}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a364c951783cc0498419caf3b307126de}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!GetTokenData@{GetTokenData}}
+\index{GetTokenData@{GetTokenData}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{GetTokenData()}{GetTokenData()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Get\+Token\+Data (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_table_item_token_metadata}{Table\+Item\+Token\+Metadata}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Read Collection\textquotesingle{}s token data table. An example. 
+
+{\ttfamily  \{ \char`\"{}default\+\_\+properties\char`\"{}\+:\{ \char`\"{}map\char`\"{}\+:\{ \char`\"{}data\char`\"{}\+:\mbox{[} \mbox{]} \} \}, \char`\"{}description\char`\"{}\+:\char`\"{}\+Alice\textquotesingle{}s simple token\char`\"{}, \char`\"{}largest\+\_\+property\+\_\+version\char`\"{}\+:\char`\"{}0\char`\"{}, \char`\"{}maximum\char`\"{}\+:\char`\"{}1\char`\"{}, \char`\"{}mutability\+\_\+config\char`\"{}\+:\{ \char`\"{}description\char`\"{}\+:false, \char`\"{}maximum\char`\"{}\+:false, \char`\"{}properties\char`\"{}\+:false, \char`\"{}royalty\char`\"{}\+:false, \char`\"{}uri\char`\"{}\+:false \}, \char`\"{}name\char`\"{}\+:\char`\"{}\+Alice\textquotesingle{}s first token\char`\"{}, \char`\"{}royalty\char`\"{}\+:\{ \char`\"{}payee\+\_\+address\char`\"{}\+:\char`\"{}0x3f99ffee67853e129173b9df0e2e9c6af6f08fe2a4417daf43df46ad957a8bbe\char`\"{}, \char`\"{}royalty\+\_\+points\+\_\+denominator\char`\"{}\+:\char`\"{}1000000\char`\"{}, \char`\"{}royalty\+\_\+points\+\_\+numerator\char`\"{}\+:\char`\"{}0\char`\"{} \}, \char`\"{}supply\char`\"{}\+:\char`\"{}1\char`\"{}, \char`\"{}uri\char`\"{}\+:\char`\"{}https\+://aptos.\+dev/img/nyan.\+jpeg\char`\"{} \} }
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em creator} & Address of the creator.\\
+\hline
+{\em collection\+Name} & Name of the collection.\\
+\hline
+{\em token\+Name} & Name of the token.\\
+\hline
+{\em property\+Version} & Version of the token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Table\+Item\+Token, Response\+Info)}\+: ~\newline
+An object the represents the NFT\textquotesingle{}s token metadata -\/ null if the transaction to get a token failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a2ea5434d1cce09f77504947918a40cb2}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a2ea5434d1cce09f77504947918a40cb2}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!OfferToken@{OfferToken}}
+\index{OfferToken@{OfferToken}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{OfferToken()}{OfferToken()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Offer\+Token (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}}}]{account,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{receiver,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account_address}{Accounts\+::\+Account\+Address}}}]{creator,  }\item[{string}]{collection\+Name,  }\item[{string}]{token\+Name,  }\item[{int}]{amount,  }\item[{int}]{property\+Version = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Offer a token to a given address. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em account} & Account offering the token.\\
+\hline
+{\em receiver} & Address of recipient.\\
+\hline
+{\em creator} & Address of token creator.\\
+\hline
+{\em collection\+Name} & Name of the collection.\\
+\hline
+{\em token\+Name} & Name of the token.\\
+\hline
+{\em amount} & Amount being offered.\\
+\hline
+{\em property\+Version} & ersion of the token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with {\ttfamily (Transaction, Response\+Info)}\+: ~\newline
+An object the represents the transaction submitted -\/ null if the transaction to offer a token failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3cc61e446a977a836accf72776b0e679}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a3cc61e446a977a836accf72776b0e679}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!SetEndPoint@{SetEndPoint}}
+\index{SetEndPoint@{SetEndPoint}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{SetEndPoint()}{SetEndPoint()}}
+{\footnotesize\ttfamily void Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Set\+End\+Point (\begin{DoxyParamCaption}\item[{string}]{url }\end{DoxyParamCaption})}
+
+
+
+Set Endpoint for RPC / REST call. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em url} & Base URL for REST API.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abc84f376cfca18c198998d545fa77a0c}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_abc84f376cfca18c198998d545fa77a0c}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!StringToByteArray@{StringToByteArray}}
+\index{StringToByteArray@{StringToByteArray}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{StringToByteArray()}{StringToByteArray()}}
+{\footnotesize\ttfamily byte\mbox{[}$\,$\mbox{]} Aptos.\+Unity.\+Rest.\+Rest\+Client.\+String\+To\+Byte\+Array (\begin{DoxyParamCaption}\item[{String}]{hex }\end{DoxyParamCaption})}
+
+
+
+Convert byte array to string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hex} & Hexadecimal string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte array representing the hex string.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_afbbc6b5f8bc82d29aa070d03f714adad}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_afbbc6b5f8bc82d29aa070d03f714adad}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!SubmitTransaction@{SubmitTransaction}}
+\index{SubmitTransaction@{SubmitTransaction}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{SubmitTransaction()}{SubmitTransaction()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Submit\+Transaction (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}}}]{sender,  }\item[{\mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_payload}{Transaction\+Payload}}}]{payload }\end{DoxyParamCaption})}
+
+
+
+1) Generates a transaction request ~\newline
+2) submits that to produce a raw transaction ~\newline
+3) signs the raw transaction ~\newline
+4) submits the signed transaction ~\newline
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em sender} & Account submitting the transaction.\\
+\hline
+{\em payload} & Transaction payload.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback}function with {\ttfamily (Transaction, Response\+Info)}\+:~\newline
+An object that represents the transaction submitted -\/ null if the transaction fails, and a response object with the response detials. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_aae392b724fe31d094fbd5fc6133b1bea}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_aae392b724fe31d094fbd5fc6133b1bea}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!ToHexadecimalRepresentation@{ToHexadecimalRepresentation}}
+\index{ToHexadecimalRepresentation@{ToHexadecimalRepresentation}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{ToHexadecimalRepresentation()}{ToHexadecimalRepresentation()}}
+{\footnotesize\ttfamily string Aptos.\+Unity.\+Rest.\+Rest\+Client.\+To\+Hexadecimal\+Representation (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{bytes }\end{DoxyParamCaption})}
+
+
+
+Turns byte array to hexadecimal string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bytes} & Byte array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+String that represents byte array of hexadecials.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a008e04354c44777bd25403704382c2c9}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a008e04354c44777bd25403704382c2c9}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!TransactionPending@{TransactionPending}}
+\index{TransactionPending@{TransactionPending}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{TransactionPending()}{TransactionPending()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Transaction\+Pending (\begin{DoxyParamCaption}\item[{Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{txn\+Hash }\end{DoxyParamCaption})}
+
+
+
+Query to see if transaction has been \textquotesingle{}confirmed\textquotesingle{} in the blockchain by using the transaction hash. A 404 error will be returned if the transaction hasn\textquotesingle{}t been confirmed. Once the transaction is confirmed it will have a {\ttfamily pending\+\_\+transaction} state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em txn\+Hash} & Transaction hash being queried for.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback}function with {\ttfamily (bool, Response\+Info)}\+: ~\newline
+A boolean that is\+: ~\newline
+-- true if transaction is still pending / hasn\textquotesingle{}t been found, meaning 404, error in response, or {\ttfamily pending\+\_\+transaction} is true ~\newline
+-- false if transaction has been found, meaning {\ttfamily pending\+\_\+transaction} is true ~\newline
+ A response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac3ab7709a0934da84f653dfcaa725759}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_ac3ab7709a0934da84f653dfcaa725759}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!Transfer@{Transfer}}
+\index{Transfer@{Transfer}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{Transfer()}{Transfer()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Transfer (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction}{Transaction}}, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{\mbox{\hyperlink{class_aptos_1_1_accounts_1_1_account}{Account}}}]{sender,  }\item[{string}]{to,  }\item[{long}]{amount }\end{DoxyParamCaption})}
+
+
+
+Transfer a given coin amount from a given Account to the recipient\textquotesingle{}s account Address. Returns the sequence number of the transaction used to transfer. ~\newline
+ 
+
+NOTE\+: Recipient address must hold APT before hand, and or have been airdrop APT if testing on devnet.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em sender} & Account executing the transfer.\\
+\hline
+{\em to} & Address of recipient.\\
+\hline
+{\em amount} & Amount of tokens.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback}function with {\ttfamily (Transaction, Response\+Info)}\+: ~\newline
+An object the represents the transaction submitted -\/ null if the transfer failed, and a response object that contains the response details. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a75fd417c0f8430e31c742be93b7f43af}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a75fd417c0f8430e31c742be93b7f43af}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!WaitForTransaction@{WaitForTransaction}}
+\index{WaitForTransaction@{WaitForTransaction}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{WaitForTransaction()}{WaitForTransaction()}}
+{\footnotesize\ttfamily IEnumerator Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Wait\+For\+Transaction (\begin{DoxyParamCaption}\item[{Action$<$ bool, \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info}{Response\+Info}} $>$}]{callback,  }\item[{string}]{txn\+Hash }\end{DoxyParamCaption})}
+
+
+
+A Coroutine that polls for a transaction hash until it is confimred in the blockchain Times out if the transaction hash is not found after querying for N times. ~\newline
+ 
+
+Waits for a transaction query to respond whether a transaction submitted has been confirmed in the blockchain. Queries for a given transaction hash (txn\+Hash) using Transaction\+Pending by polling / looping until we find a \char`\"{}\+Success\char`\"{} transaction response, or until it times out after Transaction\+Wait\+In\+Seconds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback function used when response is received.\\
+\hline
+{\em txn\+Hash} & Transaction hash.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Calls {\ttfamily callback} function with (bool, Response\+Info)\+: ~\newline
+A boolean that is\+: ~\newline
+-- true if the transaction hash was found after polling and the transaction was succesfully commited in the blockhain ~\newline
+-- false if we did not find the transaction hash and timed out ~\newline
+ A response object that contains the response details. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a59197cfe4ddeadc2577878cd3d650664}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a59197cfe4ddeadc2577878cd3d650664}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!TransactionWaitInSeconds@{TransactionWaitInSeconds}}
+\index{TransactionWaitInSeconds@{TransactionWaitInSeconds}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{TransactionWaitInSeconds}{TransactionWaitInSeconds}}
+{\footnotesize\ttfamily int Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Transaction\+Wait\+In\+Seconds = 20\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Amount of seconds to each during each polling cycle. 
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a923a972898edd67745b64d60db12274f}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a923a972898edd67745b64d60db12274f}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!Endpoint@{Endpoint}}
+\index{Endpoint@{Endpoint}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{Endpoint}{Endpoint}}
+{\footnotesize\ttfamily Uri Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Endpoint\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Based enpoint for REST API. 
+
+\mbox{\Hypertarget{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4765077e5b416c288d2299f20f759306}\label{class_aptos_1_1_unity_1_1_rest_1_1_rest_client_a4765077e5b416c288d2299f20f759306}} 
+\index{Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}!Instance@{Instance}}
+\index{Instance@{Instance}!Aptos.Unity.Rest.RestClient@{Aptos.Unity.Rest.RestClient}}
+\doxysubsubsection{\texorpdfstring{Instance}{Instance}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_aptos_1_1_unity_1_1_rest_1_1_rest_client}{Rest\+Client}} Aptos.\+Unity.\+Rest.\+Rest\+Client.\+Instance\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Static instance of the REST client. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/startup/opendive/products/\+Aptos-\/\+Unity-\/\+SDK/\+Assets/\+Aptos-\/\+Unity-\/\+SDK/\+Code/\+Aptos.\+Unity.\+Rest/\mbox{\hyperlink{_rest_client_8cs}{Rest\+Client.\+cs}}\end{DoxyCompactItemize}

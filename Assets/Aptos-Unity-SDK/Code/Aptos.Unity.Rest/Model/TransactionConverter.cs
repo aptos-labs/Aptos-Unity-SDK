@@ -12,26 +12,18 @@ namespace Aptos.Unity.Rest.Model
     {
         public override bool CanConvert(Type objectType)
         {
-            //throw new NotImplementedException();
             return objectType == typeof(Transaction);
         }
 
-        /// <summary>
-        /// TODO: Handle return null -- perhaps throw error, but consider that this breaks Unity
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="objectType"></param>
-        /// <param name="existingValue"></param>
-        /// <param name="serializer"></param>
-        /// <returns></returns>
+        ///<inheritdoc cref="JsonConverter.ReadJson(JsonReader, Type, object?, JsonSerializer)"/>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartObject)
             {
                 JObject item = JObject.Load(reader);
 
-                // TODO: Ask why failed transactions don't have a "type";
-                // A: There's the submission response, and there's the VM response -- user_transaction, transaction_pending
+                // NOTE: failed transactions don't have a "type";
+                // There's the submission response, and there's the VM response, e.g. user_transaction, transaction_pending
                 if (item["type"] == null && item["hash"] != null)
                 {
                     TransactionRequest transactionRequest = JsonConvert.DeserializeObject<TransactionRequest>(item.ToString(), new TransactionRequestConverter());
@@ -69,44 +61,6 @@ namespace Aptos.Unity.Rest.Model
                         if (item["success"] != null) transaction.Success = (bool)item["success"];
                         if (item["vm_status"] != null) transaction.VmStatus = (string)item["vm_status"];
                         if (item["accumulator_root_hash"] != null) transaction.AccumulatorRootHash = (string)item["accumulator_root_hash"];
-
-                        if (item["changes"] != null)
-                        {
-                            List<Change> changes = new List<Change>();
-
-                            // TODO: Complete TransactionConverter deserialization of Changes array
-                            JArray jChanges = new JArray(item["changes"]);
-                            foreach (var change in jChanges)
-                            {
-                                // TODO: onChage
-                                //JObject oChange = change.ToObject<JObject>();
-                                //string typeStr = oChange["type"].ToString();
-
-                                //if (typeStr.Equals("write_resource"))
-                                //{
-                                //    ChangeWriteResource changeWResource = new ChangeWriteResource();
-                                //    changeWResource.Type = (string)change["type"];
-                                //    changeWResource.StateKeyHash = (string)change["state_key_hash"];
-                                //    changeWResource.Address = (string)change["Address"];
-
-                                //    changes.Add(changeWResource);
-                                //}
-                                //else if (change["type"].Equals("write_table_item"))
-                                //{
-                                //    ChangeWriteResourceWriteTableItem changeWRWRT = new ChangeWriteResourceWriteTableItem();
-                                //    changeWRWRT.Type = (string)change["type"];
-                                //    changeWRWRT.StateKeyHash = (string)change["state_key_hash"];
-                                //    changeWRWRT.Handle = (string)change["handle"];
-                                //    changeWRWRT.Key = (string)change["key"];
-                                //    changeWRWRT.Value = (string)change["value"];
-                                //    changeWRWRT.Data = (string)change["data"];
-
-                                //    changes.Add(changeWRWRT);
-                                //}
-                            }
-
-                            transaction.Changes = changes.ToArray();
-                        }
 
                         return transaction;
                     }

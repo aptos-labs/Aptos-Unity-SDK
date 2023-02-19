@@ -2,16 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Aptos.HdWallet;
-using Aptos.Rest;
 using NBitcoin;
-using Unity.VisualScripting;
 using UnityEngine;
 using Aptos.Unity.Rest;
-using Newtonsoft.Json;
 using Aptos.Unity.Rest.Model;
-using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
-using Aptos.Accounts;
 
 namespace Aptos.Unity.Sample.UI
 {
@@ -118,20 +112,28 @@ namespace Aptos.Unity.Sample.UI
             return addressList[PlayerPrefs.GetInt(currentAddressIndexKey)];
         }
 
+        public string GetPrivateKey()
+        {
+            return wallet.Account.PrivateKey;
+        }
+
         public void LoadCurrentWalletBalance()
         {
-            StartCoroutine(RestClient.Instance.GetAccountBalance((returnResult) =>
+            AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
-                if (returnResult == null)
+                coin = _coin;
+                responseInfo = _responseInfo;
+
+                if(responseInfo.status != ResponseInfo.Status.Success)
                 {
-                    //UIController.Instance.ToggleNotification(false, "Fail to Fetch the Balance");
                     onGetBalance?.Invoke(0.0f);
                 }
                 else
                 {
-                    AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(returnResult);
-                    Debug.Log(acctResourceCoin.DataProp.Coin.Value);
-                    onGetBalance?.Invoke(float.Parse(acctResourceCoin.DataProp.Coin.Value));
+                    onGetBalance?.Invoke(float.Parse(coin.Value));
                 }
 
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress));
@@ -139,9 +141,8 @@ namespace Aptos.Unity.Sample.UI
 
         public IEnumerator AirDrop(int _amount)
         {
-            Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((returnResult) =>
+            Coroutine cor = StartCoroutine(FaucetClient.Instance.FundAccount((success, returnResult) =>
             {
-                Debug.Log("FAUCET RESPONSE: " + returnResult);
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)).AccountAddress.ToString()
                 , _amount
                 , faucetEndpoint));
@@ -150,49 +151,89 @@ namespace Aptos.Unity.Sample.UI
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully Get Airdrop of " + AptoTokenToFloat((float)_amount) + " APT");
+            UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully Get Airdrop of " + AptosTokenToFloat((float)_amount) + " APT");
         }
 
-        public IEnumerator SendToken(string targetAddress, int amount)
+        public IEnumerator SendToken(string _targetAddress, long _amount)
         {
-            string transferResult = "";
-            Coroutine cor = StartCoroutine(RestClient.Instance.Transfer((_transferResult) =>
+            Rest.Model.Transaction transferTxn = new Rest.Model.Transaction();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transferTxn, _responseInfo) =>
             {
-                transferResult = _transferResult;
-            }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), targetAddress, amount));
+                transferTxn = _transferTxn;
+                responseInfo = _responseInfo;
+            }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)), _targetAddress, _amount));
 
-            yield return cor;
+            yield return transferCor;
+
+            if (responseInfo.status == ResponseInfo.Status.Success)
+            {
+                string transactionHash = transferTxn.Hash;
+                bool waitForTxnSuccess = false;
+                Coroutine waitForTransactionCor = StartCoroutine(
+                    RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                    {
+                        waitForTxnSuccess = _pending;
+                        responseInfo = _responseInfo;
+                    }, transactionHash)
+                );
+                yield return waitForTransactionCor;
+
+                if (waitForTxnSuccess)
+                {
+                    UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully send " + AptosTokenToFloat((float)_amount) + " APT to " + UIController.Instance.ShortenString(_targetAddress, 4));
+                }
+                else
+                {
+                    UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, "Send Token Transaction Failed");
+                }
+                
+            }
+            else
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, responseInfo.message);
+            }
 
             yield return new WaitForSeconds(1f);
             LoadCurrentWalletBalance();
-            UIController.Instance.ToggleNotification(true, "Successfully send " + AptoTokenToFloat((float)amount) + " APT to " + UIController.Instance.ShortenString(targetAddress, 4));
         }
 
         public IEnumerator CreateCollection(string _collectionName, string _collectionDescription, string _collectionUri)
         {
-            string createCollectionResult = "";
-            Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((returnResult) =>
+            Rest.Model.Transaction createCollectionTxn = new Rest.Model.Transaction();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine createCollectionCor = StartCoroutine(RestClient.Instance.CreateCollection((_createCollectionTxn, _responseInfo) =>
             {
-                createCollectionResult = returnResult;
+                createCollectionTxn = _createCollectionTxn;
+                responseInfo = _responseInfo;
             }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)),
             _collectionName, _collectionDescription, _collectionUri));
             yield return createCollectionCor;
 
-            Debug.Log("Create Collection Response: " + createCollectionResult);
-            Aptos.Unity.Rest.Model.Transaction createCollectionTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createCollectionResult, new TransactionConverter());
-            string transactionHash = createCollectionTxn.Hash;
-            Debug.Log("Create Collection Hash: " + createCollectionTxn.Hash);
+            if (responseInfo.status == ResponseInfo.Status.Success)
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully Create Collection: " + _collectionName);
+            }
+            else
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, responseInfo.message);
+            }
 
-            UIController.Instance.ToggleNotification(true, "Successfully Create Collection: " + _collectionName);
+            yield return new WaitForSeconds(1f);
+            LoadCurrentWalletBalance();
+
+            string transactionHash = createCollectionTxn.Hash;
         }
 
         public IEnumerator CreateNFT(string _collectionName, string _tokenName, string _tokenDescription, int _supply, int _max, string _uri, int _royaltyPointsPerMillion)
         {
-            string createTokenResult = "";
+            Rest.Model.Transaction createTokenTxn = new Rest.Model.Transaction();
+            ResponseInfo responseInfo = new ResponseInfo();
             Coroutine createTokenCor = StartCoroutine(
-                RestClient.Instance.CreateToken((returnResult) =>
+                RestClient.Instance.CreateToken((_createTokenTxn, _responseInfo) =>
                 {
-                    createTokenResult = returnResult;
+                    createTokenTxn = _createTokenTxn;
+                    responseInfo = _responseInfo;
                 }, wallet.GetAccount(PlayerPrefs.GetInt(currentAddressIndexKey)),
                 _collectionName,
                 _tokenName,
@@ -204,22 +245,29 @@ namespace Aptos.Unity.Sample.UI
             );
             yield return createTokenCor;
 
-            Debug.Log("Create Token Response: " + createTokenResult);
-            Aptos.Unity.Rest.Model.Transaction createTokenTxn = JsonConvert.DeserializeObject<Aptos.Unity.Rest.Model.Transaction>(createTokenResult, new TransactionConverter());
-            string createTokenTxnHash = createTokenTxn.Hash;
-            Debug.Log("Create Token Hash: " + createTokenTxn.Hash);
+            if (responseInfo.status == ResponseInfo.Status.Success)
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Success, "Successfully Create NFT: " + _tokenName);
+            }
+            else
+            {
+                UIController.Instance.ToggleNotification(ResponseInfo.Status.Failed, responseInfo.message);
+            }
 
-            UIController.Instance.ToggleNotification(true, "Successfully Create NFT: " + _tokenName);
+            yield return new WaitForSeconds(1f);
+            LoadCurrentWalletBalance();
+
+            string createTokenTxnHash = createTokenTxn.Hash;
         }
 
-        public float AptoTokenToFloat(float _token)
+        public float AptosTokenToFloat(float _token)
         {
             return _token / 100000000f;
         }
 
-        public int AptoFloatToToken(float _amount)
+        public long AptosFloatToToken(float _amount)
         {
-            return (int)(_amount * 100000000f);
+            return Convert.ToInt64(_amount * 100000000);
         }
     }
 }

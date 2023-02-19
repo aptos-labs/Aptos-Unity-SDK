@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 
 namespace Aptos.Utilities.BCS
 {
+    /// <summary>
+    /// An implementation of BCS in C#
+    /// </summary>
     public class Serialization
     {
         #region Serialization
@@ -17,59 +20,108 @@ namespace Aptos.Utilities.BCS
             output = new MemoryStream();
         }
 
+        /// <summary>
+        /// Return the serialization buffer as a byte array.
+        /// </summary>
+        /// <returns>Serialization buffer as a byte array.</returns>
         public byte[] GetBytes()
         {
             return output.ToArray();
         }
 
+        /// <summary>
+        /// Serialize a string value.
+        /// </summary>
+        /// <param name="value">String value to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(string value)
         {
             SerializeString(value);
             return this;
         }
 
+        /// <summary>
+        /// Serialize a byte array.
+        /// </summary>
+        /// <param name="value">Byte array to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(byte[] value)
         {
             SerializeBytes(value);
             return this;
         }
 
+        /// <summary>
+        /// Serialize a boolean value.
+        /// </summary>
+        /// <param name="value">Boolean value to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(bool value)
         {
             SerializeBool(value);
             return this;
         }
 
+        /// <summary>
+        /// Serialize a single byte
+        /// </summary>
+        /// <param name="num">Byte to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(byte num)
         {
             SerializeU8(num);
             return this;
         }
 
+        /// <summary>
+        /// Serialize an unsigned short value.
+        /// </summary>
+        /// <param name="num">The number to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(ushort num)
         {
             SerializeU16(num);
             return this;
         }
 
+        /// <summary>
+        /// Serialize an unsigned integer value.
+        /// </summary>
+        /// <param name="num">The unsigned integer to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(uint num)
         {
             SerializeU32(num);
             return this;
         }
 
+        /// <summary>
+        /// Serialize an unsigned long number.
+        /// </summary>
+        /// <param name="num">The unsigned long number to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(ulong num)
         {
             SerializeU64(num);
             return this;
         }
 
+        /// <summary>
+        /// Serialize a big integer number.
+        /// </summary>
+        /// <param name="num">The big integer number to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(BigInteger num)
         {
             SerializeU128(num);
             return this;
         }
 
+        /// <summary>
+        /// Serialize a sequence.
+        /// </summary>
+        /// <param name="args">The sequence to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization Serialize(Sequence args)
         {
             SerializeU32AsUleb128((uint)args.Length);
@@ -78,30 +130,33 @@ namespace Aptos.Utilities.BCS
                 Serialization s = new Serialization();
                 element.Serialize(s);
                 byte[] b = s.GetBytes();
-                SerializeSingleSequenceBytes(b);
+                SerializeFixedBytes(b);
             }
             return this;
         }
 
-        /**
-        * Serializes a string. UTF8 string is supported. Serializes the string's bytes length "l" first,
-        * and then serializes "l" bytes of the string content.
-        *
-        * BCS layout for "string": string_length | string_content. string_length is the bytes length of
-        * the string that is uleb128 encoded. string_length is a u32 integer.
-        **/
+        /// <summary>
+        /// Serializes a string. UTF8 string is supported. Serializes the string's bytes length "l" first,
+        /// and then serializes "l" bytes of the string content.
+        /// 
+        /// BCS layout for "string": string_length | string_content. string_length is the bytes length of
+        /// the string that is uleb128 encoded. string_length is a u32 integer.
+        /// </summary>
+        /// <param name="value">String value to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeString(string value)
         {
             SerializeBytes(System.Text.Encoding.UTF8.GetBytes(value));
             return this;
         }
 
-        /**
-         * Serializes an array of bytes.
-         *
-         * BCS layout for "bytes": bytes_length | bytes. bytes_length is the length of the bytes array that is
-         * uleb128 encoded. bytes_length is a u32 integer.
-        **/
+        /// <summary>
+        /// Serializes an array of bytes.
+        /// BCS layout for "bytes": bytes_length | bytes. bytes_length is the length of the bytes array that is
+        /// uleb128 encoded. bytes_length is a u32 integer.
+        /// </summary>
+        /// <param name="bytes">Byte array to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeBytes(byte[] bytes)
         {
             // Write the length of the bytes array
@@ -112,30 +167,47 @@ namespace Aptos.Utilities.BCS
         }
 
         /// <summary>
-        /// Serializes a list of values in a sequence.
+        /// Serializes a list of values represented in a byte array. 
+        /// This can be a sequence or a value represented as a byte array.
         /// Note that for sequences we first add the length for the entire sequence array,
-        ///     not the length of the byte array
+        /// not the length of the byte array.
         /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
-        public Serialization SerializeSingleSequenceBytes(byte[] bytes)
+        /// <param name="bytes">Byte array to be serialized.</param>
+        /// <returns>The current Serialization object.</returns>
+        public Serialization SerializeFixedBytes(byte[] bytes)
         {
             // Copy the bytes to the rest of the array
             output.Write(bytes);
             return this;
         }
 
+        /// <summary>
+        /// Utility method to print a byte array.
+        /// </summary>
+        /// <param name="bytes">Byte array to turn into string.</param>
+        /// <returns>String representation of a byte array.</returns>
         static public string ToReadableByteArray(byte[] bytes)
         {
             return string.Join(", ", bytes);
         }
 
+        /// <summary>
+        /// Write an array bytes directly to the serialization buffer.
+        /// </summary>
+        /// <param name="bytes">Byte array to write to the serialization buffer.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization WriteBytes(byte[] bytes)
         {
             output.Write(bytes);
             return this;
         }
 
+        /// <summary>
+        /// Serialize an unsigned integer value. 
+        /// Usually used to serialize the length of values.
+        /// </summary>
+        /// <param name="value">Unsigned integer to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeU32AsUleb128(uint value)
         {
             while (value >= 0x80)
@@ -151,6 +223,11 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        /// <summary>
+        /// Serialize a boolean value
+        /// </summary>
+        /// <param name="value">Boolean value to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeBool(bool value)
         {
             if (value)
@@ -165,12 +242,22 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        /// <summary>
+        /// Serialize a unsigned byte number.
+        /// </summary>
+        /// <param name="num">Byte to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeU8(byte num)
         {
             output.WriteByte(num);
             return this;
         }
 
+        /// <summary>
+        /// Serialize unsigned short (U16).
+        /// </summary>
+        /// <param name="num">Unsigned short number to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeU16(ushort num)
         {
             byte lower = (byte)(num & 0xFF);
@@ -179,6 +266,11 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        /// <summary>
+        /// Serialize an unsigned integer number.
+        /// </summary>
+        /// <param name="num">Unsigned integer number.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeU32(uint num)
         {
             byte byte1 = (byte)(num & 0xFF);
@@ -189,6 +281,11 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        /// <summary>
+        /// Serialize an unsigned long number.
+        /// </summary>
+        /// <param name="num">Unsigned long number to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeU64(ulong num)
         {
             byte byte1 = (byte)(num & 0xFF);
@@ -203,6 +300,11 @@ namespace Aptos.Utilities.BCS
             return this;
         }
 
+        /// <summary>
+        /// Serialize a big integer value.
+        /// </summary>
+        /// <param name="value">Big integer value to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
         public Serialization SerializeU128(BigInteger value)
         {
             // Ensure the BigInteger is unsigned
