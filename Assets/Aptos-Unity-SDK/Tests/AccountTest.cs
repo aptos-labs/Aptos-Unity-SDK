@@ -1,11 +1,12 @@
 using NUnit.Framework;
 using Aptos.Accounts;
 using System;
+using Aptos.Utilities.BCS;
 
 namespace Aptos.Unity.Test
 {
     public class AccountTest
-    { 
+    {
         private static readonly byte[] PrivateKeyBytes = {
             100, 245, 118, 3, 181, 138, 241, 105,
             7, 193, 138, 134, 97, 35, 40, 110,
@@ -19,12 +20,19 @@ namespace Aptos.Unity.Test
         private const string PrivateKeyHex = "0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c";
 
         private static readonly byte[] PublicKeyBytes = {
-            88, 110, 60, 141, 68, 125, 118, 121, 
-            34, 46, 19, 144, 51, 227, 130, 2, 
-            53, 227, 61, 165, 9, 30, 155, 11, 
+            88, 110, 60, 141, 68, 125, 118, 121,
+            34, 46, 19, 144, 51, 227, 130, 2,
+            53, 227, 61, 165, 9, 30, 155, 11,
             184, 241, 161, 18, 207, 12, 143, 245
         };
         private const string PublicKeyHex = "0x586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5";
+
+        private static readonly byte[] PublicKeySerializedOutput = { 
+            32, 88, 110, 60, 141, 68, 125, 118, 
+            121, 34, 46, 19, 144, 51, 227, 130, 
+            2, 53, 227, 61, 165, 9, 30, 155, 
+            11, 184, 241, 161, 18, 207, 12, 143, 245
+        };
 
         private static readonly byte[] PrivateKeyBytesInvalid = {
             100, 245, 118, 3, 181, 138, 241, 105,
@@ -131,10 +139,31 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void PublicKeySerialization()
+        {
+            Serialization serializer = new Serialization();
+            PublicKey publicKey = new PublicKey(PublicKeyBytes);
+            publicKey.Serialize(serializer);
+            byte[] output = serializer.GetBytes();
+
+            Assert.AreEqual(output, PublicKeySerializedOutput);
+        }
+
+        [Test]
+        public void PrivateKeySerialization()
+        {
+            Assert.Throws<ArgumentException>(delegate ()
+            {
+                PrivateKey privateKey = new PrivateKey(PrivateKeyBytesInvalid);
+                PublicKey publicKey = new PublicKey(PublicKeyBytesInvalid);
+            });
+        }
+
+        [Test]
         public void GenerateAccountAddressFromPublicKey()
         {
             PublicKey publicKey = new PublicKey(PublicKeyBytes);
-            AccountAddress accountAddress = AccountAddress.FromKey(publicKey);
+            Accounts.AccountAddress accountAddress = Accounts.AccountAddress.FromKey(publicKey);
             Assert.AreEqual(accountAddress.ToString(), AccountAddressHex);
         }
 
