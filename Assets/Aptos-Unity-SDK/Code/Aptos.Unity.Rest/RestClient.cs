@@ -673,13 +673,13 @@ namespace Aptos.Unity.Rest
             ///////////////////////////////////////////////////////////////////////
             // 3) Signs the raw transaction
             ///////////////////////////////////////////////////////////////////////
-            byte[] signature = sender.Sign(toSign);
+            Signature signature = sender.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
             {
                 Type = Constants.ED25519_SIGNATURE,
                 PublicKey = "0x" + CryptoBytes.ToHexStringLower(sender.PublicKey),
-                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+                Signature = signature.ToString()
             };
 
             txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
@@ -1099,13 +1099,13 @@ namespace Aptos.Unity.Rest
             // STEP 3: Sign Ttransaction
             ///////////////////////////////////////////////////////////////////////
             byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
-            byte[] signature = sender.Sign(toSign);
+            Signature signature = sender.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
             {
                 Type = "ed25519_signature",
                 PublicKey = "0x" + CryptoBytes.ToHexStringLower(sender.PublicKey), // Works ..
-                Signature = "0x" + CryptoBytes.ToHexStringLower(signature) // Works ..
+                Signature = signature.ToString()
             };
 
             ///////////////////////////////////////////////////////////////////////
@@ -1243,13 +1243,13 @@ namespace Aptos.Unity.Rest
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
-            byte[] signature = senderRoyaltyPayeeAddress.Sign(toSign);
+            Signature signature = senderRoyaltyPayeeAddress.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
             {
                 Type = Constants.ED25519_SIGNATURE,
                 PublicKey = "0x" + CryptoBytes.ToHexStringLower(senderRoyaltyPayeeAddress.PublicKey),
-                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+                Signature = signature.ToString()
             };
 
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
@@ -1397,13 +1397,13 @@ namespace Aptos.Unity.Rest
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
-            byte[] signature = account.Sign(toSign);
+            Signature signature = account.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
             {
                 Type = Constants.ED25519_SIGNATURE,
                 PublicKey = "0x" + CryptoBytes.ToHexStringLower(account.PublicKey),
-                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+                Signature = signature.ToString()
             };
 
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
@@ -1552,13 +1552,13 @@ namespace Aptos.Unity.Rest
             yield return cor_encodedSubmission;
 
             byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
-            byte[] signature = account.Sign(toSign);
+            Signature signature = account.Sign(toSign);
 
             txnRequest.Signature = new SignatureData()
             {
                 Type = Constants.ED25519_SIGNATURE,
                 PublicKey = "0x" + CryptoBytes.ToHexStringLower(account.PublicKey),
-                Signature = "0x" + CryptoBytes.ToHexStringLower(signature)
+                Signature = signature.ToString()
             };
 
             string signedTxnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());

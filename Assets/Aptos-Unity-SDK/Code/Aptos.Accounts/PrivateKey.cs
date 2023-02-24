@@ -173,14 +173,14 @@ namespace Aptos.Accounts
         /// Sign a message using the extended private key.
         /// </summary>
         /// <param name="message">The message to sign, represented in bytes.</param>
-        /// <returns>The signature generated for the message.</returns>
-        public byte[] Sign(byte[] message)
+        /// <returns>The signature generated for the message as an object</returns>
+        public Signature Sign(byte[] message)
         {
             ArraySegment<byte> signature = new ArraySegment<byte>(new byte[64]);
             Ed25519.Sign(signature,
                 new ArraySegment<byte>(message),
                 new ArraySegment<byte>(_extendedKeyBytes));
-            return signature.Array;
+            return new Signature(signature.Array);
         }
 
         /// <summary>

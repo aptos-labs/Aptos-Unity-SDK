@@ -92,8 +92,8 @@ namespace Aptos.Accounts
         /// Sign a given byte array (data) with the current account's private key
         /// </summary>
         /// <param name="message"></param> The signature of the data.
-        /// <returns>The singed messaged in byte form</returns>
-        public byte[] Sign(byte[] message)
+        /// <returns>The signature as an object</returns>
+        public Signature Sign(byte[] message)
         {
             return PrivateKey.Sign(message);
         }

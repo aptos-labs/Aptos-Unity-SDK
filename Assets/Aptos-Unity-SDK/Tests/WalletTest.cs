@@ -36,6 +36,8 @@ namespace Aptos.Unity.Test
             211, 152, 215, 248, 78, 130, 239, 5
         };
 
+         Signature signatureObject = new Signature(SignatureBytes);
+
         [Test]
         public void CreateWallet()
         {
@@ -54,8 +56,8 @@ namespace Aptos.Unity.Test
         {
             Wallet wallet = new Wallet(mnemo);
             Account acct = wallet.Account;
-            byte[] signature = acct.Sign(MessageUt8Bytes);
-            Assert.AreEqual(SignatureBytes, signature);
+            Signature signature = acct.Sign(MessageUt8Bytes);
+            Assert.AreEqual(signatureObject, signature);
         }
 
         [Test]

@@ -88,6 +88,8 @@ namespace Aptos.Unity.Test
             211, 152, 215, 248, 78, 130, 239, 5
         };
 
+        Signature signatureObject = new Signature(SignatureBytes);
+
         private const string SignatureHex = "0xaa42bbc2a9fc751beeee3b312b8452c445c7d4ab8698036b0cf9f2e46a098bb02c369fbc8dfefd231a128d8a4bb9adcfe45e07188b758c3ad398d7f84e82ef05";
 
         private static readonly byte[] SignatureSerializedOutput ={
@@ -154,8 +156,8 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(privateKey.Key, PrivateKeyHex);
             Assert.AreEqual(privateKey.KeyBytes, PrivateKeyBytes);
 
-            byte[] signature = privateKey.Sign(MessageUtf8Bytes);
-            Assert.AreEqual(signature, SignatureBytes);
+            Signature signature = privateKey.Sign(MessageUtf8Bytes);
+            Assert.AreEqual(signature, signatureObject);
         }
 
         [Test]
@@ -165,8 +167,8 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(privateKey.Key, PrivateKeyHex);
             Assert.AreEqual(privateKey.KeyBytes, PrivateKeyBytes);
 
-            byte[] signature = privateKey.Sign(MessageUtf8Bytes);
-            Assert.AreEqual(signature, SignatureBytes);
+            Signature signature = privateKey.Sign(MessageUtf8Bytes);
+            Assert.AreEqual(signature, signatureObject);
         }
 
         [Test]
@@ -271,17 +273,17 @@ namespace Aptos.Unity.Test
         public void AccountSignSuccess()
         {
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
-            byte[] signature = acc.Sign(MessageUtf8Bytes);
-            Assert.AreEqual(signature, SignatureBytes);
+            Signature signature = acc.Sign(MessageUtf8Bytes);
+            Assert.AreEqual(signature, signatureObject);
         }
 
         [Test]
         public void AccountSignVerify()
         {
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
-            byte[] signature = acc.Sign(MessageUtf8Bytes);
-            Assert.AreEqual(signature, SignatureBytes);
-            bool verify = acc.Verify(MessageUtf8Bytes, signature);
+            Signature signature = acc.Sign(MessageUtf8Bytes);
+            Assert.AreEqual(signature, signatureObject);
+            bool verify = acc.Verify(MessageUtf8Bytes, signature.Data());
             Assert.IsTrue(verify);
         }
     }
