@@ -202,6 +202,14 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void SignatureEquality()
+        {
+            Signature sigOne = new Signature(SignatureBytes);
+            Signature sigTwo = new Signature(SignatureBytes);
+            Assert.IsTrue(sigOne.Equals(sigTwo));
+        }
+
+        [Test]
         public void SignatureSerialization()
         {
             Serialization serializer = new Serialization();

@@ -37,6 +37,15 @@ namespace Aptos.Accounts
             return _signatureBytes;
         }
 
+        /// <summary>
+        /// Serialize signature
+        /// </summary>
+        /// <param name="serializer">Serializer object</param>
+        public void Serialize(Serialization serializer)
+        {
+            serializer.SerializeBytes(this._signatureBytes);
+        }
+
         /// <inheritdoc cref="ToString"/>
         public override string ToString()
         {
@@ -46,13 +55,15 @@ namespace Aptos.Accounts
             return _signature;
         }
 
-        /// <summary>
-        /// Serialize signature
-        /// </summary>
-        /// <param name="serializer">Serializer object</param>
-        public void Serialize(Serialization serializer)
+        /// <inheritdoc cref="Equals(object)"/>
+        public override bool Equals(object obj)
         {
-            serializer.SerializeBytes(this._signatureBytes);
+            if (obj is Signature signature)
+            {
+                return signature.ToString() == this.ToString();
+            }
+
+            return false;
         }
     }
 }
