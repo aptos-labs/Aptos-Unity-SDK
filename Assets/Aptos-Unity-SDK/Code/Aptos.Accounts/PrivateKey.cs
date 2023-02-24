@@ -183,6 +183,15 @@ namespace Aptos.Accounts
             return signature.Array;
         }
 
+        /// <summary>
+        /// Serialize private key
+        /// </summary>
+        /// <param name="serializer">Serializer object</param>
+        public void Serialize(Serialization serializer)
+        {
+            serializer.SerializeBytes(this.KeyBytes);
+        }
+
         /// <inheritdoc cref="Equals(object)"/>
         public override bool Equals(object obj)
         {
