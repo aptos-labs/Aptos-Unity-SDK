@@ -46,6 +46,12 @@ namespace Aptos.Accounts
             serializer.SerializeBytes(this._signatureBytes);
         }
 
+        /// <inheritdoc cref="GetHashCode"/>
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
+        }
+
         /// <inheritdoc cref="ToString"/>
         public override string ToString()
         {
