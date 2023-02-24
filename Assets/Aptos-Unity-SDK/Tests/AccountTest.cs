@@ -7,7 +7,8 @@ namespace Aptos.Unity.Test
 {
     public class AccountTest
     {
-        private static readonly byte[] PrivateKeyBytes = {
+        // Extended PrivateKey for reference
+        private static readonly byte[] ExtendedPrivateKeyBytes = {
             100, 245, 118, 3, 181, 138, 241, 105,
             7, 193, 138, 134, 97, 35, 40, 110,
             28, 188, 232, 151, 144, 97, 53, 88,
@@ -17,7 +18,23 @@ namespace Aptos.Unity.Test
             53, 227, 61, 165, 9, 30, 155, 11,
             184, 241, 161, 18, 207, 12, 143, 245
         };
+
+        private static readonly byte[] PrivateKeyBytes = {
+            100, 245, 118, 3, 181, 138, 241, 105,
+            7, 193, 138, 134, 97, 35, 40, 110,
+            28, 188, 232, 151, 144, 97, 53, 88,
+            220, 23, 117, 171, 179, 252, 92, 140
+        };
+
         private const string PrivateKeyHex = "0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c";
+
+        private static readonly byte[] PrivateKeySerializedOutput =
+        {
+            32, 100, 245, 118, 3, 181, 138, 241,
+            105, 7, 193, 138, 134, 97, 35, 40,
+            110, 28, 188, 232, 151, 144, 97, 53,
+            88, 220, 23, 117, 171, 179, 252, 92, 140
+        };
 
         private static readonly byte[] PublicKeyBytes = {
             88, 110, 60, 141, 68, 125, 118, 121,
@@ -72,6 +89,18 @@ namespace Aptos.Unity.Test
         };
 
         [Test]
+        public void GeneratePrivateKeysWithBytesSuccess()
+        {
+            PrivateKey privateKey = new PrivateKey(PrivateKeyBytes);
+            Assert.IsNotNull(privateKey.KeyBytes, "PrivateKey.KeyBytes != null");
+            Assert.AreEqual(32, privateKey.KeyBytes.Length);
+            Assert.AreEqual(privateKey.KeyBytes, PrivateKeyBytes);
+
+            string privateKeyHex = privateKey.Key.ToString();
+            Assert.AreEqual(privateKeyHex, PrivateKeyHex);
+        }
+
+        [Test]
         public void GenerateKeysWithBytesSuccess()
         {
             PrivateKey privateKey = new PrivateKey(PrivateKeyBytes);
@@ -80,7 +109,7 @@ namespace Aptos.Unity.Test
             Assert.IsNotNull(privateKey.KeyBytes, "PrivateKey.KeyBytes != null");
             Assert.IsNotNull(publicKey.KeyBytes, "PublicKey.KeyBytes != null");
 
-            string privateKeyHex = privateKey.Key.ToString();
+            string privateKeyHex = privateKey.ToString();
             string publicKeyHex = publicKey.ToString();
 
             Assert.AreEqual(privateKeyHex, PrivateKeyHex);
@@ -152,11 +181,12 @@ namespace Aptos.Unity.Test
         [Test]
         public void PrivateKeySerialization()
         {
-            Assert.Throws<ArgumentException>(delegate ()
-            {
-                PrivateKey privateKey = new PrivateKey(PrivateKeyBytesInvalid);
-                PublicKey publicKey = new PublicKey(PublicKeyBytesInvalid);
-            });
+            Serialization serializer = new Serialization();
+            PrivateKey privateKey = new PrivateKey(PrivateKeyBytes);
+            privateKey.Serialize(serializer);
+            byte[] output = serializer.GetBytes();
+
+            Assert.AreEqual(output, PrivateKeySerializedOutput);
         }
 
         [Test]
