@@ -29,7 +29,7 @@ namespace Aptos.Accounts
             byte[] seed = new byte[Ed25519.PrivateKeySeedSizeInBytes];
             RandomUtils.GetBytes(seed);
 
-            PrivateKey = new PrivateKey(Ed25519.ExpandedPrivateKeyFromSeed(seed));
+            PrivateKey = new PrivateKey(seed);
             PublicKey = new PublicKey(Ed25519.PublicKeyFromSeed(seed));
             AccountAddress = AccountAddress.FromKey(PublicKey);
             PrivateKeyShort = new byte[32];

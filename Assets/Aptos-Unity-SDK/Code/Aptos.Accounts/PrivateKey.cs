@@ -1,6 +1,6 @@
 using Aptos.HdWallet.Utils;
+using Aptos.Utilities.BCS;
 using Chaos.NaCl;
-using NBitcoin.DataEncoders;
 using System;
 
 namespace Aptos.Accounts
@@ -14,9 +14,14 @@ namespace Aptos.Accounts
     public class PrivateKey
     {
         /// <summary>
+        /// Extended private key length.
+        /// </summary>
+        public const int ExtendedKeyLength = 64;
+
+        /// <summary>
         /// Private key length.
         /// </summary>
-        public const int KeyLength = 64;
+        public const int KeyLength = 32;
 
         /// <summary>
         /// Hex string representation of private key.
@@ -24,14 +29,20 @@ namespace Aptos.Accounts
         private string _key;
 
         /// <summary>
-        /// Byte representation of private key.
+        /// The 64-byte extended private key.
+        /// This key is used internally for signing.
+        /// A public accessor that returns a 32-byte private is found in <see cref="_keyBytes">KeyBytes</see>
+        /// </summary>
+        private byte[] _extendedKeyBytes;
+
+        /// <summary>
+        /// The 32-byte private key
+        /// This key is exposed publicly by <see cref="KeyBytes">KeyBytes</see>
         /// </summary>
         private byte[] _keyBytes;
 
         /// <summary>
         /// The key as a 32-byte hexadecimal string (64 characters).   
-        /// NOTE: We maintain the full 64-byte (128 characters) representation of the extended private key,   
-        /// then we slice it in half since the other half contains the public key.
         /// </summary>
         public string Key
         {
@@ -43,7 +54,7 @@ namespace Aptos.Accounts
                     _key = "0x" + addressHex;
                 }
 
-                return _key[0..66]; // account for "0x"
+                return _key;
             }
 
             set
@@ -53,29 +64,34 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// The extended private key in bytes.
-        /// Checks if we have the hexadecimal string representation of a 64-byte extended key,   
-        /// then returns the bytes accordingly.
+        /// The 32-byte private key in bytes.
+        /// Checks if we have the 32-byte private key or 64-byte extended key, 
+        /// otherwise uses the string representation to create both.
         /// </summary>
         public byte[] KeyBytes
         {
             get
             {
                 // if the private key bytes have not being initialized, but a 32-byte (64 character) string private has been set
-                if (_keyBytes == null && _key != null)
+                if (_keyBytes == null && _extendedKeyBytes == null && _key != null)
                 {
                     string key = _key;
                     if (_key[0..2].Equals("0x")) { key = _key[2..]; } // Trim the private key hex string
 
                     byte[] seed = key.HexStringToByteArray(); // Turn private key hex string into byte to be used a seed to derive the extended key
-                    _keyBytes = Ed25519.ExpandedPrivateKeyFromSeed(seed);
+                    _keyBytes = seed;
+                    _extendedKeyBytes = Ed25519.ExpandedPrivateKeyFromSeed(seed);
                 }
                 return _keyBytes;
             }
 
             set
             {
+                if(value.Length != KeyLength)
+                    throw new ArgumentException("Invalid key length: ", nameof(value));
+
                 _keyBytes = value;
+                _extendedKeyBytes = Ed25519.ExpandedPrivateKeyFromSeed(value);
             }
         }
 
@@ -94,6 +110,9 @@ namespace Aptos.Accounts
                 throw new ArgumentException("Invalid key length: ", nameof(privateKey));
             KeyBytes = new byte[KeyLength];
             Array.Copy(privateKey, KeyBytes, KeyLength);
+
+            _extendedKeyBytes = new byte[Ed25519.ExpandedPrivateKeySizeInBytes];
+            Array.Copy(Ed25519.ExpandedPrivateKeyFromSeed(KeyBytes), _extendedKeyBytes, Ed25519.ExpandedPrivateKeySizeInBytes);
         }
 
         /// <summary>
@@ -121,6 +140,8 @@ namespace Aptos.Accounts
                 throw new ArgumentException("Invalid key length: ", nameof(privateKey));
             KeyBytes = new byte[KeyLength];
             privateKey.CopyTo(KeyBytes.AsSpan());
+
+            _extendedKeyBytes = Ed25519.ExpandedPrivateKeyFromSeed(KeyBytes);
         }
 
         /// <summary>
@@ -148,9 +169,8 @@ namespace Aptos.Accounts
 
         public static bool operator !=(PrivateKey lhs, PrivateKey rhs) => !(lhs == rhs);
 
-
         /// <summary>
-        /// Sign a message using the current private key.
+        /// Sign a message using the extended private key.
         /// </summary>
         /// <param name="message">The message to sign, represented in bytes.</param>
         /// <returns>The signature generated for the message.</returns>
@@ -159,7 +179,7 @@ namespace Aptos.Accounts
             ArraySegment<byte> signature = new ArraySegment<byte>(new byte[64]);
             Ed25519.Sign(signature,
                 new ArraySegment<byte>(message),
-                new ArraySegment<byte>(KeyBytes));
+                new ArraySegment<byte>(_extendedKeyBytes));
             return signature.Array;
         }
 
