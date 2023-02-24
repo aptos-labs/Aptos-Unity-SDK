@@ -88,6 +88,18 @@ namespace Aptos.Unity.Test
             211, 152, 215, 248, 78, 130, 239, 5
         };
 
+        private const string SignatureHex = "0xaa42bbc2a9fc751beeee3b312b8452c445c7d4ab8698036b0cf9f2e46a098bb02c369fbc8dfefd231a128d8a4bb9adcfe45e07188b758c3ad398d7f84e82ef05";
+
+        private static readonly byte[] SignatureSerializedOutput ={
+            64, 170, 66, 187, 194, 169, 252, 117,
+            27, 238, 238, 59, 49, 43, 132, 82,
+            196, 69, 199, 212, 171, 134, 152, 3,
+            107, 12, 249, 242, 228, 106, 9, 139,
+            176, 44, 54, 159, 188, 141, 254, 253,
+            35, 26, 18, 141, 138, 75, 185, 173,
+            207, 228, 94, 7, 24, 139, 117, 140,
+            58, 211, 152, 215, 248, 78, 130, 239, 5 };
+
         [Test]
         public void GeneratePrivateKeysWithBytesSuccess()
         {
@@ -187,6 +199,16 @@ namespace Aptos.Unity.Test
             byte[] output = serializer.GetBytes();
 
             Assert.AreEqual(output, PrivateKeySerializedOutput);
+        }
+
+        [Test]
+        public void SignatureSerialization()
+        {
+            Serialization serializer = new Serialization();
+            Signature sig = new Signature(SignatureBytes);
+            sig.Serialize(serializer);
+            byte[] output = serializer.GetBytes();
+            Assert.AreEqual(output, SignatureSerializedOutput);
         }
 
         [Test]
