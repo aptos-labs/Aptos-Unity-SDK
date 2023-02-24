@@ -283,7 +283,7 @@ namespace Aptos.Unity.Test
             Account acc = new Account(PrivateKeyBytes, PublicKeyBytes);
             Signature signature = acc.Sign(MessageUtf8Bytes);
             Assert.AreEqual(signature, signatureObject);
-            bool verify = acc.Verify(MessageUtf8Bytes, signature.Data());
+            bool verify = acc.Verify(MessageUtf8Bytes, signature);
             Assert.IsTrue(verify);
         }
     }

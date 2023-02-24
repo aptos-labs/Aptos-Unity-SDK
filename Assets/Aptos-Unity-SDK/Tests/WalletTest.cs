@@ -65,7 +65,7 @@ namespace Aptos.Unity.Test
         {
             Wallet wallet = new Wallet(mnemo);
             Account acct = wallet.Account;
-            bool verify = acct.Verify(MessageUt8Bytes, SignatureBytes);
+            bool verify = acct.Verify(MessageUt8Bytes, signatureObject);
             Assert.IsTrue(verify);
         }
     }

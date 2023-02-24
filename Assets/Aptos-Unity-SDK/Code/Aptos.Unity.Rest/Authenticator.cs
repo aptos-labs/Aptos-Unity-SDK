@@ -66,9 +66,9 @@ namespace Aptos.Authenticator
     public class Ed25519Authenticator : IAuthenticator
     {
         private readonly PublicKey publicKey;
-        private readonly byte[] signature;
+        private readonly Signature signature;
 
-        public Ed25519Authenticator(PublicKey publicKey, byte[] signature)
+        public Ed25519Authenticator(PublicKey publicKey, Signature signature)
         {
             this.publicKey = publicKey;
             this.signature = signature;
@@ -87,7 +87,7 @@ namespace Aptos.Authenticator
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeBytes(this.publicKey); // Note in Python we call serializer.struct
-            serializer.SerializeBytes(this.signature); // Note in Python we call serializer.struct
+            this.signature.Serialize(serializer); // Note in Python we call serializer.struct
         }
     }
 

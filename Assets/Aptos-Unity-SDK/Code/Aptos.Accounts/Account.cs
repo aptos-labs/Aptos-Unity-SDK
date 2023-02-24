@@ -83,7 +83,7 @@ namespace Aptos.Accounts
         /// <param name="message">The signed message.</param>
         /// <param name="signature">The signature of the message.</param>
         /// <returns>True is the signature is valid, False otherwise</returns>
-        public bool Verify(byte[] message, byte[] signature)
+        public bool Verify(byte[] message, Signature signature)
         {
             return PublicKey.Verify(message, signature);
         }

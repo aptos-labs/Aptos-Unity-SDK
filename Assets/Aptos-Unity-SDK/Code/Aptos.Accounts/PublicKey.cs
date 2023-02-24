@@ -114,9 +114,9 @@ namespace Aptos.Accounts
         /// <param name="message">Message that was signed.</param>
         /// <param name="signature">The signature from the message.</param>
         /// <returns></returns>
-        public bool Verify(byte[] message, byte[] signature)
+        public bool Verify(byte[] message, Signature signature)
         {
-            return Ed25519.Verify(signature, message, KeyBytes);
+            return Ed25519.Verify(signature.Data(), message, KeyBytes);
         }
 
         /// <summary>
