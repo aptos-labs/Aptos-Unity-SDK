@@ -2,6 +2,7 @@ using Aptos.Accounts;
 using Aptos.Utilities.BCS;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Aptos.Authenticator
 {
@@ -12,13 +13,10 @@ namespace Aptos.Authenticator
     /// `AccountAuthenticator`'s `AuthenticationKeyPreimage` matches the `AuthenticationKey` stored
     /// under the participating signer's account address.
     /// </summary>
-    public interface IAuthenticator
+    public interface IAuthenticator: ISerializable
     {
         public bool Verify(byte[] data);
-
-        public void Serialize(Serialization serializer);
     }
-
 
     public class Authenticator : IAuthenticator
     {
@@ -31,7 +29,6 @@ namespace Aptos.Authenticator
 
         public Authenticator(IAuthenticator authenticator)
         {
-            // TODO: Fix comparison
             if (authenticator.GetType() == typeof(Ed25519Authenticator))
                 this.Variant = Authenticator.ED25519;
             else if (authenticator.GetType() == typeof(MultiEd25519Authenticator))
@@ -63,7 +60,7 @@ namespace Aptos.Authenticator
         }
     }
 
-    public class Ed25519Authenticator : IAuthenticator
+    public class Ed25519Authenticator : IAuthenticator, ISerializable
     {
         private readonly PublicKey publicKey;
         private readonly Signature signature;
@@ -76,7 +73,6 @@ namespace Aptos.Authenticator
 
         public bool Verify(byte[] data)
         {
-            //throw new System.NotImplementedException();
             return publicKey.Verify(data, signature);
         }
 
@@ -87,42 +83,75 @@ namespace Aptos.Authenticator
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeBytes(this.publicKey); // Note in Python we call serializer.struct
-            this.signature.Serialize(serializer); // Note in Python we call serializer.struct
+            //this.signature.Serialize(serializer); // Note in Python we call serializer.struct
+            serializer.Serialize(signature);
         }
     }
 
     public class MultiAgentAuthenticator : IAuthenticator
     {
         private Authenticator sender;
-        private List<Tuple<Utilities.BCS.AccountAddress, Authenticator>> seondarySigners;
+        private List<Tuple<Accounts.AccountAddress, Authenticator>> secondarySigners;
 
-        public MultiAgentAuthenticator(Authenticator sender, List<Tuple<Utilities.BCS.AccountAddress, Authenticator>> secondarySigners)
+        public MultiAgentAuthenticator(Authenticator sender, List<Tuple<Accounts.AccountAddress, Authenticator>> secondarySigners)
         {
             this.sender = sender;
-            this.seondarySigners = secondarySigners;
+            this.secondarySigners = secondarySigners;
+        }
+
+        public List<Accounts.AccountAddress> SecondaryAddresses()
+        {
+            List<Accounts.AccountAddress> secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToList();
+            return secondaryAddresses;
         }
 
         public bool Verify(byte[] data)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            if (!this.sender.Verify(data))
+                return false;
+
+            //return all([x[1].verify(data) for x in self.secondary_signers])
+            return secondarySigners.All(signer => signer.Item2.Verify(data));   
         }
 
         public void Serialize(Serialization serializer)
         {
-            //throw new System.NotImplementedException();
-            //sender.Serialize(serializer);
-            //serializer.SerializeFixedBytes
+            //this.sender.Serialize(serializer);
+            //Serialization acctAddressSerializer = new Serialization();
+
+            //List<Accounts.AccountAddress> secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToList();
+            //List<byte[]> secAddresssesBytes = secondaryAddresses.Select(adddress => {
+            //    Serialization ser = new Serialization();
+            //    adddress.Serialize(ser);
+            //    return ser.GetBytes();
+            //}).ToList();
+
+            //Sequence secAddressesSeq = new Sequence(secAddresssesBytes.ToArray());
+            //List< Authenticator> authenticators = secondarySigners.Select(signer => signer.Item2).ToList();
+
+            Accounts.AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
+            Authenticator[] authenticators = secondarySigners.Select(signer => signer.Item2).ToArray();
+
+            serializer.Serialize(this.sender);
+            serializer.Serialize(secondaryAddresses);
+            serializer.Serialize(authenticators);
         }
     }
 
     public class MultiEd25519Authenticator : IAuthenticator
     {
-        public void Serialize(Serialization serializer)
+        public MultiEd25519Authenticator()
         {
             throw new System.NotImplementedException();
         }
 
         public bool Verify(byte[] data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Serialize(Serialization serializer)
         {
             throw new System.NotImplementedException();
         }
