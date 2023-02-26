@@ -173,5 +173,109 @@ namespace Aptos.Unity.Test
             byte[] exp = new byte[] { 6, 112, 111, 116, 97, 116, 111, 123, 0, 0, 0, 1, 200, 1, 0, 0 };
             Assert.AreEqual(exp, res);
         }
+
+        /// <summary>
+        /// <code>
+        /// in_value = [""]
+        /// ser = Serializer()
+        /// ser.sequence(in_value, Serializer.str)
+        /// der = Deserializer(ser.output())
+        /// out_value = der.sequence(Deserializer.str)
+        /// self.assertEqual(in_value, out_value)
+        /// output = ser.output()
+        /// print([x for x in output])
+        /// </code>
+        /// </summary>
+        [Test]
+        public void SerializeEmptyStringSequence()
+        {
+            Serialization ser = new Serialization();
+            BString[] strArr = { new BString("") };
+            Sequence seq = new Sequence(strArr);
+
+            seq.Serialize(ser);
+
+            byte[] actual = ser.GetBytes();
+            byte[] expected = { 1, 1, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
+
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = [""]
+        /// ser = Serializer()
+        /// ser.sequence(in_value, Serializer.str)
+        /// der = Deserializer(ser.output())
+        /// out_value = der.sequence(Deserializer.str)
+        /// self.assertEqual(in_value, out_value)
+        /// </code>
+        /// </summary>
+        [Test]
+        public void SerializeStringSequence()
+        {
+            BString[] inValue = { new BString("a"), new BString("abc"), new BString("def"), new BString("ghi") };
+            Serialization ser = new Serialization();
+            ser.Serialize(inValue);
+
+            byte[] res = ser.GetBytes();
+            byte[] exp = new byte[] { 4, 1, 97, 3, 97, 98, 99, 3, 100, 101, 102, 3, 103, 104, 105 };
+            Assert.AreEqual(exp, res, ToReadableByteArray(res));
+        }
+
+        //[Test]
+        //public void SerializeStringSequenceTWO()
+        //{
+        //    Serialization ser = new Serialization();
+        //    Sequence seq = new Sequence(new[] { new BString("a"), new BString("abc"), new BString("def"), new BString("ghi") });
+        //    //ser.Serialize(seq);
+        //    seq.Serialize(ser);
+        //    byte[] res = ser.GetBytes();
+        //    byte[] exp = new byte[] { 4, 1, 97, 3, 97, 98, 99, 3, 100, 101, 102, 3, 103, 104, 105 };
+        //    // 4,    1, 97,    3, 97, 98, 99,    3, 100, 101, 102, 3   , 103, 104, 105
+        //    // 4, 2, 1, 97, 4, 3, 97, 98, 99, 4, 3, 100, 101, 102, 4, 3, 103, 104, 105
+        //    //       1, 97, 3, 97, 98, 99, 3, 100, 101, 102, 3, 103, 104, 105
+        //    Assert.AreEqual(exp, res, ToReadableByteArray(res));
+        //}
+
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = [False, True, False]
+        /// ser = Serializer()
+        /// seq_ser = Serializer.sequence_serializer(Serializer.bool)
+        /// seq_ser(ser, in_value)
+        /// der = Deserializer(ser.output())
+        /// out_value = der.sequence(Deserializer.bool)
+        /// self.assertEqual(in_value, out_value)
+        /// </code>
+        /// </summary>
+        [Test]
+        public void SerializerBoolSequence()
+        {
+            Bool[] inValue = { new Bool(false), new Bool(true), new Bool(false) };
+            Serialization ser = new Serialization();
+            ser.Serialize(inValue);
+
+            byte[] expected = new byte[] { 3, 0, 1, 0 };
+            byte[] actual = ser.GetBytes();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        static public string ToReadableByteArray(byte[] bytes)
+        {
+            return string.Join(", ", bytes);
+        }
+
+        //public string ToHexadecimalRepresentation(byte[] bytes)
+        //{
+        //    StringBuilder sb = new StringBuilder(bytes.Length << 1);
+        //    foreach (byte b in bytes)
+        //    {
+        //        sb.AppendFormat("{0:X2}", b);
+        //    }
+        //    return sb.ToString();
+        //}
     }
 }
