@@ -118,6 +118,17 @@ namespace Aptos.Utilities.BCS
         }
 
         /// <summary>
+        /// Serializes an object using it's own serialization implementation.
+        /// </summary>
+        /// <param name="value">Value to serialize</param>
+        /// <returns>The current Serialization object.</returns>
+        public Serialization Serialize(ISerializable value)
+        {
+            value.Serialize(this);
+            return this;
+        }
+
+        /// <summary>
         /// Serialize a sequence.
         /// </summary>
         /// <param name="args">The sequence to serialize.</param>
@@ -126,6 +137,25 @@ namespace Aptos.Utilities.BCS
         {
             SerializeU32AsUleb128((uint)args.Length);
             foreach (ISerializable element in args.GetValues())
+            {
+                Serialization s = new Serialization();
+                element.Serialize(s);
+                byte[] b = s.GetBytes();
+                SerializeFixedBytes(b);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Serializes an array of serializable elements
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public Serialization Serialize(ISerializable[] args)
+        {
+            // TODO: Remove or update after refactoring Sequence serialization code
+            SerializeU32AsUleb128((uint)args.Length);
+            foreach (ISerializable element in args)
             {
                 Serialization s = new Serialization();
                 element.Serialize(s);
