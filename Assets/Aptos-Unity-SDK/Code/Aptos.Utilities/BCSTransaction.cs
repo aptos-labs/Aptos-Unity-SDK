@@ -27,10 +27,10 @@
     /// </summary>
     public class EntryFunction : ISerializable
     {
-        ModuleId module;
-        string function;
-        TagSequence typeArgs;
-        Sequence args;
+        readonly ModuleId module;
+        readonly string function;
+        readonly TagSequence typeArgs;
+        readonly Sequence args;
 
         public EntryFunction(ModuleId module, string function, TagSequence typeArgs, Sequence args)
         {
