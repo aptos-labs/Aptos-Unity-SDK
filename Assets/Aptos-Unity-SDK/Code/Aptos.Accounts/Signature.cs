@@ -6,7 +6,7 @@ namespace Aptos.Accounts
     /// <summary>
     /// Representation of a ED25519 signature
     /// </summary>
-    public class Signature
+    public class Signature: ISerializable
     {
         /// <summary>
         /// Signature length
