@@ -20,7 +20,6 @@ namespace Aptos.Unity.Test
             return new EntryFunction(TestModuleId(), "some_function", new TagSequence(typeTags), new Sequence(args));
         }
 
-        #region General transaction tests
         [Test]
         public void SerializeAddress()
         {
@@ -94,7 +93,7 @@ namespace Aptos.Unity.Test
             s = new Serialization();
             (new Sequence(new ISerializable[] { new BString("") })).Serialize(s);
             res = s.GetBytes();
-            Assert.AreEqual(new byte[] { 1, 1, 0 }, res);
+            Assert.AreEqual(new byte[] { 1, 1, 0 }, res, ToReadableByteArray(res));
 
             s = new Serialization();
             (new Sequence(new ISerializable[] { new BString("A") })).Serialize(s);
@@ -114,12 +113,13 @@ namespace Aptos.Unity.Test
             Sequence args;
 
             s = new Serialization();
-            args = new Sequence(new ISerializable[]
-            {
-                new Sequence(new ISerializable[0] )
+            args = new Sequence( new ISerializable[] {
+                    new Sequence(new ISerializable[0] ) 
             });
             args.Serialize(s);
-            Assert.AreEqual(new byte[] { 1, 1, 0 }, s.GetBytes());
+
+            byte[] actual = s.GetBytes();
+            Assert.AreEqual(new byte[] { 1, 1, 0 }, actual, ToReadableByteArray(actual));
 
 
             //s = new Serialization();
@@ -134,6 +134,21 @@ namespace Aptos.Unity.Test
             //Assert.AreEqual(new byte[] { 1, 3, 1, 1, 65 }, s.GetBytes());
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument("wow", Serializer.str).encode(),
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithSingleStringArg()
         {
@@ -143,13 +158,26 @@ namespace Aptos.Unity.Test
                 new BString("wow"),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 4, 3, 119, 111, 119
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 4, 3, 119, 111, 119 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument(555555, Serializer.u64).encode(),
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithSingleU64Arg()
         {
@@ -159,26 +187,25 @@ namespace Aptos.Unity.Test
                 new U64(555555),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95,
-                102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 8, 35, 122, 8, 0, 0, 0, 0, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 8, 35, 122, 8, 0, 0, 0, 0, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
-        #endregion
-
-        #region Transaction with bool sequence
-
         /// <summary>
-        /// Tests a transaction where the arguments sequence contains an empty boolean sequence
-        /// 
-        /// Python Example:
-        /// txnBoolArg = TransactionArgument( [], Serializer.sequence_serializer(Serializer.bool) ).encode()
-        /// txn = EntryFunction(mod, "some_function", [], [txnBoolArg])
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument([], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
         /// </summary>
         [Test]
         public void SerializeTransactionWithEmptyBoolArgSequence()
@@ -190,13 +217,26 @@ namespace Aptos.Unity.Test
                 new Sequence(boolSequence),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 1, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 1, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument([False], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithOneBoolArgSequence()
         {
@@ -206,13 +246,45 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new Bool(false) }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 2, 1, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 2, 1, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        //[Test]
+        //public void SerializeTransactionWithOneBoolArgSequenceTWO()
+        //{
+        //    Serialization s = new Serialization();
+
+        //    Bool[] arg1 = { new Bool(false) };
+        //    ISerializable[] args =
+        //    {
+        //        arg1
+        //    };
+        //    TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
+        //    byte[] res = s.GetBytes();
+        //    Assert.AreEqual(new byte[]
+        //    {
+        //        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 2, 1, 0
+        //    }, res, ToReadableByteArray(res));
+        //}
+
+
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument([False, True], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithTwoBoolSequence()
         {
@@ -222,13 +294,27 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new Bool(false), new Bool(true)}),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 3, 2, 0, 1
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 3, 2, 0, 1 };
+
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument([False, True, False], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithThreeBoolArgsSequence()
         {
@@ -238,16 +324,26 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new Bool(false), new Bool(true), new Bool(false) }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 4, 3, 0, 1, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 4, 3, 0, 1, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
-        #endregion
-
-        #region Transaction with string sequence
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument(["A"], Serializer.sequence_serializer(Serializer.str)).encode(),
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithOneStringArgSequence()
         {
@@ -257,13 +353,27 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new BString("A") }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 3, 1, 1, 65
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 3, 1, 1, 65 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument(["A", "B"], Serializer.sequence_serializer(Serializer.str)).encode(),
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithTwoStringArgSequence()
         {
@@ -273,13 +383,27 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new BString("A"), new BString("B") }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 5, 2, 1, 65, 1, 66
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 5, 2, 1, 65, 1, 66 };
+
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument(["A", "B", "C"], Serializer.sequence_serializer(Serializer.str)).encode(),
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithThreeStringArgSequence()
         {
@@ -289,16 +413,28 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new BString("A"), new BString("B"), new BString("C") }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 7, 3, 1, 65, 1, 66, 1, 67
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 1, 7, 3, 1, 65, 1, 66, 1, 67 };
+
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
-        #endregion
-
-        #region Transaction with multiple single-type args and sequence args
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument("A", Serializer.str).encode(),
+        ///     TransactionArgument( [False], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithOneStringOneBoolArgSequence()
         {
@@ -309,13 +445,30 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new Bool(false) }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 2, 2, 1, 65, 2, 1, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 2, 2, 1, 65, 2, 1, 0 };
+
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument("A", Serializer.str).encode(),
+        ///     TransactionArgument(1, Serializer.u64).encode(),
+        ///     TransactionArgument( [False], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithOneStringOneIntOneBoolArgSequence()
         {
@@ -327,13 +480,29 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new Bool(false) }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 3, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 3, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
+        /// txn = EntryFunction(mid, "some_function", [], [
+        ///     TransactionArgument("A", Serializer.str).encode(),
+        ///     TransactionArgument(1, Serializer.u64).encode(),
+        ///     TransactionArgument(addr, Serializer.struct).encode(),
+        ///     TransactionArgument( [False], Serializer.sequence_serializer(Serializer.bool)).encode()
+        /// ])
+        ///     
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTransactionWithOneStringOneIntOneAddressOneBoolArgSequence()
         {
@@ -346,17 +515,17 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new Bool(false) }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 4, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0
-            }, res, ToReadableByteArray(res));
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 4, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0 };
+
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
         /// <summary>
-        /// Python Example:
+        /// Python SDK Example:
         /// 
         /// addr = AccountAddress.from_hex("0x01")
+        /// mid = ModuleId(addr, "my_module")
         /// txn = EntryFunction(mid, "some_function", [], [
         ///     TransactionArgument("A", Serializer.str).encode(),
         ///     TransactionArgument(1, Serializer.u64).encode(),
@@ -365,6 +534,10 @@ namespace Aptos.Unity.Test
         ///     TransactionArgument([False, True], Serializer.sequence_serializer(Serializer.bool)).encode(),
         ///     TransactionArgument(["A", "B", "C"], Serializer.sequence_serializer(Serializer.str)).encode()
         /// ])
+        /// s = Serializer()
+        /// txn.serialize(s)
+        /// out = s.output()
+        /// print([x for x in out])
         /// </summary>
         [Test]
         public void SerializeTransactionWithOneStringOneIntOneAddressMultipleArgSequences()
@@ -380,14 +553,11 @@ namespace Aptos.Unity.Test
                 new Sequence(new[] { new BString("A"), new BString("B"), new BString("C") }),
             };
             TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-            byte[] res = s.GetBytes();
-            Assert.AreEqual(new byte[]
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 6, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 3, 2, 0, 1, 7, 3, 1, 65, 1, 66, 1, 67
-            }, res, ToReadableByteArray(res));
-        }
 
-        #endregion
+            byte[] actual = s.GetBytes();
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 6, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 3, 2, 0, 1, 7, 3, 1, 65, 1, 66, 1, 67 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
 
         /// <summary>
         /// Utility function to print out byte array
