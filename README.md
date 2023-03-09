@@ -89,7 +89,7 @@ AccountAddress aliceAddress = alice.AccountAddress;
 ```
 
 #### Airdrop
-When using Devent , you can airdrop 1 APT to your account address as follows:
+When using Devnet , you can airdrop 1 APT to your account address as follows:
 
 ```csharp
 // Airdrop
