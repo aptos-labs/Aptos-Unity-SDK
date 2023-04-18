@@ -1,13 +1,19 @@
 using NUnit.Framework;
 using Aptos.Utilities.BCS;
+using Aptos.Accounts;
 
 namespace Aptos.Unity.Test
 {
     public class TransactionSerializationTest
     {
-        internal AccountAddress TestAddress()
+        //internal Utilities.BCS.AccountAddress TestAddress()
+        //{
+        //    return new Utilities.BCS.AccountAddress("0x01");
+        //}
+
+        internal Accounts.AccountAddress TestAddress()
         {
-            return new AccountAddress("0x01");
+            return Accounts.AccountAddress.FromHex("0x01");
         }
 
         internal ModuleId TestModuleId()
@@ -556,6 +562,80 @@ namespace Aptos.Unity.Test
 
             byte[] actual = s.GetBytes();
             byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 109, 121, 95, 109, 111, 100, 117, 108, 101, 13, 115, 111, 109, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 0, 6, 2, 1, 65, 8, 1, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 3, 2, 0, 1, 7, 3, 1, 65, 1, 66, 1, 67 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
+
+        /// <summary>
+        /// addr = AccountAddress.from_hex("0x1")
+        /// mid = ModuleId(addr, "coin")
+        /// transaction_arguments = [
+        ///     TransactionArgument(addr, Serializer.struct),
+        ///     TransactionArgument(1000, Serializer.u64),
+        /// ]
+        /// 
+        /// payload = EntryFunction.natural(
+        ///     "0x1::coin",
+        ///     "transfer",
+        ///     [TypeTag(StructTag.from_str("0x1::aptos_coin::AptosCoin"))],
+        ///     transaction_arguments,
+        /// )
+        /// 
+        /// ser = Serializer()
+        /// payload.serialize(ser)
+        /// out = ser.output()
+        /// 
+        /// print([x for x in out])
+        /// </summary>
+        [Test]
+        public void SerializeTransactionToTransferCoin()
+        {
+            //Account alice = Account.LoadKey("0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c");
+            //string acctAddressAlice = alice.AccountAddress.ToString();
+
+            //Account bob = Account.LoadKey("0xb10d4b38bef8a0d3e8747a84cfdc764b89a528af98e055e0237b11863afa9825");
+            //string acctAddressBob = bob.AccountAddress.ToString();
+
+            //TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
+
+            TagSequence typeTags = new TagSequence(
+                new ISerializableTag[] { 
+                    //new StructTag(new Utilities.BCS.AccountAddress("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
+                    new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
+                }
+            );
+
+            ISerializable[] args =
+            {
+                //new Utilities.BCS.AccountAddress(acctAddressBob),
+                //AccountAddress.FromHex(acctAddressBob),
+                AccountAddress.FromHex("0x1"),
+                new U64(1000),
+            };
+
+            Sequence txnArgs = new Sequence(args);
+
+            //EntryFunction payload =  new EntryFunction(
+            //    //new ModuleId(new Utilities.BCS.AccountAddress("0x1"), "coin"),
+            //    new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
+            //    "tranfer",
+            //    typeTags,
+            //    txnArgs
+            //);
+
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
+                "transfer",
+                typeTags,
+                txnArgs
+            );
+
+            Serialization s = new Serialization();
+            payload.Serialize(s);
+
+            byte[] actual = s.GetBytes();
+
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 99, 111, 105, 110, 8, 116, 114, 97, 110, 115, 102, 101, 114, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 0, 2, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 232, 3, 0, 0, 0, 0, 0, 0 };
+            //byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 99, 111, 105, 110, 8, 116, 114, 97, 110, 115, 102, 101, 114, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 0, 2, 32, 216, 159, 215, 62, 247, 192, 88, 204, 247, 159, 228, 193, 195, 133, 7, 213, 128, 53, 66, 6, 163, 106, 224, 62, 234, 1, 221, 253, 58, 254, 239, 7, 8, 232, 3, 0, 0, 0, 0, 0, 0 };
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
