@@ -1,7 +1,113 @@
 ﻿using Aptos.Accounts;
+using System;
 
 namespace Aptos.Utilities.BCS
 {
+    public class RawTransaction : ISerializable
+    {
+        public void Serialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MultiAgentRawTransaction : ISerializable
+    {
+        public void Serialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class TransactionPayload : ISerializable
+    {
+        public enum TypeTag
+        {
+            SCRIPT,
+            MODULE_BUNDLE,
+            SCRIPT_FUNCTION
+        }
+
+        readonly ISerializable value;
+        readonly TypeTag variant;
+
+        public TransactionPayload(ISerializable payload)
+        {
+            Type elementType = payload.GetType();
+            if (elementType == typeof(Script))
+            {
+                this.variant = TypeTag.SCRIPT;
+            }
+
+            else if (elementType == typeof(ModuleBundle))
+            {
+                this.variant = TypeTag.MODULE_BUNDLE;
+            }
+
+            else if (elementType == typeof(EntryFunction))
+            {
+                this.variant = TypeTag.SCRIPT_FUNCTION;
+            }
+
+            else
+            {
+                throw new Exception("Invalid type");
+            }
+
+            this.value = payload;
+        }
+
+        public TypeTag Variant()
+        {
+            return this.variant;
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            serializer.SerializeU32AsUleb128((uint)this.Variant());
+            this.value.Serialize(serializer);
+        }
+    }
+
+    public class ModuleBundle : ISerializable
+    {
+        public void Deserialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class Script : ISerializable
+    {
+        public void Deserialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ScriptArgument : ISerializable
+    {
+        public void Deserialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     /// <summary>
     /// Representation of a Module ID.
     /// </summary>
