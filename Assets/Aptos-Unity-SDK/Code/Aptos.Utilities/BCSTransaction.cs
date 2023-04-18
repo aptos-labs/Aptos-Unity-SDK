@@ -1,5 +1,6 @@
 ﻿using Aptos.Accounts;
 using System;
+using System.Text;
 
 namespace Aptos.Utilities.BCS
 {
@@ -26,23 +27,41 @@ namespace Aptos.Utilities.BCS
 
         public byte[] Prehash()
         {
-            throw new NotImplementedException();
+            var hashAlgorithm = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256);
+            byte[] input = Encoding.UTF8.GetBytes("APTOS::RawTransaction");
+            hashAlgorithm.BlockUpdate(input, 0, input.Length);
+            byte[] result = new byte[32];
+            hashAlgorithm.DoFinal(result, 0);
+            //string hashString = BitConverter.ToString(result).Replace("-", "").ToLowerInvariant();
+            return result;
         }
 
         public byte[] Keyed()
         {
-            throw new NotImplementedException();
+            Serialization ser = new Serialization();
+            this.Serialize(ser);
 
+            byte[] prehash = this.Prehash();
+            byte[] outSer = ser.GetBytes();
+
+            byte[] res = new byte[prehash.Length + outSer.Length];
+
+            prehash.CopyTo(res, 0);
+            outSer.CopyTo(res, prehash.Length);
+
+            return res;
         }
 
         public Signature Sign(PrivateKey key)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return key.Sign(this.Keyed());
         }
 
         public bool Verify(PublicKey key, Signature signature)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return key.Verify(this.Keyed(), signature);
         }
 
         public void Serialize(Serialization serializer)
