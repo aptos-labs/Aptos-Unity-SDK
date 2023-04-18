@@ -246,7 +246,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapOne()
+        public void SerializeMapOfStringToU32_One()
         {
             Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
             map.Add(new BString("x"), new U32(12345));
@@ -275,7 +275,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapTwo()
+        public void SerializeMapStringToU32_Two()
         {
             Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
             map.Add(new BString("b"), new U32(12345));
@@ -304,7 +304,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapThree()
+        public void SerializeMapStringToU32_Three()
         {
             Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
             map.Add(new BString("b"), new U32(99234));
