@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aptos.Accounts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -6,17 +7,20 @@ using System.Text;
 
 namespace Aptos.Utilities.BCS
 {
+    // See type_tag.py
     public enum TypeTag
     {
         BOOL, // int = 0
         U8, // int = 1
         U64, // int = 2
-        U32, // TODO: INSPECT WHERE TypeTag enum is leveraged
         U128, // int = 3
         ACCOUNT_ADDRESS, // int = 4
         SIGNER, // int = 5
         VECTOR, // int = 6
         STRUCT, // int = 7
+        U16,
+        U32, // TODO: INSPECT WHERE TypeTag enum is leveraged, moving it here because it offset the numbering
+        U256
     }
 
     public interface ISerializable
@@ -30,7 +34,7 @@ namespace Aptos.Utilities.BCS
 
         public void SerializeTag(Serialization serializer)
         {
-            serializer.SerializeU32AsUleb128((uint)this.Variant());
+            //serializer.SerializeU32AsUleb128((uint)this.Variant());
             this.Serialize(serializer);
         }
     }
@@ -58,7 +62,8 @@ namespace Aptos.Utilities.BCS
     }
 
     /// <summary>
-    /// Representation of a sequence
+    /// Representation of a sequence.
+    /// Used primarily to represent a list of transaction arguments
     /// </summary>
     public class Sequence : ISerializable
     {
@@ -133,14 +138,30 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    //public class BytesSingleSequence : ISerializable
+    //{
+    //    byte[] values;
+
+    //    public BytesSingleSequence(byte[] values)
+    //    {
+    //        this.values = values;
+    //    }
+
+    //    public void Serialize(Serialization serializer)
+    //    {
+    //        serializer.SerializeU32AsUleb128((uint)this.values.Length);
+    //        serializer.SerializeBytes(values);
+    //    }
+    //}
+
     /// <summary>
     /// Representation of a map in BCS.
     /// </summary>
     public class BCSMap : ISerializable
     {
-        Dictionary<BString, ISerializableTag> value;
+        Dictionary<BString, ISerializable> value;
 
-        public BCSMap(Dictionary<BString, ISerializableTag> value)
+        public BCSMap(Dictionary<BString, ISerializable> value)
         {
             this.value = value;
         }
@@ -148,7 +169,7 @@ namespace Aptos.Utilities.BCS
         {
             Serialization mapSerializer = new Serialization();
             SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
-            foreach (KeyValuePair<BString, ISerializableTag> entry in this.value)
+            foreach (KeyValuePair<BString, ISerializable> entry in this.value)
             {
                 Serialization keySerializer = new Serialization();
                 entry.Key.Serialize(keySerializer);
@@ -326,43 +347,45 @@ namespace Aptos.Utilities.BCS
     /// <summary>
     /// Representation of an account address.
     /// </summary>
-    public class AccountAddress : ISerializableTag
-    {
-        byte[] value;
+    //public class AccountAddress : ISerializableTag
+    //{
+    //    byte[] value;
 
-        public AccountAddress(byte[] value)
-        {
-            this.value = value;
-        }
+    //    public AccountAddress(byte[] value)
+    //    {
+    //        this.value = value;
+    //    }
 
-        public AccountAddress(string address)
-        {
-            byte[] addressBytes = BigInteger
-                .Parse("00" + address.Replace("0x", ""), System.Globalization.NumberStyles.HexNumber).ToByteArray()
-                .Reverse().ToArray();
-            this.value = new byte[32];
-            // left the bytezz array with 0's to make it 32 bytes long
-            Array.Copy(addressBytes, 0, this.value, 32 - addressBytes.Length, addressBytes.Length);
-        }
+    //    public AccountAddress(string address)
+    //    {
+    //        byte[] addressBytes = BigInteger
+    //            .Parse("00" + address.Replace("0x", ""), System.Globalization.NumberStyles.HexNumber).ToByteArray()
+    //            .Reverse().ToArray();
+    //        this.value = new byte[32];
+    //        Array.Copy(addressBytes, 0, this.value, 32 - addressBytes.Length, addressBytes.Length);
+    //        // left the bytezz array with 0's to make it 32 bytes long
+    //        // TODO: Fix this account for padding
+    //        //Array.Copy(addressBytes, 0, this.value, 0, addressBytes.Length)
+    //    }
 
-        public String ToHex()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in this.value)
-                sb.Append(b.ToString("X2"));
-            return "0x" + sb.ToString();
-        }
+    //    public String ToHex()
+    //    {
+    //        StringBuilder sb = new StringBuilder();
+    //        foreach (byte b in this.value)
+    //            sb.Append(b.ToString("X2"));
+    //        return "0x" + sb.ToString();
+    //    }
 
-        public TypeTag Variant()
-        {
-            return TypeTag.ACCOUNT_ADDRESS;
-        }
+    //    public TypeTag Variant()
+    //    {
+    //        return TypeTag.ACCOUNT_ADDRESS;
+    //    }
 
-        public void Serialize(Serialization serializer)
-        {
-            serializer.WriteBytes(value);
-        }
-    }
+    //    public void Serialize(Serialization serializer)
+    //    {
+    //        serializer.WriteBytes(value);
+    //    }
+    //}
 
     /// <summary>
     /// Representation of a struct tag.
