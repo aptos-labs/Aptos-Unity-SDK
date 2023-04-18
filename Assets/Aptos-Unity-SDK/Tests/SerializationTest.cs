@@ -219,7 +219,7 @@ namespace Aptos.Unity.Test
         [Test]
         public void SerializeMap()
         {
-            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("a"), new U32(12345));
             map.Add(new BString("b"), new U32(99234));
             map.Add(new BString("c"), new U32(23829));
@@ -248,7 +248,7 @@ namespace Aptos.Unity.Test
         [Test]
         public void SerializeMapOfStringToU32_One()
         {
-            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("x"), new U32(12345));
             map.Add(new BString("b"), new U32(99234));
             map.Add(new BString("c"), new U32(23829));
@@ -277,7 +277,7 @@ namespace Aptos.Unity.Test
         [Test]
         public void SerializeMapStringToU32_Two()
         {
-            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("b"), new U32(12345));
             map.Add(new BString("x"), new U32(99234));
             map.Add(new BString("c"), new U32(23829));
@@ -306,7 +306,7 @@ namespace Aptos.Unity.Test
         [Test]
         public void SerializeMapStringToU32_Three()
         {
-            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("b"), new U32(99234));
             map.Add(new BString("x"), new U32(12345));
             map.Add(new BString("c"), new U32(23829));
@@ -318,6 +318,35 @@ namespace Aptos.Unity.Test
             byte[] res = ser.GetBytes();
 
             byte[] exp = new byte[] { 3, 1, 98, 162, 131, 1, 0, 1, 99, 21, 93, 0, 0, 1, 120, 57, 48, 0, 0 };
+
+            Assert.AreEqual(exp, res);
+        }
+
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = {"a": "a", "b": "b", "c": "c"}
+        /// ser = Serializer()
+        /// ser.map(in_value, Serializer.str, Serializer.str)
+        /// output = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
+        [Test]
+        public void SerializeMapStringToString()
+        {
+            Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
+            map.Add(new BString("a"), new BString("a"));
+            map.Add(new BString("b"), new BString("b"));
+            map.Add(new BString("c"), new BString("c"));
+
+            Serialization ser = new Serialization();
+            BCSMap bcsMap = new BCSMap(map);
+            bcsMap.Serialize(ser);
+
+            byte[] res = ser.GetBytes();
+
+            byte[] exp = new byte[] { 3, 1, 97, 1, 97, 1, 98, 1, 98, 1, 99, 1, 99 };
 
             Assert.AreEqual(exp, res);
         }
@@ -421,6 +450,8 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(exp, res, ToReadableByteArray(res));
         }
 
+        // This test is invalid.
+        // To serialize sequences, use the Serializer
         //[Test]
         //public void SerializeStringSequenceTWO()
         //{
