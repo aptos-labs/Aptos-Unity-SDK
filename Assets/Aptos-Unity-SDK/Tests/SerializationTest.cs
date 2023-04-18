@@ -7,6 +7,16 @@ namespace Aptos.Unity.Test
 {
     public class SerializationTest
     {
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = True
+        /// ser = Serializer()
+        /// ser.bool (in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeTrue()
         {
@@ -14,6 +24,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 1 }, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = False
+        /// ser = Serializer()
+        /// ser.bool (in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeFalse()
         {
@@ -21,6 +41,15 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 0 }, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = 123
+        /// ser = Serializer()
+        /// ser.u8(in_value)
+        /// out = ser.output()
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeU8()
         {
@@ -29,6 +58,16 @@ namespace Aptos.Unity.Test
         }
 
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = 57615782
+        /// ser = Serializer()
+        /// ser.u32(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeU32()
         {
@@ -36,6 +75,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 166, 37, 111, 3 }, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = 9432012321182
+        /// ser = Serializer()
+        /// ser.u64(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeU64()
         {
@@ -43,6 +92,22 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 158, 113, 190, 15, 148, 8, 0, 0 }, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = 10
+        /// ser = Serializer()
+        /// ser.128(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// 
+        /// in_value = 749382032131231323910498053
+        /// ser = Serializer()
+        /// ser.128(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeU128()
         {
@@ -53,6 +118,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 5, 231, 86, 201, 40, 241, 231, 92, 209, 223, 107, 2, 0, 0, 0, 0 }, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = 1160
+        /// ser = Serializer()
+        /// ser.uleb128(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeU32AsUleb128()
         {
@@ -60,6 +135,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 136, 9 }, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = "potato UTF8: 🥔"
+        /// ser = Serializer()
+        /// ser.str(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeString()
         {
@@ -68,6 +153,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(exp, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = "potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔"
+        /// ser = Serializer()
+        /// ser.str(in_value)
+        /// out = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeStringLong()
         {
@@ -111,6 +206,45 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(exp, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = {"a": 12345, "b": 99234, "c": 23829}
+        /// ser = Serializer()
+        /// ser.map(in_value, Serializer.str, Serializer.u32)
+        /// output = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
+        [Test]
+        public void SerializeMap()
+        {
+            Dictionary<BString, ISerializableTag> map = new Dictionary<BString, ISerializableTag>();
+            map.Add(new BString("a"), new U32(12345));
+            map.Add(new BString("b"), new U32(99234));
+            map.Add(new BString("c"), new U32(23829));
+
+            Serialization ser = new Serialization();
+            BCSMap bcsMap = new BCSMap(map);
+            bcsMap.Serialize(ser);
+            
+            byte[] res = ser.GetBytes();
+
+            byte[] exp = new byte[] { 3, 1, 97, 57, 48, 0, 0, 1, 98, 162, 131, 1, 0, 1, 99, 21, 93, 0, 0 };
+
+            Assert.AreEqual(exp, res);
+        }
+
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = {"x": 12345, "b": 99234, "c": 23829}
+        /// ser = Serializer()
+        /// ser.map(in_value, Serializer.str, Serializer.u32)
+        /// output = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeMapOne()
         {
@@ -122,8 +256,24 @@ namespace Aptos.Unity.Test
             Serialization ser = new Serialization();
             BCSMap bcsMap = new BCSMap(map);
             bcsMap.Serialize(ser);
+
+            byte[] res = ser.GetBytes();
+
+            byte[] exp = new byte[] { 3, 1, 98, 162, 131, 1, 0, 1, 99, 21, 93, 0, 0, 1, 120, 57, 48, 0, 0 };
+
+            Assert.AreEqual(exp, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = {"b": 12345, "x": 99234, "c": 23829}
+        /// ser = Serializer()
+        /// ser.map(in_value, Serializer.str, Serializer.u32)
+        /// output = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeMapTwo()
         {
@@ -135,8 +285,24 @@ namespace Aptos.Unity.Test
             Serialization ser = new Serialization();
             BCSMap bcsMap = new BCSMap(map);
             bcsMap.Serialize(ser);
+
+            byte[] res = ser.GetBytes();
+
+            byte[] exp = new byte[] { 3, 1, 98, 57, 48, 0, 0, 1, 99, 21, 93, 0, 0, 1, 120, 162, 131, 1, 0 };
+
+            Assert.AreEqual(exp, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = {"b": 99234, "x": 12345, "c": 23829}
+        /// ser = Serializer()
+        /// ser.map(in_value, Serializer.str, Serializer.u32)
+        /// output = ser.output()
+        /// print([x for x in ser.output()])
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializeMapThree()
         {
@@ -148,12 +314,32 @@ namespace Aptos.Unity.Test
             Serialization ser = new Serialization();
             BCSMap bcsMap = new BCSMap(map);
             bcsMap.Serialize(ser);
+
+            byte[] res = ser.GetBytes();
+
+            byte[] exp = new byte[] { 3, 1, 98, 162, 131, 1, 0, 1, 99, 21, 93, 0, 0, 1, 120, 57, 48, 0, 0 };
+
+            Assert.AreEqual(exp, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// s = Serializer()
+        /// s.to_bytes(b"\0"*1160)
+        /// out = s.output()
+        /// print([x for x in s.output()])
+        /// </code>
+        /// </summary>
         [Test]
-        public void SerializeStringBytes()
+        public void SerializeEmptyStringBytes()
         {
-            byte[] res = new Serialization().SerializeBytes(new byte[1160]).GetBytes();
+            byte[] value = new byte[1160]; // empty byte string of size 1160
+
+            Serialization serializer = new Serialization();
+            serializer.SerializeBytes(value);
+            byte[] res = serializer.GetBytes();
+
             // 1160 for byte array + 2 for length
             byte[] exp = new byte[1162];
             exp[0] = 136;
@@ -161,8 +347,19 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(exp, res);
         }
 
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// ser = Serializer()
+        /// ser.u32(123)
+        /// ser.bool (True)
+        /// ser.u32(456)
+        /// output = ser.output()
+        /// print([x for x in output])
+        /// </code>
+        /// </summary>
         [Test]
-        public void SerializeMultiple()
+        public void SerializeMultipleValues()
         {
             Serialization serializer = new Serialization();
             serializer.Serialize("potato");
@@ -175,6 +372,7 @@ namespace Aptos.Unity.Test
         }
 
         /// <summary>
+        /// Python SDK Code:
         /// <code>
         /// in_value = [""]
         /// ser = Serializer()
