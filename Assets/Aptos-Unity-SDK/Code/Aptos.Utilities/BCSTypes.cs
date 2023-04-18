@@ -138,22 +138,6 @@ namespace Aptos.Utilities.BCS
         }
     }
 
-    //public class BytesSingleSequence : ISerializable
-    //{
-    //    byte[] values;
-
-    //    public BytesSingleSequence(byte[] values)
-    //    {
-    //        this.values = values;
-    //    }
-
-    //    public void Serialize(Serialization serializer)
-    //    {
-    //        serializer.SerializeU32AsUleb128((uint)this.values.Length);
-    //        serializer.SerializeBytes(values);
-    //    }
-    //}
-
     /// <summary>
     /// Representation of a map in BCS.
     /// </summary>
