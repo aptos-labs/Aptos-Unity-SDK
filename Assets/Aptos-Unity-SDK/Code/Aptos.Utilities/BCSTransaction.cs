@@ -5,9 +5,55 @@ namespace Aptos.Utilities.BCS
 {
     public class RawTransaction : ISerializable
     {
-        public void Serialize(Serialization serializer)
+        AccountAddress sender;
+        int sequenceNumber;
+        TransactionPayload payload;
+        int maxGasAmount;
+        int gasUnitPrice;
+        ulong expirationTimestampsSecs;
+        int chainId;
+
+        public RawTransaction(AccountAddress sender, int sequenceNumber, TransactionPayload payload, int maxGasAmount, int gasUnitPrice, ulong expirationTimestampsSecs, int chainId)
+        {
+            this.sender = sender;
+            this.sequenceNumber = sequenceNumber;
+            this.payload = payload;
+            this.maxGasAmount = maxGasAmount;
+            this.gasUnitPrice = gasUnitPrice;
+            this.expirationTimestampsSecs = expirationTimestampsSecs;
+            this.chainId = chainId;
+        }
+
+        public byte[] Prehash()
         {
             throw new NotImplementedException();
+        }
+
+        public byte[] Keyed()
+        {
+            throw new NotImplementedException();
+
+        }
+
+        public Signature Sign(PrivateKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Verify(PublicKey key, Signature signature)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            this.sender.Serialize(serializer);
+            serializer.SerializeU64((ulong)this.sequenceNumber);
+            this.payload.Serialize(serializer);
+            serializer.SerializeU64((ulong)this.maxGasAmount);
+            serializer.SerializeU64((ulong)this.gasUnitPrice);
+            serializer.SerializeU64((ulong)this.expirationTimestampsSecs);
+            serializer.SerializeU8((byte)this.chainId);
         }
     }
 

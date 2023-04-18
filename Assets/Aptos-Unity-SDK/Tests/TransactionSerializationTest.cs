@@ -705,6 +705,87 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+
+        /// <summary>
+        /// addr = AccountAddress.from_hex("0x1")
+        /// mid = ModuleId(addr, "coin")
+        /// transaction_arguments = [
+        ///     TransactionArgument(addr, Serializer.struct),
+        ///     TransactionArgument(1000, Serializer.u64),
+        /// ]
+        /// 
+        /// payload = EntryFunction.natural(
+        ///     "0x1::coin",
+        ///     "transfer",
+        ///     [TypeTag(StructTag.from_str("0x1::aptos_coin::AptosCoin"))],
+        ///     transaction_arguments,
+        /// )
+        /// 
+        /// txnPayload = TransactionPayload(payload)
+        /// 
+        /// raw_transaction = RawTransaction(
+        ///     addr,
+        ///     0,
+        ///     TransactionPayload(payload),
+        ///     2000,
+        ///     0,
+        ///     18446744073709551615,
+        ///     4,
+        ///     )
+        ///     
+        /// s = Serializer()
+        /// raw_transaction.serialize(s)
+        /// out = s.output()
+        /// 
+        /// print([x for x in out])
+        /// </summary>
+        [Test]
+        public void SerializeRawTransactionForTransferCoin()
+        {
+            TagSequence typeTags = new TagSequence(
+                new ISerializableTag[] {
+                    new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
+                }
+            );
+
+            ISerializable[] args =
+            {
+                AccountAddress.FromHex("0x1"),
+                new U64(1000),
+            };
+
+            Sequence txnArgs = new Sequence(args);
+
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
+                "transfer",
+                typeTags,
+                txnArgs
+            );
+
+            TransactionPayload txnPayload = new TransactionPayload(payload);
+
+            AccountAddress accountAddress = AccountAddress.FromHex("0x1");
+
+            RawTransaction rawTransaction = new RawTransaction(
+                accountAddress,
+                0,
+                txnPayload,
+                2000,
+                0,
+                18446744073709551615,
+                4
+            );
+
+            Serialization s = new Serialization();
+            rawTransaction.Serialize(s);
+
+            byte[] actual = s.GetBytes();
+
+            byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 99, 111, 105, 110, 8, 116, 114, 97, 110, 115, 102, 101, 114, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 0, 2, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 232, 3, 0, 0, 0, 0, 0, 0, 208, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 4 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
+
         /// <summary>
         /// Utility function to print out byte array
         /// </summary>
