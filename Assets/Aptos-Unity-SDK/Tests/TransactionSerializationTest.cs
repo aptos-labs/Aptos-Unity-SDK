@@ -587,7 +587,7 @@ namespace Aptos.Unity.Test
         /// print([x for x in out])
         /// </summary>
         [Test]
-        public void SerializeTransactionToTransferCoin()
+        public void SerializeTransactionPayloadForTransferCoin()
         {
             //Account alice = Account.LoadKey("0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c");
             //string acctAddressAlice = alice.AccountAddress.ToString();
