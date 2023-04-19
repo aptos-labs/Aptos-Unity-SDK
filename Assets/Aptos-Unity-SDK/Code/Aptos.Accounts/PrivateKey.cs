@@ -131,6 +131,17 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
+        /// Create a private key from a string literal.
+        /// Conforms to the standard Python and Typescript Aptos SDK.
+        /// </summary>
+        /// <param name="key">The private key as an ASCII encoded string.</param>
+        /// <returns>Private key object.</returns>
+        public static PrivateKey FromHex(string key)
+        {
+            return new PrivateKey(key);
+        }
+
+        /// <summary>
         /// Initialize the PrivateKey object from the given string.
         /// </summary>
         /// <param name="key">The private key as a hex encoded byte array.</param>
