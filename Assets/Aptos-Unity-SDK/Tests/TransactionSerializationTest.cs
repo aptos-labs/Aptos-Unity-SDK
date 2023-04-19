@@ -949,6 +949,7 @@ namespace Aptos.Unity.Test
 
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
 
+
             SignedTransaction signedTransactionGenerated = new SignedTransaction(
                 rawTransactionGenerated, authenticator
             );
@@ -1046,9 +1047,7 @@ namespace Aptos.Unity.Test
             byte[] expectedEd25519Sender = { 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1 };
             Assert.AreEqual(expectedEd25519Sender, actualEd25519Sender, ToReadableByteArray(actualEd25519Sender));
 
-            // TEST ED25519 Authenticator for receiver
-            List<Tuple<AccountAddress, Authenticator.Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator.Authenticator>>();
-          
+            // TEST ED25519 Authenticator for receiver          
             Authenticator.Authenticator ed25519AuthReceiver = 
                 new Authenticator.Authenticator(
                     new Authenticator.Ed25519Authenticator(
@@ -1062,6 +1061,7 @@ namespace Aptos.Unity.Test
             byte[] expectedEd25519AuthReceiver = { 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
             Assert.AreEqual(expectedEd25519AuthReceiver, actualEd25519AuthReceiver, ToReadableByteArray(actualEd25519AuthReceiver));
 
+            List<Tuple<AccountAddress, Authenticator.Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator.Authenticator>>();
             secondarySignersTup.Add(
                 new Tuple<AccountAddress, Authenticator.Authenticator>(
                     receiverAccountAddress,
@@ -1116,8 +1116,6 @@ namespace Aptos.Unity.Test
 
             string rawTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004";
             string signedTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004020020b9c6ee1630ef3e711144a648db06bbb2284f7274cfbee53ffcee503cc1a4920040343e7b10aa323c480391a5d7cd2d0cf708d51529b96b5a2be08cbb365e4f11dcc2cf0655766cf70d40853b9c395b62dad7a9f58ed998803d8bf1901ba7a7a401012d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9010020aef3f4a4b8eca1dfc343361bf8e436bd42de9259c04b8314eb8e2054dd6e82ab408a7f06e404ae8d9535b0cbbeafb7c9e34e95fe1425e4529758150a4f7ce7a683354148ad5c313ec36549e3fb29e669d90010f97467c9074ff0aec3ed87f76608";
-
-            
         }
 
         /// <summary>
