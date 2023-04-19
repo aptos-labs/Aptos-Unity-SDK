@@ -281,4 +281,52 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeString(this.name);
         }
     }
+
+    public class SignedTransaction : ISerializable
+    {
+        RawTransaction transaction;
+        Authenticator.Authenticator authenticator;
+
+        public SignedTransaction(RawTransaction transaction, Authenticator.Authenticator authenticator)
+        {
+            this.transaction = transaction;
+            this.authenticator = authenticator;
+        }
+
+        public byte[] Bytes()
+        {
+            Serialization ser = new Serialization();
+            ser.Serialize(this);
+            return ser.GetBytes();
+        }
+
+        public bool Verify()
+        {
+            //throw new NotImplementedException();
+            Type elementType = this.authenticator.GetType();
+            byte[] keyed;
+
+            if (elementType == typeof(Authenticator.MultiAgentAuthenticator))
+            {
+                Authenticator.MultiAgentAuthenticator authenticator = (Authenticator.MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
+                MultiAgentRawTransaction transaction = new MultiAgentRawTransaction(
+                    this.transaction, authenticator.SecondaryAddresses()
+                );
+
+                keyed = this.transaction.Keyed();
+            }
+            else
+            {
+                keyed = this.transaction.Keyed();
+            }
+
+            return this.authenticator.Verify(keyed);
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            this.transaction.Serialize(serializer);
+            this.authenticator.Serialize(serializer);
+        }
+    }
 }
