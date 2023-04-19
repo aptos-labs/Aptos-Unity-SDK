@@ -20,7 +20,7 @@ namespace Aptos.Authenticator
 
     public class Authenticator : IAuthenticator
     {
-        public const int ED25519 = 1;
+        public const int ED25519 = 0;
         public const int MULTI_ED25519 = 1;
         public const int MULTI_AGENT = 2;
 
@@ -61,7 +61,7 @@ namespace Aptos.Authenticator
             //byte[] output = authSerializer.GetBytes();
             //serializer.SerializeFixedBytes(output);
             //return serializer;
-            authenticator.Serialize(serializer); // TODO: implement serializer.struct
+            this.authenticator.Serialize(serializer); // TODO: implement serializer.struct
         }
     }
 
@@ -88,8 +88,8 @@ namespace Aptos.Authenticator
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeBytes(this.publicKey); // Note in Python we call serializer.struct
-            //this.signature.Serialize(serializer); // Note in Python we call serializer.struct
-            serializer.Serialize(signature);
+            this.signature.Serialize(serializer); // Note in Python we call serializer.struct
+            //serializer.Serialize(signature);
         }
     }
 
@@ -143,12 +143,21 @@ namespace Aptos.Authenticator
             //Sequence secAddressesSeq = new Sequence(secAddresssesBytes.ToArray());
             //List< Authenticator> authenticators = secondarySigners.Select(signer => signer.Item2).ToList();
 
-            Accounts.AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
+            AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
             Authenticator[] authenticators = secondarySigners.Select(signer => signer.Item2).ToArray();
 
+            Sequence secondaryAddressesSeq = new Sequence(secondaryAddresses);
+            Sequence authenticatorsSeq = new Sequence(authenticators);
+
             serializer.Serialize(this.sender);
-            serializer.Serialize(secondaryAddresses);
-            serializer.Serialize(authenticators);
+            //serializer.Serialize(secondaryAddresses);
+            //serializer.Serialize(authenticators);
+
+            //secondaryAddressesSeq.Serialize(serializer);
+            //authenticatorsSeq.Serialize(serializer);
+
+            serializer.Serialize(secondaryAddressesSeq);
+            serializer.Serialize(authenticatorsSeq);
         }
     }
 
