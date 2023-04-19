@@ -1,5 +1,6 @@
 ﻿using Aptos.Accounts;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -42,12 +43,12 @@ namespace Aptos.Utilities.BCS
             this.Serialize(ser);
 
             byte[] prehash = this.Prehash();
-            byte[] outSer = ser.GetBytes();
+            byte[] outputBytes = ser.GetBytes();
 
-            byte[] res = new byte[prehash.Length + outSer.Length];
+            byte[] res = new byte[prehash.Length + outputBytes.Length];
 
             prehash.CopyTo(res, 0);
-            outSer.CopyTo(res, prehash.Length);
+            outputBytes.CopyTo(res, prehash.Length);
 
             return res;
         }
@@ -78,6 +79,60 @@ namespace Aptos.Utilities.BCS
 
     public class MultiAgentRawTransaction : ISerializable
     {
+        RawTransaction rawTransaction;
+        Sequence secondarySigners;
+
+        public MultiAgentRawTransaction(RawTransaction rawTransaction, Sequence secondarySigners)
+        {
+            this.rawTransaction = rawTransaction;
+            this.secondarySigners = secondarySigners;
+        }
+
+        public RawTransaction Inner()
+        {
+            return this.rawTransaction;
+        }
+
+        public byte[] Prehash()
+        {
+            var hashAlgorithm = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256);
+            byte[] input = Encoding.UTF8.GetBytes("APTOS::RawTransactionWithData");
+            hashAlgorithm.BlockUpdate(input, 0, input.Length);
+            byte[] result = new byte[32];
+            hashAlgorithm.DoFinal(result, 0);
+            return result;
+        }
+
+        public byte[] Keyed()
+        {
+            Serialization ser = new Serialization();
+
+            // This is a type indicator for an enum
+            ser.SerializeU8(0);
+            ser.Serialize(this.rawTransaction);
+            secondarySigners.Serialize(ser);
+
+            byte[] prehash = this.Prehash();
+            byte[] outputBytes = ser.GetBytes();
+
+            byte[] res = new byte[prehash.Length + outputBytes.Length];
+
+            prehash.CopyTo(res, 0);
+            outputBytes.CopyTo(res, prehash.Length);
+
+            return res;
+        }
+
+        public Signature Sign(PrivateKey key)
+        {
+            return key.Sign(this.Keyed());
+        }
+
+        public bool Verify(PublicKey key, Signature signature)
+        {
+            return key.Verify(this.Keyed(), signature);
+        }
+
         public void Serialize(Serialization serializer)
         {
             throw new NotImplementedException();
