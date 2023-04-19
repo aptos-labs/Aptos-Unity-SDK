@@ -73,6 +73,7 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeU64((ulong)this.maxGasAmount);
             serializer.SerializeU64((ulong)this.gasUnitPrice);
             serializer.SerializeU64((ulong)this.expirationTimestampsSecs);
+            //serializer.SerializeU8((byte)(this.chainId >> 8));
             serializer.SerializeU8((byte)this.chainId);
         }
     }
@@ -110,7 +111,8 @@ namespace Aptos.Utilities.BCS
             // This is a type indicator for an enum
             ser.SerializeU8(0);
             ser.Serialize(this.rawTransaction);
-            secondarySigners.Serialize(ser);
+            //secondarySigners.Serialize(ser); // Similar to Python: serializer.sequence_serializer
+            ser.Serialize(secondarySigners); // Similar to Python: serializer.sequence(self.secondary_signers, Serializer.struct)
 
             byte[] prehash = this.Prehash();
             byte[] outputBytes = ser.GetBytes();
@@ -121,6 +123,7 @@ namespace Aptos.Utilities.BCS
             outputBytes.CopyTo(res, prehash.Length);
 
             return res;
+            //return ser.GetBytes();
         }
 
         public Signature Sign(PrivateKey key)
@@ -303,17 +306,18 @@ namespace Aptos.Utilities.BCS
         public bool Verify()
         {
             //throw new NotImplementedException();
-            Type elementType = this.authenticator.GetType();
             byte[] keyed;
 
+            Type elementType = this.authenticator.GetType();
             if (elementType == typeof(Authenticator.MultiAgentAuthenticator))
             {
                 Authenticator.MultiAgentAuthenticator authenticator = (Authenticator.MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
+                
                 MultiAgentRawTransaction transaction = new MultiAgentRawTransaction(
                     this.transaction, authenticator.SecondaryAddresses()
                 );
 
-                keyed = this.transaction.Keyed();
+                keyed = transaction.Keyed();
             }
             else
             {
