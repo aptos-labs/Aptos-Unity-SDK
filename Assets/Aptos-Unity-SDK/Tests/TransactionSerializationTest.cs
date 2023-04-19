@@ -672,6 +672,8 @@ namespace Aptos.Unity.Test
         }
 
         /// <summary>
+        /// Python SDK Example:
+        /// <code>
         /// addr = AccountAddress.from_hex("0x1")
         /// mid = ModuleId(addr, "coin")
         /// transaction_arguments = [
@@ -693,6 +695,7 @@ namespace Aptos.Unity.Test
         /// out = ser.output()
         /// 
         /// print([x for x in out])
+        /// </code>
         /// </summary>
         [Test]
         public void SerializeTransactionPayloadForTransferCoin()
@@ -738,6 +741,8 @@ namespace Aptos.Unity.Test
 
 
         /// <summary>
+        /// Python SDK Example:
+        /// <code>
         /// addr = AccountAddress.from_hex("0x1")
         /// mid = ModuleId(addr, "coin")
         /// transaction_arguments = [
@@ -769,6 +774,7 @@ namespace Aptos.Unity.Test
         /// out = s.output()
         /// 
         /// print([x for x in out])
+        /// </code>
         /// </summary>
         [Test]
         public void SerializeRawTransactionForTransferCoin()
@@ -984,6 +990,94 @@ namespace Aptos.Unity.Test
             Assert.IsTrue(signedTransactionGenerated.Verify());
         }
 
+        /// <summary>
+        /// Python SDK Example:
+        /// <code>
+        /// # Define common inputs
+        /// sender_key_input = (
+        ///     "9bf49a6a0755f953811fce125f2683d50429c3bb49e074147e0089a52eae155f"
+        /// )
+        /// 
+        /// receiver_key_input = (
+        ///     "0564f879d27ae3c02ce82834acfa8c793a629f2ca0de6919610be82f411326be"
+        /// )
+        /// 
+        /// sequence_number_input = 11
+        /// gas_unit_price_input = 1
+        /// max_gas_amount_input = 2000
+        /// expiration_timestamps_secs_input = 1234567890
+        /// chain_id_input = 4
+        /// 
+        /// # Accounts and crypto
+        /// sender_private_key = ed25519.PrivateKey.from_hex(sender_key_input)
+        /// sender_public_key = sender_private_key.public_key()
+        /// sender_account_address = AccountAddress.from_key(sender_public_key)
+        /// 
+        /// receiver_private_key = ed25519.PrivateKey.from_hex(receiver_key_input)
+        /// receiver_public_key = receiver_private_key.public_key()
+        /// receiver_account_address = AccountAddress.from_key(receiver_public_key)
+        /// 
+        /// # Generate the transaction locally
+        /// transaction_arguments = [
+        ///     TransactionArgument(receiver_account_address, Serializer.struct),
+        ///     TransactionArgument("collection_name", Serializer.str),
+        ///     TransactionArgument("token_name", Serializer.str),
+        ///     TransactionArgument(1, Serializer.u64),
+        /// ]
+        /// 
+        /// payload = EntryFunction.natural(
+        ///     "0x3::token",
+        ///     "direct_transfer_script",
+        ///     [],
+        ///     transaction_arguments,
+        /// )
+        /// 
+        /// raw_transaction_generated = MultiAgentRawTransaction(
+        ///     RawTransaction(
+        ///         sender_account_address, 
+        ///         sequence_number_input,
+        ///         TransactionPayload(payload),
+        ///         max_gas_amount_input,
+        ///         gas_unit_price_input,
+        ///         expiration_timestamps_secs_input,
+        ///         chain_id_input,
+        ///     ),
+        ///     [receiver_account_address],
+        /// )
+        /// 
+        /// sender_signature = raw_transaction_generated.sign(sender_private_key)
+        /// receiver_signature = raw_transaction_generated.sign(receiver_private_key)
+        /// self.assertTrue(
+        ///     raw_transaction_generated.verify(sender_public_key, sender_signature)
+        /// )
+        /// self.assertTrue(
+        ///     raw_transaction_generated.verify(receiver_public_key, receiver_signature)
+        /// )
+        /// 
+        /// authenticator = Authenticator(
+        ///     MultiAgentAuthenticator(
+        ///         Authenticator(
+        ///             Ed25519Authenticator(sender_public_key, sender_signature)
+        ///         ),
+        ///         [
+        ///             (
+        ///                 receiver_account_address,
+        ///                 Authenticator(
+        ///                     Ed25519Authenticator(
+        ///                         receiver_public_key, receiver_signature
+        ///                     )
+        ///                 ),
+        ///             )
+        ///         ],
+        ///     )
+        /// )
+        /// 
+        /// signed_transaction_generated = SignedTransaction(
+        ///     raw_transaction_generated.inner(), authenticator
+        /// )
+        /// self.assertTrue(signed_transaction_generated.verify())
+        /// </code>
+        /// </summary>
         [Test]
         public void SerializationEntryFunctionMultiAgentWithCorpus()
         {
