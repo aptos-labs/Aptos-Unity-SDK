@@ -3,6 +3,8 @@ using Aptos.Utilities.BCS;
 using Aptos.Accounts;
 using System.Collections.Generic;
 using System;
+using System.IO;
+using UnityEngine;
 
 namespace Aptos.Unity.Test
 {
@@ -611,6 +613,61 @@ namespace Aptos.Unity.Test
 
             byte[] actual = s.GetBytes();
             byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 99, 111, 105, 110, 8, 116, 114, 97, 110, 115, 102, 101, 114, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 0, 2, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 232, 3, 0, 0, 0, 0, 0, 0 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
+
+        /// <summary>
+        /// TODO: Implement opening up two_by_two_transfer.mv as byte array
+        /// 
+        /// Python SDK Example:
+        /// <code>
+        /// carol_addr = AccountAddress.from_hex("0x01")
+        /// david_addr = AccountAddress.from_hex("0x01")
+        /// 
+        /// script_arguments = [
+        ///     ScriptArgument(ScriptArgument.U64, 100),
+        ///     ScriptArgument(ScriptArgument.U64, 200),
+        ///     ScriptArgument(ScriptArgument.ADDRESS, carol_addr),
+        ///     ScriptArgument(ScriptArgument.ADDRESS, david_addr),
+        ///     ScriptArgument(ScriptArgument.U64, 50),
+        /// ]
+        /// 
+        /// script = Script(code, [], script_arguments)
+        /// ser = Serializer()
+        /// script.serialize(ser)
+        /// out = ser.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
+        [Test]
+        public void SerializeScript()
+        {
+            // TODO: open two_by_two_transfer.mv as "code"
+            //var path = Path.Combine(Directory.GetCurrentDirectory(), "\\two_by_two_transfer.mv");
+            string path = Application.dataPath + "\\Aptos-Unity-SDK\\Tests" + "\\two_by_two_transfer.mv";
+            byte[] code = File.ReadAllBytes(path);
+
+            AccountAddress caroldAddress = AccountAddress.FromHex("0x1");
+            AccountAddress davidAddress = AccountAddress.FromHex("0x1");
+
+            TagSequence typeArgs = new TagSequence(new ISerializableTag[0]);
+
+            ISerializable[] args =
+            {
+                new ScriptArgument(ScriptArgument.TypeTag.U64, 100),
+                new ScriptArgument(ScriptArgument.TypeTag.U64, 200),
+                new ScriptArgument(ScriptArgument.TypeTag.ADDRESS, caroldAddress),
+                new ScriptArgument(ScriptArgument.TypeTag.ADDRESS, davidAddress),
+                new ScriptArgument(ScriptArgument.TypeTag.U64, 50)
+            };
+            Sequence scriptArgs = new Sequence(args);
+
+            Script script = new Script(code, typeArgs, scriptArgs);
+
+            Serialization ser = new Serialization();
+            script.Serialize(ser);
+            byte[] actual = ser.GetBytes();
+            byte[] expected = { 187, 2, 161, 28, 235, 11, 5, 0, 0, 0, 8, 1, 0, 4, 2, 4, 10, 3, 14, 24, 4, 38, 8, 5, 46, 67, 7, 113, 62, 8, 175, 1, 32, 6, 207, 1, 20, 0, 0, 0, 1, 1, 2, 4, 1, 0, 1, 0, 3, 8, 0, 1, 4, 3, 4, 1, 0, 1, 5, 5, 6, 1, 0, 1, 6, 7, 4, 1, 0, 1, 7, 8, 6, 1, 0, 0, 2, 1, 2, 2, 2, 3, 2, 7, 6, 12, 6, 12, 3, 3, 5, 5, 3, 3, 11, 0, 1, 8, 1, 11, 0, 1, 8, 1, 11, 0, 1, 8, 1, 1, 8, 1, 2, 6, 12, 3, 1, 11, 0, 1, 9, 0, 2, 7, 11, 0, 1, 9, 0, 11, 0, 1, 9, 0, 0, 2, 7, 11, 0, 1, 9, 0, 3, 2, 5, 11, 0, 1, 9, 0, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 4, 99, 111, 105, 110, 4, 67, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 8, 119, 105, 116, 104, 100, 114, 97, 119, 5, 109, 101, 114, 103, 101, 7, 101, 120, 116, 114, 97, 99, 116, 7, 100, 101, 112, 111, 115, 105, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 8, 160, 134, 1, 0, 0, 0, 0, 0, 3, 8, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 1, 26, 11, 0, 10, 2, 56, 0, 12, 7, 11, 1, 10, 3, 56, 0, 12, 8, 13, 7, 11, 8, 56, 1, 13, 7, 11, 2, 11, 3, 22, 11, 6, 23, 56, 2, 12, 9, 11, 4, 11, 7, 56, 3, 11, 5, 11, 9, 56, 3, 2, 0, 5, 1, 100, 0, 0, 0, 0, 0, 0, 0, 1, 200, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 50, 0, 0, 0, 0, 0, 0, 0 };
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 

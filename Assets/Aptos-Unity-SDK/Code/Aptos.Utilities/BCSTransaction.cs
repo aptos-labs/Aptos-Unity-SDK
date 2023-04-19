@@ -204,6 +204,17 @@ namespace Aptos.Utilities.BCS
     // TODO: Implement Script
     public class Script : ISerializable
     {
+        private readonly byte[] code;
+        private readonly TagSequence typeArgs;
+        private readonly Sequence scriptArgs;
+
+        public Script(byte[] code, TagSequence typeArgs, Sequence scriptArgs)
+        {
+            this.code = code;
+            this.typeArgs = typeArgs;
+            this.scriptArgs = scriptArgs;
+        }
+
         public void Deserialize(Serialization serializer)
         {
             throw new NotImplementedException();
@@ -211,13 +222,42 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
-            throw new NotImplementedException();
+            serializer.SerializeBytes(this.code);
+            serializer.Serialize(this.typeArgs);
+            serializer.Serialize(this.scriptArgs);
         }
     }
 
-    // TODO: Implement ScriptArgument
+    // TODO: Implement ScriptArgument deserialization
     public class ScriptArgument : ISerializable
     {
+        public enum TypeTag
+        {
+            U8,
+            U64,
+            U128,
+            ADDRESS,
+            U8_VECTOR,
+            BOOL,
+            U16,
+            U32,
+            U256
+        }
+
+        TypeTag variant;
+        object value;
+
+        public ScriptArgument(TypeTag variant, object value)
+        {
+            if (variant < 0 || variant > TypeTag.BOOL)
+            {
+                throw new ArgumentException("Invalid variant");
+            }
+
+            this.variant = variant;
+            this.value = value;
+        }
+
         public void Deserialize(Serialization serializer)
         {
             throw new NotImplementedException();
@@ -225,7 +265,48 @@ namespace Aptos.Utilities.BCS
 
         public void Serialize(Serialization serializer)
         {
-            throw new NotImplementedException();
+            serializer.SerializeU8((byte)this.variant);
+            if(this.variant == TypeTag.U8)
+            {
+                serializer.SerializeU8((byte)this.value);
+            }
+            else if(this.variant == TypeTag.U16)
+            {
+                serializer.SerializeU16((ushort)this.value);
+            }
+            else if(this.variant == TypeTag.U32)
+            {
+                serializer.SerializeU32((uint)this.value);
+            }
+            else if(this.variant == TypeTag.U64)
+            {
+                serializer.SerializeU64(Convert.ToUInt64(this.value));
+            }
+            else if(this.variant == TypeTag.U128)
+            {
+                serializer.SerializeU128((System.Numerics.BigInteger)this.value);
+            }
+            // TODO: Inquire on C# U256 support
+            //else if(this.variant == TypeTag.U256)
+            //{
+            //    serializer.Serial
+            //}
+            else if(this.variant == TypeTag.ADDRESS)
+            {
+                serializer.Serialize((AccountAddress) this.value);
+            }
+            else if(this.variant == TypeTag.U8_VECTOR)
+            {
+                serializer.SerializeBytes((byte[])this.value);
+            }
+            else if(this.variant == TypeTag.BOOL)
+            {
+                serializer.SerializeBool((bool)this.value);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid ScriptArgument variant " + this.variant);
+            }
         }
     }
 
