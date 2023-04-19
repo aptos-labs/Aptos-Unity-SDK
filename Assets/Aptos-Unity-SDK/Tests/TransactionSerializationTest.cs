@@ -936,8 +936,18 @@ namespace Aptos.Unity.Test
             Assert.IsTrue(verifySenderSignature);
 
             Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
-                new Authenticator.Ed25519Authenticator(senderPublicKey, senderSignature)
+                new Authenticator.Ed25519Authenticator(
+                    senderPublicKey, senderSignature
+                )
             );
+
+            Serialization ser = new Serialization();
+            authenticator.Serialize(ser);
+
+            byte[] actual = ser.GetBytes();
+            byte[] expected = { 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 242, 91, 116, 236, 96, 163, 138, 30, 215, 128, 253, 43, 239, 109, 219, 110, 180, 53, 110, 58, 179, 146, 118, 201, 23, 108, 223, 15, 202, 226, 171, 55, 215, 155, 98, 106, 187, 67, 217, 38, 233, 21, 149, 182, 101, 3, 164, 163, 201, 10, 203, 174, 54, 162, 141, 64, 94, 48, 143, 53, 55, 175, 114, 11 };
+
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
 
             SignedTransaction signedTransactionGenerated = new SignedTransaction(
                 rawTransactionGenerated, authenticator
@@ -945,7 +955,6 @@ namespace Aptos.Unity.Test
 
             Assert.IsTrue(signedTransactionGenerated.Verify());
         }
-
 
         [Test]
         public void SerializationEntryFunctionMultiAgentWithCorpus()
@@ -1006,6 +1015,11 @@ namespace Aptos.Unity.Test
                 new Sequence(new ISerializable[] { receiverAccountAddress })
             );
 
+            // Test MultiAgentRawTransaction Keyed
+            byte[] keyedActual = rawTransactionGenerated.Keyed();
+            byte[] keyedExpected = { 94, 250, 60, 79, 2, 248, 58, 15, 75, 45, 105, 252, 149, 198, 7, 204, 2, 130, 92, 196, 231, 190, 83, 110, 240, 153, 45, 240, 80, 217, 230, 124, 0, 125, 238, 204, 177, 8, 8, 84, 244, 153, 236, 139, 76, 27, 33, 59, 130, 197, 227, 75, 146, 92, 246, 135, 95, 236, 2, 212, 183, 122, 219, 210, 214, 11, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 116, 111, 107, 101, 110, 22, 100, 105, 114, 101, 99, 116, 95, 116, 114, 97, 110, 115, 102, 101, 114, 95, 115, 99, 114, 105, 112, 116, 0, 4, 32, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 16, 15, 99, 111, 108, 108, 101, 99, 116, 105, 111, 110, 95, 110, 97, 109, 101, 11, 10, 116, 111, 107, 101, 110, 95, 110, 97, 109, 101, 8, 1, 0, 0, 0, 0, 0, 0, 0, 208, 7, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 210, 2, 150, 73, 0, 0, 0, 0, 4, 1, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169 };
+            Assert.AreEqual(keyedExpected, keyedActual, ToReadableByteArray(keyedActual));
+
             Signature senderSignature = rawTransactionGenerated.Sign(senderPrivateKey);
             Signature receiverSignature = rawTransactionGenerated.Sign(receiverPrivateKey);
 
@@ -1015,27 +1029,88 @@ namespace Aptos.Unity.Test
             bool verifyRecieverSignature = rawTransactionGenerated.Verify(receiverPublicKey, receiverSignature);
             Assert.IsTrue(verifyRecieverSignature);
 
+            // TEST ED25519 Authenticator for sender
+            Authenticator.Authenticator ed25519AuthSender =
+                new Authenticator.Authenticator(
+                        new Authenticator.Ed25519Authenticator(
+                            senderPublicKey, senderSignature
+                        )
+                );
+
+            Serialization ser = new Serialization();
+            ed25519AuthSender.Serialize(ser);
+            byte[] actualEd25519Sender = ser.GetBytes();
+            //                               0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   161, 4, 250, 230, 203, 51, 249, 187, 169, 9, 96, 222, 137, 22, 37, 197, 59, 103, 200, 141, 79, 182, 133, 98, 135, 124, 192, 183, 182, 127, 36, 143, 212, 51, 51, 165, 140, 113, 43, 175, 146, 7, 22, 83, 189, 148, 42, 233, 103, 109, 95, 80, 244, 253, 75, 49, 85, 167, 115, 144, 163, 174, 13, 14
+            //                               0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   161, 4, 250, 230, 203, 51, 249, 187, 169, 9, 96, 222, 137, 22, 37, 197, 59, 103, 200, 141, 79, 182, 133, 98, 135, 124, 192, 183, 182, 127, 36, 143, 212, 51, 51, 165, 140, 113, 43, 175, 146, 7, 22, 83, 189, 148, 42, 233, 103, 109, 95, 80, 244, 253, 75, 49, 85, 167, 115, 144, 163, 174, 13, 14
+            //                               0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   161, 4, 250, 230, 203, 51, 249, 187, 169, 9, 96, 222, 137, 22, 37, 197, 59, 103, 200, 141, 79, 182, 133, 98, 135, 124, 192, 183, 182, 127, 36, 143, 212, 51, 51, 165, 140, 113, 43, 175, 146, 7, 22, 83, 189, 148, 42, 233, 103, 109, 95, 80, 244, 253, 75, 49, 85, 167, 115, 144, 163, 174, 13, 14
+            byte[] expectedEd25519Sender = { 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1 };
+            Assert.AreEqual(expectedEd25519Sender, actualEd25519Sender, ToReadableByteArray(actualEd25519Sender));
+
+            // TEST ED25519 Authenticator for receiver
             List<Tuple<AccountAddress, Authenticator.Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator.Authenticator>>();
+          
+            Authenticator.Authenticator ed25519AuthReceiver = 
+                new Authenticator.Authenticator(
+                    new Authenticator.Ed25519Authenticator(
+                        receiverPublicKey, receiverSignature
+                    )
+            );
+
+            ser = new Serialization();
+            ed25519AuthReceiver.Serialize(ser);
+            byte[] actualEd25519AuthReceiver = ser.GetBytes();
+            byte[] expectedEd25519AuthReceiver = { 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
+            Assert.AreEqual(expectedEd25519AuthReceiver, actualEd25519AuthReceiver, ToReadableByteArray(actualEd25519AuthReceiver));
+
             secondarySignersTup.Add(
                 new Tuple<AccountAddress, Authenticator.Authenticator>(
-                    receiverAccountAddress, new Authenticator.Authenticator(
-                        new Authenticator.Ed25519Authenticator(receiverPublicKey, receiverSignature)
-                    )
+                    receiverAccountAddress,
+                    ed25519AuthReceiver
                 )
             );
 
-            Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
+            Authenticator.MultiAgentAuthenticator multiAgentAuthenticator = 
                 new Authenticator.MultiAgentAuthenticator(
-                    new Authenticator.Authenticator(
-                        new Authenticator.Ed25519Authenticator(senderPublicKey, senderSignature)
-                    ),
+                    //new Authenticator.Authenticator(
+                    //    new Authenticator.Ed25519Authenticator(senderPublicKey, senderSignature)
+                    //),
+                    ed25519AuthSender,
                     secondarySignersTup
-                )
+                );
+
+            ser = new Serialization();
+            multiAgentAuthenticator.Serialize(ser);
+
+            byte[] actualMultiAgentAuthenticator = ser.GetBytes();
+            byte[] expectedMultiAgentAuthenticator = { 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1,     45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1,     0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
+
+            Assert.AreEqual(expectedMultiAgentAuthenticator, actualMultiAgentAuthenticator, ToReadableByteArray(actualMultiAgentAuthenticator));
+
+            // Test full MultiAgentAuthenticator serialization
+            Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
+                multiAgentAuthenticator
             );
+
+            ser = new Serialization();
+            authenticator.Serialize(ser);
+
+            byte[] actualAuthenticator = ser.GetBytes();
+            byte[] expectedAuthenticator = { 2, 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1, 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
+
+            Assert.AreEqual(expectedAuthenticator, actualAuthenticator, ToReadableByteArray(actualAuthenticator));
 
             SignedTransaction signedTransactionGenerated = new SignedTransaction(
                 rawTransactionGenerated.Inner(), authenticator
             );
+
+            ser = new Serialization();
+            signedTransactionGenerated.Serialize(ser);
+
+            byte[] signedTxnActual = ser.GetBytes();
+            byte[] signedTxnExpected = { 125, 238, 204, 177, 8, 8, 84, 244, 153, 236, 139, 76, 27, 33, 59, 130, 197, 227, 75, 146, 92, 246, 135, 95, 236, 2, 212, 183, 122, 219, 210, 214, 11, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 116, 111, 107, 101, 110, 22, 100, 105, 114, 101, 99, 116, 95, 116, 114, 97, 110, 115, 102, 101, 114, 95, 115, 99, 114, 105, 112, 116, 0, 4, 32, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 16, 15, 99, 111, 108, 108, 101, 99, 116, 105, 111, 110, 95, 110, 97, 109, 101, 11, 10, 116, 111, 107, 101, 110, 95, 110, 97, 109, 101, 8, 1, 0, 0, 0, 0, 0, 0, 0, 208, 7, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 210, 2, 150, 73, 0, 0, 0, 0, 4, 2, 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1, 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
+
+            Assert.AreEqual(signedTxnExpected, signedTxnActual, ToReadableByteArray(signedTxnActual));
+
 
             Assert.IsTrue(signedTransactionGenerated.Verify());
 
