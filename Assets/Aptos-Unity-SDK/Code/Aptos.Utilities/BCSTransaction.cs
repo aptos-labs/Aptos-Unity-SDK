@@ -229,28 +229,6 @@ namespace Aptos.Utilities.BCS
     }
 
     /// <summary>
-    /// Representation of a Module ID.
-    /// </summary>
-    public class ModuleId : ISerializable
-    {
-        public AccountAddress address;
-        public string name;
-
-        public ModuleId(AccountAddress address, string name)
-        {
-            // TODO: assert on length of an address- and make it it's own type
-            this.address = address;
-            this.name = name;
-        }
-
-        public void Serialize(Serialization serializer)
-        {
-            this.address.Serialize(serializer);
-            serializer.SerializeString(this.name);
-        }
-    }
-
-    /// <summary>
     /// Representation of EntryFunction.
     /// </summary>
     public class EntryFunction : ISerializable
@@ -279,6 +257,28 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeString(this.function);
             serializer.Serialize(this.typeArgs);
             args.Serialize(serializer);
+        }
+    }
+
+    /// <summary>
+    /// Representation of a Module ID.
+    /// </summary>
+    public class ModuleId : ISerializable
+    {
+        public AccountAddress address;
+        public string name;
+
+        public ModuleId(AccountAddress address, string name)
+        {
+            // TODO: assert on length of an address- and make it it's own type
+            this.address = address;
+            this.name = name;
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            this.address.Serialize(serializer);
+            serializer.SerializeString(this.name);
         }
     }
 }
