@@ -591,38 +591,19 @@ namespace Aptos.Unity.Test
         [Test]
         public void SerializeEntryFunctionPayloadForTransferCoin()
         {
-            //Account alice = Account.LoadKey("0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c");
-            //string acctAddressAlice = alice.AccountAddress.ToString();
-
-            //Account bob = Account.LoadKey("0xb10d4b38bef8a0d3e8747a84cfdc764b89a528af98e055e0237b11863afa9825");
-            //string acctAddressBob = bob.AccountAddress.ToString();
-
-            //TestEntryFunction(new ISerializableTag[0], args).Serialize(s);
-
             TagSequence typeTags = new TagSequence(
                 new ISerializableTag[] { 
-                    //new StructTag(new Utilities.BCS.AccountAddress("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
                     new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
                 }
             );
 
             ISerializable[] args =
             {
-                //new Utilities.BCS.AccountAddress(acctAddressBob),
-                //AccountAddress.FromHex(acctAddressBob),
                 AccountAddress.FromHex("0x1"),
                 new U64(1000),
             };
 
             Sequence txnArgs = new Sequence(args);
-
-            //EntryFunction payload =  new EntryFunction(
-            //    //new ModuleId(new Utilities.BCS.AccountAddress("0x1"), "coin"),
-            //    new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
-            //    "tranfer",
-            //    typeTags,
-            //    txnArgs
-            //);
 
             EntryFunction payload = EntryFunction.Natural(
                 new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
@@ -637,7 +618,6 @@ namespace Aptos.Unity.Test
             byte[] actual = s.GetBytes();
 
             byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 99, 111, 105, 110, 8, 116, 114, 97, 110, 115, 102, 101, 114, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 0, 2, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 232, 3, 0, 0, 0, 0, 0, 0 };
-            //byte[] expected = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 99, 111, 105, 110, 8, 116, 114, 97, 110, 115, 102, 101, 114, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 97, 112, 116, 111, 115, 95, 99, 111, 105, 110, 9, 65, 112, 116, 111, 115, 67, 111, 105, 110, 0, 2, 32, 216, 159, 215, 62, 247, 192, 88, 204, 247, 159, 228, 193, 195, 133, 7, 213, 128, 53, 66, 6, 163, 106, 224, 62, 234, 1, 221, 253, 58, 254, 239, 7, 8, 232, 3, 0, 0, 0, 0, 0, 0 };
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
@@ -1030,7 +1010,7 @@ namespace Aptos.Unity.Test
             bool verifyRecieverSignature = rawTransactionGenerated.Verify(receiverPublicKey, receiverSignature);
             Assert.IsTrue(verifyRecieverSignature);
 
-            // TEST ED25519 Authenticator for sender
+            // Test ED25519 Authenticator for sender
             Authenticator.Authenticator ed25519AuthSender =
                 new Authenticator.Authenticator(
                         new Authenticator.Ed25519Authenticator(
@@ -1038,16 +1018,15 @@ namespace Aptos.Unity.Test
                         )
                 );
 
+            #region Test ED25519 Authenticator serialization for sender
             Serialization ser = new Serialization();
             ed25519AuthSender.Serialize(ser);
             byte[] actualEd25519Sender = ser.GetBytes();
-            //                               0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   161, 4, 250, 230, 203, 51, 249, 187, 169, 9, 96, 222, 137, 22, 37, 197, 59, 103, 200, 141, 79, 182, 133, 98, 135, 124, 192, 183, 182, 127, 36, 143, 212, 51, 51, 165, 140, 113, 43, 175, 146, 7, 22, 83, 189, 148, 42, 233, 103, 109, 95, 80, 244, 253, 75, 49, 85, 167, 115, 144, 163, 174, 13, 14
-            //                               0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   161, 4, 250, 230, 203, 51, 249, 187, 169, 9, 96, 222, 137, 22, 37, 197, 59, 103, 200, 141, 79, 182, 133, 98, 135, 124, 192, 183, 182, 127, 36, 143, 212, 51, 51, 165, 140, 113, 43, 175, 146, 7, 22, 83, 189, 148, 42, 233, 103, 109, 95, 80, 244, 253, 75, 49, 85, 167, 115, 144, 163, 174, 13, 14
-            //                               0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   161, 4, 250, 230, 203, 51, 249, 187, 169, 9, 96, 222, 137, 22, 37, 197, 59, 103, 200, 141, 79, 182, 133, 98, 135, 124, 192, 183, 182, 127, 36, 143, 212, 51, 51, 165, 140, 113, 43, 175, 146, 7, 22, 83, 189, 148, 42, 233, 103, 109, 95, 80, 244, 253, 75, 49, 85, 167, 115, 144, 163, 174, 13, 14
             byte[] expectedEd25519Sender = { 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64,   52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1 };
             Assert.AreEqual(expectedEd25519Sender, actualEd25519Sender, ToReadableByteArray(actualEd25519Sender));
+            #endregion
 
-            // TEST ED25519 Authenticator for receiver          
+            // Test ED25519 Authenticator for receiver          
             Authenticator.Authenticator ed25519AuthReceiver = 
                 new Authenticator.Authenticator(
                     new Authenticator.Ed25519Authenticator(
@@ -1055,11 +1034,13 @@ namespace Aptos.Unity.Test
                     )
             );
 
+            #region Test ED25519 Authenticator serialization for receiver
             ser = new Serialization();
             ed25519AuthReceiver.Serialize(ser);
             byte[] actualEd25519AuthReceiver = ser.GetBytes();
             byte[] expectedEd25519AuthReceiver = { 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
             Assert.AreEqual(expectedEd25519AuthReceiver, actualEd25519AuthReceiver, ToReadableByteArray(actualEd25519AuthReceiver));
+            #endregion
 
             List<Tuple<AccountAddress, Authenticator.Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator.Authenticator>>();
             secondarySignersTup.Add(
@@ -1071,51 +1052,47 @@ namespace Aptos.Unity.Test
 
             Authenticator.MultiAgentAuthenticator multiAgentAuthenticator = 
                 new Authenticator.MultiAgentAuthenticator(
-                    //new Authenticator.Authenticator(
-                    //    new Authenticator.Ed25519Authenticator(senderPublicKey, senderSignature)
-                    //),
                     ed25519AuthSender,
                     secondarySignersTup
                 );
 
+            #region Test MultiAgentAuthenticator serialization
             ser = new Serialization();
             multiAgentAuthenticator.Serialize(ser);
-
             byte[] actualMultiAgentAuthenticator = ser.GetBytes();
             byte[] expectedMultiAgentAuthenticator = { 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1,     45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1,     0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
-
             Assert.AreEqual(expectedMultiAgentAuthenticator, actualMultiAgentAuthenticator, ToReadableByteArray(actualMultiAgentAuthenticator));
+            #endregion
 
             // Test full MultiAgentAuthenticator serialization
             Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
                 multiAgentAuthenticator
             );
 
+            #region Test serialization of nested Authenticator containing MultiAgentAuthenticator
             ser = new Serialization();
             authenticator.Serialize(ser);
-
             byte[] actualAuthenticator = ser.GetBytes();
             byte[] expectedAuthenticator = { 2, 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1, 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
-
             Assert.AreEqual(expectedAuthenticator, actualAuthenticator, ToReadableByteArray(actualAuthenticator));
+            #endregion
 
             SignedTransaction signedTransactionGenerated = new SignedTransaction(
                 rawTransactionGenerated.Inner(), authenticator
             );
 
+            #region Test SignedTransaction serialization
             ser = new Serialization();
             signedTransactionGenerated.Serialize(ser);
-
             byte[] signedTxnActual = ser.GetBytes();
             byte[] signedTxnExpected = { 125, 238, 204, 177, 8, 8, 84, 244, 153, 236, 139, 76, 27, 33, 59, 130, 197, 227, 75, 146, 92, 246, 135, 95, 236, 2, 212, 183, 122, 219, 210, 214, 11, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 116, 111, 107, 101, 110, 22, 100, 105, 114, 101, 99, 116, 95, 116, 114, 97, 110, 115, 102, 101, 114, 95, 115, 99, 114, 105, 112, 116, 0, 4, 32, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 16, 15, 99, 111, 108, 108, 101, 99, 116, 105, 111, 110, 95, 110, 97, 109, 101, 11, 10, 116, 111, 107, 101, 110, 95, 110, 97, 109, 101, 8, 1, 0, 0, 0, 0, 0, 0, 0, 208, 7, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 210, 2, 150, 73, 0, 0, 0, 0, 4, 2, 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1, 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
-
             Assert.AreEqual(signedTxnExpected, signedTxnActual, ToReadableByteArray(signedTxnActual));
-
+            #endregion
 
             Assert.IsTrue(signedTransactionGenerated.Verify());
 
-            string rawTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004";
-            string signedTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004020020b9c6ee1630ef3e711144a648db06bbb2284f7274cfbee53ffcee503cc1a4920040343e7b10aa323c480391a5d7cd2d0cf708d51529b96b5a2be08cbb365e4f11dcc2cf0655766cf70d40853b9c395b62dad7a9f58ed998803d8bf1901ba7a7a401012d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9010020aef3f4a4b8eca1dfc343361bf8e436bd42de9259c04b8314eb8e2054dd6e82ab408a7f06e404ae8d9535b0cbbeafb7c9e34e95fe1425e4529758150a4f7ce7a683354148ad5c313ec36549e3fb29e669d90010f97467c9074ff0aec3ed87f76608";
+            //string rawTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004";
+            //string signedTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004020020b9c6ee1630ef3e711144a648db06bbb2284f7274cfbee53ffcee503cc1a4920040343e7b10aa323c480391a5d7cd2d0cf708d51529b96b5a2be08cbb365e4f11dcc2cf0655766cf70d40853b9c395b62dad7a9f58ed998803d8bf1901ba7a7a401012d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9010020aef3f4a4b8eca1dfc343361bf8e436bd42de9259c04b8314eb8e2054dd6e82ab408a7f06e404ae8d9535b0cbbeafb7c9e34e95fe1425e4529758150a4f7ce7a683354148ad5c313ec36549e3fb29e669d90010f97467c9074ff0aec3ed87f76608";
 
             //VerifyTransactions(
             //    rawTransactionInput,
