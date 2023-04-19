@@ -41,6 +41,11 @@ namespace Aptos.Authenticator
             this.authenticator = authenticator;
         }
 
+        public IAuthenticator GetAuthenticator()
+        {
+            return authenticator;
+        }
+
         public bool Verify(byte[] data)
         {
             //throw new System.NotImplementedException();
@@ -99,10 +104,18 @@ namespace Aptos.Authenticator
             this.secondarySigners = secondarySigners;
         }
 
-        public List<Accounts.AccountAddress> SecondaryAddresses()
+        //public List<Accounts.AccountAddress> SecondaryAddresses()
+        //{
+        //    List<Accounts.AccountAddress> secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToList();
+        //    return secondaryAddresses;
+        //}
+
+        public Sequence SecondaryAddresses()
         {
-            List<Accounts.AccountAddress> secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToList();
-            return secondaryAddresses;
+            ISerializable[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
+            Sequence secondaryAddressesSeq = new Sequence(secondaryAddresses);
+
+            return secondaryAddressesSeq;
         }
 
         public bool Verify(byte[] data)
