@@ -44,6 +44,8 @@ namespace Aptos.Unity.Test
         };
         private const string PublicKeyHex = "0x586e3c8d447d7679222e139033e3820235e33da5091e9b0bb8f1a112cf0c8ff5";
 
+        private const string AccountAddress = "0x9f628c43d1c1c0f54683cf5ccbd2b944608df4ff2649841053b1790a4d7c187d";
+
         private static readonly byte[] PublicKeySerializedOutput = { 
             32, 88, 110, 60, 141, 68, 125, 118, 
             121, 34, 46, 19, 144, 51, 227, 130, 
@@ -150,6 +152,15 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void GeneratePublicKeyFromPrivateKeySuccess()
+        {
+            PrivateKey privateKey = new PrivateKey(PrivateKeyHex);
+            PublicKey publicKey = privateKey.PublicKey();
+
+            Assert.AreEqual(PublicKeyBytes, publicKey.KeyBytes);
+        }
+
+        [Test]
         public void PrivateKeyFromHexSignSuccess()
         {
             PrivateKey privateKey = new PrivateKey(PrivateKeyHex);
@@ -241,6 +252,22 @@ namespace Aptos.Unity.Test
 
             Assert.IsTrue(privateKey.Key == validPrivateKey.Key);
             Assert.IsTrue(publicKey.Key == validPublicKey.Key);
+        }
+
+        [Test]
+        public void GenerateAccountFromPrivateKeyStringSuccess()
+        {
+            Account acc = Account.LoadKey(PrivateKeyHex);
+            PrivateKey privateKey = acc.PrivateKey;
+            PublicKey publicKey = acc.PublicKey;
+
+            PublicKey expectedPublicKey = new PublicKey(PublicKeyBytes);
+            PrivateKey expectedPrivateKey = new PrivateKey(PrivateKeyBytes);
+
+            Assert.IsTrue(privateKey.Key == expectedPrivateKey.Key);
+            Assert.IsTrue(publicKey.Key == expectedPublicKey.Key);
+
+            Assert.AreEqual(AccountAddress, acc.AccountAddress.ToString());
         }
 
         [Test]

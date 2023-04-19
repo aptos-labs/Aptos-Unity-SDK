@@ -60,10 +60,22 @@ namespace Aptos.Accounts
         /// Utility function to be in par with the other SDKS
         /// , otherwise use the default constructor Account().
         /// </summary>
-        /// <returns>A new account</returns>
+        /// <returns>A new account.</returns>
         public static Account Generate()
         {
             return new Account();
+        }
+
+        /// <summary>
+        /// Creates an account from private key in string format.
+        /// </summary>
+        /// <param name="privateKeyHex">The private key.</param>
+        /// <returns>A new account.</returns>
+        public static Account LoadKey(string privateKeyHex)
+        {
+            PrivateKey privateKey = new PrivateKey(privateKeyHex);
+            PublicKey publicKey = privateKey.PublicKey();
+            return new Account(privateKey, publicKey);
         }
 
         /// <summary>

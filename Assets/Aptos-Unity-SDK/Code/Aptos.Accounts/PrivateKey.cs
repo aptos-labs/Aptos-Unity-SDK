@@ -156,6 +156,16 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
+        /// Derives public key from the private key bytes.
+        /// </summary>
+        /// <returns>PublicKey object.</returns>
+        public PublicKey PublicKey()
+        {
+            PublicKey publicKey = new PublicKey(Ed25519.PublicKeyFromSeed(KeyBytes));
+            return publicKey;
+        }
+
+        /// <summary>
         /// Compartor for two private keys.
         /// </summary>
         /// <param name="lhs">First private key in comparison..</param>
