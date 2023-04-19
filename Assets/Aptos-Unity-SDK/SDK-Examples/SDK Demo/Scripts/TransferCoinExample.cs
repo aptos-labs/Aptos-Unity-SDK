@@ -30,6 +30,7 @@ namespace Aptos.Unity.Sample
             Debug.Log("Alice Auth Key: " + authKey);
 
             AccountAddress aliceAddress = alice.AccountAddress;
+            Debug.Log("Alice's Account Address: " + aliceAddress.ToString());
 
             PrivateKey privateKey = alice.PrivateKey;
             Debug.Log("Aice Private Key: " + privateKey);
@@ -38,6 +39,7 @@ namespace Aptos.Unity.Sample
             #region Bob Account
             Account bob = wallet.GetAccount(1);
             AccountAddress bobAddress = bob.AccountAddress;
+            Debug.Log("Bob's Account Address: " + bobAddress.ToString());
 
             Debug.Log("Wallet: Account 0: Alice: " + aliceAddress.ToString());
             Debug.Log("Wallet: Account 1: Bob: " + bobAddress.ToString());
