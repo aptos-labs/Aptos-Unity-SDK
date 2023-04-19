@@ -1,6 +1,5 @@
 ﻿using Aptos.Accounts;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -55,7 +54,6 @@ namespace Aptos.Utilities.BCS
 
         public Signature Sign(PrivateKey key)
         {
-            //throw new NotImplementedException();
             return key.Sign(this.Keyed());
         }
 
@@ -73,7 +71,6 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeU64((ulong)this.maxGasAmount);
             serializer.SerializeU64((ulong)this.gasUnitPrice);
             serializer.SerializeU64((ulong)this.expirationTimestampsSecs);
-            //serializer.SerializeU8((byte)(this.chainId >> 8));
             serializer.SerializeU8((byte)this.chainId);
         }
     }
@@ -123,7 +120,6 @@ namespace Aptos.Utilities.BCS
             outputBytes.CopyTo(res, prehash.Length);
 
             return res;
-            //return ser.GetBytes();
         }
 
         public Signature Sign(PrivateKey key)
@@ -205,6 +201,7 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    // TODO: Implement Script
     public class Script : ISerializable
     {
         public void Deserialize(Serialization serializer)
@@ -218,6 +215,7 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    // TODO: Implement ScriptArgument
     public class ScriptArgument : ISerializable
     {
         public void Deserialize(Serialization serializer)
@@ -285,6 +283,11 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Signed transaction implementation.
+    /// NOTE: TransactionArgument is not implemented in this SDK, instead a Sequence object is used
+    /// TODO: Add comoments regarding TransactionArgument not being implemented
+    /// </summary>
     public class SignedTransaction : ISerializable
     {
         RawTransaction transaction;
