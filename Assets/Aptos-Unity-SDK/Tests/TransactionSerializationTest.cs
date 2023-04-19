@@ -875,6 +875,75 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        [Test]
+        public void SerializationEntryFunctionMultiAgentWithCorpus()
+        {
+            string senderKeyInput = "9bf49a6a0755f953811fce125f2683d50429c3bb49e074147e0089a52eae155f";
+            string receiverKeyInput = "0564f879d27ae3c02ce82834acfa8c793a629f2ca0de6919610be82f411326be";
+
+            int sequenceNumberInput = 11;
+            int gasUnitPriceInput = 1;
+            int maxGasAmountInput = 2000;
+            ulong expirationTimestampsSecsInput = 1234567890;
+            int chainIdInput = 4;
+
+            // Accounts and crypto
+            PrivateKey senderPrivateKey = PrivateKey.FromHex(senderKeyInput);
+            PublicKey senderPublicKey = senderPrivateKey.PublicKey();
+            AccountAddress senderAccountAddress = AccountAddress.FromKey(senderPublicKey);
+
+            PrivateKey receiverPrivateKey = PrivateKey.FromHex(receiverKeyInput);
+            PublicKey receiverPublicKey = receiverPrivateKey.PublicKey();
+            AccountAddress receiverAccountAddress = AccountAddress.FromKey(receiverPublicKey);
+
+            // Transaction arguments
+            ISerializable[] txnArgs = 
+            {
+                receiverAccountAddress,
+                new BString("collection_name"),
+                new BString("token_name"),
+                new U64(1)
+            };
+
+            Sequence txnArgsSeq = new Sequence(txnArgs);
+
+            // Type tags
+            TagSequence typeTags = new TagSequence(
+                new ISerializableTag[0]
+            );
+
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x3"), "token"),
+                "direct_transfer_script",
+                typeTags,
+                txnArgsSeq
+            );
+
+            RawTransaction rawTxn = new RawTransaction(
+                senderAccountAddress,
+                sequenceNumberInput,
+                new TransactionPayload(payload),
+                maxGasAmountInput,
+                gasUnitPriceInput,
+                expirationTimestampsSecsInput,
+                chainIdInput
+            );
+
+            MultiAgentRawTransaction rawTransactionGenerated = new MultiAgentRawTransaction(
+                rawTxn,
+                new Sequence(new ISerializable[] { receiverAccountAddress })
+            );
+
+            Signature senderSignature = rawTransactionGenerated.Sign(senderPrivateKey);
+            Signature receiverSignature = rawTransactionGenerated.Sign(receiverPrivateKey);
+
+            bool verifySenderSignature = rawTransactionGenerated.Verify(senderPublicKey, senderSignature);
+            Assert.IsTrue(verifySenderSignature);
+
+            bool verifyRecieverSignature = rawTransactionGenerated.Verify(receiverPublicKey, receiverSignature);
+            Assert.IsTrue(verifyRecieverSignature);
+        }
+
         /// <summary>
         /// Utility function to print out byte array
         /// </summary>
