@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using Aptos.Utilities.BCS;
 using Aptos.Accounts;
+using System.Collections.Generic;
+using System;
 
 namespace Aptos.Unity.Test
 {
@@ -876,6 +878,76 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void SerializationEntryFunctionWithCorpus()
+        {
+            string senderKeyInput = "9bf49a6a0755f953811fce125f2683d50429c3bb49e074147e0089a52eae155f";
+            string receiverKeyInput = "0564f879d27ae3c02ce82834acfa8c793a629f2ca0de6919610be82f411326be";
+
+            int sequenceNumberInput = 11;
+            int gasUnitPriceInput = 1;
+            int maxGasAmountInput = 2000;
+            ulong expirationTimestampsSecsInput = 1234567890;
+            int chainIdInput = 4;
+            int amountInput = 5000;
+
+            // Accounts and crypto
+            PrivateKey senderPrivateKey = PrivateKey.FromHex(senderKeyInput);
+            PublicKey senderPublicKey = senderPrivateKey.PublicKey();
+            AccountAddress senderAccountAddress = AccountAddress.FromKey(senderPublicKey);
+
+            PrivateKey receiverPrivateKey = PrivateKey.FromHex(receiverKeyInput);
+            PublicKey receiverPublicKey = receiverPrivateKey.PublicKey();
+            AccountAddress receiverAccountAddress = AccountAddress.FromKey(receiverPublicKey);
+
+            // Transaction arguments
+            ISerializable[] txnArgs = 
+            {
+                receiverAccountAddress,
+                new U64(Convert.ToUInt64(amountInput))
+            };
+
+            Sequence txnArgsSeq = new Sequence(txnArgs);
+
+            TagSequence typeTags = new TagSequence(
+                new ISerializableTag[] { 
+                    new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
+                }
+            );
+
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
+                "transfer",
+                typeTags,
+                txnArgsSeq
+            );
+
+            RawTransaction rawTransactionGenerated = new RawTransaction(
+                senderAccountAddress,
+                sequenceNumberInput,
+                new TransactionPayload(payload),
+                maxGasAmountInput,
+                gasUnitPriceInput,
+                expirationTimestampsSecsInput,
+                chainIdInput
+            );
+
+            Signature senderSignature = rawTransactionGenerated.Sign(senderPrivateKey);
+            bool verifySenderSignature = rawTransactionGenerated.Verify(senderPublicKey, senderSignature);
+            Assert.IsTrue(verifySenderSignature);
+
+            Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
+                new Authenticator.Ed25519Authenticator(senderPublicKey, senderSignature)
+            );
+
+            SignedTransaction signedTransactionGenerated = new SignedTransaction(
+                rawTransactionGenerated, authenticator
+            );
+
+            Assert.IsTrue(signedTransactionGenerated.Verify());
+        }
+
+
+        [Test]
         public void SerializationEntryFunctionMultiAgentWithCorpus()
         {
             string senderKeyInput = "9bf49a6a0755f953811fce125f2683d50429c3bb49e074147e0089a52eae155f";
@@ -897,7 +969,7 @@ namespace Aptos.Unity.Test
             AccountAddress receiverAccountAddress = AccountAddress.FromKey(receiverPublicKey);
 
             // Transaction arguments
-            ISerializable[] txnArgs = 
+            ISerializable[] txnArgs =
             {
                 receiverAccountAddress,
                 new BString("collection_name"),
@@ -942,6 +1014,35 @@ namespace Aptos.Unity.Test
 
             bool verifyRecieverSignature = rawTransactionGenerated.Verify(receiverPublicKey, receiverSignature);
             Assert.IsTrue(verifyRecieverSignature);
+
+            List<Tuple<AccountAddress, Authenticator.Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator.Authenticator>>();
+            secondarySignersTup.Add(
+                new Tuple<AccountAddress, Authenticator.Authenticator>(
+                    receiverAccountAddress, new Authenticator.Authenticator(
+                        new Authenticator.Ed25519Authenticator(receiverPublicKey, receiverSignature)
+                    )
+                )
+            );
+
+            Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
+                new Authenticator.MultiAgentAuthenticator(
+                    new Authenticator.Authenticator(
+                        new Authenticator.Ed25519Authenticator(senderPublicKey, senderSignature)
+                    ),
+                    secondarySignersTup
+                )
+            );
+
+            SignedTransaction signedTransactionGenerated = new SignedTransaction(
+                rawTransactionGenerated.Inner(), authenticator
+            );
+
+            Assert.IsTrue(signedTransactionGenerated.Verify());
+
+            string rawTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004";
+            string signedTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004020020b9c6ee1630ef3e711144a648db06bbb2284f7274cfbee53ffcee503cc1a4920040343e7b10aa323c480391a5d7cd2d0cf708d51529b96b5a2be08cbb365e4f11dcc2cf0655766cf70d40853b9c395b62dad7a9f58ed998803d8bf1901ba7a7a401012d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9010020aef3f4a4b8eca1dfc343361bf8e436bd42de9259c04b8314eb8e2054dd6e82ab408a7f06e404ae8d9535b0cbbeafb7c9e34e95fe1425e4529758150a4f7ce7a683354148ad5c313ec36549e3fb29e669d90010f97467c9074ff0aec3ed87f76608";
+
+            
         }
 
         /// <summary>
