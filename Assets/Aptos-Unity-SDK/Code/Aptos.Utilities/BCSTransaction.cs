@@ -305,10 +305,9 @@ namespace Aptos.Utilities.BCS
 
         public bool Verify()
         {
-            //throw new NotImplementedException();
             byte[] keyed;
 
-            Type elementType = this.authenticator.GetType();
+            Type elementType = this.authenticator.GetAuthenticator().GetType();
             if (elementType == typeof(Authenticator.MultiAgentAuthenticator))
             {
                 Authenticator.MultiAgentAuthenticator authenticator = (Authenticator.MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
