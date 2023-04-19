@@ -56,11 +56,6 @@ namespace Aptos.Authenticator
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.Variant);
-            ////serializer.Serialize(authenticator.Serialize());
-            //Serialization authSerializer = authenticator.Serialize(serializer);
-            //byte[] output = authSerializer.GetBytes();
-            //serializer.SerializeFixedBytes(output);
-            //return serializer;
             this.authenticator.Serialize(serializer); // TODO: implement serializer.struct
         }
     }
@@ -89,7 +84,6 @@ namespace Aptos.Authenticator
         {
             serializer.SerializeBytes(this.publicKey); // Note in Python we call serializer.struct
             this.signature.Serialize(serializer); // Note in Python we call serializer.struct
-            //serializer.Serialize(signature);
         }
     }
 
@@ -104,12 +98,6 @@ namespace Aptos.Authenticator
             this.secondarySigners = secondarySigners;
         }
 
-        //public List<Accounts.AccountAddress> SecondaryAddresses()
-        //{
-        //    List<Accounts.AccountAddress> secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToList();
-        //    return secondaryAddresses;
-        //}
-
         public Sequence SecondaryAddresses()
         {
             ISerializable[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
@@ -120,29 +108,14 @@ namespace Aptos.Authenticator
 
         public bool Verify(byte[] data)
         {
-            //throw new System.NotImplementedException();
             if (!this.sender.Verify(data))
                 return false;
 
-            //return all([x[1].verify(data) for x in self.secondary_signers])
             return secondarySigners.All(signer => signer.Item2.Verify(data));   
         }
 
         public void Serialize(Serialization serializer)
         {
-            //this.sender.Serialize(serializer);
-            //Serialization acctAddressSerializer = new Serialization();
-
-            //List<Accounts.AccountAddress> secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToList();
-            //List<byte[]> secAddresssesBytes = secondaryAddresses.Select(adddress => {
-            //    Serialization ser = new Serialization();
-            //    adddress.Serialize(ser);
-            //    return ser.GetBytes();
-            //}).ToList();
-
-            //Sequence secAddressesSeq = new Sequence(secAddresssesBytes.ToArray());
-            //List< Authenticator> authenticators = secondarySigners.Select(signer => signer.Item2).ToList();
-
             AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
             Authenticator[] authenticators = secondarySigners.Select(signer => signer.Item2).ToArray();
 
@@ -150,12 +123,6 @@ namespace Aptos.Authenticator
             Sequence authenticatorsSeq = new Sequence(authenticators);
 
             serializer.Serialize(this.sender);
-            //serializer.Serialize(secondaryAddresses);
-            //serializer.Serialize(authenticators);
-
-            //secondaryAddressesSeq.Serialize(serializer);
-            //authenticatorsSeq.Serialize(serializer);
-
             serializer.Serialize(secondaryAddressesSeq);
             serializer.Serialize(authenticatorsSeq);
         }

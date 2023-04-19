@@ -55,7 +55,6 @@ namespace Aptos.Unity.Test
                 }, res);
         }
 
-
         /// <summary>
         /// Tests a transaction where the arguments sequence is empty
         /// 
