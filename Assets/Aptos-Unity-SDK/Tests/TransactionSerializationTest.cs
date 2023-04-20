@@ -617,7 +617,6 @@ namespace Aptos.Unity.Test
         }
 
         /// <summary>
-        /// TODO: Implement opening up two_by_two_transfer.mv as byte array
         /// 
         /// Python SDK Example:
         /// <code>
@@ -642,8 +641,6 @@ namespace Aptos.Unity.Test
         [Test]
         public void SerializeScript()
         {
-            // TODO: open two_by_two_transfer.mv as "code"
-            //var path = Path.Combine(Directory.GetCurrentDirectory(), "\\two_by_two_transfer.mv");
             string path = Application.dataPath + "\\Aptos-Unity-SDK\\Tests" + "\\two_by_two_transfer.mv";
             byte[] code = File.ReadAllBytes(path);
 

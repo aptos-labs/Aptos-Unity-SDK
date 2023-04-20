@@ -41,25 +41,39 @@ namespace Aptos.Authenticator
             this.authenticator = authenticator;
         }
 
+        /// <summary>
+        /// Returns the Authenticator.
+        /// </summary>
+        /// <returns>An Authenticator object.</returns>
         public IAuthenticator GetAuthenticator()
         {
             return authenticator;
         }
 
+        /// <summary>
+        /// Verifies the signed data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>True is signature can be verified, false otherwise.</returns>
         public bool Verify(byte[] data)
         {
-            //throw new System.NotImplementedException();
             return this.authenticator.Verify(data);
         }
 
-        // TODO: Review Authenticator serialization implementation
+        /// <summary>
+        /// Serializes the Authenticator.
+        /// </summary>
+        /// <param name="serializer"></param>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.Variant);
-            this.authenticator.Serialize(serializer); // TODO: implement serializer.struct
+            this.authenticator.Serialize(serializer);
         }
     }
 
+    /// <summary>
+    /// ED25519 Authenticator.
+    /// </summary>
     public class Ed25519Authenticator : IAuthenticator, ISerializable
     {
         private readonly PublicKey publicKey;
@@ -71,6 +85,11 @@ namespace Aptos.Authenticator
             this.signature = signature;
         }
 
+        /// <summary>
+        /// Verifies the data with the signature.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public bool Verify(byte[] data)
         {
             return publicKey.Verify(data, signature);
@@ -87,17 +106,24 @@ namespace Aptos.Authenticator
         }
     }
 
+    /// <summary>
+    /// An Authenticator that uses a list of tuples of account addresses and authenticator pairs.
+    /// </summary>
     public class MultiAgentAuthenticator : IAuthenticator
     {
         private Authenticator sender;
-        private List<Tuple<Accounts.AccountAddress, Authenticator>> secondarySigners;
+        private List<Tuple<AccountAddress, Authenticator>> secondarySigners;
 
-        public MultiAgentAuthenticator(Authenticator sender, List<Tuple<Accounts.AccountAddress, Authenticator>> secondarySigners)
+        public MultiAgentAuthenticator(Authenticator sender, List<Tuple<AccountAddress, Authenticator>> secondarySigners)
         {
             this.sender = sender;
             this.secondarySigners = secondarySigners;
         }
 
+        /// <summary>
+        /// Returns the list (Sequence) of corresponding account addresses.
+        /// </summary>
+        /// <returns>A Sequence of account addresses</returns>
         public Sequence SecondaryAddresses()
         {
             ISerializable[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
@@ -106,6 +132,11 @@ namespace Aptos.Authenticator
             return secondaryAddressesSeq;
         }
 
+        /// <summary>
+        /// Verifies the data with all the account addresses.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>True if all accouncts can verify, false otherwise.</returns>
         public bool Verify(byte[] data)
         {
             if (!this.sender.Verify(data))
@@ -114,6 +145,10 @@ namespace Aptos.Authenticator
             return secondarySigners.All(signer => signer.Item2.Verify(data));   
         }
 
+        /// <summary>
+        /// Serializes the MultiAgentAuthenticator.
+        /// </summary>
+        /// <param name="serializer"></param>
         public void Serialize(Serialization serializer)
         {
             AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
@@ -128,6 +163,9 @@ namespace Aptos.Authenticator
         }
     }
 
+    /// <summary>
+    /// MultiEd25519Authenticator
+    /// </summary>
     public class MultiEd25519Authenticator : IAuthenticator
     {
         public MultiEd25519Authenticator()

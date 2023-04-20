@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Aptos.Utilities.BCS
 {
+    /// <summary>
+    /// Representation of a raw transaction.
+    /// </summary>
     public class RawTransaction : ISerializable
     {
         AccountAddress sender;
@@ -32,7 +35,6 @@ namespace Aptos.Utilities.BCS
             hashAlgorithm.BlockUpdate(input, 0, input.Length);
             byte[] result = new byte[32];
             hashAlgorithm.DoFinal(result, 0);
-            //string hashString = BitConverter.ToString(result).Replace("-", "").ToLowerInvariant();
             return result;
         }
 
@@ -75,6 +77,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a multi agent raw transaction.
+    /// </summary>
     public class MultiAgentRawTransaction : ISerializable
     {
         RawTransaction rawTransaction;
@@ -113,7 +118,6 @@ namespace Aptos.Utilities.BCS
 
             byte[] prehash = this.Prehash();
             byte[] outputBytes = ser.GetBytes();
-
             byte[] res = new byte[prehash.Length + outputBytes.Length];
 
             prehash.CopyTo(res, 0);
@@ -138,6 +142,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a transaction's payload.
+    /// </summary>
     public class TransactionPayload : ISerializable
     {
         public enum TypeTag
@@ -188,6 +195,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
+    /// <summary>
+    /// Representation of a module bundle.
+    /// </summary>
     public class ModuleBundle : ISerializable
     {
         public void Deserialize(Serialization serializer)
@@ -201,7 +211,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
-    // TODO: Implement Script
+    /// <summary>
+    /// Representation of a script passed as bytes.
+    /// </summary>
     public class Script : ISerializable
     {
         private readonly byte[] code;
@@ -228,7 +240,9 @@ namespace Aptos.Utilities.BCS
         }
     }
 
-    // TODO: Implement ScriptArgument deserialization
+    /// <summary>
+    /// Representation of a script argument.
+    /// </summary>
     public class ScriptArgument : ISerializable
     {
         public enum TypeTag
@@ -311,7 +325,7 @@ namespace Aptos.Utilities.BCS
     }
 
     /// <summary>
-    /// Representation of EntryFunction.
+    /// Representation of an entry function.
     /// </summary>
     public class EntryFunction : ISerializable
     {
@@ -343,7 +357,7 @@ namespace Aptos.Utilities.BCS
     }
 
     /// <summary>
-    /// Representation of a Module ID.
+    /// Representation of a module ID.
     /// </summary>
     public class ModuleId : ISerializable
     {
