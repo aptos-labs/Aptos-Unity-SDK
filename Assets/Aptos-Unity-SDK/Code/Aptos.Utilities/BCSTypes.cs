@@ -230,6 +230,12 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
+        public bool Deserialize(byte[] data)
+        {
+            bool ret = BitConverter.ToBoolean(data);
+            return ret;
+        }
+
         public TypeTag Variant()
         {
             return TypeTag.BOOL;
@@ -257,6 +263,11 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public int Deserialize(byte[] data)
+        {
+            return BitConverter.ToInt32(data);
+        }
     }
 
     /// <summary>
@@ -279,6 +290,11 @@ namespace Aptos.Utilities.BCS
         public void Serialize(Serialization serializer)
         {
             serializer.Serialize(value);
+        }
+
+        public uint Deserialize(byte[] data)
+        {
+            return BitConverter.ToUInt32(data);
         }
     }
 
@@ -303,6 +319,11 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public ulong Deserialize(byte[] data)
+        {
+            return BitConverter.ToUInt64(data);
+        }
     }
 
     /// <summary>
@@ -325,6 +346,11 @@ namespace Aptos.Utilities.BCS
         public void Serialize(Serialization serializer)
         {
             serializer.Serialize(value);
+        }
+
+        public BigInteger Deserialize(byte[] data)
+        {
+            return new BigInteger(data);
         }
     }
 
