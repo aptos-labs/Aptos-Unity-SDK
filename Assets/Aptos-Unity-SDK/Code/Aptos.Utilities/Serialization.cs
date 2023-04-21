@@ -6,8 +6,159 @@ using System.Runtime.Serialization;
 
 namespace Aptos.Utilities.BCS
 {
+    public class Deserializtion
+    {
+        int MAX_U8 = (int)(Math.Pow(2, 8) - 1);
+        int MAX_U16 = (int)(Math.Pow(2, 16) - 1);
+        int MAX_U32 = (int)(Math.Pow(2, 32) - 1);
+        int MAX_U64 = (int)(Math.Pow(2, 64) - 1);
+        int MAX_U128 = (int)(Math.Pow(2, 128) - 1);
+        int MAX_U256 = (int)(Math.Pow(2, 256) - 1);
+
+        #region Deserialization
+
+        protected MemoryStream input;
+        private long length;
+
+        public Deserializtion(byte[] data)
+        {
+            this.length = data.Length;
+            this.input = new MemoryStream(data);
+        }
+
+        public long Remaining()
+        {
+            return length - input.Position;
+        }
+
+        public bool DeserializeBool()
+        {
+            byte[] read = Read(1);
+            int value = BitConverter.ToInt32(read);
+
+            if (value == 0) {
+                return false;
+            } 
+            else if(value == 1)
+            {
+                return true;
+            }
+            else
+            {
+                throw new Exception("Unexpected boolean value: " + value);
+            }
+        }
+
+        public byte[] ToBytes()
+        {
+            return this.Read(this.Uleb128());
+        }
+
+        public byte[] FixedBytes(int length)
+        {
+            return this.Read(length);
+        }
+
+        // TODO: Implement Map deserialization
+        public BCSMap Map()
+        {
+            throw new NotImplementedException();
+        }
+
+        // TODO: Implement Sequence deserialization
+        public Sequence Sequence()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Str()
+        {
+            return BString.Deserialize(this.ToBytes());
+        }
+
+        public ISerializable Struct(ISerializable structObj )
+        {
+            return structObj.Deserialize(this);
+        }
+
+        public int U8()
+        {
+            return BCS.U8.Deserialize(this.Read(1));
+        }
+
+        // TODO: Discuss with Max
+        //public int U16()
+        //{
+        //    return BCS.U16.Deserialize(this.Read(2));
+        //}
+
+        public uint U32()
+        {
+            return BCS.U32.Deserialize(this.Read(4));
+        }
+
+        public ulong U64()
+        {
+            return BCS.U64.Deserialize(this.Read(8));
+        }
+
+        public ulong U128()
+        {
+            return BCS.U64.Deserialize(this.Read(16));
+        }
+
+        // TODO: Discuss with Max
+        //public ulong U256()
+        //{
+        //    return BCS.U256.Deserialize(this.Read(32));
+        //}
+
+        public int Uleb128()
+        {
+            int value = 0;
+            int shift = 0;
+
+            while(value <= MAX_U32)
+            {
+                int byteRead = this.ReadInt(1);
+                value |= (byteRead & 0x7F) << shift;
+                if((byteRead & 0x80) == 0)
+                {
+                    break;
+                }
+                shift += 7;
+            }
+
+            if(value > MAX_U128)
+            {
+                throw new Exception("Unexpectedly large uleb128 value");
+            }
+
+            return value;
+        }
+
+        public byte[] Read(int length)
+        {
+            byte[] value = new byte[length];
+            int totalRead = this.input.Read(value, 0, length);
+
+            if(totalRead == 0 || totalRead < length)
+            {
+                throw new Exception("Unexpected end of input. Requested: " + length + ", found: " + totalRead);
+            }
+            return value;
+        }
+
+        public int ReadInt(int length)
+        {
+            return BitConverter.ToInt32(this.Read(length));
+        }
+
+        #endregion
+    }
+
     /// <summary>
-    /// An implementation of BCS in C#
+    /// An implementation of BCS Serialization in C#
     /// </summary>
     public class Serialization
     {
