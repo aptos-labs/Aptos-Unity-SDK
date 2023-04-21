@@ -69,6 +69,11 @@ namespace Aptos.Authenticator
             serializer.SerializeU32AsUleb128((uint)this.Variant);
             this.authenticator.Serialize(serializer);
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -103,6 +108,11 @@ namespace Aptos.Authenticator
         {
             serializer.SerializeBytes(this.publicKey); // Note in Python we call serializer.struct
             this.signature.Serialize(serializer); // Note in Python we call serializer.struct
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -161,6 +171,11 @@ namespace Aptos.Authenticator
             serializer.Serialize(secondaryAddressesSeq);
             serializer.Serialize(authenticatorsSeq);
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -181,6 +196,11 @@ namespace Aptos.Authenticator
         public void Serialize(Serialization serializer)
         {
             throw new System.NotImplementedException();
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

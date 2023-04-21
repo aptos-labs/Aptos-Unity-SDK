@@ -75,6 +75,11 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeU64((ulong)this.expirationTimestampsSecs);
             serializer.SerializeU8((byte)this.chainId);
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -140,6 +145,11 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotImplementedException();
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -193,6 +203,11 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeU32AsUleb128((uint)this.Variant());
             this.value.Serialize(serializer);
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -206,6 +221,11 @@ namespace Aptos.Utilities.BCS
         }
 
         public void Serialize(Serialization serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
         {
             throw new NotImplementedException();
         }
@@ -238,6 +258,12 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.typeArgs);
             serializer.Serialize(this.scriptArgs);
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     /// <summary>
@@ -322,6 +348,11 @@ namespace Aptos.Utilities.BCS
                 throw new ArgumentException("Invalid ScriptArgument variant " + this.variant);
             }
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -354,6 +385,11 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.typeArgs);
             args.Serialize(serializer);
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -375,6 +411,11 @@ namespace Aptos.Utilities.BCS
         {
             this.address.Serialize(serializer);
             serializer.SerializeString(this.name);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -428,6 +469,11 @@ namespace Aptos.Utilities.BCS
         {
             this.transaction.Serialize(serializer);
             this.authenticator.Serialize(serializer);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

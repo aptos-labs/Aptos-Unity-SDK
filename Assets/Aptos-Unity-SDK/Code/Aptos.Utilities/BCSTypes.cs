@@ -26,6 +26,8 @@ namespace Aptos.Utilities.BCS
     public interface ISerializable
     {
         public void Serialize(Serialization serializer);
+
+        public ISerializable Deserialize(Deserializtion deserializer);
     }
 
     public interface ISerializableTag : ISerializable
@@ -59,6 +61,12 @@ namespace Aptos.Utilities.BCS
                 element.SerializeTag(serializer);
             }
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     /// <summary>
@@ -114,6 +122,11 @@ namespace Aptos.Utilities.BCS
                 }
             }
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -135,6 +148,11 @@ namespace Aptos.Utilities.BCS
             {
                 serializer.SerializeBytes(element);
             }
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -175,6 +193,11 @@ namespace Aptos.Utilities.BCS
 
             serializer.SerializeFixedBytes(mapSerializer.GetBytes());
         }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -193,6 +216,16 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public static string Deserialize(byte[] data)
+        {
+            return BitConverter.ToString(data);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -210,6 +243,11 @@ namespace Aptos.Utilities.BCS
         public void Serialize(Serialization serializer)
         {
             serializer.Serialize(value);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -230,16 +268,22 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public bool Deserialize(byte[] data)
+        public static bool Deserialize(byte[] data)
         {
             bool ret = BitConverter.ToBoolean(data);
             return ret;
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
 
         public TypeTag Variant()
         {
             return TypeTag.BOOL;
         }
+
     }
 
     /// <summary>
@@ -264,9 +308,14 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public int Deserialize(byte[] data)
+        public static int Deserialize(byte[] data)
         {
             return BitConverter.ToInt32(data);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -292,9 +341,14 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public uint Deserialize(byte[] data)
+        public static uint Deserialize(byte[] data)
         {
             return BitConverter.ToUInt32(data);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -320,9 +374,14 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public ulong Deserialize(byte[] data)
+        public static ulong Deserialize(byte[] data)
         {
             return BitConverter.ToUInt64(data);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -348,9 +407,14 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public BigInteger Deserialize(byte[] data)
+        public static BigInteger Deserialize(byte[] data)
         {
             return new BigInteger(data);
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -431,6 +495,11 @@ namespace Aptos.Utilities.BCS
             {
                 this.typeArgs[i].Serialize(serializer);
             }
+        }
+
+        public ISerializable Deserialize(Deserializtion deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }
