@@ -76,7 +76,7 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeU8((byte)this.chainId);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -146,7 +146,7 @@ namespace Aptos.Utilities.BCS
             throw new NotImplementedException();
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -204,7 +204,7 @@ namespace Aptos.Utilities.BCS
             this.value.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -225,7 +225,7 @@ namespace Aptos.Utilities.BCS
             throw new NotImplementedException();
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -259,7 +259,7 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.scriptArgs);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -349,7 +349,7 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -386,7 +386,7 @@ namespace Aptos.Utilities.BCS
             args.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -413,7 +413,7 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeString(this.name);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -471,7 +471,7 @@ namespace Aptos.Utilities.BCS
             this.authenticator.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }

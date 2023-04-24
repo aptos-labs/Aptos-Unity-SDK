@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace Aptos.Utilities.BCS
 {
-    public class Deserializtion
+    public class Deserialization
     {
         int MAX_U8 = (int)(Math.Pow(2, 8) - 1);
         int MAX_U16 = (int)(Math.Pow(2, 16) - 1);
@@ -20,7 +20,7 @@ namespace Aptos.Utilities.BCS
         protected MemoryStream input;
         private long length;
 
-        public Deserializtion(byte[] data)
+        public Deserialization(byte[] data)
         {
             this.length = data.Length;
             this.input = new MemoryStream(data);

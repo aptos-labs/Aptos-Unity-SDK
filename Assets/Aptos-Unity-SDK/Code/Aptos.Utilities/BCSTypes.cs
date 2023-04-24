@@ -27,7 +27,7 @@ namespace Aptos.Utilities.BCS
     {
         public void Serialize(Serialization serializer);
 
-        public ISerializable Deserialize(Deserializtion deserializer);
+        //public ISerializable Deserialize(Deserialization deserializer);
     }
 
     public interface ISerializableTag : ISerializable
@@ -62,7 +62,7 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -123,7 +123,7 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -150,7 +150,7 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -194,7 +194,7 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeFixedBytes(mapSerializer.GetBytes());
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer, Func<object> deserializerType )
         {
             throw new NotImplementedException();
         }
@@ -222,7 +222,7 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToString(data);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -245,7 +245,7 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -274,7 +274,7 @@ namespace Aptos.Utilities.BCS
             return ret;
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -313,7 +313,7 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToInt32(data);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -346,7 +346,7 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToUInt32(data);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -379,7 +379,7 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToUInt64(data);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -412,7 +412,7 @@ namespace Aptos.Utilities.BCS
             return new BigInteger(data);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -497,7 +497,7 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }

@@ -47,7 +47,7 @@ namespace Aptos.Accounts
             serializer.SerializeBytes(this._signatureBytes);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }

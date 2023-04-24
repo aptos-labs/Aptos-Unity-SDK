@@ -101,7 +101,7 @@ namespace Aptos.Accounts
             serializer.SerializeFixedBytes(this.AddressBytes);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }

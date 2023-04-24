@@ -70,7 +70,7 @@ namespace Aptos.Authenticator
             this.authenticator.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -110,7 +110,7 @@ namespace Aptos.Authenticator
             this.signature.Serialize(serializer); // Note in Python we call serializer.struct
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -172,7 +172,7 @@ namespace Aptos.Authenticator
             serializer.Serialize(authenticatorsSeq);
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
@@ -198,7 +198,7 @@ namespace Aptos.Authenticator
             throw new System.NotImplementedException();
         }
 
-        public ISerializable Deserialize(Deserializtion deserializer)
+        public ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }

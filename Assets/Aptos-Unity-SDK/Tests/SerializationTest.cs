@@ -31,7 +31,7 @@ namespace Aptos.Unity.Test
         {
             bool actual = true;
             byte[] res = new Serialization().SerializeBool(actual).GetBytes();
-            bool expected = new Deserializtion(res).DeserializeBool();
+            bool expected = new Deserialization(res).DeserializeBool();
             Assert.AreEqual(expected, actual);
         }
 
@@ -57,7 +57,7 @@ namespace Aptos.Unity.Test
         {
             bool expected = false;
             byte[] res = new Serialization().SerializeBool(expected).GetBytes();
-            bool actual = new Deserializtion(res).DeserializeBool();
+            bool actual = new Deserialization(res).DeserializeBool();
             Assert.AreEqual(expected, actual);
         }
 
@@ -67,7 +67,7 @@ namespace Aptos.Unity.Test
         //{
         //    bool expected = false;
         //    byte[] res = new Serialization().SerializeU32(32).GetBytes();
-        //    Deserializtion deser = new Deserializtion(res);
+        //    Deserialization deser = new Deserialization(res);
         //    Assert.Throws<ArgumentException>(() => deser.DeserializeBool());
         //}
 
@@ -96,7 +96,7 @@ namespace Aptos.Unity.Test
             byte[] value = Encoding.UTF8.GetBytes("1234567890");
             byte[] expected = new Serialization().SerializeBytes(value).GetBytes();
 
-            byte[] actual = new Deserializtion(expected).ToBytes();
+            byte[] actual = new Deserialization(expected).ToBytes();
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
@@ -121,7 +121,7 @@ namespace Aptos.Unity.Test
         {
             byte expected = 123;
             byte[] bytes = new Serialization().SerializeU8(expected).GetBytes(); // { 123}
-            int actual = new Deserializtion(bytes).DeserializeU8();
+            int actual = new Deserialization(bytes).DeserializeU8();
             Assert.AreEqual(expected, actual);
         }
 
@@ -149,7 +149,7 @@ namespace Aptos.Unity.Test
             uint expected = 57615782;
             byte[] bytes = new Serialization().SerializeU32(expected).GetBytes();
             //Assert.AreEqual(new byte[] { 166, 37, 111, 3 }, res);
-            uint actual = new Deserializtion(bytes).DeserializeU32();
+            uint actual = new Deserialization(bytes).DeserializeU32();
             Assert.AreEqual(expected, actual);
         }
 
@@ -175,7 +175,7 @@ namespace Aptos.Unity.Test
         {
             ulong expected = 9432012321182;
             byte[] bytes = new Serialization().SerializeU64(expected).GetBytes();
-            ulong actual = new Deserializtion(bytes).DeserializeU64();
+            ulong actual = new Deserialization(bytes).DeserializeU64();
             Assert.AreEqual(expected, actual);
         }
 
@@ -211,13 +211,13 @@ namespace Aptos.Unity.Test
             BigInteger expected = BigInteger.Parse("10");
             byte[] bytes = new Serialization().SerializeU128(expected).GetBytes();
             //Assert.AreEqual(new byte[] { 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, res);
-            BigInteger actual = new Deserializtion(bytes).DeserializeU128();
+            BigInteger actual = new Deserialization(bytes).DeserializeU128();
             Assert.AreEqual(expected, actual);
 
             expected = BigInteger.Parse("749382032131231323910498053");
             bytes = new Serialization().SerializeU128(expected).GetBytes();
             //Assert.AreEqual(new byte[] { 5, 231, 86, 201, 40, 241, 231, 92, 209, 223, 107, 2, 0, 0, 0, 0 }, res);
-            actual = new Deserializtion(bytes).DeserializeU128();
+            actual = new Deserialization(bytes).DeserializeU128();
             Assert.AreEqual(expected, actual);
         }
 
@@ -245,7 +245,7 @@ namespace Aptos.Unity.Test
             uint expected = 1160;
             byte[] bytes = new Serialization().SerializeU32AsUleb128(expected).GetBytes();
             //Assert.AreEqual(new byte[] { 136, 9 }, res);
-            int actual = new Deserializtion(bytes).DeserializeUleb128();
+            int actual = new Deserialization(bytes).DeserializeUleb128();
             Assert.AreEqual(expected, actual);
         }
 
@@ -272,7 +272,7 @@ namespace Aptos.Unity.Test
         {
             string expected = "potato UTF8: 🥔";
             byte[] bytes = new Serialization().SerializeString(expected).GetBytes();
-            string actual = new Deserializtion(bytes).DeserializeString();
+            string actual = new Deserialization(bytes).DeserializeString();
             Assert.AreEqual(expected, actual);
         }
 
@@ -334,7 +334,7 @@ namespace Aptos.Unity.Test
         {
             string expected = "potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔";
             byte[] bytes = new Serialization().SerializeString(expected).GetBytes();
-            string actual = new Deserializtion(bytes).DeserializeString();
+            string actual = new Deserialization(bytes).DeserializeString();
             Assert.AreEqual(expected, actual);
         }
 
