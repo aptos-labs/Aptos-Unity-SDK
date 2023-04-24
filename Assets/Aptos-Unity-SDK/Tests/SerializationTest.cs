@@ -82,7 +82,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void DeserializeBytes()
+        public void SerializeBytes()
         {
             byte[] value = Encoding.UTF8.GetBytes("1234567890");
             byte[] actual = new Serialization().SerializeBytes(value).GetBytes();
@@ -91,7 +91,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeBytes()
+        public void DeserializeBytes()
         {
             byte[] value = Encoding.UTF8.GetBytes("1234567890");
             byte[] expected = new Serialization().SerializeBytes(value).GetBytes();
