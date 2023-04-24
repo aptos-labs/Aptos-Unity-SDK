@@ -34,24 +34,26 @@ namespace Aptos.Utilities.BCS
         public bool DeserializeBool()
         {
             byte[] read = Read(1);
-            int value = BitConverter.ToInt32(read);
+            bool value = BitConverter.ToBoolean(read);
+            return value;
 
-            if (value == 0) {
-                return false;
-            } 
-            else if(value == 1)
-            {
-                return true;
-            }
-            else
-            {
-                throw new Exception("Unexpected boolean value: " + value);
-            }
+            //int value = BitConverter.ToInt32(read);
+            //if (value == 0) {
+            //    return false;
+            //} 
+            //else if(value == 1)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    throw new Exception("Unexpected boolean value: " + value);
+            //}
         }
 
         public byte[] ToBytes()
         {
-            return this.Read(this.Uleb128());
+            return this.Read(this.DeserializeUleb128());
         }
 
         public byte[] FixedBytes(int length)
@@ -71,19 +73,21 @@ namespace Aptos.Utilities.BCS
             throw new NotImplementedException();
         }
 
-        public string Str()
+        public string DeserializeString()
         {
             return BString.Deserialize(this.ToBytes());
         }
 
         public ISerializable Struct(ISerializable structObj )
         {
-            return structObj.Deserialize(this);
+            //return structObj.Deserialize(this);
+            throw new NotImplementedException();
         }
 
-        public int U8()
+        public byte DeserializeU8()
         {
-            return BCS.U8.Deserialize(this.Read(1));
+            //return BCS.U8.Deserialize(this.Read(1));
+            return (byte) this.ReadInt(1);
         }
 
         // TODO: Discuss with Max
@@ -92,19 +96,19 @@ namespace Aptos.Utilities.BCS
         //    return BCS.U16.Deserialize(this.Read(2));
         //}
 
-        public uint U32()
+        public uint DeserializeU32()
         {
             return BCS.U32.Deserialize(this.Read(4));
         }
 
-        public ulong U64()
+        public ulong DeserializeU64()
         {
             return BCS.U64.Deserialize(this.Read(8));
         }
 
-        public ulong U128()
+        public BigInteger DeserializeU128()
         {
-            return BCS.U64.Deserialize(this.Read(16));
+            return BCS.U128.Deserialize(this.Read(16));
         }
 
         // TODO: Discuss with Max
@@ -113,14 +117,14 @@ namespace Aptos.Utilities.BCS
         //    return BCS.U256.Deserialize(this.Read(32));
         //}
 
-        public int Uleb128()
+        public int DeserializeUleb128()
         {
             int value = 0;
             int shift = 0;
 
             while(value <= MAX_U32)
             {
-                int byteRead = this.ReadInt(1);
+                byte byteRead = this.ReadInt(1);
                 value |= (byteRead & 0x7F) << shift;
                 if((byteRead & 0x80) == 0)
                 {
@@ -129,7 +133,7 @@ namespace Aptos.Utilities.BCS
                 shift += 7;
             }
 
-            if(value > MAX_U128)
+            if (value > MAX_U128)
             {
                 throw new Exception("Unexpectedly large uleb128 value");
             }
@@ -149,9 +153,9 @@ namespace Aptos.Utilities.BCS
             return value;
         }
 
-        public int ReadInt(int length)
+        public byte ReadInt(int length)
         {
-            return BitConverter.ToInt32(this.Read(length));
+            return this.Read(length)[0];
         }
 
         #endregion
