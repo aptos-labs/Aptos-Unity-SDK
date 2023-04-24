@@ -2,6 +2,8 @@ using NUnit.Framework;
 using Aptos.Utilities.BCS;
 using System.Numerics;
 using System.Collections.Generic;
+using System;
+using System.Text;
 
 namespace Aptos.Unity.Test
 {
@@ -24,6 +26,15 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 1 }, res);
         }
 
+        [Test]
+        public void DeserializeBoolTrue()
+        {
+            bool actual = true;
+            byte[] res = new Serialization().SerializeBool(actual).GetBytes();
+            bool expected = new Deserializtion(res).DeserializeBool();
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// Python SDK Code:
         /// <code>
@@ -41,6 +52,54 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 0 }, res);
         }
 
+        [Test]
+        public void DeserializeBoolFalse()
+        {
+            bool expected = false;
+            byte[] res = new Serialization().SerializeBool(expected).GetBytes();
+            bool actual = new Deserializtion(res).DeserializeBool();
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        //[Test]
+        //public void DeserializeBoolError()
+        //{
+        //    bool expected = false;
+        //    byte[] res = new Serialization().SerializeU32(32).GetBytes();
+        //    Deserializtion deser = new Deserializtion(res);
+        //    Assert.Throws<ArgumentException>(() => deser.DeserializeBool());
+        //}
+
+        /// <summary>
+        /// Python SDK Code:
+        /// <code>
+        /// in_value = b"1234567890"
+        /// ser = Serializer()
+        /// ser.to_bytes(in_value)
+        /// out = ser.output()
+        /// print([x for x in out])
+        /// </code>
+        /// </summary>
+        [Test]
+        public void DeserializeBytes()
+        {
+            byte[] value = Encoding.UTF8.GetBytes("1234567890");
+            byte[] actual = new Serialization().SerializeBytes(value).GetBytes();
+            byte[] expected = { 10, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48 };
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
+
+        [Test]
+        public void SerializeBytes()
+        {
+            byte[] value = Encoding.UTF8.GetBytes("1234567890");
+            byte[] expected = new Serialization().SerializeBytes(value).GetBytes();
+
+            byte[] actual = new Deserializtion(expected).ToBytes();
+            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+        }
+
         /// <summary>
         /// Python SDK Code:
         /// <code>
@@ -55,6 +114,15 @@ namespace Aptos.Unity.Test
         {
             byte[] res = new Serialization().SerializeU8(123).GetBytes();
             Assert.AreEqual(new byte[] { 123 }, res);
+        }
+
+        [Test]
+        public void DeserializeU8()
+        {
+            byte expected = 123;
+            byte[] bytes = new Serialization().SerializeU8(expected).GetBytes(); // { 123}
+            int actual = new Deserializtion(bytes).DeserializeU8();
+            Assert.AreEqual(expected, actual);
         }
 
 
@@ -75,6 +143,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 166, 37, 111, 3 }, res);
         }
 
+        [Test]
+        public void DeserializeU32()
+        {
+            uint expected = 57615782;
+            byte[] bytes = new Serialization().SerializeU32(expected).GetBytes();
+            //Assert.AreEqual(new byte[] { 166, 37, 111, 3 }, res);
+            uint actual = new Deserializtion(bytes).DeserializeU32();
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// Python SDK Code:
         /// <code>
@@ -90,6 +168,15 @@ namespace Aptos.Unity.Test
         {
             byte[] res = new Serialization().SerializeU64(9432012321182).GetBytes();
             Assert.AreEqual(new byte[] { 158, 113, 190, 15, 148, 8, 0, 0 }, res);
+        }
+
+        [Test]
+        public void DeserializeU64()
+        {
+            ulong expected = 9432012321182;
+            byte[] bytes = new Serialization().SerializeU64(expected).GetBytes();
+            ulong actual = new Deserializtion(bytes).DeserializeU64();
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
@@ -118,6 +205,23 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(new byte[] { 5, 231, 86, 201, 40, 241, 231, 92, 209, 223, 107, 2, 0, 0, 0, 0 }, res);
         }
 
+        [Test]
+        public void DeserializeU128()
+        {
+            BigInteger expected = BigInteger.Parse("10");
+            byte[] bytes = new Serialization().SerializeU128(expected).GetBytes();
+            //Assert.AreEqual(new byte[] { 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, res);
+            BigInteger actual = new Deserializtion(bytes).DeserializeU128();
+            Assert.AreEqual(expected, actual);
+
+            expected = BigInteger.Parse("749382032131231323910498053");
+            bytes = new Serialization().SerializeU128(expected).GetBytes();
+            //Assert.AreEqual(new byte[] { 5, 231, 86, 201, 40, 241, 231, 92, 209, 223, 107, 2, 0, 0, 0, 0 }, res);
+            actual = new Deserializtion(bytes).DeserializeU128();
+            Assert.AreEqual(expected, actual);
+        }
+
+
         /// <summary>
         /// Python SDK Code:
         /// <code>
@@ -133,6 +237,16 @@ namespace Aptos.Unity.Test
         {
             byte[] res = new Serialization().SerializeU32AsUleb128(1160).GetBytes();
             Assert.AreEqual(new byte[] { 136, 9 }, res);
+        }
+
+        [Test]
+        public void DeserializeU32AsUleb128()
+        {
+            uint expected = 1160;
+            byte[] bytes = new Serialization().SerializeU32AsUleb128(expected).GetBytes();
+            //Assert.AreEqual(new byte[] { 136, 9 }, res);
+            int actual = new Deserializtion(bytes).DeserializeUleb128();
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
@@ -151,6 +265,15 @@ namespace Aptos.Unity.Test
             byte[] res = new Serialization().SerializeString("potato UTF8: 🥔").GetBytes();
             byte[] exp = new byte[] { 17, 112, 111, 116, 97, 116, 111, 32, 85, 84, 70, 56, 58, 32, 240, 159, 165, 148 };
             Assert.AreEqual(exp, res);
+        }
+
+        [Test]
+        public void DeserializeString()
+        {
+            string expected = "potato UTF8: 🥔";
+            byte[] bytes = new Serialization().SerializeString(expected).GetBytes();
+            string actual = new Deserializtion(bytes).DeserializeString();
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
@@ -204,6 +327,15 @@ namespace Aptos.Unity.Test
             148
             };
             Assert.AreEqual(exp, res);
+        }
+
+        [Test]
+        public void DeserializeStringLong()
+        {
+            string expected = "potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔";
+            byte[] bytes = new Serialization().SerializeString(expected).GetBytes();
+            string actual = new Deserializtion(bytes).DeserializeString();
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
