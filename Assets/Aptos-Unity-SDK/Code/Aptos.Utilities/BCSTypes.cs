@@ -219,7 +219,38 @@ namespace Aptos.Utilities.BCS
 
         public static string Deserialize(byte[] data)
         {
-            return BitConverter.ToString(data);
+            byte[] cleanData = RemoveBOM(data);
+            //return (new UTF8Encoding(false)).GetString(cleanData);
+            string cleanedString = RemoveBOM(Encoding.UTF8.GetString(cleanData));
+            return RemoveBOM(cleanedString);
+        }
+
+        public static byte[] RemoveBOM(byte[] data)
+        {
+            var bom = Encoding.UTF8.GetPreamble();
+            if (data.Length > bom.Length)
+            {
+                for (int i = 0; i < bom.Length; i++)
+                {
+                    if (data[i] != bom[i])
+                        return data;
+                }
+            }
+            return data.Skip(3).ToArray();
+        }
+
+        private static string RemoveBOM(string xml)
+        {
+            // https://stackoverflow.com/questions/17795167/
+            // xml-loaddata-data-at-the-root-level-is-invalid-line-1-position-1
+            var preamble = Encoding.UTF8.GetPreamble();
+            string byteOrderMarkUtf8 = Encoding.UTF8.GetString(preamble);
+            if (xml.StartsWith(byteOrderMarkUtf8))
+            {
+                xml = xml.Remove(0, byteOrderMarkUtf8.Length);
+            }
+
+            return xml;
         }
 
         public ISerializable Deserialize(Deserialization deserializer)
