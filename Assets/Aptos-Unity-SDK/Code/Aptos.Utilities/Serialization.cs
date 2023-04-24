@@ -53,7 +53,8 @@ namespace Aptos.Utilities.BCS
 
         public byte[] ToBytes()
         {
-            return this.Read(this.DeserializeUleb128());
+            //return this.Read(this.DeserializeUleb128());
+            return this.Read((int)input.Length);
         }
 
         public byte[] FixedBytes(int length)
@@ -117,26 +118,48 @@ namespace Aptos.Utilities.BCS
         //    return BCS.U256.Deserialize(this.Read(32));
         //}
 
+        //public int DeserializeUleb128()
+        //{
+        //    int value = 0;
+        //    int shift = 0;
+
+        //    while(value <= MAX_U32)
+        //    {
+        //        byte byteRead = this.ReadInt(1);
+        //        value |= (byteRead & 0x7F) << shift;
+        //        if((byteRead & 0x80) == 0)
+        //        {
+        //            break;
+        //        }
+        //        shift += 7;
+        //    }
+
+        //    if (value > MAX_U128)
+        //    {
+        //        throw new Exception("Unexpectedly large uleb128 value");
+        //    }
+
+        //    return value;
+        //}
+
         public int DeserializeUleb128()
         {
             int value = 0;
             int shift = 0;
 
-            while(value <= MAX_U32)
+            while (value <= MAX_U32)
             {
                 byte byteRead = this.ReadInt(1);
                 value |= (byteRead & 0x7F) << shift;
-                if((byteRead & 0x80) == 0)
-                {
+                if ((byteRead & 0x80)== 0)
                     break;
-                }
                 shift += 7;
             }
 
-            if (value > MAX_U128)
-            {
-                throw new Exception("Unexpectedly large uleb128 value");
-            }
+            //if (value > MAX_U128)
+            //{
+            //    throw new Exception("Unexpectedly large uleb128 value");
+            //}
 
             return value;
         }
