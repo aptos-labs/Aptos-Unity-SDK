@@ -396,15 +396,23 @@ namespace Aptos.Unity.Test
             string keysStr = string.Join(Environment.NewLine, lines);
 
             // NOTE: After deserialization the Map / Dictionary will be sorted
-            List<BString> expectedKeyList = new List<BString>() { new BString("b"), new BString("c"), new BString("x") };
-            List<ISerializable> expectedValueList = new List<ISerializable>() { new U32(99234), new U32(23829), new U32(12345) };
+            List<BString> expectedKeyList = new List<BString>() { 
+                new BString("b"), 
+                new BString("c"), 
+                new BString("x") 
+            };
+
+            List<ISerializable> expectedValueList = new List<ISerializable>() { 
+                new U32(99234), 
+                new U32(23829), 
+                new U32(12345) 
+            };
 
             List<BString> actualKeyList = new List<BString>(res.Keys);
             List<ISerializable> actualValueList = new List<ISerializable>(res.Values);
 
             Assert.AreEqual(expectedKeyList, actualKeyList, keysStr);
             Assert.AreEqual(expectedValueList, actualValueList);
-
         }
 
         /// <summary>
