@@ -167,10 +167,12 @@ namespace Aptos.Utilities.BCS
         {
             this.value = value;
         }
+
         public void Serialize(Serialization serializer)
         {
             Serialization mapSerializer = new Serialization();
             SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
+  
             foreach (KeyValuePair<BString, ISerializable> entry in this.value)
             {
                 Serialization keySerializer = new Serialization();
@@ -194,7 +196,7 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeFixedBytes(mapSerializer.GetBytes());
         }
 
-        public ISerializable Deserialize(Deserialization deserializer, Func<object> deserializerType )
+        public BCSMap Deserialize(byte[] data, ISerializable keyType, ISerializable valueType)
         {
             throw new NotImplementedException();
         }
@@ -219,10 +221,12 @@ namespace Aptos.Utilities.BCS
 
         public static string Deserialize(byte[] data)
         {
-            byte[] cleanData = RemoveBOM(data);
-            //return (new UTF8Encoding(false)).GetString(cleanData);
-            string cleanedString = RemoveBOM(Encoding.UTF8.GetString(cleanData));
-            return RemoveBOM(cleanedString);
+            //byte[] cleanData = RemoveBOM(data);
+            ////return (new UTF8Encoding(false)).GetString(cleanData);
+            //string cleanedString = RemoveBOM(Encoding.UTF8.GetString(cleanData));
+            //return RemoveBOM(cleanedString);
+
+            return Encoding.UTF8.GetString(data);
         }
 
         public static byte[] RemoveBOM(byte[] data)
