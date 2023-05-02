@@ -167,7 +167,15 @@ namespace Aptos.Utilities.BCS
         {
             this.value = value;
         }
-
+        /// <summary>
+        /// Maps (Key / Value Stores)
+        /// Maps are represented as a variable-length, sorted sequence of(Key, Value) tuples.
+        /// Keys must be unique and the tuples sorted by increasing lexicographical order on 
+        /// the BCS bytes of each key.
+        /// The representation is otherwise similar to that of a variable-length sequence.
+        /// In particular, it is preceded by the number of tuples, encoded in ULEB128.
+        /// </summary>
+        /// <param name="serializer"></param>
         public void Serialize(Serialization serializer)
         {
             Serialization mapSerializer = new Serialization();
