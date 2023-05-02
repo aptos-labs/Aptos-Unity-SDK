@@ -330,9 +330,9 @@ namespace Aptos.Utilities.BCS
             return ret;
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ISerializable Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            return new Bool(deserializer.DeserializeBool());
         }
 
         public TypeTag Variant()
@@ -340,6 +340,24 @@ namespace Aptos.Utilities.BCS
             return TypeTag.BOOL;
         }
 
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+
+        public override bool Equals(object obj) => this.Equals(obj as Bool);
+
+        public bool Equals(Bool other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.value == other.value;
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
     }
 
     /// <summary>
