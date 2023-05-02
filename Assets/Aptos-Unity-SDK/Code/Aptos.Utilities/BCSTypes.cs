@@ -27,7 +27,7 @@ namespace Aptos.Utilities.BCS
     {
         public void Serialize(Serialization serializer);
 
-        //public ISerializable Deserialize(Deserialization deserializer);
+        //public static ISerializable Deserialize(Deserialization deserializer);
     }
 
     public interface ISerializableTag : ISerializable
@@ -161,7 +161,7 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class BCSMap : ISerializable
     {
-        Dictionary<BString, ISerializable> value;
+        public Dictionary<BString, ISerializable> value;
 
         public BCSMap(Dictionary<BString, ISerializable> value)
         {
@@ -269,6 +269,21 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(object obj) => this.Equals(obj as BString);
+
+        public bool Equals(BString other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.value.Equals(other.value);
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
+
     }
 
     /// <summary>
@@ -367,7 +382,7 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class U32 : ISerializableTag
     {
-        uint value;
+        public uint value;
 
         public U32(uint value)
         {
@@ -389,10 +404,30 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToUInt32(data);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ISerializable Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            U32 val = new U32(deserializer.DeserializeU32());
+            return val;
         }
+
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+
+        public override bool Equals(object obj) => this.Equals(obj as U32);
+
+        public bool Equals(U32 other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.value == other.value;
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
     }
 
     /// <summary>
