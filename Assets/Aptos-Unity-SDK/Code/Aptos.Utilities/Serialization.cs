@@ -5,7 +5,6 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.Serialization;
-using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -90,10 +89,24 @@ namespace Aptos.Utilities.BCS
             return new BCSMap(value);
         }
 
-        // TODO: Implement Sequence deserialization
-        public Sequence Sequence()
+        /// <summary>
+        /// Deserializes a list of objects of same type
+        /// </summary>
+        /// <param name="valueDecoderType"></param>
+        /// <returns></returns>
+        public Sequence DeserializeSequence(Type valueDecoderType)
         {
-            throw new NotImplementedException();
+            int length = DeserializeUleb128();
+            List<ISerializable> values = new List<ISerializable>();
+
+            while(values.Count < length)
+            {
+                MethodInfo method = valueDecoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+                ISerializable val = (ISerializable)method.Invoke(null, new[] { this });
+                values.Add(val);
+            }
+
+            return new Sequence(values.ToArray());
         }
 
         public string DeserializeString()
@@ -144,13 +157,11 @@ namespace Aptos.Utilities.BCS
             int value = 0;
             int shift = 0;
 
-            //Debug.Log("value: " + value);
-            //Debug.Log("MAX_U32: " + MAX_U32);
             while (value <= MAX_U32)
             {
                 byte byteRead = this.ReadInt(1);
                 value |= (byteRead & 0x7F) << shift;
-                //Debug.Log("value::: " + value);
+
                 if ((byteRead & 0x80)== 0)
                     break;
                 shift += 7;
@@ -158,7 +169,6 @@ namespace Aptos.Utilities.BCS
 
             if (value > MAX_U128)
             {
-                Debug.Log("MAX_U128: " + MAX_U128);
                 throw new Exception("Unexpectedly large uleb128 value");
             }
 
