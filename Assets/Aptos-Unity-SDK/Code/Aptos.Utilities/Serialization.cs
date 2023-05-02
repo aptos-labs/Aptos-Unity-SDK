@@ -1,8 +1,10 @@
 ﻿// An implementation of BCS in C#
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization;
+using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -10,10 +12,10 @@ namespace Aptos.Utilities.BCS
     {
         int MAX_U8 = (int)(Math.Pow(2, 8) - 1);
         int MAX_U16 = (int)(Math.Pow(2, 16) - 1);
-        int MAX_U32 = (int)(Math.Pow(2, 32) - 1);
-        int MAX_U64 = (int)(Math.Pow(2, 64) - 1);
-        int MAX_U128 = (int)(Math.Pow(2, 128) - 1);
-        int MAX_U256 = (int)(Math.Pow(2, 256) - 1);
+        uint MAX_U32 = (uint)(Math.Pow(2, 32) - 1);
+        UInt64 MAX_U64 = (UInt64)(Math.Pow(2, 64) - 1);
+        BigInteger MAX_U128 = (BigInteger)(Math.Pow(2, 128) - 1); // System.UInt128
+        BigInteger MAX_U256 = (BigInteger)(Math.Pow(2, 256) - 1);
 
         #region Deserialization
 
@@ -63,7 +65,7 @@ namespace Aptos.Utilities.BCS
         }
 
         // TODO: Implement Map deserialization
-        public BCSMap Map()
+        public BCSMap DeserializeMap(Type keyType, Type valueType)
         {
             throw new NotImplementedException();
         }
@@ -147,19 +149,23 @@ namespace Aptos.Utilities.BCS
             int value = 0;
             int shift = 0;
 
+            //Debug.Log("value: " + value);
+            //Debug.Log("MAX_U32: " + MAX_U32);
             while (value <= MAX_U32)
             {
                 byte byteRead = this.ReadInt(1);
                 value |= (byteRead & 0x7F) << shift;
+                //Debug.Log("value::: " + value);
                 if ((byteRead & 0x80)== 0)
                     break;
                 shift += 7;
             }
 
-            //if (value > MAX_U128)
-            //{
-            //    throw new Exception("Unexpectedly large uleb128 value");
-            //}
+            if (value > MAX_U128)
+            {
+                Debug.Log("MAX_U128: " + MAX_U128);
+                throw new Exception("Unexpectedly large uleb128 value");
+            }
 
             return value;
         }
