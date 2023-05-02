@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.Serialization;
 using UnityEngine;
 
@@ -67,7 +68,40 @@ namespace Aptos.Utilities.BCS
         // TODO: Implement Map deserialization
         public BCSMap DeserializeMap(Type keyType, Type valueType)
         {
-            throw new NotImplementedException();
+            //Deserialization deser = new Deserialization(input.GetBuffer());
+            //int length = deser.DeserializeUleb128();
+
+            int length = DeserializeUleb128();
+
+            //SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
+            SortedDictionary<string, ISerializable> sortedMap = new SortedDictionary<string, ISerializable>();
+
+
+            while (sortedMap.Count < length)
+            {
+                string key = DeserializeString();
+                BString bcsStr = new BString(key);
+
+                //ISerializable value = valueType.GetMethod("Deserialize").Invoke(this);
+
+                MethodInfo method = valueType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+                //MethodInfo generic = method.MakeGenericMethod(valueType);
+                //ISerializable val = (ISerializable)generic.Invoke(null, new[] {this});
+                ISerializable val = (ISerializable)method.Invoke(null, new[] { this });
+
+                sortedMap.Add(key, val);
+            }
+
+            Dictionary<BString, ISerializable> value = new Dictionary<BString, ISerializable>();
+
+            foreach (KeyValuePair<string, ISerializable> entry in sortedMap)
+            {
+                value.Add(new BString(entry.Key), entry.Value);
+            }
+
+            return new BCSMap(value);
+
+            //throw new NotImplementedException();
         }
 
         // TODO: Implement Sequence deserialization
@@ -78,7 +112,7 @@ namespace Aptos.Utilities.BCS
 
         public string DeserializeString()
         {
-            return BString.Deserialize(this.ToBytes());
+            return BString.Deserialize(this.Read(this.DeserializeUleb128()));
         }
 
         public ISerializable Struct(ISerializable structObj )
