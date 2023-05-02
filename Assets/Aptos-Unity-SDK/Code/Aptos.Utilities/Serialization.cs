@@ -38,19 +38,6 @@ namespace Aptos.Utilities.BCS
             byte[] read = Read(1);
             bool value = BitConverter.ToBoolean(read);
             return value;
-
-            //int value = BitConverter.ToInt32(read);
-            //if (value == 0) {
-            //    return false;
-            //} 
-            //else if(value == 1)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    throw new Exception("Unexpected boolean value: " + value);
-            //}
         }
 
         public byte[] ToBytes()
