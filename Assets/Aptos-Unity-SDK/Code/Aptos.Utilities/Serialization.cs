@@ -65,43 +65,29 @@ namespace Aptos.Utilities.BCS
             return this.Read(length);
         }
 
-        // TODO: Implement Map deserialization
         public BCSMap DeserializeMap(Type keyType, Type valueType)
         {
-            //Deserialization deser = new Deserialization(input.GetBuffer());
-            //int length = deser.DeserializeUleb128();
-
             int length = DeserializeUleb128();
-
-            //SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
             SortedDictionary<string, ISerializable> sortedMap = new SortedDictionary<string, ISerializable>();
-
 
             while (sortedMap.Count < length)
             {
                 string key = DeserializeString();
-                BString bcsStr = new BString(key);
 
-                //ISerializable value = valueType.GetMethod("Deserialize").Invoke(this);
-
+                // Calls the "Deserialize" method from the give BCS type
                 MethodInfo method = valueType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
-                //MethodInfo generic = method.MakeGenericMethod(valueType);
-                //ISerializable val = (ISerializable)generic.Invoke(null, new[] {this});
                 ISerializable val = (ISerializable)method.Invoke(null, new[] { this });
 
                 sortedMap.Add(key, val);
             }
 
             Dictionary<BString, ISerializable> value = new Dictionary<BString, ISerializable>();
-
             foreach (KeyValuePair<string, ISerializable> entry in sortedMap)
             {
                 value.Add(new BString(entry.Key), entry.Value);
             }
 
             return new BCSMap(value);
-
-            //throw new NotImplementedException();
         }
 
         // TODO: Implement Sequence deserialization
@@ -123,7 +109,6 @@ namespace Aptos.Utilities.BCS
 
         public byte DeserializeU8()
         {
-            //return BCS.U8.Deserialize(this.Read(1));
             return (byte) this.ReadInt(1);
         }
 
@@ -152,30 +137,6 @@ namespace Aptos.Utilities.BCS
         //public ulong U256()
         //{
         //    return BCS.U256.Deserialize(this.Read(32));
-        //}
-
-        //public int DeserializeUleb128()
-        //{
-        //    int value = 0;
-        //    int shift = 0;
-
-        //    while(value <= MAX_U32)
-        //    {
-        //        byte byteRead = this.ReadInt(1);
-        //        value |= (byteRead & 0x7F) << shift;
-        //        if((byteRead & 0x80) == 0)
-        //        {
-        //            break;
-        //        }
-        //        shift += 7;
-        //    }
-
-        //    if (value > MAX_U128)
-        //    {
-        //        throw new Exception("Unexpectedly large uleb128 value");
-        //    }
-
-        //    return value;
         //}
 
         public int DeserializeUleb128()
