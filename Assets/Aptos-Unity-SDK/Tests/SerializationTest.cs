@@ -395,6 +395,7 @@ namespace Aptos.Unity.Test
             var lines = res.Select(kvp => kvp.Key.value + ": " + kvp.Value.ToString());
             string keysStr = string.Join(Environment.NewLine, lines);
 
+            // NOTE: After deserialization the Map / Dictionary will be sorted
             List<BString> expectedKeyList = new List<BString>() { new BString("b"), new BString("c"), new BString("x") };
             List<ISerializable> expectedValueList = new List<ISerializable>() { new U32(99234), new U32(23829), new U32(12345) };
 
