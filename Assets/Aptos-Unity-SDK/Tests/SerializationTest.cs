@@ -607,6 +607,26 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
         }
 
+        [Test]
+        public void DeserializeListOfBCSStrings()
+        {
+            Serialization ser = new Serialization();
+            BString[] expectedStrArr = { new BString("a"), new BString("abc"), new BString("def"), new BString("ghi") };
+            ser.Serialize(expectedStrArr);
+
+            Sequence expectedSeq = new Sequence(expectedStrArr);
+
+            byte[] actual = ser.GetBytes();
+            byte[] exp = new byte[] { 4, 1, 97, 3, 97, 98, 99, 3, 100, 101, 102, 3, 103, 104, 105 };
+            Assert.AreEqual(exp, actual, ToReadableByteArray(actual));
+
+            Deserialization deser = new Deserialization(actual);
+            Sequence actualSequence = deser.DeserializeSequence(typeof(BString));
+            BString[] actualSequenceArr = actualSequence.GetValues().Cast<BString>().ToArray();
+
+            Assert.AreEqual(expectedStrArr, actualSequenceArr);
+        }
+
         /// <summary>
         /// Python SDK Code:
         /// <code>
