@@ -70,8 +70,10 @@ namespace Aptos.Utilities.BCS
     }
 
     /// <summary>
-    /// Representation of a sequence.
-    /// Used primarily to represent a list of transaction arguments
+    /// Representation of a Transaction Argument sequence / list.
+    /// NOTE: Transaction Arguments have different types hence they cannot be represented using a regular list.
+    /// NOTE: This class does not implement deserialization because the developer would know the types beforehand,
+    /// and hence would apply the appropriate deserialization based on the type.
     /// </summary>
     public class Sequence : ISerializable
     {
@@ -121,11 +123,6 @@ namespace Aptos.Utilities.BCS
                     serializer.SerializeBytes(b);
                 }
             }
-        }
-
-        public ISerializable Deserialize(Deserialization deserializer)
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -203,11 +200,6 @@ namespace Aptos.Utilities.BCS
 
             serializer.SerializeFixedBytes(mapSerializer.GetBytes());
         }
-
-        public BCSMap Deserialize(byte[] data, ISerializable keyType, ISerializable valueType)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     /// <summary>
@@ -265,9 +257,15 @@ namespace Aptos.Utilities.BCS
             return xml;
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ISerializable Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            string deserStr = deserializer.DeserializeString();
+            return new BString(deserStr);
+        }
+
+        public override string ToString()
+        {
+            return value;
         }
 
         public override bool Equals(object obj) => this.Equals(obj as BString);
