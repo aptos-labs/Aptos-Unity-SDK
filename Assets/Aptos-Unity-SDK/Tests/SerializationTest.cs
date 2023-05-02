@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Collections.Generic;
 using System;
 using System.Text;
+using System.Linq;
 
 namespace Aptos.Unity.Test
 {
@@ -370,6 +371,39 @@ namespace Aptos.Unity.Test
             byte[] exp = new byte[] { 3, 1, 97, 57, 48, 0, 0, 1, 98, 162, 131, 1, 0, 1, 99, 21, 93, 0, 0 };
 
             Assert.AreEqual(exp, res);
+        }
+
+        [Test]
+        public void DeserializeMap()
+        {
+            Dictionary<BString, ISerializable> expectedMap = new Dictionary<BString, ISerializable>();
+            expectedMap.Add(new BString("x"), new U32(12345));
+            expectedMap.Add(new BString("b"), new U32(99234));
+            expectedMap.Add(new BString("c"), new U32(23829));
+
+            BCSMap expectedBcsMap = new BCSMap(expectedMap);
+
+            Serialization ser = new Serialization();
+            expectedBcsMap.Serialize(ser);
+
+            byte[] bytes = ser.GetBytes();
+
+            Deserialization deser = new Deserialization(bytes);
+            BCSMap actualBcsMap = deser.DeserializeMap(typeof(BString), typeof(U32));
+
+            Dictionary<BString, ISerializable> res = actualBcsMap.value;
+            var lines = res.Select(kvp => kvp.Key.value + ": " + kvp.Value.ToString());
+            string keysStr = string.Join(Environment.NewLine, lines);
+
+            List<BString> expectedKeyList = new List<BString>() { new BString("b"), new BString("c"), new BString("x") };
+            List<ISerializable> expectedValueList = new List<ISerializable>() { new U32(99234), new U32(23829), new U32(12345) };
+
+            List<BString> actualKeyList = new List<BString>(res.Keys);
+            List<ISerializable> actualValueList = new List<ISerializable>(res.Values);
+
+            Assert.AreEqual(expectedKeyList, actualKeyList, keysStr);
+            Assert.AreEqual(expectedValueList, actualValueList);
+
         }
 
         /// <summary>
