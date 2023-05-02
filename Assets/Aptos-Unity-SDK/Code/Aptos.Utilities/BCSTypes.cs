@@ -26,6 +26,8 @@ namespace Aptos.Utilities.BCS
     public interface ISerializable
     {
         public void Serialize(Serialization serializer);
+
+        //public static ISerializable Deserialize(Deserialization deserializer);
     }
 
     public interface ISerializableTag : ISerializable
@@ -59,11 +61,19 @@ namespace Aptos.Utilities.BCS
                 element.SerializeTag(serializer);
             }
         }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     /// <summary>
-    /// Representation of a sequence.
-    /// Used primarily to represent a list of transaction arguments
+    /// Representation of a Transaction Argument sequence / list.
+    /// NOTE: Transaction Arguments have different types hence they cannot be represented using a regular list.
+    /// NOTE: This class does not implement deserialization because the developer would know the types beforehand,
+    /// and hence would apply the appropriate deserialization based on the type.
     /// </summary>
     public class Sequence : ISerializable
     {
@@ -136,6 +146,11 @@ namespace Aptos.Utilities.BCS
                 serializer.SerializeBytes(element);
             }
         }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -143,16 +158,26 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class BCSMap : ISerializable
     {
-        Dictionary<BString, ISerializable> value;
+        public Dictionary<BString, ISerializable> value;
 
         public BCSMap(Dictionary<BString, ISerializable> value)
         {
             this.value = value;
         }
+        /// <summary>
+        /// Maps (Key / Value Stores)
+        /// Maps are represented as a variable-length, sorted sequence of(Key, Value) tuples.
+        /// Keys must be unique and the tuples sorted by increasing lexicographical order on 
+        /// the BCS bytes of each key.
+        /// The representation is otherwise similar to that of a variable-length sequence.
+        /// In particular, it is preceded by the number of tuples, encoded in ULEB128.
+        /// </summary>
+        /// <param name="serializer"></param>
         public void Serialize(Serialization serializer)
         {
             Serialization mapSerializer = new Serialization();
             SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
+  
             foreach (KeyValuePair<BString, ISerializable> entry in this.value)
             {
                 Serialization keySerializer = new Serialization();
@@ -193,6 +218,70 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public static string Deserialize(byte[] data)
+        {
+            //byte[] cleanData = RemoveBOM(data);
+            ////return (new UTF8Encoding(false)).GetString(cleanData);
+            //string cleanedString = RemoveBOM(Encoding.UTF8.GetString(cleanData));
+            //return RemoveBOM(cleanedString);
+
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public static byte[] RemoveBOM(byte[] data)
+        {
+            var bom = Encoding.UTF8.GetPreamble();
+            if (data.Length > bom.Length)
+            {
+                for (int i = 0; i < bom.Length; i++)
+                {
+                    if (data[i] != bom[i])
+                        return data;
+                }
+            }
+            return data.Skip(3).ToArray();
+        }
+
+        private static string RemoveBOM(string xml)
+        {
+            // https://stackoverflow.com/questions/17795167/
+            // xml-loaddata-data-at-the-root-level-is-invalid-line-1-position-1
+            var preamble = Encoding.UTF8.GetPreamble();
+            string byteOrderMarkUtf8 = Encoding.UTF8.GetString(preamble);
+            if (xml.StartsWith(byteOrderMarkUtf8))
+            {
+                xml = xml.Remove(0, byteOrderMarkUtf8.Length);
+            }
+
+            return xml;
+        }
+
+        public static ISerializable Deserialize(Deserialization deserializer)
+        {
+            string deserStr = deserializer.DeserializeString();
+            return new BString(deserStr);
+        }
+
+        public override string ToString()
+        {
+            return value;
+        }
+
+        public override bool Equals(object obj) => this.Equals(obj as BString);
+
+        public bool Equals(BString other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.value.Equals(other.value);
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
+
     }
 
     /// <summary>
@@ -210,6 +299,11 @@ namespace Aptos.Utilities.BCS
         public void Serialize(Serialization serializer)
         {
             serializer.Serialize(value);
+        }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -230,10 +324,40 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
+        public static bool Deserialize(byte[] data)
+        {
+            bool ret = BitConverter.ToBoolean(data);
+            return ret;
+        }
+
+        public static ISerializable Deserialize(Deserialization deserializer)
+        {
+            return new Bool(deserializer.DeserializeBool());
+        }
+
         public TypeTag Variant()
         {
             return TypeTag.BOOL;
         }
+
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+
+        public override bool Equals(object obj) => this.Equals(obj as Bool);
+
+        public bool Equals(Bool other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.value == other.value;
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
     }
 
     /// <summary>
@@ -257,6 +381,16 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public static int Deserialize(byte[] data)
+        {
+            return BitConverter.ToInt32(data);
+        }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -264,7 +398,7 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class U32 : ISerializableTag
     {
-        uint value;
+        public uint value;
 
         public U32(uint value)
         {
@@ -280,6 +414,36 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public static uint Deserialize(byte[] data)
+        {
+            return BitConverter.ToUInt32(data);
+        }
+
+        public static ISerializable Deserialize(Deserialization deserializer)
+        {
+            U32 val = new U32(deserializer.DeserializeU32());
+            return val;
+        }
+
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+
+        public override bool Equals(object obj) => this.Equals(obj as U32);
+
+        public bool Equals(U32 other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.value == other.value;
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
     }
 
     /// <summary>
@@ -303,6 +467,16 @@ namespace Aptos.Utilities.BCS
         {
             serializer.Serialize(value);
         }
+
+        public static ulong Deserialize(byte[] data)
+        {
+            return BitConverter.ToUInt64(data);
+        }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -325,6 +499,16 @@ namespace Aptos.Utilities.BCS
         public void Serialize(Serialization serializer)
         {
             serializer.Serialize(value);
+        }
+
+        public static BigInteger Deserialize(byte[] data)
+        {
+            return new BigInteger(data);
+        }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -405,6 +589,11 @@ namespace Aptos.Utilities.BCS
             {
                 this.typeArgs[i].Serialize(serializer);
             }
+        }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,5 +1,6 @@
 using Aptos.Utilities.BCS;
 using Chaos.NaCl;
+using System;
 
 namespace Aptos.Accounts
 {
@@ -44,6 +45,11 @@ namespace Aptos.Accounts
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeBytes(this._signatureBytes);
+        }
+
+        public ISerializable Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="GetHashCode"/>
