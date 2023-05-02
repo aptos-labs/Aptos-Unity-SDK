@@ -594,7 +594,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeEmptyStringSequence()
+        public void SerializeEmptyTransactionArgumentSequenceOfString()
         {
             Serialization ser = new Serialization();
             BString[] strArr = { new BString("") };
@@ -621,8 +621,7 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(exp, actual, ToReadableByteArray(actual));
 
             Deserialization deser = new Deserialization(actual);
-            Sequence actualSequence = deser.DeserializeSequence(typeof(BString));
-            BString[] actualSequenceArr = actualSequence.GetValues().Cast<BString>().ToArray();
+            BString[] actualSequenceArr = deser.DeserializeSequence(typeof(BString)).Cast<BString>().ToArray();
 
             Assert.AreEqual(expectedStrArr, actualSequenceArr);
         }
@@ -690,6 +689,24 @@ namespace Aptos.Unity.Test
             byte[] actual = ser.GetBytes();
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DeserializerBoolSequence()
+        {
+            Bool[] expectedBoolArr = { new Bool(false), new Bool(true), new Bool(false) };
+            Serialization ser = new Serialization();
+            ser.Serialize(expectedBoolArr);
+
+            byte[] expectedByteArr = new byte[] { 3, 0, 1, 0 };
+            byte[] actualByteArr = ser.GetBytes();
+
+            Assert.AreEqual(expectedByteArr, actualByteArr);
+
+            Deserialization deser = new Deserialization(actualByteArr);
+            Bool[] actualBoolArr = deser.DeserializeSequence(typeof(Bool)).Cast<Bool>().ToArray();
+
+            Assert.AreEqual(expectedBoolArr, actualBoolArr);
         }
 
         static public string ToReadableByteArray(byte[] bytes)
