@@ -94,7 +94,7 @@ namespace Aptos.Utilities.BCS
         /// </summary>
         /// <param name="valueDecoderType"></param>
         /// <returns></returns>
-        public Sequence DeserializeSequence(Type valueDecoderType)
+        public ISerializable[] DeserializeSequence(Type valueDecoderType)
         {
             int length = DeserializeUleb128();
             List<ISerializable> values = new List<ISerializable>();
@@ -106,7 +106,7 @@ namespace Aptos.Utilities.BCS
                 values.Add(val);
             }
 
-            return new Sequence(values.ToArray());
+            return values.ToArray();
         }
 
         public string DeserializeString()
