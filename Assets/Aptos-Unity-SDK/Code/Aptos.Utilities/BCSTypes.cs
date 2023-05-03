@@ -72,7 +72,8 @@ namespace Aptos.Utilities.BCS
             else if (variant == TypeTag.VECTOR)
                 throw new NotImplementedException();
             else if (variant == TypeTag.STRUCT)
-                return ISerializableTag.Deserialize(deserializer);
+                return StructTag.Deserialize(deserializer);
+                //return ISerializableTag.Deserialize(deserializer);
 
             throw new NotImplementedException();
         }
@@ -702,9 +703,9 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public StructTag Deserialize(Deserialization deserializer, Type typeArgsDecoderType)
+        public static StructTag Deserialize(Deserialization deserializer)
         {
-            int variant = deserializer.DeserializeUleb128();
+            //int variant = deserializer.DeserializeUleb128();
             AccountAddress address = AccountAddress.Deserialize(deserializer);
             string module = deserializer.DeserializeString();
             string name = deserializer.DeserializeString();
@@ -714,8 +715,9 @@ namespace Aptos.Utilities.BCS
 
             while (typeArgsList.Count < length)
             {
-                MethodInfo method = typeArgsDecoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
-                ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
+                //MethodInfo method = typeArgsDecoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+                //ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
+                ISerializableTag val = ISerializableTag.DeserializeTag(deserializer);
                 typeArgsList.Add(val);
             }
 
