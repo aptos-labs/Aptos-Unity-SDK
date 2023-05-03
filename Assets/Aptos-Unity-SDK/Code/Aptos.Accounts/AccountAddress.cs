@@ -9,7 +9,7 @@ namespace Aptos.Accounts
     /// Represents an Aptos account address.
     /// More details can her found <see cref="https://aptos.dev/concepts/accounts">here</see>.
     /// </summary>
-    public class AccountAddress: ISerializable
+    public class AccountAddress: ISerializableTag
     {
         private static readonly int Length = 32;
         private readonly byte[] AddressBytes;
@@ -101,7 +101,18 @@ namespace Aptos.Accounts
             serializer.SerializeFixedBytes(this.AddressBytes);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        // TODO: Add AccountAddress deserialization test
+        public static AccountAddress Deserialize(Deserialization deserializer)
+        {
+            return new AccountAddress(deserializer.FixedBytes(AccountAddress.Length));
+        }
+
+        public TypeTag Variant()
+        {
+            return TypeTag.ACCOUNT_ADDRESS;
+        }
+
+        public object GetValue()
         {
             throw new NotImplementedException();
         }
