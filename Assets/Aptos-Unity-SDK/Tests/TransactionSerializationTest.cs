@@ -651,11 +651,11 @@ namespace Aptos.Unity.Test
 
             ISerializable[] args =
             {
-                new ScriptArgument(ScriptArgument.TypeTag.U64, 100),
-                new ScriptArgument(ScriptArgument.TypeTag.U64, 200),
+                new ScriptArgument(ScriptArgument.TypeTag.U64, new U64(100)),
+                new ScriptArgument(ScriptArgument.TypeTag.U64, new U64(200)),
                 new ScriptArgument(ScriptArgument.TypeTag.ADDRESS, caroldAddress),
                 new ScriptArgument(ScriptArgument.TypeTag.ADDRESS, davidAddress),
-                new ScriptArgument(ScriptArgument.TypeTag.U64, 50)
+                new ScriptArgument(ScriptArgument.TypeTag.U64, new U64(50))
             };
             Sequence scriptArgs = new Sequence(args);
 
@@ -979,6 +979,13 @@ namespace Aptos.Unity.Test
 
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
 
+            Deserialization deser = new Deserialization(actual);
+            Authenticator.Authenticator authenticatorDeserialized = (Authenticator.Authenticator)Authenticator.Authenticator.Deserialize(deser);
+
+            Assert.AreEqual(authenticator.GetVariant(), authenticatorDeserialized.GetVariant());
+
+            string internals = authenticator.ToString() + " ::: " + authenticatorDeserialized.ToString();
+            Assert.AreEqual(authenticator, authenticatorDeserialized, internals);
 
             SignedTransaction signedTransactionGenerated = new SignedTransaction(
                 rawTransactionGenerated, authenticator
