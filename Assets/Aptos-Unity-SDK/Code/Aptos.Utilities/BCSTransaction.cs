@@ -94,6 +94,46 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotSupportedException();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is not RawTransaction)
+                throw new NotImplementedException();
+
+            RawTransaction otherRawTx = (RawTransaction)other;
+
+            return (
+                this.sender.Equals(otherRawTx.sender)
+                && this.sequenceNumber == otherRawTx.sequenceNumber
+                && this.payload.Equals(otherRawTx.payload)
+                && this.maxGasAmount == otherRawTx.maxGasAmount
+                && this.gasUnitPrice == otherRawTx.gasUnitPrice
+                && this.expirationTimestampsSecs == otherRawTx.expirationTimestampsSecs
+                && this.chainId == otherRawTx.chainId
+            );
+        }
+
+        public override string ToString()
+        {
+            String s = String.Format("RawTransaction:\n" +
+                "sender: {0}\n" +
+                "sequence_number: {1}\n" +
+                "payload: {2}\n" +
+                "max_gas_amount: {3}\n" +
+                "gas_unit_price: {4}\n" +
+                "expiration_timestamps_secs: {5}\n" +
+                "chain_id: {6}",
+                this.sender.ToString(),
+                this.sequenceNumber,
+                this.payload.ToString(),
+                this.maxGasAmount,
+                this.gasUnitPrice,
+                this.expirationTimestampsSecs,
+                this.chainId);
+
+
+            return base.ToString();
+        }
     }
 
     /// <summary>
@@ -234,6 +274,21 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotSupportedException();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is not TransactionPayload)
+                throw new NotImplementedException();
+
+            TransactionPayload otherTxnPayload = (TransactionPayload)other;
+
+            return this.variant == otherTxnPayload.variant && this.value.Equals(otherTxnPayload.value);
+        }
+
+        public override string ToString()
+        {
+            return this.value.ToString();
+        }
     }
 
     /// <summary>
@@ -298,6 +353,27 @@ namespace Aptos.Utilities.BCS
         public object GetValue()
         {
             throw new NotSupportedException();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not Script)
+                throw new NotImplementedException();
+
+            Script otherScript = (Script)other;
+
+            // TODO: Fix comparisons in Script Equals operator
+            return (
+                this.code == otherScript.code
+                && this.typeArgs == otherScript.typeArgs
+                && this.scriptArgs == otherScript.scriptArgs
+            );
+        }
+
+        //  TODO: Implement Script ToString
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 
@@ -435,6 +511,25 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotSupportedException();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is not ScriptArgument)
+                throw new NotImplementedException();
+
+            ScriptArgument otherScriptArg = (ScriptArgument)other;
+
+            // TODO: Check comparator and Equals operator for ISerializableTag(s)
+            return (
+                this.variant == otherScriptArg.variant
+                && this.value == otherScriptArg.value
+            );
+        }
+
+        public override string ToString()
+        {
+            return String.Format("[{0}] {1}", this.variant, this.value);
+        }
     }
 
     /// <summary>
@@ -483,6 +578,30 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotSupportedException();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is not EntryFunction)
+                throw new NotImplementedException();
+
+            EntryFunction otherEntryFunc = (EntryFunction)other;
+
+            // TODO: Add TagSequence comparator
+            // TODO: Add Sequence comparator
+            return (
+                this.module.Equals(otherEntryFunc.module)
+                && this.function.Equals(otherEntryFunc.function)
+                && this.typeArgs.Equals(otherEntryFunc.typeArgs)
+                && this.args.Equals(otherEntryFunc.args)
+            );
+        }
+
+        // TODO: Add TagSequence ToString
+        // TODO: Add Sequence ToString
+        public override string ToString()
+        {
+            return String.Format("{0}::{1}::<{2}>({3})", this.module, this.function, this.typeArgs.ToString(), this.args.ToString());
+        }
     }
 
     /// <summary>
@@ -517,6 +636,21 @@ namespace Aptos.Utilities.BCS
         public object GetValue()
         {
             throw new NotSupportedException();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not ModuleId)
+                throw new NotImplementedException();
+
+            ModuleId otherModuleId = (ModuleId)other;
+
+            return this.address.Equals(otherModuleId.address) && this.name.Equals(otherModuleId.name);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}::{1}", this.address, this.name);
         }
     }
 
@@ -604,6 +738,24 @@ namespace Aptos.Utilities.BCS
         public object GetValue()
         {
             throw new NotSupportedException();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not SignedTransaction)
+                throw new NotImplementedException();
+
+            SignedTransaction otherSignedTxn = (SignedTransaction)other;
+
+            return (
+                this.transaction.Equals(otherSignedTxn.transaction)
+                &&this.authenticator.Equals(otherSignedTxn.authenticator)
+            );
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Transaction: {0} Authenticator: {1}", this.transaction.ToString(), this.authenticator.ToString());
         }
     }
 }
