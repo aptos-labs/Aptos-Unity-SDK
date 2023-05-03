@@ -128,6 +128,17 @@ namespace Aptos.Accounts
             serializer.SerializeBytes(this.KeyBytes);
         }
 
+        // TODO: Add PublicKey deserialization test
+        public static PublicKey Deserialize(Deserialization deserializer)
+        {
+            byte[] keyBytes = deserializer.ToBytes();
+            if (keyBytes.Length != PublicKey.KeyLength)
+                throw new Exception("Length mismatch");
+
+            // TODO: Implement VerifyKey for PublicKey
+            return new PublicKey(keyBytes);
+        }
+
         /// <summary>
         /// Check if PubliKey is a valid on the Ed25519 curve.
         /// </summary>
