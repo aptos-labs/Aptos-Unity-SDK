@@ -133,7 +133,7 @@ namespace Aptos.Accounts
         {
             byte[] keyBytes = deserializer.ToBytes();
             if (keyBytes.Length != PublicKey.KeyLength)
-                throw new Exception("Length mismatch");
+                throw new Exception("Length mismatch. Expected: " + PublicKey.KeyLength + ", Actual: "  + keyBytes.Length);
 
             // TODO: Implement VerifyKey for PublicKey
             return new PublicKey(keyBytes);
