@@ -41,6 +41,11 @@ namespace Aptos.Authenticator
             this.authenticator = authenticator;
         }
 
+        public int GetVariant()
+        {
+            return this.Variant;
+        }
+
         /// <summary>
         /// Returns the Authenticator.
         /// </summary>
@@ -70,9 +75,39 @@ namespace Aptos.Authenticator
             this.authenticator.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ISerializable Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            int variant = deserializer.DeserializeUleb128();
+            ISerializable authenticator;
+
+            if (variant == Authenticator.ED25519)
+                authenticator = Ed25519Authenticator.Deserialize(deserializer);
+            else if (variant == Authenticator.MULTI_ED25519)
+                authenticator = MultiEd25519Authenticator.Deserialize(deserializer);
+            else if (variant == Authenticator.MULTI_AGENT)
+                authenticator = MultiAgentAuthenticator.Deserialize(deserializer);
+            else
+                throw new Exception("Invalid type: " + variant);
+
+            return new Authenticator((IAuthenticator)authenticator);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not Authenticator)
+                throw new NotImplementedException();
+
+            return (
+                this.Variant == ((Authenticator)other).Variant 
+                && this.authenticator.Equals(((Authenticator)other).authenticator)
+            );
+        }
+
+        public override int GetHashCode() => this.authenticator.GetHashCode();
+
+        public override string ToString()
+        {
+            return this.authenticator.ToString();
         }
     }
 
@@ -110,9 +145,32 @@ namespace Aptos.Authenticator
             this.signature.Serialize(serializer); // Note in Python we call serializer.struct
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static Ed25519Authenticator Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            PublicKey key = PublicKey.Deserialize(deserializer);
+            Signature signature = Signature.Deserialize(deserializer);
+
+            return new Ed25519Authenticator(key, signature);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not Ed25519Authenticator)
+                throw new NotImplementedException();
+
+            return 
+                this.publicKey.Equals(((Ed25519Authenticator)other).publicKey) 
+                && this.signature.Equals(((Ed25519Authenticator)other).signature);
+        }
+
+        public override int GetHashCode()
+        {
+            return publicKey.GetHashCode() + signature.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return "PublicKey: " + this.publicKey + ", Signature: " + this.signature; 
         }
     }
 
@@ -172,9 +230,39 @@ namespace Aptos.Authenticator
             serializer.Serialize(authenticatorsSeq);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static MultiAgentAuthenticator Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            Authenticator sender = (Authenticator)Authenticator.Deserialize(deserializer);
+            AccountAddress[] secondaryAddresses = (AccountAddress[])deserializer.DeserializeSequence(typeof(AccountAddress));
+            Authenticator[] secondaryAuthenticator = (Authenticator[])deserializer.DeserializeSequence(typeof(Authenticator));
+
+            List<Tuple<AccountAddress, Authenticator>> secondarySigners = new List<Tuple<AccountAddress, Authenticator>>();
+            for(int i = 0; i < secondaryAddresses.Length; i++)
+            {
+                secondarySigners.Add(Tuple.Create(secondaryAddresses[i], secondaryAuthenticator[i]));
+            }
+
+            return new MultiAgentAuthenticator(sender, secondarySigners);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not MultiAgentAuthenticator)
+                throw new NotImplementedException();
+
+            //bool same = list1.Count == list2.Count && !list1.Except(list2).Any();
+            //&& this.secondarySigners == ((MultiAgentAuthenticator)other).secondarySigners
+
+            return (
+                this.sender.Equals(((MultiAgentAuthenticator)other).sender)
+                    && this.secondarySigners.Count == ((MultiAgentAuthenticator)other).secondarySigners.Count 
+                    && !this.secondarySigners.Except(((MultiAgentAuthenticator)other).secondarySigners).Any()
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 
@@ -198,9 +286,22 @@ namespace Aptos.Authenticator
             throw new System.NotImplementedException();
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
+
+        //public override bool Equals(object other)
+        //{
+        //    if (other is not MultiEd25519Authenticator)
+        //        throw new NotImplementedException();
+
+        //    return base.Equals(other);
+        //}
+
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
     }
 }
