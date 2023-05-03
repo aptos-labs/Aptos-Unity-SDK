@@ -1,5 +1,6 @@
 ﻿using Aptos.Accounts;
 using System;
+using System.Reflection;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -76,9 +77,22 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeU8((byte)this.chainId);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static RawTransaction Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            return new RawTransaction(
+                AccountAddress.Deserialize(deserializer),
+                (int)deserializer.DeserializeU64(),
+                TransactionPayload.Deserialize(deserializer),
+                (int)deserializer.DeserializeU64(),
+                (int)deserializer.DeserializeU64(),
+                deserializer.DeserializeU64(),
+                deserializer.DeserializeU8()
+            );
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 
@@ -150,6 +164,11 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotImplementedException();
         }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
+        }
     }
 
     /// <summary>
@@ -170,25 +189,15 @@ namespace Aptos.Utilities.BCS
         public TransactionPayload(ISerializable payload)
         {
             Type elementType = payload.GetType();
+
             if (elementType == typeof(Script))
-            {
                 this.variant = TypeTag.SCRIPT;
-            }
-
             else if (elementType == typeof(ModuleBundle))
-            {
                 this.variant = TypeTag.MODULE_BUNDLE;
-            }
-
             else if (elementType == typeof(EntryFunction))
-            {
                 this.variant = TypeTag.SCRIPT_FUNCTION;
-            }
-
             else
-            {
                 throw new Exception("Invalid type");
-            }
 
             this.value = payload;
         }
@@ -204,9 +213,26 @@ namespace Aptos.Utilities.BCS
             this.value.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static TransactionPayload Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            TypeTag variant = (TypeTag) deserializer.DeserializeUleb128();
+            ISerializable payload;
+
+            if(variant == TypeTag.SCRIPT)
+                payload = Script.Deserialize(deserializer);
+            else if(variant == TypeTag.MODULE_BUNDLE)
+                payload = ModuleBundle.Deserialize(deserializer);
+            else if(variant == TypeTag.SCRIPT_FUNCTION)
+                payload = EntryFunction.Deserialize(deserializer);
+            else
+                throw new Exception("Invalid type");
+
+            return new TransactionPayload(payload);
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 
@@ -225,9 +251,14 @@ namespace Aptos.Utilities.BCS
             throw new NotImplementedException();
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ISerializable Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 
@@ -247,11 +278,6 @@ namespace Aptos.Utilities.BCS
             this.scriptArgs = scriptArgs;
         }
 
-        public void Deserialize(Serialization serializer)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeBytes(this.code);
@@ -259,11 +285,20 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.scriptArgs);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        //TODO: Implement Script deserialization
+        public static Script Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            byte[] code = deserializer.ToBytes();
+            TagSequence typeArgs = deserializer.DeserializeTagSequence();
+            Sequence scriptArgs = deserializer.DeserializeScriptArgSequence();
+
+            return new Script(code, typeArgs, scriptArgs);
         }
 
+        public object GetValue()
+        {
+            throw new NotSupportedException();
+        }
     }
 
     /// <summary>
@@ -285,9 +320,9 @@ namespace Aptos.Utilities.BCS
         }
 
         TypeTag variant;
-        object value;
+        ISerializableTag value;
 
-        public ScriptArgument(TypeTag variant, object value)
+        public ScriptArgument(TypeTag variant, ISerializableTag value)
         {
             if (variant < 0 || variant > TypeTag.BOOL)
             {
@@ -298,33 +333,28 @@ namespace Aptos.Utilities.BCS
             this.value = value;
         }
 
-        public void Deserialize(Serialization serializer)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU8((byte)this.variant);
             if(this.variant == TypeTag.U8)
             {
-                serializer.SerializeU8((byte)this.value);
+                serializer.SerializeU8((byte)this.value.GetValue());
             }
             else if(this.variant == TypeTag.U16)
             {
-                serializer.SerializeU16((ushort)this.value);
+                serializer.SerializeU16((ushort)this.value.GetValue());
             }
             else if(this.variant == TypeTag.U32)
             {
-                serializer.SerializeU32((uint)this.value);
+                serializer.SerializeU32((uint)this.value.GetValue());
             }
             else if(this.variant == TypeTag.U64)
             {
-                serializer.SerializeU64(Convert.ToUInt64(this.value));
+                serializer.SerializeU64(Convert.ToUInt64(this.value.GetValue()));
             }
             else if(this.variant == TypeTag.U128)
             {
-                serializer.SerializeU128((System.Numerics.BigInteger)this.value);
+                serializer.SerializeU128((System.Numerics.BigInteger)this.value.GetValue());
             }
             // TODO: Inquire on C# U256 support
             //else if(this.variant == TypeTag.U256)
@@ -337,11 +367,11 @@ namespace Aptos.Utilities.BCS
             }
             else if(this.variant == TypeTag.U8_VECTOR)
             {
-                serializer.SerializeBytes((byte[])this.value);
+                serializer.SerializeBytes((byte[])this.value.GetValue());
             }
             else if(this.variant == TypeTag.BOOL)
             {
-                serializer.SerializeBool((bool)this.value);
+                serializer.SerializeBool((bool)this.value.GetValue());
             }
             else
             {
@@ -349,9 +379,61 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ScriptArgument Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            TypeTag variant = (TypeTag) deserializer.DeserializeU8();
+            ISerializableTag value;
+
+            if(variant == (int) TypeTag.U8)
+            {
+                value = new U8(deserializer.DeserializeU8());
+            }
+            // TODO: implement U16
+            //else if(variant == (int) TypeTag.U16)
+            //{
+            //    value = deserializer.DeserializeU16();
+            //}
+            else if(variant == TypeTag.U32)
+            {
+                value = new U32(deserializer.DeserializeU32());
+            }
+            else if(variant == TypeTag.U64)
+            {
+                value = new U64(deserializer.DeserializeU64());
+            }
+            else if(variant == TypeTag.U128)
+            {
+                value = new U128(deserializer.DeserializeU128());
+            }
+            // TODO: implement U256
+            //else if(variant == (int) TypeTag.U256)
+            //{
+            //    value = deserializer.DeserializeU256();
+            //}
+            else if (variant == TypeTag.ADDRESS)
+            {
+                value = AccountAddress.Deserialize(deserializer);
+            }
+            // TODO: Implement U8 Vector deserialization
+            //else if(variant == (int) TypeTag.U8_VECTOR)
+            //{
+
+            //}
+            else if(variant == TypeTag.BOOL)
+            {
+                value = new Bool(deserializer.DeserializeBool());
+            }
+            else
+            {
+                throw new Exception("Invalid variant");
+            }
+
+            return new ScriptArgument(variant, value);
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 
@@ -386,9 +468,20 @@ namespace Aptos.Utilities.BCS
             args.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        // TODO: implement Entry Function deserialization
+        public static EntryFunction Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            ModuleId module = ModuleId.Deserialize(deserializer);
+            string function = deserializer.DeserializeString();
+            TagSequence typeArgs = deserializer.DeserializeTagSequence();
+            Sequence args = Sequence.Deserialize(deserializer);
+
+            return new EntryFunction(module, function, typeArgs, args);
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 
@@ -413,9 +506,38 @@ namespace Aptos.Utilities.BCS
             serializer.SerializeString(this.name);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static ModuleId Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            AccountAddress addr = AccountAddress.Deserialize(deserializer);
+            string name = deserializer.DeserializeString();
+
+            return new ModuleId(addr, name);
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class TransactionArgument
+    {
+        ISerializable value;
+        Type encoderType;
+
+        public TransactionArgument(ISerializable value, Type encoderType)
+        {
+            this.value = value;
+            this.encoderType = encoderType;
+        }
+
+        public byte[] Encode()
+        {
+            Serialization ser = new Serialization();
+            ser.Serialize(value);
+            //MethodInfo method = encoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+            //ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { ser, this.value });
+            return ser.GetBytes();
         }
     }
 
@@ -471,9 +593,17 @@ namespace Aptos.Utilities.BCS
             this.authenticator.Serialize(serializer);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static SignedTransaction Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            RawTransaction transaction = RawTransaction.Deserialize(deserializer);
+            Authenticator.Authenticator authenticator = (Authenticator.Authenticator)Authenticator.Authenticator.Deserialize(deserializer);
+
+            return new SignedTransaction(transaction, authenticator);
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 }
