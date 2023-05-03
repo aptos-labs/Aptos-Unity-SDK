@@ -116,5 +116,15 @@ namespace Aptos.Accounts
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.ToString().Equals(((AccountAddress)obj).ToString());
+        }
+
+        public override int GetHashCode()
+        {
+            return this.AddressBytes.GetHashCode();
+        }
     }
 }
