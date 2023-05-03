@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -27,17 +28,53 @@ namespace Aptos.Utilities.BCS
     {
         public void Serialize(Serialization serializer);
 
-        //public static ISerializable Deserialize(Deserialization deserializer);
+        public static ISerializable Deserialize(Deserialization deserializer) => throw new NotImplementedException();
     }
 
     public interface ISerializableTag : ISerializable
     {
         public TypeTag Variant();
 
+        public object GetValue();
+
         public void SerializeTag(Serialization serializer)
         {
             //serializer.SerializeU32AsUleb128((uint)this.Variant());
             this.Serialize(serializer);
+        }
+
+        public static new ISerializableTag Deserialize(Deserialization deserializer) => throw new NotImplementedException();
+
+        public static ISerializableTag DeserializeTag(Deserialization deserializer)
+        {
+            TypeTag variant = (TypeTag) deserializer.DeserializeUleb128();
+
+            if (variant == TypeTag.BOOL)
+                return Bool.Deserialize(deserializer);
+            else if (variant == TypeTag.U8)
+                return U8.Deserialize(deserializer);
+            // TODO: Implement U16
+            //else if (variant == TypeTag.U16)
+            //    return U16.Deserialize(deserializer);
+            else if (variant == TypeTag.U32)
+                return U32.Deserialize(deserializer);
+            else if (variant == TypeTag.U64)
+                return U64.Deserialize(deserializer);
+            else if (variant == TypeTag.U128)
+                return U128.Deserialize(deserializer);
+            // TODO: Implement U256
+            //else if (variant == TypeTag.U256)
+            //    return U256.Deserialize(deserializer);
+            else if (variant == TypeTag.ACCOUNT_ADDRESS)
+                return AccountAddress.Deserialize(deserializer);
+            else if (variant == TypeTag.SIGNER)
+                throw new NotImplementedException();
+            else if (variant == TypeTag.VECTOR)
+                throw new NotImplementedException();
+            else if (variant == TypeTag.STRUCT)
+                return ISerializableTag.Deserialize(deserializer);
+
+            throw new NotImplementedException();
         }
     }
 
@@ -62,11 +99,18 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static TagSequence Deserialize(Deserialization deserializer)
         {
+            int length = deserializer.DeserializeUleb128();
+
+
             throw new NotImplementedException();
         }
 
+        public object GetValue()
+        {
+            return serializableTags;
+        }
     }
 
     /// <summary>
@@ -74,6 +118,15 @@ namespace Aptos.Utilities.BCS
     /// NOTE: Transaction Arguments have different types hence they cannot be represented using a regular list.
     /// NOTE: This class does not implement deserialization because the developer would know the types beforehand,
     /// and hence would apply the appropriate deserialization based on the type.
+    /// 
+    /// Fixed and Variable Length Sequences
+    /// Sequences can be made of up of any BCS supported types(even complex structures) 
+    /// but all elements in the sequence must be of the same type.If the length of a sequence 
+    /// is fixed and well known then BCS represents this as just the concatenation of the 
+    /// serialized form of each individual element in the sequence. If the length of the sequence 
+    /// can be variable, then the serialized sequence is length prefixed with a ULEB128-encoded unsigned integer 
+    /// indicating the number of elements in the sequence. All variable length sequences must 
+    /// be MAX_SEQUENCE_LENGTH elements long or less.
     /// </summary>
     public class Sequence : ISerializable
     {
@@ -87,7 +140,7 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable[] GetValues()
+        public object GetValue()
         {
             return values;
         }
@@ -124,6 +177,19 @@ namespace Aptos.Utilities.BCS
                 }
             }
         }
+
+        public static Sequence Deserialize(Deserialization deser)
+        {
+            int length = deser.DeserializeUleb128();
+            List<ISerializable> values = new List<ISerializable>();
+
+            while(values.Count < length)
+            {
+                values.Add(new Bytes(deser.ToBytes()));
+            }
+
+            return new Sequence(values.ToArray());
+        }
     }
 
     /// <summary>
@@ -151,6 +217,11 @@ namespace Aptos.Utilities.BCS
         {
             throw new NotImplementedException();
         }
+
+        public object GetValue()
+        {
+            return values;
+        }
     }
 
     /// <summary>
@@ -164,6 +235,12 @@ namespace Aptos.Utilities.BCS
         {
             this.value = value;
         }
+
+        public object GetValue()
+        {
+            return value;
+        }
+
         /// <summary>
         /// Maps (Key / Value Stores)
         /// Maps are represented as a variable-length, sorted sequence of(Key, Value) tuples.
@@ -257,7 +334,7 @@ namespace Aptos.Utilities.BCS
             return xml;
         }
 
-        public static ISerializable Deserialize(Deserialization deserializer)
+        public static BString Deserialize(Deserialization deserializer)
         {
             string deserStr = deserializer.DeserializeString();
             return new BString(deserStr);
@@ -282,6 +359,10 @@ namespace Aptos.Utilities.BCS
 
         public override int GetHashCode() => this.value.GetHashCode();
 
+        public object GetValue()
+        {
+            return value;
+        }
     }
 
     /// <summary>
@@ -301,9 +382,14 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(value);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public Bytes Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            return new Bytes(deserializer.ToBytes());
+        }
+
+        public object GetValue()
+        {
+            return value;
         }
     }
 
@@ -330,7 +416,7 @@ namespace Aptos.Utilities.BCS
             return ret;
         }
 
-        public static ISerializable Deserialize(Deserialization deserializer)
+        public static Bool Deserialize(Deserialization deserializer)
         {
             return new Bool(deserializer.DeserializeBool());
         }
@@ -358,6 +444,11 @@ namespace Aptos.Utilities.BCS
         }
 
         public override int GetHashCode() => this.value.GetHashCode();
+
+        public object GetValue()
+        {
+            return value;
+        }
     }
 
     /// <summary>
@@ -387,9 +478,14 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToInt32(data);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static U8 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
+        }
+
+        public object GetValue()
+        {
+            return value;
         }
     }
 
@@ -420,7 +516,7 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToUInt32(data);
         }
 
-        public static ISerializable Deserialize(Deserialization deserializer)
+        public static U32 Deserialize(Deserialization deserializer)
         {
             U32 val = new U32(deserializer.DeserializeU32());
             return val;
@@ -444,6 +540,11 @@ namespace Aptos.Utilities.BCS
         }
 
         public override int GetHashCode() => this.value.GetHashCode();
+
+        public object GetValue()
+        {
+            return value;
+        }
     }
 
     /// <summary>
@@ -473,9 +574,14 @@ namespace Aptos.Utilities.BCS
             return BitConverter.ToUInt64(data);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static U64 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
+        }
+
+        public object GetValue()
+        {
+            return value;
         }
     }
 
@@ -506,9 +612,14 @@ namespace Aptos.Utilities.BCS
             return new BigInteger(data);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static U128 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
+        }
+
+        public object GetValue()
+        {
+            return value;
         }
     }
 
@@ -591,9 +702,38 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public StructTag Deserialize(Deserialization deserializer, Type typeArgsDecoderType)
         {
-            throw new NotImplementedException();
+            int variant = deserializer.DeserializeUleb128();
+            AccountAddress address = AccountAddress.Deserialize(deserializer);
+            string module = deserializer.DeserializeString();
+            string name = deserializer.DeserializeString();
+
+            int length = deserializer.DeserializeUleb128();
+            List<ISerializableTag> typeArgsList = new List<ISerializableTag>();
+
+            while (typeArgsList.Count < length)
+            {
+                MethodInfo method = typeArgsDecoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+                ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
+                typeArgsList.Add(val);
+            }
+
+            ISerializableTag[] typeArgsArr = typeArgsList.ToArray();
+
+            StructTag structTag = new StructTag(
+                address,
+                module,
+                name,
+                typeArgsArr
+            );
+
+            return structTag;
+        }
+
+        public object GetValue()
+        {
+            throw new NotSupportedException();
         }
     }
 }
