@@ -42,8 +42,7 @@ namespace Aptos.Utilities.BCS
 
         public byte[] ToBytes()
         {
-            //return this.Read(this.DeserializeUleb128());
-            return this.Read((int)input.Length);
+            return this.Read(this.DeserializeUleb128());
         }
 
         public byte[] FixedBytes(int length)
@@ -96,15 +95,62 @@ namespace Aptos.Utilities.BCS
             return values.ToArray();
         }
 
+        public TagSequence DeserializeTagSequence()
+        {
+            int length = DeserializeUleb128();
+            List<ISerializableTag> values = new List<ISerializableTag>();
+
+            while (values.Count < length)
+            {
+                ISerializableTag val = ISerializableTag.Deserialize(this);
+                values.Add(val);
+            }
+
+            return new TagSequence(values.ToArray());
+        }
+
+        public Sequence DeserializeScriptArgSequence()
+        {
+            int length = DeserializeUleb128();
+            List<ScriptArgument> values = new List<ScriptArgument>();
+
+            while (values.Count < length)
+            {
+                ScriptArgument val = ScriptArgument.Deserialize(this);
+                values.Add(val);
+            }
+
+            return new Sequence(values.ToArray());
+        }
+
+        public TagSequence DeserializeArgSequence(Type valueDecoderType)
+        {
+            int length = DeserializeUleb128();
+            List<ISerializableTag> values = new List<ISerializableTag>();
+
+            while (values.Count < length)
+            {
+                MethodInfo method = valueDecoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+                ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
+                values.Add(val);
+            }
+
+            return new TagSequence(values.ToArray());
+        }
+
         public string DeserializeString()
         {
             return BString.Deserialize(this.Read(this.DeserializeUleb128()));
         }
 
-        public ISerializable Struct(ISerializable structObj )
+        //public ISerializable Struct(ISerializable structObj )
+        public ISerializable Struct(Type structType)
         {
-            //return structObj.Deserialize(this);
-            throw new NotImplementedException();
+            //Type structType = structObj.GetType();
+            MethodInfo method = structType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
+            ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
+
+            return val;
         }
 
         public byte DeserializeU8()
@@ -312,7 +358,7 @@ namespace Aptos.Utilities.BCS
         public Serialization Serialize(Sequence args)
         {
             SerializeU32AsUleb128((uint)args.Length);
-            foreach (ISerializable element in args.GetValues())
+            foreach (ISerializable element in (ISerializable[])args.GetValue())
             {
                 Serialization s = new Serialization();
                 element.Serialize(s);
