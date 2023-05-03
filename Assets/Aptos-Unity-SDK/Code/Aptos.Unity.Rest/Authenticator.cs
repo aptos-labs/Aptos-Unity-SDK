@@ -233,8 +233,8 @@ namespace Aptos.Authenticator
         public static MultiAgentAuthenticator Deserialize(Deserialization deserializer)
         {
             Authenticator sender = (Authenticator)Authenticator.Deserialize(deserializer);
-            AccountAddress[] secondaryAddresses = (AccountAddress[])deserializer.DeserializeSequence(typeof(AccountAddress));
-            Authenticator[] secondaryAuthenticator = (Authenticator[])deserializer.DeserializeSequence(typeof(Authenticator));
+            AccountAddress[] secondaryAddresses = deserializer.DeserializeSequence(typeof(AccountAddress)).Cast<AccountAddress>().ToArray();
+            Authenticator[] secondaryAuthenticator = deserializer.DeserializeSequence(typeof(Authenticator)).Cast<Authenticator>().ToArray();
 
             List<Tuple<AccountAddress, Authenticator>> secondarySigners = new List<Tuple<AccountAddress, Authenticator>>();
             for(int i = 0; i < secondaryAddresses.Length; i++)
@@ -250,13 +250,18 @@ namespace Aptos.Authenticator
             if (other is not MultiAgentAuthenticator)
                 throw new NotImplementedException();
 
-            //bool same = list1.Count == list2.Count && !list1.Except(list2).Any();
-            //&& this.secondarySigners == ((MultiAgentAuthenticator)other).secondarySigners
+            AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
+            Authenticator[] authenticators = secondarySigners.Select(signer => signer.Item2).ToArray();
+
+            AccountAddress[] otherSecondaryAddresses = ((MultiAgentAuthenticator)other).secondarySigners.Select(signer => signer.Item1).ToArray();
+            Authenticator[] otherAuthenticators = ((MultiAgentAuthenticator)other).secondarySigners.Select(signer => signer.Item2).ToArray();
 
             return (
                 this.sender.Equals(((MultiAgentAuthenticator)other).sender)
-                    && this.secondarySigners.Count == ((MultiAgentAuthenticator)other).secondarySigners.Count 
-                    && !this.secondarySigners.Except(((MultiAgentAuthenticator)other).secondarySigners).Any()
+                    && this.secondarySigners.Count == ((MultiAgentAuthenticator)other).secondarySigners.Count
+                    ////&& !this.secondarySigners.Except(((MultiAgentAuthenticator)other).secondarySigners).Any()
+                    && Enumerable.SequenceEqual(secondaryAddresses, otherSecondaryAddresses)
+                    && Enumerable.SequenceEqual(authenticators, otherAuthenticators)
             );
         }
 

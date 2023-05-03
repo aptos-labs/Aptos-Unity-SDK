@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using UnityEngine;
+using System.Linq;
 
 namespace Aptos.Unity.Test
 {
@@ -1220,6 +1221,20 @@ namespace Aptos.Unity.Test
             byte[] actualAuthenticator = ser.GetBytes();
             byte[] expectedAuthenticator = { 2, 0, 32, 185, 198, 238, 22, 48, 239, 62, 113, 17, 68, 166, 72, 219, 6, 187, 178, 40, 79, 114, 116, 207, 190, 229, 63, 252, 238, 80, 60, 193, 164, 146, 0, 64, 52, 62, 123, 16, 170, 50, 60, 72, 3, 145, 165, 215, 205, 45, 12, 247, 8, 213, 21, 41, 185, 107, 90, 43, 224, 140, 187, 54, 94, 79, 17, 220, 194, 207, 6, 85, 118, 108, 247, 13, 64, 133, 59, 156, 57, 91, 98, 218, 215, 169, 245, 142, 217, 152, 128, 61, 139, 241, 144, 27, 167, 167, 164, 1, 1, 45, 19, 61, 221, 40, 27, 182, 32, 85, 88, 53, 124, 198, 172, 117, 102, 24, 23, 233, 170, 234, 195, 175, 235, 195, 40, 66, 117, 156, 191, 127, 169, 1, 0, 32, 174, 243, 244, 164, 184, 236, 161, 223, 195, 67, 54, 27, 248, 228, 54, 189, 66, 222, 146, 89, 192, 75, 131, 20, 235, 142, 32, 84, 221, 110, 130, 171, 64, 138, 127, 6, 228, 4, 174, 141, 149, 53, 176, 203, 190, 175, 183, 201, 227, 78, 149, 254, 20, 37, 228, 82, 151, 88, 21, 10, 79, 124, 231, 166, 131, 53, 65, 72, 173, 92, 49, 62, 195, 101, 73, 227, 251, 41, 230, 105, 217, 0, 16, 249, 116, 103, 201, 7, 79, 240, 174, 195, 237, 135, 247, 102, 8 };
             Assert.AreEqual(expectedAuthenticator, actualAuthenticator, ToReadableByteArray(actualAuthenticator));
+
+            Deserialization deser = new Deserialization(actualAuthenticator);
+            Authenticator.Authenticator authenticatorDeserialized = (Authenticator.Authenticator)Authenticator.Authenticator.Deserialize(deser);
+            Assert.AreEqual(authenticator.GetVariant(), authenticatorDeserialized.GetVariant());
+
+            //string internals = ((Authenticator.MultiAgentAuthenticator) authenticator.GetAuthenticator()).sender.ToString() + " ::: " + ((Authenticator.MultiAgentAuthenticator) authenticatorDeserialized.GetAuthenticator()).sender.ToString();
+            List<Tuple<AccountAddress, Authenticator.Authenticator>> list1 = ((Authenticator.MultiAgentAuthenticator)authenticator.GetAuthenticator()).secondarySigners;
+            string result1 = string.Join(",", list1.Select(t => string.Format("[ '{0}', '{1}']", t.Item1, t.Item2)));
+
+            List<Tuple<AccountAddress, Authenticator.Authenticator>> list2 = ((Authenticator.MultiAgentAuthenticator)authenticatorDeserialized.GetAuthenticator()).secondarySigners;
+            string result2 = string.Join(",", list1.Select(t => string.Format("[ '{0}', '{1}']", t.Item1, t.Item2)));
+
+            Assert.AreEqual(authenticator, authenticatorDeserialized, result1 + "\n" + result2);
+
             #endregion
 
             SignedTransaction signedTransactionGenerated = new SignedTransaction(
