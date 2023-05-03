@@ -47,9 +47,14 @@ namespace Aptos.Accounts
             serializer.SerializeBytes(this._signatureBytes);
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        // TODO: Add test for Signature deserialization
+        public static Signature Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            byte[] sigBytes = deserializer.ToBytes();
+            if (sigBytes.Length != Signature.SignatureLength)
+                throw new Exception("Length mismatch");
+
+            return new Signature(sigBytes);
         }
 
         /// <inheritdoc cref="GetHashCode"/>
