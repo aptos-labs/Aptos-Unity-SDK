@@ -98,7 +98,8 @@ namespace Aptos.Unity.Test
             byte[] expected = new Serialization().SerializeBytes(value).GetBytes();
 
             byte[] actual = new Deserialization(expected).ToBytes();
-            Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
+            Assert.AreEqual(value.Length, actual.Length, "EXPECTED LENGHT: " + value.Length + " ACTUAL LENGHT: " + actual.Length);
+            Assert.AreEqual(value, actual, ToReadableByteArray(actual));
         }
 
         /// <summary>
