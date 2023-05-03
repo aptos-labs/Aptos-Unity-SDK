@@ -204,6 +204,22 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void PublicKeyDeserialization()
+        {
+            Serialization serializer = new Serialization();
+            PublicKey publicKey = new PublicKey(PublicKeyBytes);
+            publicKey.Serialize(serializer);
+            byte[] output = serializer.GetBytes();
+
+            Assert.AreEqual(output, PublicKeySerializedOutput);
+
+            Deserialization deserializer = new Deserialization(output);
+            PublicKey actualDeserialized = PublicKey.Deserialize(deserializer);
+
+            Assert.AreEqual(publicKey, actualDeserialized);
+        }
+
+        [Test]
         public void PrivateKeySerialization()
         {
             Serialization serializer = new Serialization();
