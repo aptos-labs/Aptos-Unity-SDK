@@ -352,7 +352,7 @@ namespace Aptos.Utilities.BCS
         }
 
         /// <summary>
-        /// Serialize a sequence.
+        /// Serialize a plain sequence as a list of bytes.
         /// </summary>
         /// <param name="args">The sequence to serialize.</param>
         /// <returns>The current Serialization object.</returns>
