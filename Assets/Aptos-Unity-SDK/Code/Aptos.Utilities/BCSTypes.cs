@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -112,6 +111,12 @@ namespace Aptos.Utilities.BCS
         {
             return serializableTags;
         }
+
+        public override bool Equals(object other)
+        {
+            TagSequence otherTagSeq = (TagSequence)other;
+            return Enumerable.SequenceEqual((ISerializableTag[])this.GetValue(), (ISerializableTag[])otherTagSeq.GetValue());
+        }
     }
 
     /// <summary>
@@ -184,12 +189,19 @@ namespace Aptos.Utilities.BCS
             int length = deser.DeserializeUleb128();
             List<ISerializable> values = new List<ISerializable>();
 
-            while(values.Count < length)
+            while (values.Count < length)
             {
                 values.Add(new Bytes(deser.ToBytes()));
             }
 
             return new Sequence(values.ToArray());
+        }
+
+        // TODO: FIX Sequence comparison
+        public override bool Equals(object other)
+        {
+            Sequence otherSeq = (Sequence)other;
+            return Enumerable.SequenceEqual(this.values, otherSeq.values);
         }
     }
 
@@ -214,14 +226,35 @@ namespace Aptos.Utilities.BCS
             }
         }
 
-        public ISerializable Deserialize(Deserialization deserializer)
+        public static BytesSequence Deserialize(Deserialization deserializer)
         {
-            throw new NotImplementedException();
+            int length = deserializer.DeserializeUleb128();
+            List<byte[]> bytesList = new List<byte[]>();
+
+            while(bytesList.Count < length)
+            {
+                byte[] bytes = deserializer.ToBytes();
+                bytesList.Add(bytes);
+            }
+
+            return new BytesSequence(bytesList.ToArray());
         }
 
         public object GetValue()
         {
             return values;
+        }
+
+        public override bool Equals(object other)
+        {
+            BytesSequence otherSeq = (BytesSequence)other;
+
+            bool equal = true;
+            for(int i = 0; i < this.values.Length; i++)
+            {
+                equal = equal && Enumerable.SequenceEqual(this.values[i], otherSeq.values[i]);
+            }
+            return equal;
         }
     }
 
@@ -371,16 +404,16 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class Bytes : ISerializable
     {
-        byte[] value;
+        byte[] values;
 
-        public Bytes(byte[] value)
+        public Bytes(byte[] values)
         {
-            this.value = value;
+            this.values = values;
         }
 
         public void Serialize(Serialization serializer)
         {
-            serializer.Serialize(value);
+            serializer.Serialize(values);
         }
 
         public Bytes Deserialize(Deserialization deserializer)
@@ -390,7 +423,15 @@ namespace Aptos.Utilities.BCS
 
         public object GetValue()
         {
-            return value;
+            return values;
+        }
+
+        public override bool Equals(object obj)
+        {
+            Bytes otherBytes = (Bytes)obj;
+            bool equal = Enumerable.SequenceEqual(this.values, otherBytes.values);
+
+            return equal;
         }
     }
 
@@ -736,6 +777,27 @@ namespace Aptos.Utilities.BCS
         public object GetValue()
         {
             throw new NotSupportedException();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not StructTag)
+                throw new NotImplementedException();
+
+            StructTag otherStructTag = (StructTag)other;
+
+            return (
+                this.address.Equals(otherStructTag.address)
+                && this.module.Equals(otherStructTag.module)
+                && this.name.Equals(otherStructTag.name)
+                && Enumerable.SequenceEqual(this.typeArgs, otherStructTag.typeArgs)
+            );;
+        }
+
+        // TODO: Implement StructTag ToString();
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }
