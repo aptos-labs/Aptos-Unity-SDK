@@ -1,6 +1,6 @@
 ﻿using Aptos.Accounts;
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -131,8 +131,7 @@ namespace Aptos.Utilities.BCS
                 this.expirationTimestampsSecs,
                 this.chainId);
 
-
-            return base.ToString();
+            return s;
         }
     }
 
@@ -282,7 +281,10 @@ namespace Aptos.Utilities.BCS
 
             TransactionPayload otherTxnPayload = (TransactionPayload)other;
 
-            return this.variant == otherTxnPayload.variant && this.value.Equals(otherTxnPayload.value);
+            bool variantComparison = this.variant == otherTxnPayload.variant;
+            bool txnPayload = this.value.Equals(otherTxnPayload.value);
+
+            return variantComparison && txnPayload;
         }
 
         public override string ToString()
@@ -550,9 +552,51 @@ namespace Aptos.Utilities.BCS
             this.args = args;
         }
 
+        public static string ToReadableByteArray(byte[] bytes)
+        {
+            return string.Join(", ", bytes);
+        }
+
+        /// <summary>
+        /// Converts a Sequence of ISerializable objects and converts it to a Sequence of Bytes objects
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="function"></param>
+        /// <param name="typeArgs"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static EntryFunction Natural(ModuleId module, string function, TagSequence typeArgs, Sequence args)
         {
-            return new EntryFunction(module, function, typeArgs, args);
+            // Encode all args in array of byte arrays
+            // See transaction.py `EntryFunction.natural(...)`
+            ISerializable[] value = (ISerializable[])args.GetValue();
+
+            List<ISerializable> valuesAsBytes = new List<ISerializable>();
+
+            foreach (ISerializable element in value)
+            {
+                Type elementType = element.GetType();
+                if (elementType == typeof(Sequence))
+                {
+                    Serialization seqSerializer = new Serialization();
+                    Sequence seq = (Sequence)element;
+                    seqSerializer.Serialize(seq);
+
+                    byte[] bytes = seqSerializer.GetBytes();
+                    valuesAsBytes.Add(new Bytes(bytes)); // Serialized into bytes
+                }
+                else // TODO: Explore this case
+                {
+                    Serialization s = new Serialization();
+                    element.Serialize(s);
+                    byte[] bytes = s.GetBytes();
+
+                    valuesAsBytes.Add(new Bytes(bytes)); // Serialized into bytes
+                }
+            }
+
+            Sequence seqBytes = new Sequence(valuesAsBytes.ToArray());
+            return new EntryFunction(module, function, typeArgs, seqBytes);
         }
 
         public void Serialize(Serialization serializer)
@@ -560,7 +604,7 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.module);
             serializer.SerializeString(this.function);
             serializer.Serialize(this.typeArgs);
-            args.Serialize(serializer);
+            serializer.Serialize(this.args);
         }
 
         // TODO: implement Entry Function deserialization
@@ -588,11 +632,15 @@ namespace Aptos.Utilities.BCS
 
             // TODO: Add TagSequence comparator
             // TODO: Add Sequence comparator
+            bool moduleComparison = this.module.Equals(otherEntryFunc.module);
+            bool entryFuncComparison = this.function.Equals(otherEntryFunc.function);
+            bool typeArgsComparison = this.typeArgs.Equals(otherEntryFunc.typeArgs);
+            bool argsComparison = this.args.Equals(otherEntryFunc.args);
             return (
-                this.module.Equals(otherEntryFunc.module)
-                && this.function.Equals(otherEntryFunc.function)
-                && this.typeArgs.Equals(otherEntryFunc.typeArgs)
-                && this.args.Equals(otherEntryFunc.args)
+                moduleComparison
+                && entryFuncComparison
+                && typeArgsComparison
+                && argsComparison
             );
         }
 
