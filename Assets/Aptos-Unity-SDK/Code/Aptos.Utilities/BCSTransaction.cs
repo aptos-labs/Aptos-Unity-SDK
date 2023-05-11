@@ -552,11 +552,6 @@ namespace Aptos.Utilities.BCS
             this.args = args;
         }
 
-        public static string ToReadableByteArray(byte[] bytes)
-        {
-            return string.Join(", ", bytes);
-        }
-
         /// <summary>
         /// Converts a Sequence of ISerializable objects and converts it to a Sequence of Bytes objects
         /// </summary>
@@ -730,7 +725,7 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class SignedTransaction : ISerializable
     {
-        RawTransaction transaction;
+        public RawTransaction transaction;
         Authenticator.Authenticator authenticator;
 
         public SignedTransaction(RawTransaction transaction, Authenticator.Authenticator authenticator)
