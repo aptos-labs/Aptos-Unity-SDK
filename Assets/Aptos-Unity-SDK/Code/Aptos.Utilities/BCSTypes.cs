@@ -836,10 +836,29 @@ namespace Aptos.Utilities.BCS
             return value;
         }
 
-        // TODO: Implement StructTag method FromStr
         public static StructTag FromStr(string typeTag)
         {
-            throw new NotImplementedException();
+            string name = string.Empty;
+            int index = 0;
+            while (index < typeTag.Length)
+            {
+                char letter = typeTag[index];
+                index += 1;
+
+                if (letter.Equals("<"))
+                    throw new NotImplementedException();
+                else
+                    name.Append(letter);
+            }
+
+            string[] split = name.Split("::");
+
+            return new StructTag(
+                AccountAddress.FromHex(split[0]), 
+                split[1], 
+                split[2], 
+                new ISerializableTag[] { }
+            );
         }
 
         public override int GetHashCode()
