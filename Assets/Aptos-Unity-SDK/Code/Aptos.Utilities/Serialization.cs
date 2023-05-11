@@ -95,7 +95,6 @@ namespace Aptos.Utilities.BCS
             return values.ToArray();
         }
 
-        // TODO: FIX implementation. It read too many bytes
         public TagSequence DeserializeTagSequence()
         {
             int length = DeserializeUleb128();

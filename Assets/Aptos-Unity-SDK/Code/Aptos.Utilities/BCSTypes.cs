@@ -20,7 +20,7 @@ namespace Aptos.Utilities.BCS
         VECTOR, // int = 6
         STRUCT, // int = 7
         U16,
-        U32, // TODO: INSPECT WHERE TypeTag enum is leveraged, moving it here because it offset the numbering
+        U32,
         U256
     }
 

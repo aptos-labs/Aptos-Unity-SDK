@@ -662,8 +662,6 @@ namespace Aptos.Utilities.BCS
 
             EntryFunction otherEntryFunc = (EntryFunction)other;
 
-            // TODO: Add TagSequence comparator
-            // TODO: Add Sequence comparator
             bool moduleComparison = this.module.Equals(otherEntryFunc.module);
             bool entryFuncComparison = this.function.Equals(otherEntryFunc.function);
             bool typeArgsComparison = this.typeArgs.Equals(otherEntryFunc.typeArgs);
