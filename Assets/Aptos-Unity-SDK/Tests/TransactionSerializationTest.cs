@@ -579,6 +579,14 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void StructTagFromString()
+        {
+            StructTag expectedStructTag = new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0]);
+            StructTag actualStructTag = StructTag.FromStr("0x1::aptos_coin::AptosCoin");
+            Assert.AreEqual(expectedStructTag, actualStructTag);
+        }
+
+        [Test]
         public void SerializeTagSequence()
         {
             TagSequence typeTags = new TagSequence(
