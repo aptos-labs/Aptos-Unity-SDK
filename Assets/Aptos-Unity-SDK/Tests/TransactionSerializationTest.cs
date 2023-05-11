@@ -1011,8 +1011,8 @@ namespace Aptos.Unity.Test
             bool verifySenderSignature = rawTransactionGenerated.Verify(senderPublicKey, senderSignature);
             Assert.IsTrue(verifySenderSignature);
 
-            Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
-                new Authenticator.Ed25519Authenticator(
+            Authenticator authenticator = new Authenticator(
+                new Ed25519Authenticator(
                     senderPublicKey, senderSignature
                 )
             );
@@ -1026,7 +1026,7 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual));
 
             Deserialization deser = new Deserialization(actual);
-            Authenticator.Authenticator authenticatorDeserialized = (Authenticator.Authenticator)Authenticator.Authenticator.Deserialize(deser);
+            Authenticator authenticatorDeserialized = (Authenticator)Authenticator.Deserialize(deser);
 
             Assert.AreEqual(authenticator.GetVariant(), authenticatorDeserialized.GetVariant());
 
@@ -1202,9 +1202,9 @@ namespace Aptos.Unity.Test
             Assert.IsTrue(verifyRecieverSignature);
 
             // Test ED25519 Authenticator for sender
-            Authenticator.Authenticator ed25519AuthSender =
-                new Authenticator.Authenticator(
-                        new Authenticator.Ed25519Authenticator(
+            Authenticator ed25519AuthSender =
+                new Authenticator(
+                        new Ed25519Authenticator(
                             senderPublicKey, senderSignature
                         )
                 );
@@ -1218,9 +1218,9 @@ namespace Aptos.Unity.Test
             #endregion
 
             // Test ED25519 Authenticator for receiver          
-            Authenticator.Authenticator ed25519AuthReceiver = 
-                new Authenticator.Authenticator(
-                    new Authenticator.Ed25519Authenticator(
+            Authenticator ed25519AuthReceiver = 
+                new Authenticator(
+                    new Ed25519Authenticator(
                         receiverPublicKey, receiverSignature
                     )
             );
@@ -1233,16 +1233,16 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expectedEd25519AuthReceiver, actualEd25519AuthReceiver, ToReadableByteArray(actualEd25519AuthReceiver));
             #endregion
 
-            List<Tuple<AccountAddress, Authenticator.Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator.Authenticator>>();
+            List<Tuple<AccountAddress, Authenticator>> secondarySignersTup = new List<Tuple<AccountAddress, Authenticator>>();
             secondarySignersTup.Add(
-                new Tuple<AccountAddress, Authenticator.Authenticator>(
+                new Tuple<AccountAddress, Authenticator>(
                     receiverAccountAddress,
                     ed25519AuthReceiver
                 )
             );
 
-            Authenticator.MultiAgentAuthenticator multiAgentAuthenticator = 
-                new Authenticator.MultiAgentAuthenticator(
+            MultiAgentAuthenticator multiAgentAuthenticator = 
+                new MultiAgentAuthenticator(
                     ed25519AuthSender,
                     secondarySignersTup
                 );
@@ -1256,7 +1256,7 @@ namespace Aptos.Unity.Test
             #endregion
 
             // Test full MultiAgentAuthenticator serialization
-            Authenticator.Authenticator authenticator = new Authenticator.Authenticator(
+            Authenticator authenticator = new Authenticator(
                 multiAgentAuthenticator
             );
 
@@ -1268,7 +1268,7 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expectedAuthenticator, actualAuthenticator, ToReadableByteArray(actualAuthenticator));
 
             Deserialization deser = new Deserialization(actualAuthenticator);
-            Authenticator.Authenticator authenticatorDeserialized = (Authenticator.Authenticator)Authenticator.Authenticator.Deserialize(deser);
+            Authenticator authenticatorDeserialized = (Authenticator)Authenticator.Deserialize(deser);
             Assert.AreEqual(authenticator.GetVariant(), authenticatorDeserialized.GetVariant());
 
             //string internals = ((Authenticator.MultiAgentAuthenticator) authenticator.GetAuthenticator()).sender.ToString() + " ::: " + ((Authenticator.MultiAgentAuthenticator) authenticatorDeserialized.GetAuthenticator()).sender.ToString();

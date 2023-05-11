@@ -755,9 +755,9 @@ namespace Aptos.BCS
     public class SignedTransaction : ISerializable
     {
         public RawTransaction transaction;
-        Authenticator.Authenticator authenticator;
+        Authenticator authenticator;
 
-        public SignedTransaction(RawTransaction transaction, Authenticator.Authenticator authenticator)
+        public SignedTransaction(RawTransaction transaction, Authenticator authenticator)
         {
             this.transaction = transaction;
             this.authenticator = authenticator;
@@ -775,9 +775,9 @@ namespace Aptos.BCS
             byte[] keyed;
 
             Type elementType = this.authenticator.GetAuthenticator().GetType();
-            if (elementType == typeof(Authenticator.MultiAgentAuthenticator))
+            if (elementType == typeof(MultiAgentAuthenticator))
             {
-                Authenticator.MultiAgentAuthenticator authenticator = (Authenticator.MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
+                MultiAgentAuthenticator authenticator = (MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
                 
                 MultiAgentRawTransaction transaction = new MultiAgentRawTransaction(
                     this.transaction, authenticator.SecondaryAddresses()
@@ -802,7 +802,7 @@ namespace Aptos.BCS
         public static SignedTransaction Deserialize(Deserialization deserializer)
         {
             RawTransaction transaction = RawTransaction.Deserialize(deserializer);
-            Authenticator.Authenticator authenticator = (Authenticator.Authenticator)Authenticator.Authenticator.Deserialize(deserializer);
+            Authenticator authenticator = (Authenticator) Authenticator.Deserialize(deserializer);
             return new SignedTransaction(transaction, authenticator);
         }
 

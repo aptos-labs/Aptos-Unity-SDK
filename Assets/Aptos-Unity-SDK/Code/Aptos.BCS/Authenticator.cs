@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Aptos.Authenticator
+namespace Aptos.BCS
 {
     /// <summary>
     /// Each transaction submitted to the Aptos blockchain contains a `TransactionAuthenticator`.
