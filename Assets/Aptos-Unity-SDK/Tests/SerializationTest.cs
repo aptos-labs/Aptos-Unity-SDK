@@ -392,7 +392,7 @@ namespace Aptos.Unity.Test
             Deserialization deser = new Deserialization(bytes);
             BCSMap actualBcsMap = deser.DeserializeMap(typeof(BString), typeof(U32));
 
-            Dictionary<BString, ISerializable> res = actualBcsMap.value;
+            Dictionary<BString, ISerializable> res = actualBcsMap.values;
             var lines = res.Select(kvp => kvp.Key.value + ": " + kvp.Value.ToString());
             string keysStr = string.Join(Environment.NewLine, lines);
 
