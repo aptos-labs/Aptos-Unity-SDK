@@ -749,6 +749,12 @@ namespace Aptos.Utilities.BCS
             );
         }
 
+        // TODO: Implement ModuleId FromStr method
+        public static ModuleId FromStr(string moduleId)
+        {
+            throw new NotImplementedException();
+        }
+
         public override int GetHashCode()
         {
             int hash = 17;
