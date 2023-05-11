@@ -58,7 +58,11 @@ namespace Aptos.HdWallet.Utils
             addressHex = addressHex.Replace("-", "").ToLowerInvariant(); // Remove '-' characters from hexa hash
             //return "0x" + addressHex;
             return addressHex;
+        }
 
+        public static string ByteArrayToReadableString(this byte[] input)
+        {
+            return string.Join(", ", input);
         }
 
         /// <summary>
