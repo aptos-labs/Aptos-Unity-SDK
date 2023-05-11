@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using UnityEngine;
 
 namespace Aptos.Utilities.BCS
 {
@@ -838,7 +839,7 @@ namespace Aptos.Utilities.BCS
 
         public static StructTag FromStr(string typeTag)
         {
-            string name = string.Empty;
+            string name = "";
             int index = 0;
             while (index < typeTag.Length)
             {
@@ -848,11 +849,10 @@ namespace Aptos.Utilities.BCS
                 if (letter.Equals("<"))
                     throw new NotImplementedException();
                 else
-                    name.Append(letter);
+                    name += letter;
             }
 
             string[] split = name.Split("::");
-
             return new StructTag(
                 AccountAddress.FromHex(split[0]), 
                 split[1], 
