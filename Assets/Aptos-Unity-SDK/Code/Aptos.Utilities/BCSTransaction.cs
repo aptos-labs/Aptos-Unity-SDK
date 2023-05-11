@@ -706,7 +706,6 @@ namespace Aptos.Utilities.BCS
 
         public ModuleId(AccountAddress address, string name)
         {
-            // TODO: assert on length of an address- and make it it's own type
             this.address = address;
             this.name = name;
         }
