@@ -21,14 +21,14 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTrue()
+        public void BoolTrueSerialize()
         {
             byte[] res = new Serialization().SerializeBool(true).GetBytes();
             Assert.AreEqual(new byte[] { 1 }, res);
         }
 
         [Test]
-        public void DeserializeBoolTrue()
+        public void BoolTrueDeserialize()
         {
             bool actual = true;
             byte[] res = new Serialization().SerializeBool(actual).GetBytes();
@@ -47,14 +47,14 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeFalse()
+        public void BoolFalseSerialize()
         {
             byte[] res = new Serialization().SerializeBool(false).GetBytes();
             Assert.AreEqual(new byte[] { 0 }, res);
         }
 
         [Test]
-        public void DeserializeBoolFalse()
+        public void BoolFalseDeserialize()
         {
             bool expected = false;
             byte[] res = new Serialization().SerializeBool(expected).GetBytes();
@@ -83,7 +83,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeBytes()
+        public void ByteArraySerialize()
         {
             byte[] value = Encoding.UTF8.GetBytes("1234567890");
             byte[] actual = new Serialization().SerializeBytes(value).GetBytes();
@@ -92,7 +92,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeBytes()
+        public void ByteArrayDeserialize()
         {
             byte[] value = Encoding.UTF8.GetBytes("1234567890");
             byte[] expected = new Serialization().SerializeBytes(value).GetBytes();
@@ -112,14 +112,14 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeU8()
+        public void U8Serialize()
         {
             byte[] res = new Serialization().SerializeU8(123).GetBytes();
             Assert.AreEqual(new byte[] { 123 }, res);
         }
 
         [Test]
-        public void DeserializeU8()
+        public void U8Deserialize()
         {
             byte expected = 123;
             byte[] bytes = new Serialization().SerializeU8(expected).GetBytes(); // { 123}
@@ -139,14 +139,14 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeU32()
+        public void U32Serialize()
         {
             byte[] res = new Serialization().SerializeU32(57615782).GetBytes();
             Assert.AreEqual(new byte[] { 166, 37, 111, 3 }, res);
         }
 
         [Test]
-        public void DeserializeU32()
+        public void U32Deserialize()
         {
             uint expected = 57615782;
             byte[] bytes = new Serialization().SerializeU32(expected).GetBytes();
@@ -166,14 +166,14 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeU64()
+        public void U64Serialize()
         {
             byte[] res = new Serialization().SerializeU64(9432012321182).GetBytes();
             Assert.AreEqual(new byte[] { 158, 113, 190, 15, 148, 8, 0, 0 }, res);
         }
 
         [Test]
-        public void DeserializeU64()
+        public void U64Deserialize()
         {
             ulong expected = 9432012321182;
             byte[] bytes = new Serialization().SerializeU64(expected).GetBytes();
@@ -198,7 +198,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeU128()
+        public void U128Serialize()
         {
             byte[] res = new Serialization().SerializeU128(BigInteger.Parse("10")).GetBytes();
             Assert.AreEqual(new byte[] { 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, res);
@@ -208,7 +208,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeU128()
+        public void U128Deserialize()
         {
             BigInteger expected = BigInteger.Parse("10");
             byte[] bytes = new Serialization().SerializeU128(expected).GetBytes();
@@ -235,7 +235,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeU32AsUleb128()
+        public void U32AsUleb128Serialize()
         {
             byte[] res = new Serialization().SerializeU32AsUleb128(1160).GetBytes();
             Assert.AreEqual(new byte[] { 136, 9 }, res);
@@ -247,7 +247,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeU32AsUleb128()
+        public void U32AsUleb128Deserialize()
         {
             uint expected = 1160;
             byte[] bytes = new Serialization().SerializeU32AsUleb128(expected).GetBytes();
@@ -267,7 +267,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeString()
+        public void StringSerialize()
         {
             byte[] res = new Serialization().SerializeString("potato UTF8: 🥔").GetBytes();
             byte[] exp = new byte[] { 17, 112, 111, 116, 97, 116, 111, 32, 85, 84, 70, 56, 58, 32, 240, 159, 165, 148 };
@@ -275,7 +275,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeString()
+        public void StringDeserialize()
         {
             string expected = "potato UTF8: 🥔";
             byte[] bytes = new Serialization().SerializeString(expected).GetBytes();
@@ -294,7 +294,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeStringLong()
+        public void StringLongSerialize()
         {
             byte[] res = new Serialization().SerializeString(
                 "potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔"
@@ -337,7 +337,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeStringLong()
+        public void StringLongDeserialize()
         {
             string expected = "potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔 potato UTF8: 🥔";
             byte[] bytes = new Serialization().SerializeString(expected).GetBytes();
@@ -356,7 +356,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMap()
+        public void Map_BString_U32_Serialize()
         {
             Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("a"), new U32(12345));
@@ -375,7 +375,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeMap()
+        public void Map_BString_U32_Deserialize()
         {
             Dictionary<BString, ISerializable> expectedMap = new Dictionary<BString, ISerializable>();
             expectedMap.Add(new BString("x"), new U32(12345));
@@ -427,7 +427,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapOfStringToU32_One()
+        public void Map_BString_U32_Serialize_1()
         {
             Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("x"), new U32(12345));
@@ -456,7 +456,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapStringToU32_Two()
+        public void Map_BString_U32_Serialize_2()
         {
             Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("b"), new U32(12345));
@@ -485,7 +485,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapStringToU32_Three()
+        public void Map_BString_U32_Serialize_3()
         {
             Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("b"), new U32(99234));
@@ -514,7 +514,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMapStringToString()
+        public void Map_BString_BString_Serialize()
         {
             Dictionary<BString, ISerializable> map = new Dictionary<BString, ISerializable>();
             map.Add(new BString("a"), new BString("a"));
@@ -542,7 +542,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeEmptyStringBytes()
+        public void StringBytesEmptySerialize()
         {
             byte[] value = new byte[1160]; // empty byte string of size 1160
 
@@ -569,7 +569,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeMultipleValues()
+        public void MultipleValues_Serialize()
         {
             Serialization serializer = new Serialization();
             serializer.Serialize("potato");
@@ -595,7 +595,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeEmptyTransactionArgumentSequenceOfString()
+        public void SequenceBStringEmptySerialize()
         {
             Serialization ser = new Serialization();
             BString[] strArr = { new BString("") };
@@ -609,7 +609,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializeListOfBCSStrings()
+        public void SequenceBStringLongDeserialize()
         {
             Serialization ser = new Serialization();
             BString[] expectedStrArr = { new BString("a"), new BString("abc"), new BString("def"), new BString("ghi") };
@@ -639,7 +639,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeStringSequence()
+        public void SequenceBStringSerialize()
         {
             BString[] inValue = { new BString("a"), new BString("abc"), new BString("def"), new BString("ghi") };
             Serialization ser = new Serialization();
@@ -680,7 +680,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializerBoolSequence()
+        public void SequenceBoolSerialize()
         {
             Bool[] inValue = { new Bool(false), new Bool(true), new Bool(false) };
             Serialization ser = new Serialization();
@@ -693,7 +693,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void DeserializerBoolSequence()
+        public void SequenceBoolDeserializer()
         {
             Bool[] expectedBoolArr = { new Bool(false), new Bool(true), new Bool(false) };
             Serialization ser = new Serialization();
