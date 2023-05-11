@@ -1,6 +1,7 @@
 ﻿using Aptos.Accounts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Aptos.Utilities.BCS
@@ -363,7 +364,7 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.scriptArgs);
         }
 
-        //TODO: Implement Script deserialization
+        //TODO: Implement Script deserialization 
         public static Script Deserialize(Deserialization deserializer)
         {
             byte[] code = deserializer.ToBytes();
@@ -384,16 +385,13 @@ namespace Aptos.Utilities.BCS
                 throw new NotImplementedException();
 
             Script otherScript = (Script)other;
-
-            // TODO: Fix comparisons in Script Equals operator
             return (
-                this.code == otherScript.code
-                && this.typeArgs == otherScript.typeArgs
-                && this.scriptArgs == otherScript.scriptArgs
+                Enumerable.SequenceEqual(this.code, otherScript.code)
+                && this.typeArgs.Equals(otherScript.typeArgs)
+                && this.scriptArgs.Equals(otherScript.scriptArgs)
             );
         }
 
-        //  TODO: Implement Script ToString
         public override string ToString()
         {
             return string.Format(
@@ -555,10 +553,9 @@ namespace Aptos.Utilities.BCS
 
             ScriptArgument otherScriptArg = (ScriptArgument)other;
 
-            // TODO: Check comparator and Equals operator for ISerializableTag(s)
             return (
                 this.variant == otherScriptArg.variant
-                && this.value == otherScriptArg.value
+                && this.value.Equals(otherScriptArg.value)
             );
         }
 
@@ -644,7 +641,6 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.args);
         }
 
-        // TODO: implement Entry Function deserialization
         public static EntryFunction Deserialize(Deserialization deserializer)
         {
             ModuleId module = ModuleId.Deserialize(deserializer);
@@ -681,8 +677,6 @@ namespace Aptos.Utilities.BCS
             );
         }
 
-        // TODO: Add TagSequence ToString
-        // TODO: Add Sequence ToString
         public override string ToString()
         {
             return String.Format(
