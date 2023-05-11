@@ -427,16 +427,14 @@ namespace Aptos.Utilities.BCS
             return value;
         }
 
-        public override bool Equals(object obj) => this.Equals(obj as BString);
-
-        public bool Equals(BString other)
+        public override bool Equals(object other)
         {
-            if (other is null)
-            {
-                return false;
-            }
+            if (other is not BString)
+                throw new NotImplementedException();
 
-            return this.value.Equals(other.value);
+            BString otherBString = (BString)other;
+
+            return this.value == otherBString.value;
         }
 
         public override int GetHashCode() => this.value.GetHashCode();
@@ -474,9 +472,12 @@ namespace Aptos.Utilities.BCS
             return values;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            Bytes otherBytes = (Bytes)obj;
+            if (other is not Bytes)
+                throw new NotImplementedException();
+
+            Bytes otherBytes = (Bytes)other;
             bool equal = Enumerable.SequenceEqual(this.values, otherBytes.values);
 
             return equal;
@@ -488,6 +489,11 @@ namespace Aptos.Utilities.BCS
             foreach (byte value in values)
                 result.Append(value.ToString());
             return result.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 
@@ -529,17 +535,16 @@ namespace Aptos.Utilities.BCS
             return value.ToString();
         }
 
-        public override bool Equals(object obj) => this.Equals(obj as Bool);
-
-        public bool Equals(Bool other)
+        public override bool Equals(object other)
         {
-            if (other is null)
-            {
-                return false;
-            }
+            if (other is not Bool)
+                throw new NotImplementedException();
 
-            return this.value == other.value;
+            Bool otherBool = (Bool)other;
+
+            return this.value == otherBool.value;
         }
+
 
         public override int GetHashCode() => this.value.GetHashCode();
 
@@ -585,6 +590,26 @@ namespace Aptos.Utilities.BCS
         {
             return value;
         }
+
+        public override string ToString()
+        {
+            return this.value.ToString();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not U8)
+                throw new NotImplementedException();
+
+            U8 otherU8 = (U8)other;
+
+            return this.value == otherU8.value;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     /// <summary>
@@ -625,16 +650,14 @@ namespace Aptos.Utilities.BCS
             return value.ToString();
         }
 
-        public override bool Equals(object obj) => this.Equals(obj as U32);
-
-        public bool Equals(U32 other)
+        public override bool Equals(object other)
         {
-            if (other is null)
-            {
-                return false;
-            }
+            if (other is not U32)
+                throw new NotImplementedException();
 
-            return this.value == other.value;
+            U32 otherU8 = (U32)other;
+
+            return this.value == otherU8.value;
         }
 
         public override int GetHashCode() => this.value.GetHashCode();
@@ -733,6 +756,26 @@ namespace Aptos.Utilities.BCS
         public object GetValue()
         {
             return value;
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not U128)
+                throw new NotImplementedException();
+
+            U128 otherU128 = (U128)other;
+
+            return this.value == otherU128.value;
+        }
+
+        public override string ToString()
+        {
+            return this.value.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 
