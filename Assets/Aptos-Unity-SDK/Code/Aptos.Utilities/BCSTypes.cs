@@ -753,49 +753,6 @@ namespace Aptos.Utilities.BCS
     }
 
     /// <summary>
-    /// Representation of an account address.
-    /// </summary>
-    //public class AccountAddress : ISerializableTag
-    //{
-    //    byte[] value;
-
-    //    public AccountAddress(byte[] value)
-    //    {
-    //        this.value = value;
-    //    }
-
-    //    public AccountAddress(string address)
-    //    {
-    //        byte[] addressBytes = BigInteger
-    //            .Parse("00" + address.Replace("0x", ""), System.Globalization.NumberStyles.HexNumber).ToByteArray()
-    //            .Reverse().ToArray();
-    //        this.value = new byte[32];
-    //        Array.Copy(addressBytes, 0, this.value, 32 - addressBytes.Length, addressBytes.Length);
-    //        // left the bytezz array with 0's to make it 32 bytes long
-    //        // TODO: Fix this account for padding
-    //        //Array.Copy(addressBytes, 0, this.value, 0, addressBytes.Length)
-    //    }
-
-    //    public String ToHex()
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        foreach (byte b in this.value)
-    //            sb.Append(b.ToString("X2"));
-    //        return "0x" + sb.ToString();
-    //    }
-
-    //    public TypeTag Variant()
-    //    {
-    //        return TypeTag.ACCOUNT_ADDRESS;
-    //    }
-
-    //    public void Serialize(Serialization serializer)
-    //    {
-    //        serializer.WriteBytes(value);
-    //    }
-    //}
-
-    /// <summary>
     /// Representation of a struct tag.
     /// </summary>
     public class StructTag : ISerializableTag
