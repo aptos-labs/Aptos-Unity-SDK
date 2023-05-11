@@ -104,8 +104,15 @@ namespace Aptos.Utilities.BCS
         {
             int length = deserializer.DeserializeUleb128();
 
+            List <ISerializableTag> values = new List<ISerializableTag>();
 
-            throw new NotImplementedException();
+            while (values.Count < length)
+            {
+                ISerializableTag tag = ISerializableTag.DeserializeTag(deserializer);
+                values.Add(tag);
+            }
+
+            return new TagSequence(values.ToArray());
         }
 
         public object GetValue()

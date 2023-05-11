@@ -565,6 +565,24 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(expected, actual, ToReadableByteArray(actual) + "\n" + ToReadableByteArray(expected));
         }
 
+        [Test]
+        public void SerializeTagSequence()
+        {
+            TagSequence typeTags = new TagSequence(
+                new ISerializableTag[] {
+                    new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0])
+                }
+            );
+
+            Serialization ser = new Serialization();
+            typeTags.Serialize(ser);
+            byte[] typeTagsBytes = ser.GetBytes();
+
+            Deserialization deser = new Deserialization(typeTagsBytes);
+            TagSequence actualTagSeq = TagSequence.Deserialize(deser);
+            Assert.AreEqual(typeTags, actualTagSeq);
+        }
+
         /// <summary>
         /// addr = AccountAddress.from_hex("0x1")
         /// mid = ModuleId(addr, "coin")

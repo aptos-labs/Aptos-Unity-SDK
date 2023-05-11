@@ -364,7 +364,6 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.scriptArgs);
         }
 
-        //TODO: Implement Script deserialization 
         public static Script Deserialize(Deserialization deserializer)
         {
             byte[] code = deserializer.ToBytes();
