@@ -39,7 +39,6 @@ namespace Aptos.Utilities.BCS
 
         public void SerializeTag(Serialization serializer)
         {
-            //serializer.SerializeU32AsUleb128((uint)this.Variant());
             this.Serialize(serializer);
         }
 
@@ -136,6 +135,11 @@ namespace Aptos.Utilities.BCS
 
             return result.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     /// <summary>
@@ -226,10 +230,7 @@ namespace Aptos.Utilities.BCS
         {
             StringBuilder result = new StringBuilder();
             foreach (var value in values)
-            {
                 result.Append(value.ToString());
-            }
-
             return result.ToString();
         }
 
@@ -255,9 +256,7 @@ namespace Aptos.Utilities.BCS
         {
             serializer.SerializeU32AsUleb128((uint)this.values.Length);
             foreach (byte[] element in this.values)
-            {
                 serializer.SerializeBytes(element);
-            }
         }
 
         public static BytesSequence Deserialize(Deserialization deserializer)
@@ -285,9 +284,7 @@ namespace Aptos.Utilities.BCS
 
             bool equal = true;
             for(int i = 0; i < this.values.Length; i++)
-            {
                 equal = equal && Enumerable.SequenceEqual(this.values[i], otherSeq.values[i]);
-            }
             return equal;
         }
 
@@ -300,10 +297,7 @@ namespace Aptos.Utilities.BCS
         {
             StringBuilder result = new StringBuilder();
             foreach (byte[] value in values)
-            {
                 result.Append(value.ByteArrayToReadableString());
-            }
-
             return result.ToString();
         }
     }
@@ -366,10 +360,7 @@ namespace Aptos.Utilities.BCS
         {
             StringBuilder result = new StringBuilder();
             foreach (KeyValuePair<BString, ISerializable> entry in values)
-            {
                 result.Append("(" + entry.Key.ToString() + ", " + entry.Value.ToString() + ")");
-            }
-
             return result.ToString();
         }
     }
@@ -393,11 +384,6 @@ namespace Aptos.Utilities.BCS
 
         public static string Deserialize(byte[] data)
         {
-            //byte[] cleanData = RemoveBOM(data);
-            ////return (new UTF8Encoding(false)).GetString(cleanData);
-            //string cleanedString = RemoveBOM(Encoding.UTF8.GetString(cleanData));
-            //return RemoveBOM(cleanedString);
-
             return Encoding.UTF8.GetString(data);
         }
 
@@ -499,10 +485,7 @@ namespace Aptos.Utilities.BCS
         {
             StringBuilder result = new StringBuilder();
             foreach (byte value in values)
-            {
                 result.Append(value.ToString());
-            }
-
             return result.ToString();
         }
     }
@@ -782,15 +765,13 @@ namespace Aptos.Utilities.BCS
             serializer.Serialize(this.module);
             serializer.Serialize(this.name);
             serializer.SerializeU32AsUleb128((uint)this.typeArgs.Length);
+
             for (int i = 0; i < this.typeArgs.Length; i++)
-            {
                 this.typeArgs[i].Serialize(serializer);
-            }
         }
 
         public static StructTag Deserialize(Deserialization deserializer)
         {
-            //int variant = deserializer.DeserializeUleb128();
             AccountAddress address = AccountAddress.Deserialize(deserializer);
             string module = deserializer.DeserializeString();
             string name = deserializer.DeserializeString();
@@ -800,8 +781,6 @@ namespace Aptos.Utilities.BCS
 
             while (typeArgsList.Count < length)
             {
-                //MethodInfo method = typeArgsDecoderType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
-                //ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
                 ISerializableTag val = ISerializableTag.DeserializeTag(deserializer);
                 typeArgsList.Add(val);
             }
@@ -851,9 +830,7 @@ namespace Aptos.Utilities.BCS
             {
                 value += string.Format("<{0}", this.typeArgs[0].ToString());
                 foreach(ISerializableTag typeArg in this.typeArgs[1..])
-                {
                     value += string.Format(", {0}", typeArg.ToString());
-                }
                 value += ">";
             }
             return value;

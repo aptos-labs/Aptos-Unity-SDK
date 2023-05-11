@@ -259,7 +259,6 @@ namespace Aptos.Authenticator
             return (
                 this.sender.Equals(((MultiAgentAuthenticator)other).sender)
                     && this.secondarySigners.Count == ((MultiAgentAuthenticator)other).secondarySigners.Count
-                    ////&& !this.secondarySigners.Except(((MultiAgentAuthenticator)other).secondarySigners).Any()
                     && Enumerable.SequenceEqual(secondaryAddresses, otherSecondaryAddresses)
                     && Enumerable.SequenceEqual(authenticators, otherAuthenticators)
             );
@@ -291,7 +290,7 @@ namespace Aptos.Authenticator
             throw new System.NotImplementedException();
         }
 
-        public static ISerializable Deserialize(Deserialization deserializer)
+        public static MultiEd25519Authenticator Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
