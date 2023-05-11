@@ -27,7 +27,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeAddress()
+        public void AddressSerialize()
         {
             Serialization s = new Serialization();
             TestAddress().Serialize(s);
@@ -40,7 +40,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeModuleId()
+        public void ModuleIdSerialize()
         {
             Serialization s = new Serialization();
             TestModuleId().Serialize(s);
@@ -60,7 +60,7 @@ namespace Aptos.Unity.Test
         /// txn = EntryFunction(mod, "some_function", [], [])
         /// </summary>
         [Test]
-        public void SerializeSimpleTransaction()
+        public void Transaction_Simple_Serialize()
         {
             Serialization s = new Serialization();
             ISerializableTag[] tags = new ISerializableTag[] { };
@@ -78,7 +78,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeTransactionWithEmptyArgSequence()
+        public void Transaction_EmptyArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             TestEntryFunction(new ISerializableTag[0], new ISerializable[0]).Serialize(s);
@@ -90,7 +90,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeSequenceString()
+        public void SequenceBStringSerialize()
         {
             byte[] res;
             Serialization s;
@@ -112,7 +112,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeSequenceSequenceBool()
+        public void SequenceOfSequenceSerialize()
         {
             Serialization s;
             Sequence args;
@@ -155,7 +155,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithSingleStringArg()
+        public void Transaction_SingleStringArg_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -184,7 +184,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithSingleU64Arg()
+        public void Transaction_SingleU64Arg_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -213,7 +213,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithEmptyBoolArgSequence()
+        public void Transaction_WithEmptyBoolArgSequence_Serialize()
         {
             Bool[] boolSequence = new Bool[] { };
             Serialization s = new Serialization();
@@ -243,7 +243,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithOneBoolArgSequence()
+        public void Transaction_hOneBoolArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -291,7 +291,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithTwoBoolSequence()
+        public void Transaction_TwoBoolSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -321,7 +321,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithThreeBoolArgsSequence()
+        public void Transaction_ThreeBoolArgsSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -350,7 +350,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithOneStringArgSequence()
+        public void Transaction_WithOneStringArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -380,7 +380,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithTwoStringArgSequence()
+        public void Transaction_WithTwoStringArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -409,7 +409,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithThreeStringArgSequence()
+        public void Transaction_ThreeStringArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -439,7 +439,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithOneStringOneBoolArgSequence()
+        public void Transactio_OneStringOneBoolArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -472,7 +472,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithOneStringOneIntOneBoolArgSequence()
+        public void Transaction_OneStringOneIntOneBoolArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -506,7 +506,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionWithOneStringOneIntOneAddressOneBoolArgSequence()
+        public void Transaction_OneStringOneIntOneAddressOneBoolArgSequence_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -541,7 +541,7 @@ namespace Aptos.Unity.Test
         /// print([x for x in out])
         /// </summary>
         [Test]
-        public void SerializeTransactionWithOneStringOneIntOneAddressMultipleArgSequences()
+        public void Transaction_OneStringOneIntOneAddressMultipleArgSequences_Serialize()
         {
             Serialization s = new Serialization();
             ISerializable[] args =
@@ -582,7 +582,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializeTagSequence()
+        public void TagSequenceSerialize()
         {
             TagSequence typeTags = new TagSequence(
                 new ISerializableTag[] {
@@ -621,7 +621,7 @@ namespace Aptos.Unity.Test
         /// print([x for x in out])
         /// </summary>
         [Test]
-        public void SerializeEntryFunctionPayloadForTransferCoin()
+        public void EntryFunction_PayloadForTransferCoin_Serialize()
         {
             TagSequence typeTags = new TagSequence(
                 new ISerializableTag[] { 
@@ -675,7 +675,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeScript()
+        public void ScriptSerialize()
         {
             string path = Application.dataPath + "\\Aptos-Unity-SDK\\Tests" + "\\two_by_two_transfer.mv";
             byte[] code = File.ReadAllBytes(path);
@@ -736,7 +736,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeTransactionPayloadForTransferCoin()
+        public void Transaction_PayloadForTransferCoin_Serialize()
         {
             //Account alice = Account.LoadKey("0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c");
             //string acctAddressAlice = alice.AccountAddress.ToString();
@@ -815,7 +815,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializeRawTransactionForTransferCoin()
+        public void RawTransaction_TransferCoin_Serialize()
         {
             TagSequence typeTags = new TagSequence(
                 new ISerializableTag[] {
@@ -866,7 +866,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void PrehashRawTransactionForTransferCoin()
+        public void RawTransaction_TransferCoin_Prehash()
         {
             TagSequence typeTags = new TagSequence(
                 new ISerializableTag[] {
@@ -910,7 +910,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void KeyedRawTransactionForTransferCoin()
+        public void RawTransaction_TransferCoin_Keyed()
         {
             TagSequence typeTags = new TagSequence(
                 new ISerializableTag[] {
@@ -954,7 +954,7 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
-        public void SerializationEntryFunctionWithCorpus()
+        public void EntryFunction_WithCorpus_Serialize()
         {
             string senderKeyInput = "9bf49a6a0755f953811fce125f2683d50429c3bb49e074147e0089a52eae155f";
             string receiverKeyInput = "0564f879d27ae3c02ce82834acfa8c793a629f2ca0de6919610be82f411326be";
@@ -1129,7 +1129,7 @@ namespace Aptos.Unity.Test
         /// </code>
         /// </summary>
         [Test]
-        public void SerializationEntryFunctionMultiAgentWithCorpus()
+        public void EntryFunction_MultiAgentWithCorpus_Serialize()
         {
             string senderKeyInput = "9bf49a6a0755f953811fce125f2683d50429c3bb49e074147e0089a52eae155f";
             string receiverKeyInput = "0564f879d27ae3c02ce82834acfa8c793a629f2ca0de6919610be82f411326be";
