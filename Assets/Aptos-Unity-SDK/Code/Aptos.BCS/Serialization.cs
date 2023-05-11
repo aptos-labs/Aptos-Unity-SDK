@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Aptos.Utilities.BCS
+namespace Aptos.BCS
 {
     public class Deserialization
     {

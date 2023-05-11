@@ -1,4 +1,4 @@
-using Aptos.Utilities.BCS;
+using Aptos.BCS;
 using Chaos.NaCl;
 using System;
 
