@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using Aptos.HdWallet.Utils;
 
 namespace Aptos.Unity.Test
 {
@@ -1259,20 +1260,19 @@ namespace Aptos.Unity.Test
 
             Assert.IsTrue(signedTransactionGenerated.Verify());
 
-            //string rawTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004";
-            //string signedTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004020020b9c6ee1630ef3e711144a648db06bbb2284f7274cfbee53ffcee503cc1a4920040343e7b10aa323c480391a5d7cd2d0cf708d51529b96b5a2be08cbb365e4f11dcc2cf0655766cf70d40853b9c395b62dad7a9f58ed998803d8bf1901ba7a7a401012d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9010020aef3f4a4b8eca1dfc343361bf8e436bd42de9259c04b8314eb8e2054dd6e82ab408a7f06e404ae8d9535b0cbbeafb7c9e34e95fe1425e4529758150a4f7ce7a683354148ad5c313ec36549e3fb29e669d90010f97467c9074ff0aec3ed87f76608";
+            string rawTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004";
+            string signedTransactionInput = "7deeccb1080854f499ec8b4c1b213b82c5e34b925cf6875fec02d4b77adbd2d60b0000000000000002000000000000000000000000000000000000000000000000000000000000000305746f6b656e166469726563745f7472616e736665725f7363726970740004202d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9100f636f6c6c656374696f6e5f6e616d650b0a746f6b656e5f6e616d65080100000000000000d0070000000000000100000000000000d20296490000000004020020b9c6ee1630ef3e711144a648db06bbb2284f7274cfbee53ffcee503cc1a4920040343e7b10aa323c480391a5d7cd2d0cf708d51529b96b5a2be08cbb365e4f11dcc2cf0655766cf70d40853b9c395b62dad7a9f58ed998803d8bf1901ba7a7a401012d133ddd281bb6205558357cc6ac75661817e9aaeac3afebc32842759cbf7fa9010020aef3f4a4b8eca1dfc343361bf8e436bd42de9259c04b8314eb8e2054dd6e82ab408a7f06e404ae8d9535b0cbbeafb7c9e34e95fe1425e4529758150a4f7ce7a683354148ad5c313ec36549e3fb29e669d90010f97467c9074ff0aec3ed87f76608";
 
-            //VerifyTransactions(
-            //    rawTransactionInput,
-            //    rawTransactionGenerated.Inner(),
-            //    signedTransactionInput,
-            //    signedTransactionGenerated
-            //);
+            VerifyTransactions(
+                rawTransactionInput,
+                rawTransactionGenerated.Inner(),
+                signedTransactionInput,
+                signedTransactionGenerated
+            );
         }
 
         /// <summary>
         /// Verifies serialization works for RawTransaction and SignedTransaction
-        /// TODO: Implement converting serialization to hex string. See Python: SignedTransaction
         /// </summary>
         /// <param name="rawTransactionInput"></param>
         /// <param name="rawTransactionGenerated"></param>
@@ -1288,24 +1288,28 @@ namespace Aptos.Unity.Test
             // Produce serialized generated transactions
             Serialization ser = new Serialization();
             ser.Serialize(rawTransactionGenerated);
-            byte[] rawTransactionGeneratedBytes = ser.GetBytes();
+            string rawTransactionGeneratedBytes = ser.GetBytes().HexString();
 
             ser = new Serialization();
             ser.Serialize(signedTransactionGenerated);
-            byte[] signedTransactionGeneratedBytes = ser.GetBytes();
+            string signedTransactionGeneratedBytes = ser.GetBytes().HexString();
 
             // Verify the RawTransaction
-            Assert.AreEqual(rawTransactionInput, rawTransactionGeneratedBytes, ToReadableByteArray(rawTransactionGeneratedBytes));
-            // TODO: Implement RawTransaction deserialization -- rawTransaction
-            // TODO: Assert equals rawTransactionGenerated & rawTransaction
+            Assert.AreEqual(rawTransactionInput, rawTransactionGeneratedBytes, rawTransactionGeneratedBytes);
+            RawTransaction rawTransaction = RawTransaction.Deserialize(
+                new Deserialization(rawTransactionInput.ByteArrayFromHexString())
+            );
+            Assert.AreEqual(rawTransactionGenerated, rawTransaction);
 
             // Verify the SignedTransaction
-            Assert.AreEqual(signedTransactionInput, signedTransactionGeneratedBytes, ToReadableByteArray(signedTransactionGeneratedBytes));
-            // TODO: Implement SignedTransaction deserialization -- signedTransaction
+            Assert.AreEqual(signedTransactionInput, signedTransactionGeneratedBytes, signedTransactionGeneratedBytes);
+            SignedTransaction signedTransaction = SignedTransaction.Deserialize(
+                new Deserialization(signedTransactionInput.ByteArrayFromHexString())
+            );
 
-            // TODO: Assert equals signedTransaction.transaction & rawTransaction
-            // TODO: Assert equals signedTransaction, signedTransactionGenerated
-            // TODO: Assert true signedTransaction.very
+            Assert.AreEqual(signedTransaction.transaction, rawTransaction);
+            Assert.AreEqual(signedTransaction, signedTransactionGenerated);
+            Assert.IsTrue(signedTransaction.Verify());
         }
 
         /// <summary>
