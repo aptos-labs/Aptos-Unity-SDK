@@ -249,6 +249,19 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void SignatureDeserialization()
+        {
+            Serialization serializer = new Serialization();
+            Signature sig = new Signature(SignatureBytes);
+            sig.Serialize(serializer);
+            byte[] output = serializer.GetBytes();
+
+            Deserialization deser = new Deserialization(output);
+            Signature actualSig = Signature.Deserialize(deser);
+            Assert.AreEqual(sig, actualSig);
+        }
+
+        [Test]
         public void GenerateAccountAddressFromPublicKey()
         {
             PublicKey publicKey = new PublicKey(PublicKeyBytes);
