@@ -748,11 +748,15 @@ namespace Aptos.Utilities.BCS
             );
         }
 
-        // TODO: Implement ModuleId FromStr method
         public static ModuleId FromStr(string moduleId)
         {
-            throw new NotImplementedException();
-        }
+            string[] words = moduleId.Split("::");
+            string address = words[0];
+            AccountAddress accountAddress = AccountAddress.FromHex(address);
+            string name = words[1];
+
+            return new ModuleId(accountAddress, name);
+         }
 
         public override int GetHashCode()
         {

@@ -566,6 +566,19 @@ namespace Aptos.Unity.Test
         }
 
         [Test]
+        public void ModuleFromString()
+        {
+            AccountAddress accountAddress = AccountAddress.FromHex("0x1");
+            string name = "coin";
+
+            ModuleId expectedModuleId = new ModuleId(accountAddress, name);
+
+            ModuleId actualModuleId = ModuleId.FromStr("0x1::coin");
+
+            Assert.AreEqual(expectedModuleId, actualModuleId);
+        }
+
+        [Test]
         public void SerializeTagSequence()
         {
             TagSequence typeTags = new TagSequence(
