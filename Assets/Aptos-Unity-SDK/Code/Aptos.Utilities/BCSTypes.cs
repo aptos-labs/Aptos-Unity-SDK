@@ -719,6 +719,11 @@ namespace Aptos.Utilities.BCS
         {
             return this.value.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     /// <summary>
