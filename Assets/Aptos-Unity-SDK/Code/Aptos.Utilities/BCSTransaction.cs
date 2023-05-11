@@ -708,6 +708,9 @@ namespace Aptos.Utilities.BCS
 
         public static ModuleId FromStr(string moduleId)
         {
+            if (string.IsNullOrWhiteSpace(moduleId))
+                throw new ArgumentException("ModuleId string is empty.");
+
             string[] words = moduleId.Split("::");
             string address = words[0];
             AccountAddress accountAddress = AccountAddress.FromHex(address);
