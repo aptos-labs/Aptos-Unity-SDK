@@ -47,7 +47,6 @@ namespace Aptos.Accounts
             serializer.SerializeBytes(this._signatureBytes);
         }
 
-        // TODO: Add test for Signature deserialization
         public static Signature Deserialize(Deserialization deserializer)
         {
             byte[] sigBytes = deserializer.ToBytes();

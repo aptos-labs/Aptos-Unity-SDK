@@ -128,7 +128,6 @@ namespace Aptos.Accounts
             serializer.SerializeBytes(this.KeyBytes);
         }
 
-        // TODO: Add PublicKey deserialization test
         public static PublicKey Deserialize(Deserialization deserializer)
         {
             byte[] keyBytes = deserializer.ToBytes();

@@ -101,7 +101,6 @@ namespace Aptos.Accounts
             serializer.SerializeFixedBytes(this.AddressBytes);
         }
 
-        // TODO: Add AccountAddress deserialization test
         public static AccountAddress Deserialize(Deserialization deserializer)
         {
             return new AccountAddress(deserializer.FixedBytes(AccountAddress.Length));
