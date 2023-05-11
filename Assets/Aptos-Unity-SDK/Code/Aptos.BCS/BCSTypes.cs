@@ -7,7 +7,7 @@ using System.Numerics;
 using System.Text;
 using UnityEngine;
 
-namespace Aptos.Utilities.BCS
+namespace Aptos.BCS
 {
     // See type_tag.py
     public enum TypeTag

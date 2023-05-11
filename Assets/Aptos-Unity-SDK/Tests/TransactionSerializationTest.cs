@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Aptos.Utilities.BCS;
+using Aptos.BCS;
 using Aptos.Accounts;
 using System.Collections.Generic;
 using System;

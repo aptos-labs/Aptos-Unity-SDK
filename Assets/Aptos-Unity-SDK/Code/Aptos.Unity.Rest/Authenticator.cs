@@ -1,5 +1,5 @@
 using Aptos.Accounts;
-using Aptos.Utilities.BCS;
+using Aptos.BCS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
