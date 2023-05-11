@@ -63,7 +63,7 @@ namespace Aptos.Accounts
                 addr = pad + addr;
             }
 
-            return new AccountAddress(addr.HexStringToByteArray());
+            return new AccountAddress(addr.ByteArrayFromHexString());
         }
 
         /// <summary>

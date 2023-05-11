@@ -57,7 +57,7 @@ namespace Aptos.Accounts
                 {
                     string key = _key;
                     if (_key[0..2].Equals("0x")) { key = _key[2..]; }
-                    _keyBytes = key.HexStringToByteArray();
+                    _keyBytes = key.ByteArrayFromHexString();
                 }
                 return _keyBytes;
             }

@@ -78,7 +78,7 @@ namespace Aptos.Accounts
                     string key = _key;
                     if (_key[0..2].Equals("0x")) { key = _key[2..]; } // Trim the private key hex string
 
-                    byte[] seed = key.HexStringToByteArray(); // Turn private key hex string into byte to be used a seed to derive the extended key
+                    byte[] seed = key.ByteArrayFromHexString(); // Turn private key hex string into byte to be used a seed to derive the extended key
                     _keyBytes = seed;
                     _extendedKeyBytes = Ed25519.ExpandedPrivateKeyFromSeed(seed);
                 }

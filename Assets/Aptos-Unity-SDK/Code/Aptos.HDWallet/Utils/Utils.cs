@@ -34,7 +34,7 @@ namespace Aptos.HdWallet.Utils
         /// </summary>
         /// <param name="input"></param> Valid hexadecimal string
         /// <returns>Byte array representation of hexadecimal string</returns>
-        internal static byte[] HexStringToByteArray(this string input)
+        public static byte[] ByteArrayFromHexString(this string input)
         {
             var outputLength = input.Length / 2;
             var output = new byte[outputLength];
@@ -45,6 +45,20 @@ namespace Aptos.HdWallet.Utils
                 output[i] = Convert.ToByte(new string(numeral), 16);
             }
             return output;
+        }
+
+        /// <summary>
+        /// Turn byte array to hex string without 0x identifier
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string HexString(this byte[] input)
+        {
+            string addressHex = BitConverter.ToString(input); // Turn into hexadecimal string
+            addressHex = addressHex.Replace("-", "").ToLowerInvariant(); // Remove '-' characters from hexa hash
+            //return "0x" + addressHex;
+            return addressHex;
+
         }
 
         /// <summary>
