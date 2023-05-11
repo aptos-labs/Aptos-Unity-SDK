@@ -209,7 +209,6 @@ namespace Aptos.Utilities.BCS
             return new Sequence(values.ToArray());
         }
 
-        // TODO: FIX Sequence comparison
         public override bool Equals(object other)
         {
             Sequence otherSeq = (Sequence)other;
@@ -690,6 +689,21 @@ namespace Aptos.Utilities.BCS
         public object GetValue()
         {
             return value;
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not U64)
+                throw new NotImplementedException();
+
+            U64 otherU64 = (U64)other;
+
+            return this.value == (ulong) otherU64.GetValue();
+        }
+
+        public override string ToString()
+        {
+            return this.value.ToString();
         }
     }
 
