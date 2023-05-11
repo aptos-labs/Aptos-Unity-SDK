@@ -133,6 +133,19 @@ namespace Aptos.Utilities.BCS
 
             return s;
         }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.sender.GetHashCode();
+            hash = hash * 23 * this.sequenceNumber.GetHashCode();
+            hash = hash * 23 + this.payload.GetHashCode();
+            hash = hash * 23 + this.maxGasAmount.GetHashCode();
+            hash = hash * 23 + this.gasUnitPrice.GetHashCode();
+            hash = hash * 23 + this.expirationTimestampsSecs.GetHashCode();
+            hash = hash * 23 + this.chainId.GetHashCode();
+            return hash;
+        }
     }
 
     /// <summary>
@@ -291,6 +304,14 @@ namespace Aptos.Utilities.BCS
         {
             return this.value.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.value.GetHashCode();
+            hash = hash * 23 + this.variant.GetHashCode();
+            return hash;
+        }
     }
 
     /// <summary>
@@ -375,7 +396,20 @@ namespace Aptos.Utilities.BCS
         //  TODO: Implement Script ToString
         public override string ToString()
         {
-            return base.ToString();
+            return string.Format(
+                "<{0}>({1})",
+                this.typeArgs.ToString(),
+                this.scriptArgs.ToString()
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.code.GetHashCode();
+            hash = hash * 23 + this.typeArgs.GetHashCode();
+            hash = hash * 23 + this.scriptArgs.GetHashCode();
+            return hash;
         }
     }
 
@@ -530,7 +564,15 @@ namespace Aptos.Utilities.BCS
 
         public override string ToString()
         {
-            return String.Format("[{0}] {1}", this.variant, this.value);
+            return String.Format("[{0}] {1}", this.variant.ToString(), this.value.ToString());
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.variant.GetHashCode();
+            hash = hash * 23 + this.value.GetHashCode();
+            return hash;
         }
     }
 
@@ -643,7 +685,23 @@ namespace Aptos.Utilities.BCS
         // TODO: Add Sequence ToString
         public override string ToString()
         {
-            return String.Format("{0}::{1}::<{2}>({3})", this.module, this.function, this.typeArgs.ToString(), this.args.ToString());
+            return String.Format(
+                "{0}::{1}::<{2}>({3})", 
+                this.module.ToString(), 
+                this.function.ToString(), 
+                this.typeArgs.ToString(), 
+                this.args.ToString()
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.module.GetHashCode();
+            hash = hash * 23 + this.function.GetHashCode();
+            hash = hash * 23 + this.typeArgs.GetHashCode();
+            hash = hash * 23 + this.args.GetHashCode();
+            return hash;
         }
     }
 
@@ -693,7 +751,19 @@ namespace Aptos.Utilities.BCS
 
         public override string ToString()
         {
-            return String.Format("{0}::{1}", this.address, this.name);
+            return String.Format(
+                "{0}::{1}", 
+                this.address.ToString(), 
+                this.name.ToString()
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.address.GetHashCode();
+            hash = hash * 23 + this.name.GetHashCode();
+            return hash;
         }
     }
 
@@ -798,7 +868,19 @@ namespace Aptos.Utilities.BCS
 
         public override string ToString()
         {
-            return String.Format("Transaction: {0} Authenticator: {1}", this.transaction.ToString(), this.authenticator.ToString());
+            return String.Format(
+                "Transaction: {0} Authenticator: {1}", 
+                this.transaction.ToString(), 
+                this.authenticator.ToString()
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 23 + this.transaction.GetHashCode();
+            hash = hash * 23 + this.authenticator.GetHashCode();
+            return hash;
         }
     }
 }

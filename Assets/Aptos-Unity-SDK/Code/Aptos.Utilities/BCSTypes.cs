@@ -1,4 +1,5 @@
 ﻿using Aptos.Accounts;
+using Aptos.HdWallet.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,6 +118,17 @@ namespace Aptos.Utilities.BCS
             TagSequence otherTagSeq = (TagSequence)other;
             return Enumerable.SequenceEqual((ISerializableTag[])this.GetValue(), (ISerializableTag[])otherTagSeq.GetValue());
         }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (var tag in serializableTags)
+            {
+                result.Append(tag.ToString());
+            }
+
+            return result.ToString();
+        }
     }
 
     /// <summary>
@@ -203,6 +215,22 @@ namespace Aptos.Utilities.BCS
             Sequence otherSeq = (Sequence)other;
             return Enumerable.SequenceEqual(this.values, otherSeq.values);
         }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (var value in values)
+            {
+                result.Append(value.ToString());
+            }
+
+            return result.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     /// <summary>
@@ -256,6 +284,22 @@ namespace Aptos.Utilities.BCS
             }
             return equal;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (byte[] value in values)
+            {
+                result.Append(value.ByteArrayToReadableString());
+            }
+
+            return result.ToString();
+        }
     }
 
     /// <summary>
@@ -263,16 +307,16 @@ namespace Aptos.Utilities.BCS
     /// </summary>
     public class BCSMap : ISerializable
     {
-        public Dictionary<BString, ISerializable> value;
+        public Dictionary<BString, ISerializable> values;
 
-        public BCSMap(Dictionary<BString, ISerializable> value)
+        public BCSMap(Dictionary<BString, ISerializable> values)
         {
-            this.value = value;
+            this.values = values;
         }
 
         public object GetValue()
         {
-            return value;
+            return values;
         }
 
         /// <summary>
@@ -289,7 +333,7 @@ namespace Aptos.Utilities.BCS
             Serialization mapSerializer = new Serialization();
             SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
   
-            foreach (KeyValuePair<BString, ISerializable> entry in this.value)
+            foreach (KeyValuePair<BString, ISerializable> entry in this.values)
             {
                 Serialization keySerializer = new Serialization();
                 entry.Key.Serialize(keySerializer);
@@ -310,6 +354,17 @@ namespace Aptos.Utilities.BCS
             }
 
             serializer.SerializeFixedBytes(mapSerializer.GetBytes());
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (KeyValuePair<BString, ISerializable> entry in values)
+            {
+                result.Append("(" + entry.Key.ToString() + ", " + entry.Value.ToString() + ")");
+            }
+
+            return result.ToString();
         }
     }
 
@@ -432,6 +487,17 @@ namespace Aptos.Utilities.BCS
             bool equal = Enumerable.SequenceEqual(this.values, otherBytes.values);
 
             return equal;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (byte value in values)
+            {
+                result.Append(value.ToString());
+            }
+
+            return result.ToString();
         }
     }
 
@@ -794,10 +860,36 @@ namespace Aptos.Utilities.BCS
             );;
         }
 
-        // TODO: Implement StructTag ToString();
         public override string ToString()
         {
-            return base.ToString();
+            string value = string.Format(
+                "{0}::{1}::{2}",
+                this.address.ToString(),
+                this.module.ToString(),
+                this.name.ToString()
+            );
+
+            if(this.typeArgs.Length > 0)
+            {
+                value += string.Format("<{0}", this.typeArgs[0].ToString());
+                foreach(ISerializableTag typeArg in this.typeArgs[1..])
+                {
+                    value += string.Format(", {0}", typeArg.ToString());
+                }
+                value += ">";
+            }
+            return value;
+        }
+
+        // TODO: Implement StructTag method FromStr
+        public static StructTag FromStr(string typeTag)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }
