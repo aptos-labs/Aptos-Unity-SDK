@@ -1,11 +1,16 @@
 # Aptos Unity SDK
 The Aptos Unity SDK is a .NET implementation of the [Aptos SDK](https://aptos.dev/sdks/index/), compatible with .NET Standard 2.0 and .NET 4.x for Unity. 
-The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the Unity game engine and the Aptos blockchain infrastructure. An implementation of a desktop wallet application is provided as an example.
+The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the [Unity](https://unity.com/) game engine and the Aptos blockchain infrastructure.
+
+## Examples and References
+
+The [Aptos Unity SDK](https://aptos.dev/sdks/unity-sdk) includes an implementation of a desktop wallet application as an example. A set of examples is also provided in the `Assets/Aptos-Unity-SDK/SDK-Examples` directory.
+
+A local version of Doxygen-generated documentation for the classes can be found in `Assets/Aptos-Unity-SDK/Documentation/html/index.html`. A hosted version of the latter documentation can found at:
+https://aptos-unity-sdk-docs.netlify.app/
 
 ## Getting Started
-To get started, you may check our [Quick Start Guide](#quick-start-video). A set of examples is also provided in the `Assets/Aptos-Unity-SDK/SDK-Examples` directory. A local version of Doxygen-generated documentation for the classes can be found in `Assets/Aptos-Unity-SDK/Documentation/html/index.html`. A hosted version of the latter documentation can found in [here](https://aptos-unity-sdk-docs.netlify.app/).    
-
-This accompanying README file provides further details on the SDK and integration. 
+To get started, check out our [Quick Start](#quick-start-video) video. The [Aptos Unity SDK](https://aptos.dev/sdks/unity-sdk) dev doc and this accompanying README file provide further details on the SDK and integration. 
 
 ### Installation
 
@@ -16,18 +21,17 @@ This accompanying README file provides further details on the SDK and integratio
 
 ## Quick Start Video
 
-
 https://user-images.githubusercontent.com/25370590/216013906-ee46a940-ee91-4b7f-8e84-febfa315480e.mp4
 
 
 ## Wallet Example Walthrough
 
-You can find a set of examples under `SDK-Examples/SDK Demo` and `SDK-Examples/UI Demo` directory. We will use the scene under `UI Demo` for this walkthrough.
+Find a set of examples under the `SDK-Examples/SDK Demo` and `SDK-Examples/UI Demo` directories. We will use the scene under `UI Demo` for this walkthrough.
 
 <img src="https://user-images.githubusercontent.com/25370590/219817969-86709825-0b32-44c7-86bf-5699b4163369.jpg" alt="wallet_seedphrase1" width="400"/>   
 <br />
 
-Once you open  the demo scene, you will see all tab are locked except `Add Account` , you have the choice to create or import a wallet.
+Once you open the demo scene, you will see all tabs are locked except `Add Account`; you have the choice to create or import a wallet.
 
 <br />
 
@@ -47,14 +51,14 @@ wallet = new Wallet(mnemo);
 
 PlayerPrefs.SetString(mnemonicsKey, mnemo.ToString());
 ```
-This wallet object can be used to derive multiple accounts which show in code further down.
+This wallet object can be used to derive multiple accounts that show in code further down.
 
 ### Account
 
 <img src="https://user-images.githubusercontent.com/25370590/219818548-ab6755a8-b080-4535-a3cf-76379acd4577.jpg" alt="wallet_account0" width="400"/>
 <br />
 
-Once you create the wallet, you will be able to unlock rest of the panel, on `Account` Panel.    
+Once you create the wallet, you will be able to unlock the rest of the panel, on `Account` Panel.    
 
 <br />
 
@@ -62,7 +66,7 @@ Once you create the wallet, you will be able to unlock rest of the panel, on `Ac
 <br />
 
 
-#### Deriviving Accounts from HD Wallet
+#### Deriving Accounts from HD Wallet
 In code, you can derive accounts from the HD Wallet by selecting an account index as follows:
 
 ```csharp
@@ -89,7 +93,7 @@ AccountAddress aliceAddress = alice.AccountAddress;
 ```
 
 #### Airdrop
-When using Devent , you can airdrop 1 APT to your account address as follows:
+When using Devnet, you can airdrop one APT to your account address as follows:
 
 ```csharp
 // Airdrop
@@ -121,9 +125,9 @@ if(responseInfo.status != ResponseInfo.Status.Success)
 <img src="https://user-images.githubusercontent.com/25370590/219818959-ba93a155-0e2f-4b06-8795-431a7583f669.jpg" alt="wallet_nft_minter1" width="400"/>
 <br />
 
-On the `Mint NFT` tab, You can mint a NFT of your own. In order to do that, you need to `Create Collection` first, then `Create NFT`.   
+On the `Mint NFT` tab, you can mint an NFT of your own. In order to do that, you need to `Create Collection` first, then `Create NFT`.   
 
- Note that you must confirm that the creation of the collection was sucessful before creating the token, you can use the `WaitForTransaction` corouting for this.
+ Note that you must confirm that the creation of the collection was sucessful before creating the token; you can use the `WaitForTransaction` co-routing for this.
 
 ```csharp
 // Create Collection
