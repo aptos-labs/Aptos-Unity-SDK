@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Aptos.Accounts;
 using System;
-using Aptos.Utilities.BCS;
+using Aptos.BCS;
 
 namespace Aptos.Unity.Test
 {

@@ -1,7 +1,7 @@
 using Chaos.NaCl;
 using System;
 using Aptos.HdWallet.Utils;
-using Aptos.Utilities.BCS;
+using Aptos.BCS;
 
 namespace Aptos.Accounts
 {

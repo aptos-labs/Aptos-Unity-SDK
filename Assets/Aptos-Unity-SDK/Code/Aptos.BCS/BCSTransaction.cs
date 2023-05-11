@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Aptos.Utilities.BCS
+namespace Aptos.BCS
 {
     /// <summary>
     /// Representation of a raw transaction.
