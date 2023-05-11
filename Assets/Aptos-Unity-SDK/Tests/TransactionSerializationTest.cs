@@ -11,11 +11,6 @@ namespace Aptos.Unity.Test
 {
     public class TransactionSerializationTest
     {
-        //internal Utilities.BCS.AccountAddress TestAddress()
-        //{
-        //    return new Utilities.BCS.AccountAddress("0x01");
-        //}
-
         internal Accounts.AccountAddress TestAddress()
         {
             return Accounts.AccountAddress.FromHex("0x01");
