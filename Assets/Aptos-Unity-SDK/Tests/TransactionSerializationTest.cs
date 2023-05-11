@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using UnityEngine;
-using System.Linq;
 using Aptos.HdWallet.Utils;
 
 namespace Aptos.Unity.Test
