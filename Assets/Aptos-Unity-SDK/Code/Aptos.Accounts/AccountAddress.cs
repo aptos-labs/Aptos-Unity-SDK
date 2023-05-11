@@ -54,6 +54,9 @@ namespace Aptos.Accounts
         /// <returns>An account address object</returns>
         public static AccountAddress FromHex(string address)
         {
+            if (string.IsNullOrWhiteSpace(address))
+                throw new ArgumentException("Address string is empty.");
+
             string addr = address;
             if (address[0..2].Equals("0x")) { addr = address[2..]; }
 
