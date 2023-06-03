@@ -1,10 +1,12 @@
 using Aptos.Accounts;
+using Aptos.BCS;
 using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
 using NBitcoin;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,6 +14,18 @@ using Transaction = Aptos.Unity.Rest.Model.Transaction;
 
 namespace Aptos.Unity.Rest
 {
+    /// <summary>
+    /// Common configuration for clients,
+    /// particularly for submitting transactions
+    /// </summary>
+    public class ClientConfig
+    {
+        public const int EXPIRATION_TTL = 600;
+        public const int GAS_UNIT_PRICE = 100;
+        public const int MAX_GAS_AMOUNT = 100000;
+        public const int TRANSACTION_WAIT_IN_SECONDS = 20;
+    }
+
     /// <summary>
     /// The Aptos REST Client contains a set of [standalone] Coroutines
     /// that can started within any Unity script.
@@ -29,6 +43,7 @@ namespace Aptos.Unity.Rest
 
         /// Based enpoint for REST API.
         public Uri Endpoint { get; private set; }
+        public int ChainId { get; private set; }
 
         private void Awake()
         {
@@ -36,6 +51,15 @@ namespace Aptos.Unity.Rest
         }
 
         #region Setup
+        public RestClient(
+            int ChainId,
+            ClientConfig ClientConfig,
+            string BaseUrl)
+        {
+            this.Endpoint = new Uri(BaseUrl);
+            this.ChainId = ChainId;
+        }
+
         /// <summary>
         /// Set Endpoint for RPC / REST call.
         /// </summary>
@@ -84,13 +108,13 @@ namespace Aptos.Unity.Rest
 
                 callback(null, responseInfo);
             }
-            else if(request.responseCode == 404)
+            else if (request.responseCode == 404)
             {
                 responseInfo.status = ResponseInfo.Status.NotFound;
                 responseInfo.message = "Account not found";
                 callback(null, responseInfo);
             }
-            else if(request.responseCode >= 400)
+            else if (request.responseCode >= 400)
             {
                 responseInfo.status = ResponseInfo.Status.Failed;
                 responseInfo.message = request.error;
@@ -106,34 +130,6 @@ namespace Aptos.Unity.Rest
             }
 
             request.Dispose();
-        }
-
-        /// <summary>
-        /// Gets Account Sequence Number
-        /// </summary>
-        /// <param name="callback">Callback function used after response is received.</param>
-        /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>Calls <c>callback</c> function with <c>(string, ResponseInfo)</c>: \n
-        /// A Sequence number as a string - null if the request fails, and a response object containing the response details. </returns>
-        public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
-        {
-            AccountData accountData = new AccountData();
-            ResponseInfo responseInfo = new ResponseInfo();
-            Coroutine cor = StartCoroutine(GetAccount((_accountData, _responseInfo) => {
-                accountData = _accountData;
-                responseInfo = _responseInfo;
-            }, accountAddress));
-            yield return cor;
-
-            if(responseInfo.status != ResponseInfo.Status.Success)
-            {
-                callback(null, responseInfo);
-                yield break;
-            }
-
-            string sequenceNumber = accountData.SequenceNumber;
-
-            callback(sequenceNumber, responseInfo);
         }
 
         /// <summary>
@@ -216,6 +212,78 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
+        /// Gets Account Sequence Number
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <returns>Calls <c>callback</c> function with <c>(string, ResponseInfo)</c>: \n
+        /// A Sequence number as a string - null if the request fails, and a response object containing the response details. </returns>
+        public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
+        {
+            AccountData accountData = new AccountData();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine cor = StartCoroutine(GetAccount((_accountData, _responseInfo) => {
+                accountData = _accountData;
+                responseInfo = _responseInfo;
+            }, accountAddress));
+            yield return cor;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+                yield break;
+            }
+
+            string sequenceNumber = accountData.SequenceNumber;
+
+            callback(sequenceNumber, responseInfo);
+        }
+
+        /// <summary>
+        /// Get a resource of a given type from an account.
+        /// NOTE: The response is a complex object of types only known to the developer writing the contracts.
+        /// This function return a string and expect the developer to deserialize it into an object.
+        /// See <see cref="GetAccountResourceCollection(Action{ResourceCollection, ResponseInfo}, AccountAddress, string)">GetAccountResourceCollection</see> for an example.
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <param name="resourceType">Type of resource being queried for.</param>
+        /// <returns>Calls <c>callback</c> function with <c>(bool, long, string)</c>: \n
+        /// -- bool: success boolean \n
+        /// -- long: - error code, string - JSON response to be deserialized by the consumer of the function\n
+        /// -- string: - the response which may contain the resource details</returns>
+        public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType = "", string ledgerVersion = "")
+        {
+            string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
+            Uri accountsURI = new Uri(accountsURL);
+            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                callback(false, 0, "ERROR: Connection Error: " + request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback(false, request.responseCode, request.error);
+            }
+            else if (request.responseCode >= 400)
+            {
+                callback(false, request.responseCode, request.error);
+            }
+            else
+            {
+                callback(true, request.responseCode, request.downloadHandler.text);
+            }
+
+            request.Dispose();
+        }
+
+        /// <summary>
         /// Get Account Resource
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
@@ -257,62 +325,6 @@ namespace Aptos.Unity.Rest
                 ResourceCollection acctResource = JsonConvert.DeserializeObject<ResourceCollection>(request.downloadHandler.text);
                 responseInfo.status = ResponseInfo.Status.Success;
                 responseInfo.message = request.downloadHandler.text;
-                callback(acctResource, responseInfo);
-            }
-
-            request.Dispose();
-            yield return null;
-        }
-
-        /// <summary>
-        /// Gets table item that represents a coin resource
-        /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see>
-        /// </summary>
-        /// <param name="callback">Callback function used after response is received.</param>
-        /// <param name="handle">The identifier for the given table.</param>
-        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
-        /// <param name="valueType">String representation of an on-chain Move type value.</param>
-        /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
-        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n 
-        /// An object representing the account resource that holds the coin's information - null if the request fails, and a response object the contains the response details.</returns>
-        public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
-        {
-            TableItemRequest tableItemRequest = new TableItemRequest
-            {
-                KeyType = keyType,
-                ValueType = valueType,
-                Key = key
-            };
-
-            string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
-            Uri getTableItemURI = new Uri(getTableItemURL);
-
-            UnityWebRequest request = UnityWebRequest.Get(getTableItemURI);
-            request.SendWebRequest();
-            while (!request.isDone)
-            {
-                yield return null;
-            }
-
-            ResponseInfo responseInfo = new ResponseInfo();
-            if (request.result == UnityWebRequest.Result.ConnectionError)
-            {
-                responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Error while sending request for table item. " + request.error;
-                callback(null, responseInfo);
-            }
-            if (request.responseCode == 404)
-            {
-                responseInfo.status = ResponseInfo.Status.NotFound;
-                responseInfo.message = "Table item not found. " + request.error;
-                callback(null, responseInfo);
-            }
-            else
-            {
-                string response = request.downloadHandler.text;
-                AccountResourceCoin acctResource = JsonConvert.DeserializeObject<AccountResourceCoin>(response);
-                responseInfo.status = ResponseInfo.Status.Success;
-                responseInfo.message = response;
                 callback(acctResource, responseInfo);
             }
 
@@ -370,6 +382,62 @@ namespace Aptos.Unity.Rest
             {
                 string response = request.downloadHandler.text;
                 callback(response);
+            }
+
+            request.Dispose();
+            yield return null;
+        }
+
+        /// <summary>
+        /// Gets table item that represents a coin resource
+        /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see>
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="handle">The identifier for the given table.</param>
+        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
+        /// <param name="valueType">String representation of an on-chain Move type value.</param>
+        /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n 
+        /// An object representing the account resource that holds the coin's information - null if the request fails, and a response object the contains the response details.</returns>
+        public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
+        {
+            TableItemRequest tableItemRequest = new TableItemRequest
+            {
+                KeyType = keyType,
+                ValueType = valueType,
+                Key = key
+            };
+
+            string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
+            Uri getTableItemURI = new Uri(getTableItemURL);
+
+            UnityWebRequest request = UnityWebRequest.Get(getTableItemURI);
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            ResponseInfo responseInfo = new ResponseInfo();
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while sending request for table item. " + request.error;
+                callback(null, responseInfo);
+            }
+            if (request.responseCode == 404)
+            {
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Table item not found. " + request.error;
+                callback(null, responseInfo);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+                AccountResourceCoin acctResource = JsonConvert.DeserializeObject<AccountResourceCoin>(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(acctResource, responseInfo);
             }
 
             request.Dispose();
@@ -567,7 +635,21 @@ namespace Aptos.Unity.Rest
             request.Dispose();
             yield return null;
         }
+
+
+        // TODO: Implement AggregatorValue
+        public IEnumerator AggregatorValue(
+            Action<string, ResponseInfo> Callback,
+            AccountAddress AccountAddress,
+            string ResourceType,
+            List<string> AggregatorPath
+        )
+        {
+            yield return null;
+        }
+
         #endregion
+
 
         #region Ledger Accessors
         /// <summary>
@@ -593,7 +675,7 @@ namespace Aptos.Unity.Rest
                 responseInfo.message = request.error;
                 callback(null, responseInfo);
             }
-            else if(request.responseCode >= 404)
+            else if (request.responseCode >= 404)
             {
                 responseInfo.status = ResponseInfo.Status.NotFound;
                 responseInfo.message = request.error;
@@ -613,6 +695,114 @@ namespace Aptos.Unity.Rest
         #endregion
 
         #region Transactions
+        // TODO: Test SimuateTransaction
+        public IEnumerator SimulateTransaction(
+            Action<string, ResponseInfo> callback,
+            RawTransaction transaction,
+            Account sender
+        )
+        {
+            // authenticator = Authenticator(
+            //      Ed25519Authenticator(
+            //          sender.public_key(),
+            //          ed25519.Signature(b"\x00" * 64),
+            //      )
+            // )
+
+            Authenticator authenticator = new Authenticator(
+                new Ed25519Authenticator(
+                    sender.PublicKey,
+                    new Signature(new byte[64]) // TODO: Check if this generates a byte array 64 lenght with padded 0's
+                )
+            );
+
+            SignedTransaction signedTransaction = new SignedTransaction(transaction, authenticator);
+
+            string simulateTxnEndpoint = Endpoint + "/transactions/simulate";
+            UnityWebRequest request = new UnityWebRequest(simulateTxnEndpoint, "POST");
+            request.SetRequestHeader("Content-Type", "application/x.aptos.signed_transaction+bcs");
+
+            // byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
+            // request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.uploadHandler = new UploadHandlerRaw(signedTransaction.Bytes());
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            ResponseInfo responseInfo = new ResponseInfo();
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting simulated transaction. " + request.error;
+                callback(null, responseInfo);
+            }
+            if (request.responseCode == 404)
+            {
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Endppoint not found. " + request.error;
+                callback(null, responseInfo);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(response, responseInfo);
+            }
+
+            request.Dispose();
+            yield return null;
+
+        }
+
+        // TODO: Check JSON object returned by Submit BCS Transaction, and update return type
+        public IEnumerator SubmitBCSTransaction(
+            Action<string, ResponseInfo> callback,
+            SignedTransaction SignedTransaction
+        )
+        {
+            string simulateTxnEndpoint = Endpoint + "/transactions";
+            UnityWebRequest request = new UnityWebRequest(simulateTxnEndpoint, "POST");
+            request.SetRequestHeader("Content-Type", "application/x.aptos.signed_transaction+bcs");
+            request.uploadHandler = new UploadHandlerRaw(SignedTransaction.Bytes());
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            ResponseInfo responseInfo = new ResponseInfo();
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting BCS transaction. " + request.error;
+                callback(null, responseInfo);
+            }
+            if (request.responseCode == 404)
+            {
+                responseInfo.status = ResponseInfo.Status.NotFound;
+                responseInfo.message = "Endppoint for BCS transaction not found. " + request.error;
+                callback(null, responseInfo);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(response, responseInfo);
+            }
+
+            request.Dispose();
+            yield return null;
+        }
 
         /// <summary>
         /// 1) Generates a transaction request \n
@@ -626,7 +816,7 @@ namespace Aptos.Unity.Rest
         /// <returns>Calls <c>callback</c>function with <c>(Transaction, ResponseInfo)</c>:\n
         /// An object that represents the transaction submitted - null if the transaction fails, and a response object with the response detials.
         /// </returns>
-        public IEnumerator SubmitTransaction(Action<Transaction, ResponseInfo> callback, Account sender, TransactionPayload payload)
+        public IEnumerator SubmitTransaction(Action<Transaction, ResponseInfo> callback, Account sender, Model.TransactionPayload payload)
         {
             ///////////////////////////////////////////////////////////////////////
             // 1) Generate a transaction request
@@ -639,7 +829,7 @@ namespace Aptos.Unity.Rest
             }, sender.AccountAddress));
             yield return cor_sequenceNumber;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 callback(null, responseInfo);
             }
@@ -864,6 +1054,132 @@ namespace Aptos.Unity.Rest
 
         #endregion
 
+        #region Transaction Helpers
+
+        // TODO: Update all TransactionPayload instantiations to use BCS.TransactionPayload
+        public IEnumerable CreateMultiAgentBCSTransaction(Action<SignedTransaction> Callback, Account Sender, List<Account> SecondaryAccounts, BCS.TransactionPayload Payload)
+        {
+            string sequenceNumber = "";
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
+                sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
+            }, Sender.AccountAddress));
+            yield return cor_sequenceNumber;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                throw new Exception("Unable to get sequence number for: " + Sender.AccountAddress);
+            }
+
+            List<AccountAddress> secondaryAddressList = new List<AccountAddress>();
+            foreach (Account account in SecondaryAccounts)
+                secondaryAddressList.Add(account.AccountAddress);
+
+            ulong expirationTimestamp = ((ulong)(DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL));
+
+            MultiAgentRawTransaction rawTransaction = new MultiAgentRawTransaction(
+                new RawTransaction(
+                    Sender.AccountAddress,
+                    int.Parse(sequenceNumber),
+                    Payload,
+                    ClientConfig.MAX_GAS_AMOUNT,
+                    ClientConfig.GAS_UNIT_PRICE,
+                    expirationTimestamp,
+                    this.ChainId
+                ),
+                new BCS.Sequence(secondaryAddressList.ToArray())
+            );
+
+            byte[] keyedTxn = rawTransaction.Keyed();
+
+            List<Tuple<AccountAddress, Authenticator>> secondarySigners = new List<Tuple<AccountAddress, Authenticator>>();
+            foreach (Account account in SecondaryAccounts)
+            {
+                secondarySigners.Add(
+                    Tuple.Create<AccountAddress, Authenticator>(
+                        account.AccountAddress,
+                        new Authenticator(
+                            new Ed25519Authenticator(account.PublicKey, account.Sign(keyedTxn))
+                        )
+                    )
+                );
+            }
+
+            Authenticator authenticator = new Authenticator(
+                new MultiAgentAuthenticator(
+                    new Authenticator(
+                        new Ed25519Authenticator(Sender.PublicKey, Sender.Sign(keyedTxn))
+                    ),
+                    secondarySigners
+                )
+            );
+
+            Callback(new SignedTransaction(rawTransaction.Inner(), authenticator));
+        }
+
+        // TODO: Fix TransactionPayload declaration
+        public IEnumerator CreateBCSTransaction(
+            Action<RawTransaction> Callback,
+            Account Sender,
+            BCS.TransactionPayload payload)
+        {
+            string sequenceNumber = "";
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
+                sequenceNumber = _sequenceNumber;
+                responseInfo = _responseInfo;
+            }, Sender.AccountAddress));
+            yield return cor_sequenceNumber;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                throw new Exception("Unable to get sequence number for: " + Sender.AccountAddress);
+            }
+
+            ulong expirationTimestamp = ((ulong)(DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL));
+
+            RawTransaction rawTxn = new RawTransaction(
+                Sender.AccountAddress,
+                int.Parse(sequenceNumber),
+                payload,
+                ClientConfig.MAX_GAS_AMOUNT,
+                ClientConfig.GAS_UNIT_PRICE,
+                expirationTimestamp,
+                this.ChainId
+            );
+
+            Callback(rawTxn);
+
+            yield return null;
+        }
+
+        // TODO: Fix "full qualifying TransactionPayload"
+        public IEnumerator CreateBCSSignedTransaction(
+            Action<SignedTransaction> Callback,
+            Account Sender,
+            BCS.TransactionPayload Payload
+        )
+        {
+            RawTransaction rawTransaction = null;
+
+            Coroutine cor_createBCSTransaction = StartCoroutine(CreateBCSTransaction((_rawTransaction) => {
+                rawTransaction = _rawTransaction;
+            }, Sender, Payload));
+            yield return cor_createBCSTransaction;
+
+            Signature signature = Sender.Sign(rawTransaction.Keyed());
+            Authenticator authenticator = new Authenticator(
+                new Ed25519Authenticator(Sender.PublicKey, signature)
+            );
+
+            Callback(new SignedTransaction(rawTransaction, authenticator));
+        }
+
+        #endregion
+
         #region Transaction Wrappers
         /// <summary>
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
@@ -890,7 +1206,8 @@ namespace Aptos.Unity.Rest
                 yield break;
             }
 
-            var transferPayload = new TransactionPayload()
+            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
+            var transferPayload = new Model.TransactionPayload()
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
                 Function = Constants.COIN_TRANSFER_FUNCTION,
@@ -909,7 +1226,7 @@ namespace Aptos.Unity.Rest
             }, sender, transferPayload));
             yield return cor_response;
 
-            if(responseInfo.status == ResponseInfo.Status.Success)
+            if (responseInfo.status == ResponseInfo.Status.Success)
             {
                 Transaction transaction = JsonConvert.DeserializeObject<Transaction>(responseInfo.message, new TransactionConverter());
                 callback(transaction, responseInfo);
@@ -918,6 +1235,47 @@ namespace Aptos.Unity.Rest
             {
                 callback(null, responseInfo);
             }
+        }
+
+        public IEnumerator BCSTransfer(
+            Action<string, ResponseInfo> Callback,
+            Account Sender,
+            AccountAddress Recipient,
+            int Amount
+        )
+        {
+            ISerializable[] transactionArguments =
+            {
+                Recipient,
+                new U64((ulong)Amount)
+            };
+
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x1"), "aptos_account"),
+                "transfer_coins",
+                new TagSequence(new ISerializableTag[] { new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0]) }),
+                new BCS.Sequence(transactionArguments)
+            );
+
+            SignedTransaction signedTransaction = null;
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(CreateBCSSignedTransaction((_signedTransaction) => {
+                signedTransaction = _signedTransaction;
+            }, Sender, new BCS.TransactionPayload(payload)));
+            yield return cor_createBcsSIgnedTransaction;
+
+            string submitBcsTxnJsonResponse = "";
+
+            Coroutine cor_submitBcsTransaction = StartCoroutine(SubmitBCSTransaction((_responseJson, _responseInfo) => {
+                submitBcsTxnJsonResponse = _responseJson;
+                responseInfo = _responseInfo;
+            }, signedTransaction));
+            yield return cor_submitBcsTransaction;
+
+            Callback(submitBcsTxnJsonResponse, responseInfo);
+
+            yield return null;
         }
 
         /// <summary>
@@ -1043,7 +1401,8 @@ namespace Aptos.Unity.Rest
             // TYPE: entry_function_payload
             // TYPE: script_function_payload
             // FUNCTION: create_collection_script
-            TransactionPayload createCollectionPayload = new TransactionPayload()
+            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
+            Model.TransactionPayload createCollectionPayload = new Model.TransactionPayload()
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
                 Function = Constants.CREATE_COLLECTION_SCRIPT, // Contract Address
@@ -1065,7 +1424,7 @@ namespace Aptos.Unity.Rest
             }, sender.AccountAddress));
             yield return cor_sequenceNumber;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 callback(null, responseInfo);
                 yield break;
@@ -1131,7 +1490,7 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Error while submitting transaction. " + request.error; 
+                responseInfo.message = "Error while submitting transaction. " + request.error;
                 callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
@@ -1192,7 +1551,8 @@ namespace Aptos.Unity.Rest
                 PropertyTypes = new string[] { },
             };
 
-            TransactionPayload txnPayload = new TransactionPayload()
+            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
+            Model.TransactionPayload txnPayload = new Model.TransactionPayload()
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
                 Function = Constants.CREATE_TOKEN_SCRIPT_FUNCTION,
@@ -1211,7 +1571,7 @@ namespace Aptos.Unity.Rest
             }, senderRoyaltyPayeeAddress.AccountAddress));
             yield return cor_sequenceNumber;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 callback(null, responseInfo);
                 yield break;
@@ -1350,7 +1710,8 @@ namespace Aptos.Unity.Rest
                 }
             };
 
-            TransactionPayload txnPayload = new TransactionPayload()
+            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
+            Model.TransactionPayload txnPayload = new Model.TransactionPayload()
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
                 Function = Constants.TOKEN_TRANSFER_OFFER_SCRIPT,
@@ -1366,7 +1727,7 @@ namespace Aptos.Unity.Rest
             }, account.AccountAddress));
             yield return cor_sequenceNumber;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 callback(null, responseInfo);
                 yield break;
@@ -1503,7 +1864,8 @@ namespace Aptos.Unity.Rest
                 },
             };
 
-            TransactionPayload txnPayload = new TransactionPayload()
+            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
+            Model.TransactionPayload txnPayload = new Model.TransactionPayload()
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
                 Function = Constants.TOKEN_TRANSFER_CLAIM_SCRIPT,
@@ -1521,7 +1883,7 @@ namespace Aptos.Unity.Rest
             }, account.AccountAddress));
             yield return cor_sequenceNumber;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 callback(null, responseInfo);
                 yield break;
@@ -1831,7 +2193,7 @@ namespace Aptos.Unity.Rest
             }, creator, "0x3::token::Collections"));
             yield return getAccountResourceCor;
 
-            if(!success)
+            if (!success)
             {
                 callback("Account resource not found");
                 yield break;
@@ -1853,50 +2215,6 @@ namespace Aptos.Unity.Rest
                 );
             yield return getTableItemCor;
             callback(tableItemResp);
-        }
-
-        /// <summary>
-        /// Get a resource of a given type from an account.
-        /// NOTE: The response is a complex object of types only known to the developer writing the contracts.
-        /// This function return a string and expect the developer to deserialize it into an object.
-        /// See <see cref="GetAccountResourceCollection(Action{ResourceCollection, ResponseInfo}, AccountAddress, string)">GetAccountResourceCollection</see> for an example.
-        /// </summary>
-        /// <param name="callback">Callback function used when response is received.</param>
-        /// <param name="accountAddress">Address of the account.</param>
-        /// <param name="resourceType">Type of resource being queried for.</param>
-        /// <returns>Calls <c>callback</c> function with <c>(bool, long, string)</c>: \n
-        /// -- bool: success boolean \n
-        /// -- long: - error code, string - JSON response to be deserialized by the consumer of the function\n
-        /// -- string: - the response which may contain the resource details</returns>
-        public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType)
-        {
-            string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
-            Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
-            request.SendWebRequest();
-            while (!request.isDone)
-            {
-                yield return null;
-            }
-
-            if (request.result == UnityWebRequest.Result.ConnectionError)
-            {
-                callback(false, 0, "ERROR: Connection Error: " + request.error);
-            }
-            else if (request.responseCode == 404)
-            {
-                callback(false, request.responseCode, request.error);
-            }
-            else if (request.responseCode >= 400)
-            {
-                callback(false, request.responseCode, request.error);
-            }
-            else
-            {
-                callback(true, request.responseCode, request.downloadHandler.text);
-            }
-
-            request.Dispose();
         }
         #endregion
 
