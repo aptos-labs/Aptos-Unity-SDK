@@ -186,9 +186,10 @@ namespace Aptos.Accounts
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(PublicKey lhs, PublicKey rhs) {
+        public static bool operator !=(PublicKey lhs, PublicKey rhs)
+        {
             return lhs == rhs;
-        } 
+        }
 
         /// <summary>
         /// Convert a PublicKey object to hex encoded string representatio public key.
@@ -215,7 +216,7 @@ namespace Aptos.Accounts
         /// </summary>
         /// <param name="publicKey">The PublicKey object.</param>
         /// <returns>Public key as a byte array.</returns>
-        public static implicit operator byte[](PublicKey publicKey) 
+        public static implicit operator byte[](PublicKey publicKey)
         {
             return publicKey.KeyBytes;
         }
