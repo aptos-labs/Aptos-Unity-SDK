@@ -1,3 +1,4 @@
+using Aptos.BCS;
 using Chaos.NaCl;
 using NBitcoin;
 using System;
@@ -127,6 +128,41 @@ namespace Aptos.Accounts
             byte[] bytes = new byte[Ed25519.PrivateKeySeedSizeInBytes];
             RandomUtils.GetBytes(bytes);
             return bytes;
+        }
+    }
+
+    public class RotationProofChallenge
+    {
+        AccountAddress TypeInfoAccountAddress = AccountAddress.FromHex("0x1");
+        string TypeInfoModuleName = "account";
+        string TypeInfoStructName = "RotationProofChallenge";
+        int SequenceNumber;
+        AccountAddress Originator;
+        AccountAddress CurrentAuthKey;
+        byte[] NewPublicKey;
+
+        public RotationProofChallenge(
+            int SequenceNumber,
+            AccountAddress Originator,
+            AccountAddress CurrentAuthKey,
+            byte[] NewPublicKey
+        )
+        {
+            this.SequenceNumber = SequenceNumber;
+            this.Originator = Originator;
+            this.CurrentAuthKey = CurrentAuthKey;
+            this.NewPublicKey = NewPublicKey;
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            this.TypeInfoAccountAddress.Serialize(serializer);
+            serializer.SerializeString(this.TypeInfoModuleName);
+            serializer.SerializeString(this.TypeInfoStructName);
+            serializer.SerializeU64((ulong)this.SequenceNumber);
+            this.Originator.Serialize(serializer);
+            this.CurrentAuthKey.Serialize(serializer);
+            serializer.SerializeBytes(this.NewPublicKey);
         }
     }
 }
