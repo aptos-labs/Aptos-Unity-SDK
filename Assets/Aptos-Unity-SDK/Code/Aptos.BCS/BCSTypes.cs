@@ -47,7 +47,7 @@ namespace Aptos.BCS
 
         public static ISerializableTag DeserializeTag(Deserialization deserializer)
         {
-            TypeTag variant = (TypeTag) deserializer.DeserializeUleb128();
+            TypeTag variant = (TypeTag)deserializer.DeserializeUleb128();
 
             if (variant == TypeTag.BOOL)
                 return Bool.Deserialize(deserializer);
@@ -73,7 +73,7 @@ namespace Aptos.BCS
                 throw new NotImplementedException();
             else if (variant == TypeTag.STRUCT)
                 return StructTag.Deserialize(deserializer);
-                //return ISerializableTag.Deserialize(deserializer);
+            //return ISerializableTag.Deserialize(deserializer);
 
             throw new NotImplementedException();
         }
@@ -104,7 +104,7 @@ namespace Aptos.BCS
         {
             int length = deserializer.DeserializeUleb128();
 
-            List <ISerializableTag> values = new List<ISerializableTag>();
+            List<ISerializableTag> values = new List<ISerializableTag>();
 
             while (values.Count < length)
             {
@@ -265,7 +265,7 @@ namespace Aptos.BCS
             int length = deserializer.DeserializeUleb128();
             List<byte[]> bytesList = new List<byte[]>();
 
-            while(bytesList.Count < length)
+            while (bytesList.Count < length)
             {
                 byte[] bytes = deserializer.ToBytes();
                 bytesList.Add(bytes);
@@ -284,7 +284,7 @@ namespace Aptos.BCS
             BytesSequence otherSeq = (BytesSequence)other;
 
             bool equal = true;
-            for(int i = 0; i < this.values.Length; i++)
+            for (int i = 0; i < this.values.Length; i++)
                 equal = equal && Enumerable.SequenceEqual(this.values[i], otherSeq.values[i]);
             return equal;
         }
@@ -333,13 +333,13 @@ namespace Aptos.BCS
         {
             Serialization mapSerializer = new Serialization();
             SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
-  
+
             foreach (KeyValuePair<BString, ISerializable> entry in this.values)
             {
                 Serialization keySerializer = new Serialization();
                 entry.Key.Serialize(keySerializer);
                 byte[] bKey = keySerializer.GetBytes();
-                
+
                 Serialization valSerializer = new Serialization();
                 entry.Value.Serialize(valSerializer);
                 byte[] bValue = valSerializer.GetBytes();
@@ -347,8 +347,8 @@ namespace Aptos.BCS
                 byteMap.Add(entry.Key.value, (bKey, bValue));
             }
             mapSerializer.SerializeU32AsUleb128((uint)byteMap.Count);
-            
-            foreach(KeyValuePair<string, (byte[], byte[])> entry in byteMap)
+
+            foreach (KeyValuePair<string, (byte[], byte[])> entry in byteMap)
             {
                 mapSerializer.SerializeFixedBytes(entry.Value.Item1);
                 mapSerializer.SerializeFixedBytes(entry.Value.Item2);
@@ -467,7 +467,7 @@ namespace Aptos.BCS
             return new Bytes(deserializer.ToBytes());
         }
 
-        public object GetValue()
+        public byte[] GetValue()
         {
             return values;
         }
@@ -712,7 +712,7 @@ namespace Aptos.BCS
 
             U64 otherU64 = (U64)other;
 
-            return this.value == (ulong) otherU64.GetValue();
+            return this.value == (ulong)otherU64.GetValue();
         }
 
         public override string ToString()
@@ -863,7 +863,7 @@ namespace Aptos.BCS
                 && this.module.Equals(otherStructTag.module)
                 && this.name.Equals(otherStructTag.name)
                 && Enumerable.SequenceEqual(this.typeArgs, otherStructTag.typeArgs)
-            );;
+            ); ;
         }
 
         public override string ToString()
@@ -875,10 +875,10 @@ namespace Aptos.BCS
                 this.name.ToString()
             );
 
-            if(this.typeArgs.Length > 0)
+            if (this.typeArgs.Length > 0)
             {
                 value += string.Format("<{0}", this.typeArgs[0].ToString());
-                foreach(ISerializableTag typeArg in this.typeArgs[1..])
+                foreach (ISerializableTag typeArg in this.typeArgs[1..])
                     value += string.Format(", {0}", typeArg.ToString());
                 value += ">";
             }
@@ -902,9 +902,9 @@ namespace Aptos.BCS
 
             string[] split = name.Split("::");
             return new StructTag(
-                AccountAddress.FromHex(split[0]), 
-                split[1], 
-                split[2], 
+                AccountAddress.FromHex(split[0]),
+                split[1],
+                split[2],
                 new ISerializableTag[] { }
             );
         }
