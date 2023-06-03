@@ -2,6 +2,8 @@ using NUnit.Framework;
 using Aptos.Accounts;
 using System;
 using Aptos.BCS;
+using Aptos.HdWallet.Utils;
+using System.Collections.Generic;
 
 namespace Aptos.Unity.Test
 {
@@ -46,10 +48,10 @@ namespace Aptos.Unity.Test
 
         private const string AccountAddress = "0x9f628c43d1c1c0f54683cf5ccbd2b944608df4ff2649841053b1790a4d7c187d";
 
-        private static readonly byte[] PublicKeySerializedOutput = { 
-            32, 88, 110, 60, 141, 68, 125, 118, 
-            121, 34, 46, 19, 144, 51, 227, 130, 
-            2, 53, 227, 61, 165, 9, 30, 155, 
+        private static readonly byte[] PublicKeySerializedOutput = {
+            32, 88, 110, 60, 141, 68, 125, 118,
+            121, 34, 46, 19, 144, 51, 227, 130,
+            2, 53, 227, 61, 165, 9, 30, 155,
             11, 184, 241, 161, 18, 207, 12, 143, 245
         };
 
@@ -74,7 +76,7 @@ namespace Aptos.Unity.Test
         private const string AccountAuthKeyHex = "0x9f628c43d1c1c0f54683cf5ccbd2b944608df4ff2649841053b1790a4d7c187d";
 
         private static readonly byte[] MessageUtf8Bytes = {
-            87, 69, 76, 67, 79, 77, 69, 32, 
+            87, 69, 76, 67, 79, 77, 69, 32,
             84, 79, 32, 65, 80, 84, 79, 83, 33 };
         private const string Message = "WELCOME TO APTOS!";
 
@@ -341,6 +343,72 @@ namespace Aptos.Unity.Test
             Assert.AreEqual(signature, signatureObject);
             bool verify = acc.Verify(MessageUtf8Bytes, signature);
             Assert.IsTrue(verify);
+        }
+
+        [Test]
+        public void TestRotationProofChallenge()
+        {
+            Account OriginatingAccount = Account.LoadKey(
+                "005120c5882b0d492b3d2dc60a8a4510ec2051825413878453137305ba2d644b"
+            );
+
+            Account TargetAccount = Account.LoadKey(
+                "19d409c191b1787d5b832d780316b83f6ee219677fafbd4c0f69fee12fdcdcee"
+            );
+
+            RotationProofChallenge rotationProofChallenge = new RotationProofChallenge(
+                1234,
+                OriginatingAccount.AccountAddress,
+                OriginatingAccount.AccountAddress,
+                TargetAccount.PublicKey.KeyBytes
+            );
+
+            Serialization serializer = new Serialization();
+            rotationProofChallenge.Serialize(serializer);
+            string rotationProofChallengeBcs = serializer.GetBytes().HexString();
+
+            string expectedBytes = string.Format("{0}{1}{2}{3}{4}{5}",
+                "0000000000000000000000000000000000000000000000000000000000000001",
+                "076163636f756e7416526f746174696f6e50726f6f664368616c6c656e6765d2",
+                "0400000000000015b67a673979c7c5dfc8d9c9f94d02da35062a19dd9d218087",
+                "bd9076589219c615b67a673979c7c5dfc8d9c9f94d02da35062a19dd9d218087",
+                "bd9076589219c620a1f942a3c46e2a4cd9552c0f95d529f8e3b60bcd44408637",
+                "9ace35e4458b9f22");
+
+            Assert.AreEqual(expectedBytes, rotationProofChallengeBcs, rotationProofChallengeBcs);
+        }
+
+        [Test]
+        public void TestMultisig()
+        {
+            // Generate signatory private keys.
+            PrivateKey privateKey1 = PrivateKey.FromHex("4e5e3be60f4bbd5e98d086d932f3ce779ff4b58da99bf9e5241ae1212a29e5fe");
+            PrivateKey privateKey2 = PrivateKey.FromHex("1e70e49b78f976644e2c51754a2f049d3ff041869c669523ba95b172c7329901");
+
+            // Generate multisig public key with threshold of 1.
+            List<PublicKey> publicKeys = new List<PublicKey>();
+            publicKeys.Add(privateKey1.PublicKey());
+            publicKeys.Add(privateKey2.PublicKey());
+            MultiPublicKey multiSigPublicKey = new MultiPublicKey(
+                publicKeys, 1
+            );
+
+            // Get public key BCS representation.
+            Serialization serializer = new Serialization();
+            multiSigPublicKey.Serialize(serializer);
+            string publicKeyBcs = serializer.GetBytes().HexString();
+            // Check against expected BCS representation.
+            string expectedPublicKeyBcs = string.Format("{0}{1}",
+                "41754bb6a4720a658bdd5f532995955db0971ad3519acbde2f1149c3857348006c",
+                "1634cd4607073f2be4a6f2aadc2b866ddb117398a675f2096ed906b20e0bf2c901"
+            );
+
+            Assert.AreEqual(expectedPublicKeyBcs, publicKeyBcs, privateKey1.PublicKey().KeyBytes.HexString());
+        }
+
+        static public string ToReadableByteArray(byte[] bytes)
+        {
+            return string.Join(", ", bytes);
         }
     }
 }
