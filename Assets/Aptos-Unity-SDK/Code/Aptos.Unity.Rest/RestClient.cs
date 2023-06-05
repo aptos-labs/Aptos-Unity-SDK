@@ -15,8 +15,8 @@ namespace Aptos.Unity.Rest
     /// <summary>
     /// The Aptos REST Client contains a set of [standalone] Coroutines
     /// that can started within any Unity script.
-    /// 
-    /// Consideration must be placed into the wait time required 
+    ///
+    /// Consideration must be placed into the wait time required
     /// for a transaction to be committed into the blockchain.
     /// </summary>
     public class RestClient : MonoBehaviour
@@ -49,18 +49,18 @@ namespace Aptos.Unity.Rest
         #region Account Accessors
 
         /// <summary>
-        /// Get Account Details.   
-        /// Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. 
+        /// Get Account Details.
+        /// Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified.
         /// If the ledger version is not specified in the request, the latest ledger version is used.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns>Calls <c>callback</c> function with <c>(AccountData, ResponseInfo)</c>: \n
-        /// An object that contains the account's:   
-        /// <c>sequence_number</c>, a string containing a 64-bit unsigned integer.   
+        /// An object that contains the account's:
+        /// <c>sequence_number</c>, a string containing a 64-bit unsigned integer.
         /// Example: <code>32425224034</code>
         /// <c>authentication_key</c> All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.
-        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
+        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.
         /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>, it is null if the request fails \n
         /// and a response object that contains the response details.
         /// </returns>
@@ -137,9 +137,9 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get an account's balance.    
-        /// 
-        /// The <c>/account</{address}/resource/{coin_type}</c> endpoint for AptosCoin returns the following response:     
+        /// Get an account's balance.
+        ///
+        /// The <c>/account</{address}/resource/{coin_type}</c> endpoint for AptosCoin returns the following response:
         /// <code>
         /// {
         ///     "type":"0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>",
@@ -172,7 +172,7 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoin.Coin, ResponseInfo)</c>: \n 
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoin.Coin, ResponseInfo)</c>: \n
         /// A representation of the coin, and an object containing the response details.</returns>
         public IEnumerator GetAccountBalance(Action<AccountResourceCoin.Coin, ResponseInfo> callback, Accounts.AccountAddress accountAddress)
         {
@@ -273,7 +273,7 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
-        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n 
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n
         /// An object representing the account resource that holds the coin's information - null if the request fails, and a response object the contains the response details.</returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
         {
@@ -324,7 +324,7 @@ namespace Aptos.Unity.Rest
         /// Get a  table item at a specific ledger version from the table identified
         /// by the handle {table_handle} in the path and a [simple] "key" (TableItemRequest)
         /// provided by the request body.
-        /// 
+        ///
         /// Further details are provider <see cref="https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item">here</see>
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
@@ -379,7 +379,7 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get a  table item for a NFT from the table identified
         /// by the handle {table_handle} in the path and a complex key provided by the request body.
-        /// 
+        ///
         /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see> for a get table item using a generic string key.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
@@ -472,14 +472,14 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get a table item that contains a token's (NFT) metadata.
         /// In this case we are using a complex key to retrieve the table item.
-        ///  
+        ///
         /// Note: the response received from the REST <c>/table</c>  for this methods
-        /// has a particular format specific to the SDK example.    
-        /// 
+        /// has a particular format specific to the SDK example.
+        ///
         /// Developers will have to implement their own custom object's to match
-        /// the properties of the NFT, meaning the content in the table item.   
-        /// 
-        /// The response for <c>/table</c> in the SDK example has the following format:   
+        /// the properties of the NFT, meaning the content in the table item.
+        ///
+        /// The response for <c>/table</c> in the SDK example has the following format:
         /// <code>
         /// {
         ///     "default_properties":{
@@ -574,7 +574,7 @@ namespace Aptos.Unity.Rest
         /// Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
-        /// <returns>Calls <c>callback</c>function with <c>(LedgerInfo, response)</c>: \n 
+        /// <returns>Calls <c>callback</c>function with <c>(LedgerInfo, response)</c>: \n
         /// An object that contains the chain details - null if the request fails, and a response object that contains the response details. </returns>
         public IEnumerator GetInfo(Action<LedgerInfo, ResponseInfo> callback)
         {
@@ -725,12 +725,12 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// A Coroutine that polls for a transaction hash until it is confimred in the blockchain
-        /// Times out if the transaction hash is not found after querying for N times.    
-        /// 
+        /// Times out if the transaction hash is not found after querying for N times.
+        ///
         /// Waits for a transaction query to respond whether a transaction submitted has been confirmed in the blockchain.
         /// Queries for a given transaction hash (txnHash) using <see cref="TransactionPending"/>
         /// by polling / looping until we find a "Success" transaction response, or until it times out after <see cref="TransactionWaitInSeconds"/>.
-        /// 
+        ///
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="txnHash">Transaction hash.</param>
@@ -738,7 +738,7 @@ namespace Aptos.Unity.Rest
         /// A boolean that is: \n
         /// -- true if the transaction hash was found after polling and the transaction was succesfully commited in the blockhain \n
         /// -- false if we did not find the transaction hash and timed out \n
-        /// 
+        ///
         /// A response object that contains the response details.
         /// </returns>
         public IEnumerator WaitForTransaction(Action<bool, ResponseInfo> callback, string txnHash)
@@ -804,7 +804,7 @@ namespace Aptos.Unity.Rest
         /// A boolean that is: \n
         /// -- true if transaction is still pending / hasn't been found, meaning 404, error in response, or `pending_transaction` is true \n
         /// -- false if transaction has been found, meaning `pending_transaction` is true \n
-        /// 
+        ///
         /// A response object that contains the response details.
         /// </returns>
         public IEnumerator TransactionPending(Action<bool, ResponseInfo> callback, string txnHash)
@@ -867,8 +867,8 @@ namespace Aptos.Unity.Rest
         #region Transaction Wrappers
         /// <summary>
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
-        /// Returns the sequence number of the transaction used to transfer.   
-        /// 
+        /// Returns the sequence number of the transaction used to transfer.
+        ///
         /// NOTE: Recipient address must hold APT before hand, and or have been airdrop APT if testing on devnet.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
@@ -921,13 +921,13 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Encodes submission.   
-        /// This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner 
-        /// (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS.   
-        /// The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint. 
-        /// 
+        /// Encodes submission.
+        /// This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner
+        /// (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS.
+        /// The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint.
+        ///
         /// If you are using an SDK that has BCS support, such as the official Rust, TypeScript, or Python SDKs, you may use the BCS encoding instead of this endpoint.
-        /// 
+        ///
         /// To sign a message using the response from this endpoint:
         /// - Decode the hex encoded string in the response to bytes.
         /// - Sign the bytes to create the signature.
@@ -937,8 +937,8 @@ namespace Aptos.Unity.Rest
         /// <param name="txnRequestJson">Transaction request in JSON format.</param>
         /// <returns>
         /// Calls <c>callback</c> function with: \n
-        /// All bytes (Vec) data that is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.  
-        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
+        /// All bytes (Vec) data that is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.
+        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.
         /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
         /// </returns>
         public IEnumerator EncodeSubmission(Action<string> callback, string txnRequestJson)
@@ -1131,7 +1131,7 @@ namespace Aptos.Unity.Rest
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Error while submitting transaction. " + request.error; 
+                responseInfo.message = "Error while submitting transaction. " + request.error;
                 callback(null, responseInfo);
             }
             else if (request.responseCode == 404)
@@ -1718,7 +1718,7 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Read Collection's token data table.
-        /// An example 
+        /// An example
         /// <code>
         /// {
         ///     "default_properties":{
