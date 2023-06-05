@@ -614,6 +614,47 @@ namespace Aptos.Unity.Rest
 
         #region Transactions
 
+        /// todo
+        public IEnumerator View(Action<String[], ResponseInfo> callback, Account sender, ViewRequest request)
+        {
+            string viewURL = Endpoint + "/view";
+            Uri viewURI = new Uri(viewURL);
+            var request = new UnityWebRequest(viewURI, "POST");
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting view function request. " + request.error;
+                callback(null, responseInfo);
+            }
+            else if (request.responseCode >= 404)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error 404 when submitting view function request.";
+                callback(null, responseInfo);
+            }
+            else // Either 200, or 202
+            {
+                string response = request.downloadHandler.text;
+                String[] values = JsonConvert.DeserializeObject<String[]>(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(values, responseInfo);
+            }
+
+            request.Dispose();
+        }
+
         /// <summary>
         /// 1) Generates a transaction request \n
         /// 2) submits that to produce a raw transaction \n
