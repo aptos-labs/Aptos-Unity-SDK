@@ -1,22 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Aptos.BCS;
-using UnityEngine;
 
 namespace Aptos.Accounts
 {
     public class MultiPublicKey : ISerializable
     {
         public List<PublicKey> Keys;
-        public int Threshold;
+        public byte Threshold;
 
         public int MIN_KEYS = 2;
         public int MAX_KEYS = 32;
         public int MIN_THRESHOLD = 1;
 
-        public MultiPublicKey(List<PublicKey> Keys, int Threshold, bool Checked = true)
+        public MultiPublicKey(List<PublicKey> Keys, byte Threshold, bool Checked = true)
         {
             if(Checked)
             {
@@ -44,15 +41,10 @@ namespace Aptos.Accounts
         {
             List<byte> concatenatedKeys = new List<byte>();
             foreach (PublicKey key in this.Keys)
-            {
-                //byte[] pubKeyBytes = key.Key.As
-                //concatenatedKeys.Concat(key.KeyBytes);
-                foreach(byte aByte in key.KeyBytes)
-                {
+                foreach (byte aByte in key.KeyBytes)
                     concatenatedKeys.Add(aByte);
-                }
-            }
-            concatenatedKeys.Concat(BitConverter.GetBytes(this.Threshold));
+
+            concatenatedKeys.Add(this.Threshold);
             return concatenatedKeys.ToArray();
         }
 
@@ -71,7 +63,7 @@ namespace Aptos.Accounts
             }
 
             // Get threshold.
-            int threshold = (int)Key[-1];
+            byte threshold = Key[-1];
             if(!(minThreshold <= threshold && threshold <= nSigners)) {
                 throw new Exception(string.Format("Threshold must be between {0} and {1}.", minThreshold, nSigners));
             }
@@ -92,7 +84,7 @@ namespace Aptos.Accounts
 
         public void Serialize(Serialization serializer)
         {
-            serializer.SerializeFixedBytes(this.ToBytes());
+            serializer.SerializeBytes(this.ToBytes());
         }
     }
 }
