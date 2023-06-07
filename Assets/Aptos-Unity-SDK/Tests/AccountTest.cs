@@ -4,6 +4,7 @@ using System;
 using Aptos.BCS;
 using Aptos.HdWallet.Utils;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Aptos.Unity.Test
 {
@@ -382,8 +383,12 @@ namespace Aptos.Unity.Test
         public void TestMultisig()
         {
             // Generate signatory private keys.
-            PrivateKey privateKey1 = PrivateKey.FromHex("4e5e3be60f4bbd5e98d086d932f3ce779ff4b58da99bf9e5241ae1212a29e5fe");
-            PrivateKey privateKey2 = PrivateKey.FromHex("1e70e49b78f976644e2c51754a2f049d3ff041869c669523ba95b172c7329901");
+            PrivateKey privateKey1 = PrivateKey.FromHex(
+                "4e5e3be60f4bbd5e98d086d932f3ce779ff4b58da99bf9e5241ae1212a29e5fe"
+            );
+            PrivateKey privateKey2 = PrivateKey.FromHex(
+                "1e70e49b78f976644e2c51754a2f049d3ff041869c669523ba95b172c7329901"
+            );
 
             // Generate multisig public key with threshold of 1.
             List<PublicKey> publicKeys = new List<PublicKey>();
@@ -403,12 +408,98 @@ namespace Aptos.Unity.Test
                 "1634cd4607073f2be4a6f2aadc2b866ddb117398a675f2096ed906b20e0bf2c901"
             );
 
-            Assert.AreEqual(expectedPublicKeyBcs, publicKeyBcs, privateKey1.PublicKey().KeyBytes.HexString());
+            Assert.AreEqual(expectedPublicKeyBcs, publicKeyBcs,
+                publicKeyBcs
+                + "\n" +
+                privateKey1.PublicKey().KeyBytes.HexString()
+                + "\n" +
+                privateKey2.PublicKey().KeyBytes.HexString()
+                + "\n" +
+                multiSigPublicKey.Threshold
+                + "\n" +
+                ToReadableByteArray(BitConverter.GetBytes(multiSigPublicKey.Threshold))
+            );
+        }
+
+        [Test]
+        public void TestMultiEd25519()
+        {
+            PrivateKey privateKey1 = PrivateKey.FromHex(
+                "4e5e3be60f4bbd5e98d086d932f3ce779ff4b58da99bf9e5241ae1212a29e5fe"
+            );
+
+            PrivateKey privateKey2 = PrivateKey.FromHex(
+                "1e70e49b78f976644e2c51754a2f049d3ff041869c669523ba95b172c7329901"
+            );
+
+            MultiPublicKey multiSigPublicKey = new MultiPublicKey(
+                new List<PublicKey>() { privateKey1.PublicKey(), privateKey2.PublicKey() }, 1
+            );
+
+            AccountAddress expected = Accounts.AccountAddress.FromHex(
+                "835bb8c5ee481062946b18bbb3b42a40b998d6bf5316ca63834c959dc739acf0"
+            );
+
+            AccountAddress actual = Accounts.AccountAddress.FromMultiEd25519(multiSigPublicKey);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestResourceAccount()
+        {
+            AccountAddress baseAddress = Accounts.AccountAddress.FromHex("b0b");
+            AccountAddress expected = Accounts.AccountAddress.FromHex(
+                "ee89f8c763c27f9d942d496c1a0dcf32d5eacfe78416f9486b8db66155b163b0"
+            );
+
+            byte[] seed = { 0x0b, 0x00, 0x0b };
+            AccountAddress actual = Accounts.AccountAddress.ForResourceAccount(baseAddress, seed);
+            Assert.AreEqual(actual, expected);
+        }
+
+        // TODO: Inquire on missing test for GUID Object
+
+        [Test]
+        public void TestNamedObject()
+        {
+            AccountAddress baseAddress = Accounts.AccountAddress.FromHex("b0b");
+            AccountAddress expected = Accounts.AccountAddress.FromHex(
+                "f417184602a828a3819edf5e36285ebef5e4db1ba36270be580d6fd2d7bcc321"
+            );
+
+            byte[] seed = Encoding.ASCII.GetBytes("bob's collection");
+            AccountAddress actual = Accounts.AccountAddress.ForNamedObject(baseAddress, seed);
+            Assert.AreEqual(actual, expected);
         }
 
         static public string ToReadableByteArray(byte[] bytes)
         {
             return string.Join(", ", bytes);
+        }
+
+        [Test]
+        public void TestCollection()
+        {
+            AccountAddress baseAddress = Accounts.AccountAddress.FromHex("b0b");
+            AccountAddress expected = Accounts.AccountAddress.FromHex(
+                "f417184602a828a3819edf5e36285ebef5e4db1ba36270be580d6fd2d7bcc321"
+            );
+            AccountAddress actual = Accounts.AccountAddress.ForNamedCollection(baseAddress, "bob's collection");
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void TestToken()
+        {
+            AccountAddress baseAddress = Accounts.AccountAddress.FromHex("b0b");
+            AccountAddress expected = Accounts.AccountAddress.FromHex(
+                "e20d1f22a5400ba7be0f515b7cbd00edc42dbcc31acc01e31128b2b5ddb3c56e"
+            );
+            AccountAddress actual = Accounts.AccountAddress.ForNamedToken(
+                baseAddress, "bob's collection", "bob's token"
+            );
+            Assert.AreEqual(actual, expected);
         }
     }
 }
