@@ -2,9 +2,19 @@ using Chaos.NaCl;
 using System;
 using Aptos.HdWallet.Utils;
 using Aptos.BCS;
+using System.Text;
 
 namespace Aptos.Accounts
 {
+    public class AuthKeyScheme
+    {
+        public const byte Ed25519 = 0x00;
+        public const byte MultiEd25519 = 0x01;
+        public const byte DeriveObjectAddressFromGuid = 0xFD;
+        public const byte DeriveObjectAddressFromSeed = 0xFE;
+        public const byte DeriveResourceAccountAddress = 0xFF;
+    }
+
     /// <summary>
     /// Represents an Aptos account address.
     /// More details can her found <see cref="https://aptos.dev/concepts/accounts">here</see>.
@@ -88,6 +98,68 @@ namespace Aptos.Accounts
             sha256.DoFinal(result, 0);
 
             return new AccountAddress(result);
+        }
+
+        public static AccountAddress FromMultiEd25519(MultiPublicKey keys)
+        {
+            var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
+            byte[] keyBytes = keys.ToBytes();
+            byte authKeyScheme = AuthKeyScheme.MultiEd25519;
+            sha256.BlockUpdate(keyBytes, 0, keyBytes.Length);
+            sha256.Update(authKeyScheme);
+            byte[] result = new byte[Ed25519.PublicKeySizeInBytes];
+            sha256.DoFinal(result, 0);
+            return new AccountAddress(result);
+        }
+
+        public static AccountAddress ForResourceAccount(AccountAddress creator, byte[] seed)
+        {
+            var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
+            sha256.BlockUpdate(creator.AddressBytes, 0, creator.AddressBytes.Length);
+            sha256.BlockUpdate(seed, 0, seed.Length);
+            sha256.Update(AuthKeyScheme.DeriveResourceAccountAddress);
+            byte[] result = new byte[Ed25519.PublicKeySizeInBytes];
+            sha256.DoFinal(result, 0);
+            return new AccountAddress(result);
+        }
+
+        public static AccountAddress ForGuidObject(AccountAddress creator, int creationNum)
+        {
+            var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
+            Serialization serializer = new Serialization();
+            serializer.SerializeU64((ulong)creationNum);
+            byte[] output = serializer.GetBytes();
+            sha256.BlockUpdate(output, 0, output.Length);
+            sha256.BlockUpdate(creator.AddressBytes, 0, creator.AddressBytes.Length);
+            sha256.Update(AuthKeyScheme.DeriveObjectAddressFromGuid);
+            byte[] result = new byte[Ed25519.PublicKeySizeInBytes];
+            sha256.DoFinal(result, 0);
+            return new AccountAddress(result);
+        }
+
+        public static AccountAddress ForNamedObject(AccountAddress creator, byte[] seed)
+        {
+            var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
+            sha256.BlockUpdate(creator.AddressBytes, 0, creator.AddressBytes.Length);
+            sha256.BlockUpdate(seed, 0, seed.Length);
+            sha256.Update(AuthKeyScheme.DeriveObjectAddressFromSeed);
+            byte[] result = new byte[Ed25519.PublicKeySizeInBytes];
+            sha256.DoFinal(result, 0);
+            return new AccountAddress(result);
+        }
+
+        public static AccountAddress ForNamedToken(AccountAddress creator, string collectionName, string tokenName)
+        {
+            byte[] result = Encoding.ASCII.GetBytes(collectionName + "::" + tokenName);
+            return AccountAddress.ForNamedObject(
+                creator, result
+            );
+        }
+
+        public static AccountAddress ForNamedCollection(AccountAddress creator, string collectionName)
+        {
+            byte[] collectionNameEncode = Encoding.ASCII.GetBytes(collectionName);
+            return AccountAddress.ForNamedObject(creator, collectionNameEncode);
         }
 
         /// <summary>
