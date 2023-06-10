@@ -429,10 +429,14 @@ namespace Aptos.BCS
 
         public override bool Equals(object other)
         {
-            if (other is not BString)
-                throw new NotImplementedException();
+            BString otherBString;
 
-            BString otherBString = (BString)other;
+            if (other is string)
+                otherBString = new BString((string) other);
+            else if (other is not BString)
+                throw new NotImplementedException();
+            else 
+                otherBString = (BString)other;
 
             return this.value == otherBString.value;
         }
