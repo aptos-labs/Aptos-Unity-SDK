@@ -1,6 +1,8 @@
 using Aptos.Accounts;
 using Aptos.BCS;
+using Aptos.HdWallet.Utils;
 using Aptos.Unity.Rest.Model;
+using Aptos.Unity.Rest.Model.Resources;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -16,7 +18,10 @@ namespace Aptos.Unity.Rest
     public interface IResource
     {
         public string GetStructTag();
-        public static IResource Parse(string resourceJson) => throw new NotImplementedException();
+        public static IResource Parse(ResourceDataBase resource)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     #region Object Class
@@ -28,7 +33,7 @@ namespace Aptos.Unity.Rest
         bool AllowUngatedTransfer;
         AccountAddress Owner;
 
-        public string StructTag = "0x1::object::ObjectCore";
+        public static string StructTag = "0x1::object::ObjectCore";
 
         public Object(bool AllowUngatedTransfer, AccountAddress Owner)
         {
@@ -41,16 +46,13 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="resourceJson"></param>
         /// <returns></returns>
-        // TODO: Implement Parse for Object class
-        public IResource Parse(string resourceJson)
+        public static IResource Parse(ResourceDataBase resourceData)
         {
-            //ObjectResource resourceObj = JsonConvert.DeserializeObject<ObjectResource>(resourceJson, new ObjectResourceConverter());
-
-            //return new Object(
-            //    resourceObj.AllowUngatedTransfer,
-            //    AccountAddress.FromHex(resourceObj.Owner)
-            //);
-            throw new NotImplementedException();
+            ObjectResourceData objcResData = (ObjectResourceData)resourceData;
+            return new Object(
+                objcResData.AllowUngatedTransfer,
+                AccountAddress.FromHex(objcResData.Owner)
+            );
         }
 
         public override string ToString()
@@ -91,18 +93,15 @@ namespace Aptos.Unity.Rest
             return string.Format("AccountAddress[creator: {0}, description: {1}, name: {2}, uri: {3}]", this.Creator, this.Description, this.Name, this.Uri);
         }
 
-        // TODO: Check the resource data type and if it matches Python implementation
-        public static IResource Parse(string resourceJson)
+        public static IResource Parse(ResourceDataBase resource)
         {
-            //CollectionResource resourceObj = JsonConvert.DeserializeObject<CollectionResource>(resourceJson, new CollectionResourceConverter());
-            //return new Collection(
-            //    AccountAddress.FromHex(resourceObj.Creator),
-            //    resourceObj.Description,
-            //    resourceObj.Name,
-            //    resourceObj.Uri
-            //);
-
-            throw new NotImplementedException();
+            CollectionResourceData collectionData = (CollectionResourceData)resource;
+            return new Collection(
+                AccountAddress.FromHex(collectionData.Creator),
+                collectionData.Description,
+                collectionData.Name,
+                collectionData.Uri
+            );
         }
 
         public string GetStructTag()
@@ -119,7 +118,7 @@ namespace Aptos.Unity.Rest
         int Denominator;
         AccountAddress PayeeAddress;
 
-        string StructTag = "0x4::royalty::Royalty";
+        public static string StructTag = "0x4::royalty::Royalty";
 
         public Royalty(int Numerator, int Denominator, AccountAddress PayeeAddress)
         {
@@ -133,16 +132,14 @@ namespace Aptos.Unity.Rest
             return string.Format("Royalty[numerator: {0}, denominator: {1}, payee_address: {2}]", this.Numerator, this.Denominator, this.PayeeAddress);
         }
 
-        // TODO: Check the resource data type and if it matches Python implementation
-        public IResource Parse(string resourceJson)
+        public static IResource Parse(ResourceDataBase resource)
         {
-            //RoyaltyResource resourceObj = JsonConvert.DeserializeObject<RoyaltyResource>(resourceJson, new RoyaltyResourceConverter());
-            //return new Royalty(
-            //    resourceObj.Numerator,
-            //    resourceObj.Denominator,
-            //    resourceObj.Payee_address
-            //);
-            throw new NotImplementedException();
+            RoyaltyResourceData royaltyResData = (RoyaltyResourceData)resource;
+            return new Royalty(
+                int.Parse(royaltyResData.Numerator),
+                int.Parse(royaltyResData.Denominator),
+                AccountAddress.FromHex(royaltyResData.PayeeAddress)
+            );
         }
 
         public string GetStructTag()
@@ -164,7 +161,7 @@ namespace Aptos.Unity.Rest
         string Name;
         string Uri;
 
-        string StructTag = "0x4::token::Token";
+        public static string StructTag = "0x4::token::Token";
 
         public Token(AccountAddress Collection, int Index, string Description, string Name, string Uri)
         {
@@ -180,19 +177,16 @@ namespace Aptos.Unity.Rest
             return string.Format("Token[collection: {0}, index: {1}, description: {2}, name: {3}, uri: {4}]", this.Collection, this.Index, this.Description, this.Name, this.Uri);
         }
 
-        // TODO: Check the resource data type and if it matches Python implementation
-        public static IResource Parse(string resourceJson)
+        public static IResource Parse(ResourceDataBase resource)
         {
-            //TokenResource resourceObj = JsonConvert.DeserializeObject<TokenResource>(resourceJson, new TokenResourceConverter());
-            //return new Token(
-            //    AccountAddress.FromHex(resourceObj.Collection.Inner),
-            //    int.Parse(resourceObj.Index),
-            //    resourceObj.Description,
-            //    resourceObj.Name,
-            //    resourceObj.Uri
-            //);
-
-            throw new NotImplementedException();
+            TokenResourceData royaltyResData = (TokenResourceData)resource;
+            return new Token(
+                AccountAddress.FromHex(royaltyResData.Collection.Inner),
+                int.Parse(royaltyResData.Index),
+                royaltyResData.Description,
+                royaltyResData.Name,
+                royaltyResData.Uri
+            );
         }
 
         public string GetStructTag()
@@ -249,6 +243,8 @@ namespace Aptos.Unity.Rest
 
         public byte[] SerializeValue()
         {
+            Debug.Log("PROPERTY TYPE: " + PropertyType.ToString());
+
             Serialization ser = new Serialization();
             if (this.PropertyType.Equals("bool"))
             {
@@ -307,17 +303,6 @@ namespace Aptos.Unity.Rest
 
             return ser.GetBytes();
         }
-
-        // TODO: Review TransactionArgument implementation,
-        // otherwise remove TranactionArgument class since ISerializable represents a TransactionArgument
-        // public List<TransactionArgument> ToTransactionArguments()
-        // {
-        //     List<TransactionArgument> args = new List<TransactionArgument>();
-        //     args.Add(new TransactionArgument(this.Name, typeof(BString)));
-        //     args.Add(new TransactionArgument(this.PropertyType, typeof(BString)));
-        //     args.Add(new TransactionArgument(new Bytes(this.SerializeValue()), typeof(Bytes)));
-        //     return args;
-        // }
 
         public List<ISerializable> ToTransactionArguments()
         {
@@ -478,7 +463,7 @@ namespace Aptos.Unity.Rest
     {
         List<Property> Properties;
 
-        string StructTag = "0x4::property_map::PropertyMap";
+        public static string StructTag = "0x4::property_map::PropertyMap";
 
         public PropertyMap(List<Property> Properties)
         {
@@ -513,25 +498,24 @@ namespace Aptos.Unity.Rest
             return Tuple.Create(names, types, values);
         }
 
-        // TODO: Look into implementation and or resource object model
-        public static IResource Parse(string resourceJson)
+        public static IResource Parse(ResourceDataBase resource)
         {
-            //PropertyMapResource resourceObj = JsonConvert.DeserializeObject<PropertyMapResource>(resourceJson, new PropertyMapResourceConverter());
-            //PropertyList props = resourceObj.Inner.Data;
-            //List<Property> properties = new List<Property>();
-            //foreach(Property prop in props)
-            //{
-            //    properties.Add(
-            //        Property.Parse(
-            //            new BString(prop.Key),
-            //            prop.Value.Type,
-            //            prop.Value.Value.Substring(2).BytesFromHex()
-            //        )
-            //    );
-            //}
-            //return new PropertyMap(properties);
+            PropertyMapResourceData propMapResData = (PropertyMapResourceData)resource;
+            List<Property> properties = new List<Property>();
+            List<PropertyResource> props = propMapResData.Inner.Data;
 
-            throw new NotImplementedException();
+            foreach(PropertyResource prop in props)
+            {
+                properties.Add(
+                    Property.Parse(
+                        new BString(prop.Key),
+                        int.Parse(prop.Value.Type),
+                        new Bytes(prop.Value.Value.ByteArrayFromHexString())
+                    )
+                );
+            }
+
+            return new PropertyMap(properties);
         }
 
         public string GetStructTag()
@@ -544,26 +528,20 @@ namespace Aptos.Unity.Rest
     #region ReadObject Class
     public class ReadObject
     {
-        // TODO: Look into how to implement the following Python code:
-        /* 
-        resource_map: dict[str, Any] = {
-            Collection.struct_tag: Collection,
-            Object.struct_tag: Object,
-            PropertyMap.struct_tag: PropertyMap,
-            Royalty.struct_tag: Royalty,
-            Token.struct_tag: Token,
-        }
+        public static Dictionary<string, Func<ResourceDataBase, IResource>> ResourceMap
+            = new Dictionary<string, Func<ResourceDataBase, IResource>>
+        {
+            { Collection.StructTag, new Func<ResourceDataBase, IResource>(Collection.Parse) },
+            { Object.StructTag, new Func<ResourceDataBase, IResource>(Object.Parse) },
+            { PropertyMap.StructTag, new Func<ResourceDataBase, IResource>(PropertyMap.Parse) },
+            { Royalty.StructTag, new Func<ResourceDataBase, IResource>(Royalty.Parse) },
+            { Token.StructTag, new Func<ResourceDataBase, IResource>(Token.Parse) }
+        };
 
-        */
-        // TODO: Look into instantiating a Dictionary
-        //Dictionary<string, Type> ResourceMap = {
-        //    new KeyValuePair<string, Type>("", null)
-        //};
+        // <0x1::object::ObjectCore, ResourceDataBase>
+        Dictionary<string, IResource> Resources;
 
-        Dictionary<IResource, IResource> Resources;
-
-
-        public ReadObject(Dictionary<IResource, IResource> Resources)
+        public ReadObject(Dictionary<string, IResource> Resources)
         {
             this.Resources = Resources;
         }
@@ -571,9 +549,10 @@ namespace Aptos.Unity.Rest
         public override string ToString()
         {
             string response = "ReadObject";
-            foreach (KeyValuePair<IResource, IResource> resourceObjValue in this.Resources)
+            foreach (KeyValuePair<string, IResource> resourceObjValue in this.Resources)
             {
-                response += string.Format("\n\t{0}: {1}", resourceObjValue.Key.GetStructTag(), resourceObjValue.Value);
+                //response += string.Format("\n\t{0}: {1}", resourceObjValue.Key.GetStructTag(), resourceObjValue.Value);
+                response += string.Format("\n\t{0}: {1}", resourceObjValue.Key, resourceObjValue.Value);
             }
             return response;
         }
@@ -587,25 +566,40 @@ namespace Aptos.Unity.Rest
     {
         RestClient Client;
 
-        public AptosTokenClient(RestClient Client)
+        public static AptosTokenClient Instance { get; private set; }
+
+        private void Awake()
         {
-            this.Client = Client;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
 
-        // TODO: Look into missing function from Python code:
-        // read_resources = await self.client.account_resources(address)
-        public IEnumerator ReadObject(Action<AccountData, ResponseInfo> callback, AccountAddress address)
+        public AptosTokenClient SetUp(RestClient Client)
+        {
+            this.Client = Client;
+            return Instance;
+        }
+
+        public IEnumerator ReadObject(Action<ReadObject, ResponseInfo> callback, AccountAddress address)
         {
             bool success = false;
             long responseCode = 0;
             string resourcesResp = "";
-            Coroutine getAccountResourceCor = StartCoroutine(Client.GetAccountResource((_success, _responseCode, returnResult) =>
+            Coroutine getAccountResourceCor = StartCoroutine(Client.GetAccountResources((_success, _responseCode, returnResult) =>
             {
                 success = _success;
                 responseCode = _responseCode;
                 resourcesResp = returnResult;
-            }, address, ""));
+            }, address));
             yield return getAccountResourceCor;
+
+            Debug.Log("READ OBJECT getAccountResource: " + "\n" + resourcesResp);
 
             ResponseInfo responseInfo = new ResponseInfo();
 
@@ -617,27 +611,60 @@ namespace Aptos.Unity.Rest
                 yield break;
             }
 
-            // TODO: Implement ResourcesResponse data model
-            //Model.Resources resources;
+            Debug.Log("READ OBJECT: " + "\n" + resourcesResp);
 
-            //ResourcesResponse resourcesResponseObj = JsonConvert.DeserializeObject<ResourcesResponse>(resourcesResp);
-            //List<Resource> resourcesList = resourcesResponseObj.responses;
+            Dictionary<string, IResource> resources = new Dictionary<string, IResource>();
+            //List<IResourceBase> readResources = JsonConvert.DeserializeObject<List<IResourceBase>>(resourcesResp);
+            List<IResourceBase> readResources = JsonConvert.DeserializeObject<List<IResourceBase>>(resourcesResp, new ResourceBaseListConverter<IResourceBase>());
+            foreach (IResourceBase resource in readResources)
+            {
+                string type = resource.Type;
+                if(Rest.ReadObject.ResourceMap.ContainsKey(type))
+                {
+                    string resourceObj = type; // NOTE: In Python it resources the entire class
 
-            // TODO: Implement
-            //for resource in read_resources:
-            //if resource["type"] in ReadObject.resource_map:
-            //    resource_obj = ReadObject.resource_map[resource["type"]]
-            //    resources[resource_obj] = resource_obj.parse(resource["data"])
-            //return ReadObject(resources)
+                    if(resourceObj.Equals(Collection.StructTag))
+                    {
+                        CollectionResource collectionRes = (CollectionResource)resource;
+                        CollectionResourceData data = collectionRes.Data;
+                        Collection collection = (Collection) Collection.Parse(data);
+                        resources.Add(resourceObj, collection);
+                    }
+                    else if(resourceObj.Equals(Object.StructTag))
+                    {
+                        //ObjectResource objectRes = (ObjectResource)resource;
+                        ObjectResource objectRes = (ObjectResource) resource;
 
-            //foreach (Resource resource in resourcesList)
-            //{
-            //    if (ReadObject.ResourceMap.ContainsKey(resource.Type))
-            //    {
-            //        Resource resourceObj = ReadObject.ResourceMap[resource.Type];
-            //        resources[]
-            //    }
-            //}
+                        ObjectResourceData data = objectRes.Data;
+                        Object obj = (Object)Object.Parse(data);
+                        resources.Add(resourceObj, obj);
+                    }
+                    else if (resourceObj.Equals(PropertyMap.StructTag))
+                    {
+                        PropertyMapResource PropMapRes = (PropertyMapResource)resource;
+                        PropertyMapResourceData data = PropMapRes.Data;
+                        PropertyMap propMap = (PropertyMap)PropertyMap.Parse(data);
+                        resources.Add(resourceObj, propMap);
+                    }
+                    else if (resourceObj.Equals(Royalty.StructTag))
+                    {
+                        RoyaltyResource RoyaltyRes = (RoyaltyResource)resource;
+                        RoyaltyResourceData data = RoyaltyRes.Data;
+                        Royalty royalty = (Royalty)Royalty.Parse(data);
+                        resources.Add(resourceObj, royalty);
+                    }
+                    else // Token
+                    {
+                        TokenResource RoyaltyRes = (TokenResource)resource;
+                        TokenResourceData data = RoyaltyRes.Data;
+                        Token token = (Token)Token.Parse(data);
+                        resources.Add(resourceObj, token);
+                    }
+                }
+
+            }
+
+            callback(new ReadObject(resources), null);
         }
 
         public IEnumerator CreateCollection(
@@ -686,7 +713,7 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -698,6 +725,7 @@ namespace Aptos.Unity.Rest
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
+            Debug.Log("SIGNED TXN: \n" + signedTransaction);
 
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
@@ -708,12 +736,14 @@ namespace Aptos.Unity.Rest
             }, signedTransaction));
             yield return cor_submitBcsTransaction;
 
+            Debug.Log("SUBMIT BCS TXN JSON RESPONSE: \n" + submitBcsTxnJsonResponse);
+
             Callback(submitBcsTxnJsonResponse, responseInfo);
 
             yield return null;
         }
 
-        public IEnumerator IMintToken(
+        public IEnumerator MintToken(
             Action<string, ResponseInfo> Callback,
             Account Creator,
             string Collection,
@@ -743,7 +773,7 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             //)
@@ -801,7 +831,7 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -841,7 +871,7 @@ namespace Aptos.Unity.Rest
                  new Sequence(new ISerializable[] { Token })
              );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -881,7 +911,7 @@ namespace Aptos.Unity.Rest
                  new Sequence(new ISerializable[] { Token })
              );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -921,7 +951,7 @@ namespace Aptos.Unity.Rest
                  new Sequence(new ISerializable[] { Token })
              );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -967,7 +997,7 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -1012,7 +1042,7 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
@@ -1058,7 +1088,7 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Add create_bcs_signed_transaction REST call
+            // TODO: Verify REST call
             // signed_transaction = await self.client.create_bcs_signed_transaction(
             //     creator, TransactionPayload(payload)
             // )
