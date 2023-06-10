@@ -18,12 +18,12 @@ namespace Aptos.Unity.Rest
     /// Common configuration for clients,
     /// particularly for submitting transactions
     /// </summary>
-    public class ClientConfig
+    public static class ClientConfig
     {
         public const int EXPIRATION_TTL = 600;
         public const int GAS_UNIT_PRICE = 100;
         public const int MAX_GAS_AMOUNT = 100000;
-        public const int TRANSACTION_WAIT_IN_SECONDS = 20;
+        public const int TRANSACTION_WAIT_IN_SECONDS = 20; // Amount of seconds to each during each polling cycle.
     }
 
     /// <summary>
@@ -36,10 +36,7 @@ namespace Aptos.Unity.Rest
     public class RestClient : MonoBehaviour
     {
         /// Static instance of the REST client.
-        public static RestClient Instance { get; set; }
-
-        /// Amount of seconds to each during each polling cycle.
-        public static int TransactionWaitInSeconds = 20;
+        public static RestClient Instance { get; private set; }
 
         /// Based enpoint for REST API.
         public Uri Endpoint { get; private set; }
@@ -47,17 +44,42 @@ namespace Aptos.Unity.Rest
 
         private void Awake()
         {
-            Instance = this;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
 
         #region Setup
-        public RestClient(
-            int ChainId,
-            ClientConfig ClientConfig,
-            string BaseUrl)
+        public IEnumerator SetUp(Action<RestClient> Callback, string BaseUrl)
         {
             this.Endpoint = new Uri(BaseUrl);
-            this.ChainId = ChainId;
+
+            LedgerInfo ledgerInfo = new LedgerInfo();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine ledgerInfoCor = StartCoroutine(
+                GetInfo((_ledgerInfo, _responseInfo) =>
+                {
+                    ledgerInfo = _ledgerInfo;
+                    responseInfo = _responseInfo;
+                })
+            );
+
+            yield return ledgerInfoCor;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Error getting ledger info: " + responseInfo.message);
+                yield break;
+            }
+
+            this.ChainId = ledgerInfo.ChainId;
+
+            Callback(Instance);
         }
 
         /// <summary>
@@ -255,6 +277,38 @@ namespace Aptos.Unity.Rest
         public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType = "", string ledgerVersion = "")
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
+            Uri accountsURI = new Uri(accountsURL);
+            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                callback(false, 0, "ERROR: Connection Error: " + request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback(false, request.responseCode, request.error);
+            }
+            else if (request.responseCode >= 400)
+            {
+                callback(false, request.responseCode, request.error);
+            }
+            else
+            {
+                callback(true, request.responseCode, request.downloadHandler.text);
+            }
+
+            request.Dispose();
+        }
+
+        // TODO: Explore and add documentation
+        public IEnumerator GetAccountResources(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string ledgerVersion = "")
+        {
+            string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resources";
             Uri accountsURI = new Uri(accountsURL);
             UnityWebRequest request = UnityWebRequest.Get(accountsURI);
             request.SendWebRequest();
@@ -766,8 +820,8 @@ namespace Aptos.Unity.Rest
             SignedTransaction SignedTransaction
         )
         {
-            string simulateTxnEndpoint = Endpoint + "/transactions";
-            UnityWebRequest request = new UnityWebRequest(simulateTxnEndpoint, "POST");
+            string submitTxnEndpoint = Endpoint + "/transactions";
+            UnityWebRequest request = new UnityWebRequest(submitTxnEndpoint, "POST");
             request.SetRequestHeader("Content-Type", "application/x.aptos.signed_transaction+bcs");
             request.uploadHandler = new UploadHandlerRaw(SignedTransaction.Bytes());
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -969,7 +1023,7 @@ namespace Aptos.Unity.Rest
 
                 // Timeout if the transaction is still pending (hash not found) and we have queried N times
                 // Set the boolean response to false, break -- we did not find the transaction
-                if (count > TransactionWaitInSeconds)
+                if (count > ClientConfig.TRANSACTION_WAIT_IN_SECONDS)
                 {
                     responseInfo.message = "Response Timed Out After Querying " + count + "Times";
                     isTxnSuccessful = false;
