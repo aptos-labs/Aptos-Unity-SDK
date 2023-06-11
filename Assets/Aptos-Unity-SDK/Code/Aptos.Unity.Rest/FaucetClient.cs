@@ -30,9 +30,11 @@ namespace Aptos.Unity.Rest
         /// A boolean stating that the request for funding was successful, and an object containg the response details</returns>
         public IEnumerator FundAccount(Action<bool, ResponseInfo> callback, string address, int amount, string endpoint)
         {
-            string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
+             string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
             Uri transactionsURI = new Uri(faucetURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+
+            var request = RequestClient.GetRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             request.SetRequestHeader("Content-Type", "application/json");
 
             ResponseInfo responseInfo = new ResponseInfo();
