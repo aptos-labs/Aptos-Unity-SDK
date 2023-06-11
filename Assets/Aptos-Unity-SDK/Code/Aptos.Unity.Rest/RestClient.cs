@@ -68,8 +68,10 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
             Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            var request = RequestClient.GetRequest(accountsURI);
+
             request.SendWebRequest();
+
             while (!request.isDone)
             {
                 yield return null;
@@ -178,7 +180,8 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
             Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            var request = RequestClient.GetRequest(accountsURI);
+
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -204,6 +207,7 @@ namespace Aptos.Unity.Rest
             }
             else
             {
+                Debug.Log("downloader: " + request.downloadHandler.text);
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
 
                 AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
@@ -227,8 +231,8 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
+            var request = RequestClient.GetRequest(accountsURI);
 
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -277,17 +281,10 @@ namespace Aptos.Unity.Rest
         /// An object representing the account resource that holds the coin's information - null if the request fails, and a response object the contains the response details.</returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
         {
-            TableItemRequest tableItemRequest = new TableItemRequest
-            {
-                KeyType = keyType,
-                ValueType = valueType,
-                Key = key
-            };
-
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.GetRequest(getTableItemURI);
 
-            UnityWebRequest request = UnityWebRequest.Get(getTableItemURI);
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -345,8 +342,8 @@ namespace Aptos.Unity.Rest
 
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.GetRequest(getTableItemURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -413,8 +410,8 @@ namespace Aptos.Unity.Rest
 
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.GetRequest(getTableItemURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -528,8 +525,8 @@ namespace Aptos.Unity.Rest
 
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.GetRequest(getTableItemURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -578,7 +575,8 @@ namespace Aptos.Unity.Rest
         /// An object that contains the chain details - null if the request fails, and a response object that contains the response details. </returns>
         public IEnumerator GetInfo(Action<LedgerInfo, ResponseInfo> callback)
         {
-            UnityWebRequest request = UnityWebRequest.Get(Endpoint);
+            var request = RequestClient.GetRequest(Endpoint);
+
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -749,7 +747,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.GetRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -872,9 +871,10 @@ namespace Aptos.Unity.Rest
         /// </returns>
         public IEnumerator TransactionPending(Action<bool, ResponseInfo> callback, string txnHash)
         {
-            string accountsURL = Endpoint + "/transactions/by_hash/" + txnHash;
-            Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            string txnURL = Endpoint + "/transactions/by_hash/" + txnHash;
+            Uri txnURI = new Uri(txnURL);
+            var request = RequestClient.GetRequest(txnURI);
+
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -1007,9 +1007,9 @@ namespace Aptos.Unity.Rest
         public IEnumerator EncodeSubmission(Action<string> callback, string txnRequestJson)
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
-            Uri accountsURI = new Uri(transactionsEncodeURL);
+            Uri txnEncodedUri = new Uri(transactionsEncodeURL);
+            var request = RequestClient.GetRequest(txnEncodedUri, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(accountsURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1048,8 +1048,8 @@ namespace Aptos.Unity.Rest
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
             Uri transactionsEncodeURI = new Uri(transactionsEncodeURL);
+            var request = RequestClient.GetRequest(transactionsEncodeURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(transactionsEncodeURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1179,7 +1179,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.GetRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -1320,7 +1321,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.GetRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+
             byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1474,7 +1476,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.GetRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1629,7 +1632,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.GetRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1935,7 +1939,8 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            var request = RequestClient.GetRequest(accountsURI);
+            
             request.SendWebRequest();
             while (!request.isDone)
             {
