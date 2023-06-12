@@ -1,8 +1,11 @@
 using Aptos.Accounts;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
+
 using Newtonsoft.Json;
+
 using System.Collections;
+
 using UnityEngine;
 
 namespace Aptos.Unity.Sample
@@ -42,7 +45,7 @@ namespace Aptos.Unity.Sample
             }, aliceAddress.ToString(), 100000000, faucetEndpoint));
             yield return fundAliceAccountCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Faucet funding for Alice failed: " + responseInfo.message);
                 yield break;
@@ -131,7 +134,7 @@ namespace Aptos.Unity.Sample
             }, alice, collectionName, collectionDescription, collectionUri));
             yield return createCollectionCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Cannot create collection. " + responseInfo.message);
             }
@@ -171,7 +174,7 @@ namespace Aptos.Unity.Sample
             );
             yield return createTokenCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Error creating token. " + responseInfo.message);
             }
@@ -234,7 +237,7 @@ namespace Aptos.Unity.Sample
             );
             yield return getTokenDataCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Could not get toke data.");
                 yield break;
@@ -255,7 +258,7 @@ namespace Aptos.Unity.Sample
 
             yield return offerTokenCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Error offering token. " + responseInfo.message);
                 yield break;
