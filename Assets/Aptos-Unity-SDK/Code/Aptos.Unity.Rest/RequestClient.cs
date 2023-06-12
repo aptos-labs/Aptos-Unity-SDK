@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Aptos.Unity.Rest {
+namespace Aptos.Unity.Rest
+{
 
     /// <summary>
     /// UnityWebRequest wrapper client
     /// </summary>
-    public class RequestClient {
+    public class RequestClient
+    {
 
         public static string X_APTOS_HEADER = "x-aptos-client";
 
@@ -16,7 +19,8 @@ namespace Aptos.Unity.Rest {
         /// Get the default Aptos header value
         /// </summary>
         /// <returns>String with the default Aptos header value</returns>
-        public static string Get_APTOS_HEADER_VALUE() {
+        public static string GetAptosHeaderValue()
+        {
             return "aptos-unity-sdk/" + Application.version;
         }
 
@@ -26,19 +30,23 @@ namespace Aptos.Unity.Rest {
         /// <param name="uri">endpoint uri</param>
         /// <param name="method">HTTP method</param>
         /// <returns>UnityWebRequest object</returns>
-        public static UnityWebRequest GetRequest(Uri uri, string method = UnityWebRequest.kHttpVerbGET) {
+        public static UnityWebRequest SubmitRequest(Uri uri, string method = UnityWebRequest.kHttpVerbGET)
+        {
             var request = new UnityWebRequest();
 
-            if (method == UnityWebRequest.kHttpVerbGET) {
+            if (method == UnityWebRequest.kHttpVerbGET)
+            {
                 // We are using UnityWebRequest.Get for GET requests because we need the default downloadhandler
                 // Using 'new UnityWebRequest' for Get does not set it
                 request = UnityWebRequest.Get(uri);
-            } else {
+            }
+            else
+            {
                 request = new UnityWebRequest(uri, method);
             }
 
             // Set the default Aptos header
-            request.SetRequestHeader(X_APTOS_HEADER, Get_APTOS_HEADER_VALUE());
+            request.SetRequestHeader(X_APTOS_HEADER, GetAptosHeaderValue());
             return request;
         }
     }
