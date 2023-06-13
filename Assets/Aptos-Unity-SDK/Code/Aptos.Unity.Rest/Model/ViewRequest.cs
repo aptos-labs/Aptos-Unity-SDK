@@ -16,6 +16,6 @@ namespace Aptos.Unity.Rest.Model
         public string[] TypeArguments { get; set; }
 
         [JsonProperty("arguments", Required = Required.AllowNull)]
-        public Arguments Arguments { get; set; }
+        public string[] Arguments { get; set; }
     }
 }
