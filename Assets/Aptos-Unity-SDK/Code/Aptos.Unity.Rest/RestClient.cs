@@ -614,13 +614,40 @@ namespace Aptos.Unity.Rest
 
         #region Transactions
 
-        /// todo
-        public IEnumerator View(Action<String[], ResponseInfo> callback, Account sender, ViewRequest viewPayload)
+        /// <summary>
+        /// Execute the Move view function with the given parameters and return its execution result.
+        ///
+        /// Even if the function returns a single value, it will be wrapped in an array.
+        ///
+        /// Usage example where we determine an accounts AptosCoin balance:
+        /// <code>
+        /// string[] data = new string[] {};
+        /// ViewRequest viewRequest = new ViewRequest();
+        /// viewRequest.Function = "0x1::coin::balance";
+        /// viewRequest.TypeArguments = new string[] { "0x1::aptos_coin::AptosCoin" };
+        /// viewRequest.Arguments = new string[] { bobAddress.ToString() };
+        /// Coroutine getBobAccountBalanceView = StartCoroutine(RestClient.Instance.View((_data, _responseInfo) =>
+        /// {
+        ///     data = _data;
+        ///     responseInfo = _responseInfo;
+        /// }, viewRequest));
+        /// yield return getBobAccountBalanceView;
+        /// if (responseInfo.status == ResponseInfo.Status.Failed) {
+        ///     Debug.LogError(responseInfo.message);
+        ///     yield break;
+        /// }
+        /// Debug.Log("Bob's Balance After Funding: " + ulong.Parse(data[0]));
+        /// </code>
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="viewRequest">The payload for the view function</param>
+        /// <returns>A vec containing the values returned from the view functions.</returns>
+        public IEnumerator View(Action<String[], ResponseInfo> callback, ViewRequest viewRequest)
         {
             var viewURL = Endpoint + "/view";
             var viewURI = new Uri(viewURL);
             var viewWebRequest = new UnityWebRequest(viewURI, "POST");
-            var jsonToSend = new UTF8Encoding().GetBytes(JsonConvert.SerializeObject(viewPayload));
+            var jsonToSend = new UTF8Encoding().GetBytes(JsonConvert.SerializeObject(viewRequest));
             viewWebRequest.uploadHandler = new UploadHandlerRaw(jsonToSend);
             viewWebRequest.downloadHandler = new DownloadHandlerBuffer();
             viewWebRequest.SetRequestHeader("Content-Type", "application/json");
@@ -638,7 +665,7 @@ namespace Aptos.Unity.Rest
                 responseInfo.message = "Error while submitting view function request. " + viewWebRequest.error;
                 callback(null, responseInfo);
             }
-            else // Either 200, or 202
+            else // 200
             {
                 var response = viewWebRequest.downloadHandler.text;
                 var values = JsonConvert.DeserializeObject<String[]>(response);

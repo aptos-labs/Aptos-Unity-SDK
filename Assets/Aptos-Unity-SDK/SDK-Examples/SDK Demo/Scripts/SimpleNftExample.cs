@@ -87,13 +87,19 @@ namespace Aptos.Unity.Sample
 
             Debug.Log("Alice's Balance After Funding: " + coin.Value);
 
-
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            // Whereas for Alice we lookup the balance by the resource API, for Bob we lookup
+            // the balance using a view function.
+            string[] data = new string[] {};
+            ViewRequest viewRequest = new ViewRequest();
+            viewRequest.Function = "0x1::coin::balance";
+            viewRequest.TypeArguments = new string[] { "0x1::aptos_coin::AptosCoin" };
+            viewRequest.Arguments = new string[] { bobAddress.ToString() };
+            Coroutine getBobAccountBalanceView = StartCoroutine(RestClient.Instance.View((_data, _responseInfo) =>
             {
-                coin = _coin;
+                data = _data;
                 responseInfo = _responseInfo;
-            }, bobAddress));
-            yield return getBobAccountBalance;
+            }, viewRequest));
+            yield return getBobAccountBalanceView;
 
             if (responseInfo.status == ResponseInfo.Status.Failed)
             {
@@ -101,7 +107,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("Bob's Balance After Funding: " + coin.Value);
+            Debug.Log("Bob's Balance After Funding: " + ulong.Parse(data[0]));
             #endregion
 
             #region Collection & Token Naming Details
@@ -204,7 +210,7 @@ namespace Aptos.Unity.Sample
             Debug.Log("Alice's Collection: " + getCollectionResult);
             #endregion
 
-            #region Get Token Balance 
+            #region Get Token Balance
             Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
             string getTokenBalanceResultAlice = "";
             Coroutine getTokenBalanceCor = StartCoroutine(
