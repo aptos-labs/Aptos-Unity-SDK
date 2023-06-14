@@ -506,6 +506,7 @@ namespace Aptos.Unity.Rest
 
             foreach(PropertyResource prop in props)
             {
+                Debug.Log("KEY: " + prop.Key + " VALUE TYPE: " + prop.Value.Type + " VALUE: " + prop.Value.Value);
                 properties.Add(
                     Property.Parse(
                         new BString(prop.Key),
@@ -664,7 +665,9 @@ namespace Aptos.Unity.Rest
 
             }
 
-            callback(new ReadObject(resources), null);
+            responseInfo.status = ResponseInfo.Status.Success;
+            responseInfo.message = resourcesResp;
+            callback(new ReadObject(resources), responseInfo);
         }
 
         public IEnumerator CreateCollection(
