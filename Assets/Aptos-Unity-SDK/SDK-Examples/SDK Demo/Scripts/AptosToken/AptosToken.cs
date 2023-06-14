@@ -243,7 +243,6 @@ namespace Aptos.Unity.Sample
             CreateTokenResponse createTxnResponse = JsonConvert.DeserializeObject<CreateTokenResponse>(createCollectionTxn);
             string createTokenTxnHash = txnResponse.Hash;
             Debug.Log("Transaction Hash: " + createTokenTxnHash);
-
             #endregion
 
             #region Wait for Transaction
