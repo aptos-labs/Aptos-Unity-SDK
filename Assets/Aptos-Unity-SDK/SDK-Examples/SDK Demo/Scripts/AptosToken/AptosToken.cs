@@ -36,7 +36,9 @@ namespace Aptos.Unity.Sample
             Account alice = Account.Generate();
             Account bob = Account.Generate();
 
+            Debug.Log("<color=cyan>=== ========= ===</color>");
             Debug.Log("<color=cyan>=== Addresses ===</color>");
+            Debug.Log("<color=cyan>=== ========= ===</color>");
             Debug.Log("Alice: " + alice.AccountAddress.ToString());
             Debug.Log("Bob: " + bob.AccountAddress.ToString());
             #endregion
@@ -80,7 +82,9 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Initial Coin Balances
+            Debug.Log("<color=cyan>=== ===================== ===</color>");
             Debug.Log("<color=cyan>=== Initial Coin Balances ===</color>");
+            Debug.Log("<color=cyan>=== ===================== ===</color>");
             AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
             Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
@@ -213,7 +217,9 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Mint Token
+            Debug.Log("<color=cyan>=== ========== ===</color>");
             Debug.Log("<color=cyan>=== Mint Token ===</color>");
+            Debug.Log("<color=cyan>=== ========== ===</color>");
 
             string mintTokenTxn = "";
             Coroutine mintTokenCor = StartCoroutine(tokenClient.MintToken((_mintTokenTxn, _responseInfo) =>
@@ -277,7 +283,9 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Token Client read_object Collection
+            Debug.Log("<color=cyan>=== ====================== ===</color>");
             Debug.Log("<color=cyan>=== Read Collection Object ===</color>");
+            Debug.Log("<color=cyan>=== =================== ===</color>");
             ReadObject readObjectCollection = new ReadObject(null);
             Coroutine readObjectCollectionCor = StartCoroutine(tokenClient.ReadObject((_readObjectCollection, _responseInfo) =>
             {
@@ -315,7 +323,11 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Add token property
-            Debug.Log("<color=cyan>=== Add Token Property ===</color>");
+            Debug.Log(
+                "<color=cyan>=== ================== ===</color>\n" +
+                "<color=cyan>=== Add Token Property ===</color>\n" +
+                "<color=cyan>=== ================== ===</color>"
+            );
             string responseString = "";
 
             // Add token property
@@ -348,44 +360,173 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
+            Debug.Log("TOKEN ADDRESS: " + tokenAddress);
             // Read token object after adding property
-            //readObjectToken = new ReadObject(null);
-            //readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
-            //{
-            //    readObjectToken = _readObjectToken;
-            //    responseInfo = _responseInfo;
-            //}, tokenAddress));
+            readObjectToken = new ReadObject(null);
+            readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
+            {
+                readObjectToken = _readObjectToken;
+                responseInfo = _responseInfo;
+            }, tokenAddress));
 
-            //yield return readObjectCollectionCor;
+            yield return readObjectTokenCor;
 
-            //Debug.Log("ReadObject: " + readObjectToken);
-            //Debug.Log("ReadObject: " + readObjectToken.ToString());
+            Debug.Log("ReadObject: " + readObjectToken);
+            Debug.Log("ReadObject: " + readObjectToken.ToString());
             #endregion
 
-            //#region Remove token property
-            //Debug.Log("<color=cyan>=== Add Token Property ===</color>");
-            //responseString = "";
-            //Coroutine removeTokenPropertyCor = StartCoroutine(tokenClient.RemoveTokenProperty((_responseString, _responseInfo) =>
-            //{
-            //    responseString = _responseString;
-            //    responseInfo = _responseInfo;
-            //}, alice, tokenAddress, "string"));
+            #region Remove token property
+            Debug.Log("<color=cyan>=== =================== ===</color>");
+            Debug.Log("<color=cyan>=== Remove Property ===</color>");
+            Debug.Log("<color=cyan>=== =================== ===</color>");
+            responseString = "";
+            Coroutine removeTokenPropertyCor = StartCoroutine(tokenClient.RemoveTokenProperty((_responseString, _responseInfo) =>
+            {
+                responseString = _responseString;
+                responseInfo = _responseInfo;
+            }, alice, tokenAddress, "string"));
 
-            //yield return addTokenPropertyCor;
+            yield return removeTokenPropertyCor;
 
-            //// Read token object after removing property
-            //readObjectToken = new ReadObject(null);
-            //readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
-            //{
-            //    readObjectToken = _readObjectToken;
-            //    responseInfo = _responseInfo;
-            //}, tokenAddress));
+            // Wait for transaction
+            waitForTxnSuccess = false;
+            waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+            yield return waitForTransactionCor;
 
-            //yield return readObjectCollectionCor;
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
+                yield break;
+            }
 
-            //Debug.Log("ReadObject: " + readObjectToken);
-            //Debug.Log("ReadObject: " + readObjectToken.ToString());
-            //#endregion
+            // Read token object after removing property
+            readObjectToken = new ReadObject(null);
+            readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
+            {
+                readObjectToken = _readObjectToken;
+                responseInfo = _responseInfo;
+            }, tokenAddress));
+
+            yield return readObjectTokenCor;
+
+            Debug.Log("ReadObject: " + readObjectToken);
+            Debug.Log("ReadObject: " + readObjectToken.ToString());
+            #endregion
+
+            #region Update Token Property
+            Debug.Log("<color=cyan>=== ================== ===</color>");
+            Debug.Log("<color=cyan>=== Update Token Property ===</color>");
+            Debug.Log("<color=cyan>=== ================== ===</color>");
+
+            responseString = "";
+            responseInfo = new ResponseInfo();
+
+            // Add token property
+            Coroutine updateTokenPropertyCor = StartCoroutine(tokenClient.UpdateTokenProperty((_responseString, _responseInfo) =>
+            {
+                responseString = _responseString;
+                responseInfo = _responseInfo;
+            }, alice, tokenAddress, Property.BoolProp("test", true)));
+
+            yield return updateTokenPropertyCor;
+
+            Debug.Log("UPDATE TOKEN PROPERTY \n" + responseString);
+            UpdateTokenResponse UpdateTokenPropertyResponse = JsonConvert.DeserializeObject<UpdateTokenResponse>(responseString);
+            transactionHash = addTokenPropertyResponse.Hash;
+
+            // Wait for transaction
+            waitForTxnSuccess = false;
+            waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+            yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
+                yield break;
+            }
+
+            // Read token object after updating property
+            readObjectToken = new ReadObject(null);
+            readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
+            {
+                readObjectToken = _readObjectToken;
+                responseInfo = _responseInfo;
+            }, tokenAddress));
+
+            yield return readObjectTokenCor;
+
+            Debug.Log("ReadObject: " + readObjectToken);
+            Debug.Log("ReadObject: " + readObjectToken.ToString());
+
+            #endregion
+
+            ////////
+            ///
+            #region Add token property -- binary data
+            Debug.Log(
+                "<color=cyan>=== ==================================== ===</color>\n" +
+                "<color=cyan>=== Add Token Property - Binary Sequence ===</color>\n" +
+                "<color=cyan>=== ==================================== ===</color>\n"
+            );
+            responseString = "";
+
+            // Add token property
+            addTokenPropertyCor = StartCoroutine(tokenClient.AddTokenProperty((_responseString, _responseInfo) =>
+            {
+                responseString = _responseString;
+                responseInfo = _responseInfo;
+            }, alice, tokenAddress, Property.BytesProp("bytes", new byte[] { 0x00, 0x01 })));
+
+            yield return addTokenPropertyCor;
+
+            Debug.Log("ADD TOKEN PROPERTY \n" + responseString);
+            addTokenPropertyResponse = JsonConvert.DeserializeObject<AddTokenPropertyResponse>(responseString);
+            transactionHash = addTokenPropertyResponse.Hash;
+            Debug.Log("TXN HASH: " + transactionHash);
+
+            // Wait for transaction
+            waitForTxnSuccess = false;
+            waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+            yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("TOKEN ADDRESS: " + tokenAddress);
+            // Read token object after adding property
+            readObjectToken = new ReadObject(null);
+            readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
+            {
+                readObjectToken = _readObjectToken;
+                responseInfo = _responseInfo;
+            }, tokenAddress));
+
+            yield return readObjectTokenCor;
+
+            Debug.Log("ReadObject: " + readObjectToken);
+            Debug.Log("ReadObject: " + readObjectToken.ToString());
+            #endregion
 
             yield return null;
         }
