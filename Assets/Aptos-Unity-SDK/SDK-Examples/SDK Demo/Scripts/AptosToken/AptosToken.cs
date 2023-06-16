@@ -19,11 +19,14 @@ namespace Aptos.Unity.Sample
         IEnumerator RunAptosClientExample()
         {
             #region REST & Faucet Client Setup
+            Debug.Log("<color=cyan>=== ========= ===</color>");
+            Debug.Log("<color=cyan>=== Set Up Faucet & REST Client ===</color>");
+            Debug.Log("<color=cyan>=== ========= ===</color>");
             string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
             FaucetClient faucetClient = FaucetClient.Instance;
 
-            RestClient restClient = new RestClient();
+            RestClient restClient = RestClient.Instance;
             Coroutine restClientSetupCor = StartCoroutine(RestClient.Instance.SetUp((_restClient) => {
                 restClient = _restClient;
             }, Constants.DEVNET_BASE_URL));
