@@ -275,9 +275,13 @@ namespace Aptos.BCS
     /// </summary>
     public class MultiEd25519Authenticator : IAuthenticator
     {
-        public MultiEd25519Authenticator()
+        MultiPublicKey PublicKey;
+        MultiSignature Signature;
+
+        public MultiEd25519Authenticator(MultiPublicKey publicKey, MultiSignature signature)
         {
-            throw new System.NotImplementedException();
+            this.PublicKey = publicKey;
+            this.Signature = signature;
         }
 
         public bool Verify(byte[] data)
@@ -287,7 +291,8 @@ namespace Aptos.BCS
 
         public void Serialize(Serialization serializer)
         {
-            throw new System.NotImplementedException();
+            serializer.Serialize(this.PublicKey);
+            serializer.Serialize(this.Signature);
         }
 
         public static MultiEd25519Authenticator Deserialize(Deserialization deserializer)
