@@ -125,7 +125,7 @@ namespace Aptos.Accounts
         /// Example: <c>0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c</c></param>
         public PrivateKey(string key)
         {
-            if(!Utils.IsValidAddress(key))
+            if(!HdWallet.Utils.Utils.IsValidAddress(key))
                 throw new ArgumentException("Invalid key", nameof(key));
 
             Key = key ?? throw new ArgumentNullException(nameof(key));
