@@ -311,6 +311,133 @@ namespace Aptos.Unity.Sample
             Debug.Log("SUBMIT BCS TXN: " + submitBcsTxnJsonResponse);
 
             #endregion
+
+            #region Section 6: New Account Balances
+            Debug.Log("<color=cyan>=== ==================== ===</color>");
+            Debug.Log("<color=cyan>=== New Account Balances ===</color>");
+            Debug.Log("<color=cyan>=== ==================== ===</color>");
+
+            // Get account balance for Alice`
+            coin = new AccountResourceCoin.Coin();
+            getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, alice.AccountAddress));
+            yield return getAliceBalanceCor1;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("ALICE BALANCE: " + responseInfo.message);
+            Debug.Log(string.Format("Alice's balance: ", coin.Value));
+
+            // Get account balance for Bob
+            coin = new AccountResourceCoin.Coin();
+            getBobBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, bob.AccountAddress));
+            yield return getBobBalanceCor1;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("BOB BALANCE: " + responseInfo.message);
+            Debug.Log(string.Format("Bob's balance: ", coin.Value));
+
+            // Get account balance for Chad
+            coin = new AccountResourceCoin.Coin();
+            getChadBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, chad.AccountAddress));
+            yield return getChadBalanceCor1;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("CHAD BALANCE: " + responseInfo.message);
+            Debug.Log(string.Format("Chad's balance: ", coin.Value));
+
+            // Get account balance for Multisig
+            coin = new AccountResourceCoin.Coin();
+            getMultisigBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, multisigAddress));
+            yield return getMultisigBalanceCor1;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("MULTISIG BALANCE: " + responseInfo.message);
+            Debug.Log(string.Format("Multisig balance: ", coin.Value));
+            #endregion
+
+            #region Section 7: Funding Vanity Address
+            Debug.Log("<color=cyan>=== ====================== ===</color>");
+            Debug.Log("<color=cyan>=== Funding vanity address ===</color>");
+            Debug.Log("<color=cyan>=== ====================== ===</color>");
+
+            Account deedee = Account.Generate();
+
+            while (deedee.AccountAddress.ToString()[2..4].Equals("dd"))
+                deedee = Account.Generate();
+
+            Debug.Log(string.Format("Deedee's address: {0}", deedee.AccountAddress));
+            Debug.Log(string.Format("Deedee's public key: {0}", deedee.PublicKey));
+
+            int deedeeStart = 50000000;
+
+            // Fund Deedee account
+            success = false;
+            responseInfo = new ResponseInfo();
+            Coroutine fundDeedeeAccountCor = StartCoroutine(faucetClient.FundAccount((_success, _responseInfo) =>
+            {
+                success = _success;
+                responseInfo = _responseInfo;
+            }, alice.AccountAddress.ToString(), deedeeStart, faucetEndpoint));
+            yield return fundAliceAccountCor;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Faucet funding for Deedee failed: " + responseInfo.message);
+                yield break;
+            }
+
+            coin = new AccountResourceCoin.Coin();
+            Coroutine getDeedeeBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, alice.AccountAddress));
+            yield return getAliceBalanceCor1;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("DEEDEE BALANCE: " + responseInfo.message);
+            Debug.Log(string.Format("Deedee's balance: ", coin.Value));
+            #endregion
             yield return null;
         }
     }
