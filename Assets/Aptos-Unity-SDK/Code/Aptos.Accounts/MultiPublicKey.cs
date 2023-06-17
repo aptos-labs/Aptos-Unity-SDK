@@ -9,22 +9,22 @@ namespace Aptos.Accounts
         public List<PublicKey> Keys;
         public byte Threshold;
 
-        public int MIN_KEYS = 2;
-        public int MAX_KEYS = 32;
-        public int MIN_THRESHOLD = 1;
+        public static int MIN_KEYS = 2;
+        public static int MAX_KEYS = 32;
+        public static int MIN_THRESHOLD = 1;
 
         public MultiPublicKey(List<PublicKey> Keys, byte Threshold, bool Checked = true)
         {
             if(Checked)
             {
-                if(!(this.MIN_KEYS <= Keys.Count && Keys.Count <= this.MAX_KEYS))
+                if(!(MIN_KEYS <= Keys.Count && Keys.Count <= MAX_KEYS))
                 {
-                    throw new Exception("Must have between " + this.MIN_KEYS + " and " + this.MAX_KEYS + " keys.");
+                    throw new Exception("Must have between " + MIN_KEYS + " and " + MAX_KEYS + " keys.");
                 }
 
-                if(!(this.MIN_THRESHOLD <= Threshold && Threshold < Keys.Count))
+                if(!(MIN_THRESHOLD <= Threshold && Threshold < Keys.Count))
                 {
-                    throw new Exception("Threshold must be between " + this.MIN_THRESHOLD + " and " + Keys.Count);
+                    throw new Exception("Threshold must be between " +MIN_THRESHOLD + " and " + Keys.Count);
                 }
             }
 
@@ -48,12 +48,12 @@ namespace Aptos.Accounts
             return concatenatedKeys.ToArray();
         }
 
-        public MultiPublicKey FromBytes(byte[] Key)
+        public static MultiPublicKey FromBytes(byte[] Key)
         {
             // Get key count and threshold limits.
-            int minKeys = this.MIN_KEYS;
-            int maxKeys = this.MAX_KEYS;
-            int minThreshold = this.MIN_THRESHOLD;
+            int minKeys = MIN_KEYS;
+            int maxKeys = MAX_KEYS;
+            int minThreshold = MIN_THRESHOLD;
 
             // Get number of signers.
             int nSigners = (int)Key.Length / PublicKey.KeyLength;
@@ -63,7 +63,7 @@ namespace Aptos.Accounts
             }
 
             // Get threshold.
-            byte threshold = Key[-1];
+            byte threshold = Key[Key.Length - 1];
             if(!(minThreshold <= threshold && threshold <= nSigners)) {
                 throw new Exception(string.Format("Threshold must be between {0} and {1}.", minThreshold, nSigners));
             }
