@@ -22,9 +22,27 @@ namespace Aptos.Unity.Sample
 
         IEnumerator RunTransferCoinExample()
         {
+            #region REST & Faucet Client Setup
+            Debug.Log("<color=cyan>=== =========================== ===</color>");
+            Debug.Log("<color=cyan>=== Set Up Faucet & REST Client ===</color>");
+            Debug.Log("<color=cyan>=== =========================== ===</color>");
+            string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
+
+            FaucetClient faucetClient = FaucetClient.Instance;
+
+            RestClient restClient = RestClient.Instance;
+            Coroutine restClientSetupCor = StartCoroutine(RestClient.Instance.SetUp((_restClient) => {
+                restClient = _restClient;
+            }, Constants.DEVNET_BASE_URL));
+            yield return restClientSetupCor;
+            #endregion
+
             Wallet wallet = new Wallet(mnemo);
 
             #region Alice Account
+            Debug.Log("<color=cyan>=== ========= ===</color>");
+            Debug.Log("<color=cyan>=== Addresses ===</color>");
+            Debug.Log("<color=cyan>=== ========= ===</color>");
             Account alice = wallet.GetAccount(0);
             string authKey = alice.AuthKey();
             Debug.Log("Alice Auth Key: " + authKey);
@@ -45,28 +63,12 @@ namespace Aptos.Unity.Sample
             Debug.Log("Wallet: Account 1: Bob: " + bobAddress.ToString());
             #endregion
 
-            #region REST Client Setup
-            RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
-
-            LedgerInfo ledgerInfo = new LedgerInfo();
-            ResponseInfo responseInfo = new ResponseInfo();
-            Coroutine ledgerInfoCor = StartCoroutine(RestClient.Instance.GetInfo((_ledgerInfo, _responseInfo) =>
-            {
-                ledgerInfo = _ledgerInfo;
-                responseInfo = _responseInfo;
-            }));
-            yield return ledgerInfoCor;
-
-            if(responseInfo.status != ResponseInfo.Status.Success)
-            {
-                Debug.LogError(responseInfo.message);
-                yield break;
-            }
-
-            Debug.Log("Chain ID: " + ledgerInfo.ChainId);
-            #endregion
+            Debug.Log("<color=cyan>=== ================ ===</color>");
+            Debug.Log("<color=cyan>=== Initial Balances ===</color>");
+            Debug.Log("<color=cyan>=== ================ ===</color>");
 
             #region Get Alice Account Balance
+            ResponseInfo responseInfo = new ResponseInfo();
             AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
             responseInfo = new ResponseInfo();
             Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
@@ -84,11 +86,7 @@ namespace Aptos.Unity.Sample
             }
 
             Debug.Log("Alice's Balance Before Funding: " + coin.Value);
-
-
             #endregion
-
-            string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
             #region Fund Alice Account Through Devnet Faucet
             bool success = false;
@@ -201,6 +199,10 @@ namespace Aptos.Unity.Sample
 
             #endregion
 
+            Debug.Log("<color=cyan>=== ===================== ===</color>");
+            Debug.Log("<color=cyan>=== Intermediate Balances ===</color>");
+            Debug.Log("<color=cyan>=== ===================== ===</color>");
+
             #region Get Alice Account Balance After Transfer
             Coroutine getAliceAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
@@ -234,6 +236,72 @@ namespace Aptos.Unity.Sample
 
             Debug.Log("Bob Balance After Transfer: " + coin.Value);
 
+            #endregion
+
+            #region Have Alice give Bob another 1_000 coins using BCS
+            string responseStr = "";
+            Coroutine bcsTransferCor = StartCoroutine(RestClient.Instance.BCSTransfer((_responseStr, _responseInfo) =>
+            {
+                responseStr = _responseStr;
+                responseInfo = _responseInfo;
+
+            }, alice, bobAddress, 1000));
+            yield return bcsTransferCor;
+
+            Debug.Log("BCS TRANSFER: " + responseStr);
+            TransferCoinBCSResponse response = JsonConvert.DeserializeObject<TransferCoinBCSResponse>(responseStr);
+
+            // Wait for transaction
+            waitForTxnSuccess = false;
+            waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+            yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example", gameObject);
+                yield break;
+            }
+            #endregion
+
+            Debug.Log("<color=cyan>=== ============== ===</color>");
+            Debug.Log("<color=cyan>=== Final Balances ===</color>");
+            Debug.Log("<color=cyan>=== ============== ===</color>");
+            #region Final Balances
+            Coroutine getAliceAccountBalance4 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, aliceAddress));
+            yield return getAliceAccountBalance4;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Alice Balance After Transfer: " + coin.Value);
+
+            Coroutine getBobAccountBalance3 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            {
+                coin = _coin;
+                responseInfo = _responseInfo;
+            }, bobAddress));
+            yield return getBobAccountBalance3;
+
+            if (responseInfo.status == ResponseInfo.Status.Failed)
+            {
+                Debug.LogError(responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log("Bob Balance After Transfer: " + coin.Value);
             #endregion
         }
     }
