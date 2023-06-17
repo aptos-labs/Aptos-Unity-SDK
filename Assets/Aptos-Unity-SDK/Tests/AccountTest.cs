@@ -419,6 +419,48 @@ namespace Aptos.Unity.Test
                 + "\n" +
                 ToReadableByteArray(BitConverter.GetBytes(multiSigPublicKey.Threshold))
             );
+
+            // Get public key bytes representation.
+            byte[] publicKeyBytes = multiSigPublicKey.ToBytes();
+
+            // Convert back to multisig class instance from bytes.
+            MultiPublicKey multisigPublicKey = MultiPublicKey.FromBytes(publicKeyBytes);
+
+            // Get public key BCS representation.
+            serializer = new Serialization();
+            multiSigPublicKey.Serialize(serializer);
+            string publicKeyBCs = serializer.GetBytes().HexString();
+
+            // Assert BCS representation is the same.
+            Assert.AreEqual(publicKeyBcs, expectedPublicKeyBcs);
+
+            // Have one signer sign arbitrary message.
+            Signature signature = privateKey2.Sign(Encoding.UTF8.GetBytes("multisig"));
+
+            // Compose multisig signature.
+            List<Tuple<PublicKey, Signature>> signMap = new List<Tuple<PublicKey, Signature>>()
+            {
+                Tuple.Create<PublicKey, Signature>(privateKey2.PublicKey(), signature)
+            };
+            MultiSignature multiSignature = new MultiSignature(multisigPublicKey, signMap);
+
+            // Get signature BCS representation.
+            serializer = new Serialization();
+            multiSignature.Serialize(serializer);
+            byte[] multisigBcsBytes = serializer.GetBytes();
+            string multisigSignatureBcs = serializer.GetBytes().HexString();
+
+            // Check against expected BCS representation.
+            string expectedMultisigSignatureBcs = string.Format("{0}{1}{2}",
+                "4402e90d8f300d79963cb7159ffa6f620f5bba4af5d32a7176bfb5480b43897cf",
+                "4886bbb4042182f4647c9b04f02dbf989966f0facceec52d22bdcc7ce631bfc0c",
+                "40000000"
+            );
+
+            Assert.AreEqual(
+                multisigSignatureBcs,
+                expectedMultisigSignatureBcs,
+                "BCS HEX: " + multisigSignatureBcs + "\n" + multisigBcsBytes.Length);
         }
 
         [Test]
