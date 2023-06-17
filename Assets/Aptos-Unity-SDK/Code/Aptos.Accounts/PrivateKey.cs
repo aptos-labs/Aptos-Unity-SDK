@@ -2,6 +2,7 @@ using Aptos.HdWallet.Utils;
 using Aptos.BCS;
 using Chaos.NaCl;
 using System;
+using NBitcoin;
 
 namespace Aptos.Accounts
 {
@@ -163,6 +164,13 @@ namespace Aptos.Accounts
         {
             PublicKey publicKey = new PublicKey(Ed25519.PublicKeyFromSeed(KeyBytes));
             return publicKey;
+        }
+
+        public static PrivateKey Random()
+        {
+            byte[] seed = new byte[Ed25519.PrivateKeySeedSizeInBytes];
+            RandomUtils.GetBytes(seed);
+            return new PrivateKey(seed);
         }
 
         /// <summary>
