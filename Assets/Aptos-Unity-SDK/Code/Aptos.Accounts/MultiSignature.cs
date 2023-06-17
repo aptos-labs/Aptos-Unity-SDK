@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Aptos.BCS;
+using Aptos.HdWallet.Utils;
 
 namespace Aptos.Accounts
 {
@@ -26,9 +27,9 @@ namespace Aptos.Accounts
             }
 
             // 4-byte big endian bitmap.
-            // TODO: Check implementation in C#
             // self.bitmap = bitmap.to_bytes(4, "big")
-            this.Bitmap = BitConverter.GetBytes(bitmap);
+            uint uBitmap = ((uint)bitmap).ToBigEndian();
+            this.Bitmap = BitConverter.GetBytes(uBitmap);
         }
 
         public byte[] ToBytes()
@@ -36,15 +37,17 @@ namespace Aptos.Accounts
             List<byte> concatenatedSignatures = new List<byte>();
             foreach(Signature signature in this.Signatures)
             {
-                concatenatedSignatures.Concat(signature.Data());
+                concatenatedSignatures
+                    = concatenatedSignatures.Concat(signature.Data()).ToList();
             }
-            concatenatedSignatures.Concat(this.Bitmap);
+            concatenatedSignatures
+                = concatenatedSignatures.Concat(this.Bitmap).ToList();
             return concatenatedSignatures.ToArray();
         }
 
         public void Serialize(Serialization serializer)
         {
-            serializer.SerializeFixedBytes(this.ToBytes());
+            serializer.SerializeBytes(this.ToBytes());
         }
     }
 }
