@@ -1,6 +1,7 @@
 using Aptos.Accounts;
 using Aptos.BCS;
 using Aptos.HdWallet;
+using Aptos.HdWallet.Utils;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
 using NBitcoin;
@@ -25,7 +26,7 @@ namespace Aptos.Unity.Sample
             #region REST & Faucet Client Setup
             Debug.Log("<color=cyan>=== =========================== ===</color>");
             Debug.Log("<color=cyan>=== Set Up Faucet & REST Client ===</color>");
-            Debug.Log("<color=cyan>=== ========= ===</color>");
+            Debug.Log("<color=cyan>=== =========================== ===</color>");
             string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
             FaucetClient faucetClient = FaucetClient.Instance;
@@ -232,17 +233,20 @@ namespace Aptos.Unity.Sample
             Debug.Log("<color=cyan>=== ================= ===</color>");
 
             // Transaction Arguments
+            AccountAddress chadAccountAddress = chad.AccountAddress;
             List<ISerializable> txnArgumentsList = new List<ISerializable>() {
-                chad.AccountAddress,
+                chadAccountAddress,
                 new U64(100)
             };
             ISerializable[] transactionArguments = txnArgumentsList.ToArray();
+
+            StructTag structTag = StructTag.FromStr("0x1::aptos_coin::AptosCoin");
 
             // Entry Function
             EntryFunction entryFunction = EntryFunction.Natural(
                 new ModuleId(AccountAddress.FromHex("0x1"), "coin"),
                 "transfer",
-                new TagSequence(new ISerializableTag[] { new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0]) }),
+                new TagSequence(new ISerializableTag[] { structTag }),
                 new BCS.Sequence(transactionArguments)
             );
 
@@ -263,15 +267,15 @@ namespace Aptos.Unity.Sample
             Signature aliceSignature = alice.Sign(rawTransaction.Keyed());
             Signature bobSignature = bob.Sign(rawTransaction.Keyed());
 
-            Assert.IsTrue(rawTransaction.Verify(alice.PublicKey, aliceSignature));
-            Assert.IsTrue(rawTransaction.Verify(bob.PublicKey, bobSignature));
+            Assert.IsTrue(rawTransaction.Verify(alice.PublicKey, aliceSignature), "Alice signature cannot be verified");
+            Assert.IsTrue(rawTransaction.Verify(bob.PublicKey, bobSignature), "Bob's signature cannot be verified");
 
-            Debug.Log("<color=cyan>=== ================= ===</color>");
+            Debug.Log("<color=cyan>=== ===================== ===</color>");
             Debug.Log("<color=cyan>=== Individual signatures ===</color>");
-            Debug.Log("<color=cyan>=== ================= ===</color>");
+            Debug.Log("<color=cyan>=== ===================== ===</color>");
 
-            Debug.Log(string.Format("Alice: {0}", aliceSignature));
-            Debug.Log(string.Format("Bob: {0}", bobSignature));
+            Debug.Log(string.Format("Alice signature: {0}", aliceSignature));
+            Debug.Log(string.Format("Bob signature: {0}", bobSignature));
             #endregion
 
             #region Section 5: Submit transfer transaction
@@ -412,8 +416,8 @@ namespace Aptos.Unity.Sample
             {
                 success = _success;
                 responseInfo = _responseInfo;
-            }, alice.AccountAddress.ToString(), deedeeStart, faucetEndpoint));
-            yield return fundAliceAccountCor;
+            }, deedee.AccountAddress.ToString(), deedeeStart, faucetEndpoint));
+            yield return fundDeedeeAccountCor;
 
             if (responseInfo.status != ResponseInfo.Status.Success)
             {
@@ -427,7 +431,7 @@ namespace Aptos.Unity.Sample
                 coin = _coin;
                 responseInfo = _responseInfo;
             }, alice.AccountAddress));
-            yield return getAliceBalanceCor1;
+            yield return getDeedeeBalanceCor1;
 
             if (responseInfo.status == ResponseInfo.Status.Failed)
             {
@@ -438,6 +442,149 @@ namespace Aptos.Unity.Sample
             Debug.Log("DEEDEE BALANCE: " + responseInfo.message);
             Debug.Log(string.Format("Deedee's balance: ", coin.Value));
             #endregion
+
+            #region Section 8: Signing Rotation Proof Challenge
+            Debug.Log("<color=cyan>=== =============================== ===</color>");
+            Debug.Log("<color=cyan>=== Signing rotation proof chalange ===</color>");
+            Debug.Log("<color=cyan>=== =============================== ===</color>");
+
+            RotationProofChallenge rotationProofChallenge = new RotationProofChallenge(
+                0,
+                deedee.AccountAddress,
+                deedee.AccountAddress,
+                multisigPublicKey.ToBytes()
+            );
+
+            Serialization serializer = new Serialization();
+            rotationProofChallenge.Serialize(serializer);
+            byte[] rotationProofChallangeBcs = serializer.GetBytes();
+
+            byte[] capRotateKey = deedee.Sign(rotationProofChallangeBcs).Data();
+
+            byte[] capUpdateTable = new MultiSignature(
+                multisigPublicKey,
+                new List<Tuple<PublicKey, Signature>>()
+                {
+                    Tuple.Create(bob.PublicKey, bob.Sign(rotationProofChallangeBcs)),
+                    Tuple.Create(chad.PublicKey, chad.Sign(rotationProofChallangeBcs))
+                }
+            ).ToBytes();
+
+            string capRotateKeyHex = string.Format("0x{0}", capRotateKey.HexString());
+            string capUpdateTableHex = string.Format("0x{0}", capRotateKey.HexString());
+            #endregion
+
+            #region Section 9: Submitting Authentication Key Rotation Transaction
+            Debug.Log("<color=cyan>=== ================================================== ===</color>");
+            Debug.Log("<color=cyan>=== Submitting authentication key rotation transaction ===</color>");
+            Debug.Log("<color=cyan>=== ================================================== ===</color>");
+
+            int fromScheme = Authenticator.ED25519;
+            byte[] fromPublicKeyBytes = deedee.PublicKey.KeyBytes;
+            int toScheme = Authenticator.MULTI_ED25519;
+            byte[] toPublicKeyBytes = multisigPublicKey.ToBytes();
+
+            // Transaction Arguments
+            txnArgumentsList = new List<ISerializable>() {
+                new U8((byte)fromScheme),
+                new Bytes(fromPublicKeyBytes),
+                new U8((byte)toScheme),
+                new Bytes(toPublicKeyBytes),
+                new Bytes(capRotateKey),
+                new Bytes(capUpdateTable)
+            };
+            transactionArguments = txnArgumentsList.ToArray();
+
+            // Entry Function
+            entryFunction = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x1"), "account"),
+                "rotate_authentication_key",
+                new TagSequence(new ISerializableTag[0]),
+                new BCS.Sequence(transactionArguments)
+            );
+
+            Coroutine createBCSTransactionCor = StartCoroutine(
+                restClient.CreateBCSSignedTransaction(
+                    (_signedransaction) => {
+                        signedTransaction = _signedransaction;
+                    },
+                    deedee,
+                    new BCS.TransactionPayload(entryFunction)
+                )
+            );
+            yield return createBCSTransactionCor;
+
+            // Get account data
+            AccountData accountData = new AccountData();
+            responseInfo = new ResponseInfo();
+            Coroutine cor = StartCoroutine(restClient.GetAccount((_accountData, _responseInfo) => {
+                accountData = _accountData;
+                responseInfo = _responseInfo;
+            }, deedee.AccountAddress));
+            yield return cor;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Account not found.");
+                yield break;
+            }
+
+            string authKey = accountData.AuthenticationKey;
+            Debug.Log(string.Format("Auth key pre-rotation: {0}", authKey));
+
+            submitBcsTransactionCor = StartCoroutine(
+                restClient.SubmitBCSTransaction(
+                    (_responseJson, _responseInfo) => {
+                        submitBcsTxnJsonResponse = _responseJson;
+                        responseInfo = _responseInfo;
+                    },
+                    signedTransaction
+                )
+            );
+            yield return submitBcsTransactionCor;
+
+            Debug.Log("Submit BCS Transaction: \n" + submitBcsTxnJsonResponse);
+
+            RotateKeyBcsTransactionResponse bcsTxnResponse = JsonConvert.DeserializeObject<RotateKeyBcsTransactionResponse>(submitBcsTxnJsonResponse);
+            string transactionHash = bcsTxnResponse.Hash;
+
+            // Wait for transaction
+            bool waitForTxnSuccess = false;
+            Coroutine waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+            yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log(string.Format("Transacthin hash: {0}", transactionHash));
+
+            responseInfo = new ResponseInfo();
+            cor = StartCoroutine(restClient.GetAccount((_accountData, _responseInfo) => {
+                accountData = _accountData;
+                responseInfo = _responseInfo;
+            }, deedee.AccountAddress));
+            yield return cor;
+
+            if (responseInfo.status != ResponseInfo.Status.Success)
+            {
+                Debug.LogError("Account not found.");
+                yield break;
+            }
+
+            authKey = accountData.AuthenticationKey;
+            Debug.Log(string.Format("New auth key:          {0}", authKey));
+            Debug.Log(string.Format("1st multisig address:  {0}", multisigAddress));
+            #endregion
+
             yield return null;
         }
     }
