@@ -65,6 +65,7 @@ namespace Aptos.Unity.Rest
             {
                 responseInfo.status = ResponseInfo.Status.Success;
                 responseInfo.message = "Funding succeeded!";
+                yield return new WaitForSeconds(2f);
                 callback(true, responseInfo);
             }
 
