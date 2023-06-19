@@ -1,6 +1,5 @@
 using Aptos.Accounts;
 using Aptos.BCS;
-using Aptos.HdWallet;
 using Aptos.HdWallet.Utils;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
@@ -110,7 +109,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
+            AccountResourceCoin.Coin coin = null;
             Coroutine getAliceBalanceCor1 = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
                 coin = _coin;
@@ -124,8 +123,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("ALICE BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Alice's balance: ", coin.Value));
+            Debug.Log(string.Format("Alice's balance: {0}", coin.Value));
 
             // Fund Bob account
             success = false;
@@ -157,8 +155,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("BOB BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Bob's balance: ", coin.Value));
+            Debug.Log(string.Format("Bob's balance: {0}", coin.Value));
 
             // Fund Chad account
             success = false;
@@ -190,8 +187,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("CHAD BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Chad's balance: ", coin.Value));
+            Debug.Log(string.Format("Chad's balance: {0}", coin.Value));
 
             // Fund Multisig account
             success = false;
@@ -223,8 +219,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("MULTISIG BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Multisig balance: ", coin.Value));
+            Debug.Log(string.Format("Multisig balance: {0}", coin.Value));
             #endregion
 
             #region Section 4. Initiate Transfer
@@ -314,6 +309,30 @@ namespace Aptos.Unity.Sample
 
             Debug.Log("SUBMIT BCS TXN: " + submitBcsTxnJsonResponse);
 
+            MultisigTransferBcsTransactionResponse transferTxnResponse
+                = JsonConvert.DeserializeObject<MultisigTransferBcsTransactionResponse>(submitBcsTxnJsonResponse);
+
+            string transactionHash = transferTxnResponse.Hash;
+
+            // Wait for transaction
+            bool waitForTxnSuccess = false;
+            Coroutine waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+            yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
+                yield break;
+            }
+
+            Debug.Log(string.Format("Transacthin hash: {0}", transactionHash));
+
             #endregion
 
             #region Section 6: New Account Balances
@@ -336,8 +355,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("ALICE BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Alice's balance: ", coin.Value));
+            Debug.Log(string.Format("Alice's balance: {0}", coin.Value));
 
             // Get account balance for Bob
             coin = new AccountResourceCoin.Coin();
@@ -354,8 +372,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("BOB BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Bob's balance: ", coin.Value));
+            Debug.Log(string.Format("Bob's balance: {0}", coin.Value));
 
             // Get account balance for Chad
             coin = new AccountResourceCoin.Coin();
@@ -372,8 +389,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("CHAD BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Chad's balance: ", coin.Value));
+            Debug.Log(string.Format("Chad's balance: {0}", coin.Value));
 
             // Get account balance for Multisig
             coin = new AccountResourceCoin.Coin();
@@ -390,8 +406,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("MULTISIG BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Multisig balance: ", coin.Value));
+            Debug.Log(string.Format("Multisig balance: {0}", coin.Value));
             #endregion
 
             #region Section 7: Funding Vanity Address
@@ -430,7 +445,7 @@ namespace Aptos.Unity.Sample
             {
                 coin = _coin;
                 responseInfo = _responseInfo;
-            }, alice.AccountAddress));
+            }, deedee.AccountAddress));
             yield return getDeedeeBalanceCor1;
 
             if (responseInfo.status == ResponseInfo.Status.Failed)
@@ -439,8 +454,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("DEEDEE BALANCE: " + responseInfo.message);
-            Debug.Log(string.Format("Deedee's balance: ", coin.Value));
+            Debug.Log(string.Format("Deedee's balance: {0}", coin.Value));
             #endregion
 
             #region Section 8: Signing Rotation Proof Challenge
@@ -546,11 +560,11 @@ namespace Aptos.Unity.Sample
             Debug.Log("Submit BCS Transaction: \n" + submitBcsTxnJsonResponse);
 
             RotateKeyBcsTransactionResponse bcsTxnResponse = JsonConvert.DeserializeObject<RotateKeyBcsTransactionResponse>(submitBcsTxnJsonResponse);
-            string transactionHash = bcsTxnResponse.Hash;
+            transactionHash = bcsTxnResponse.Hash;
 
             // Wait for transaction
-            bool waitForTxnSuccess = false;
-            Coroutine waitForTransactionCor = StartCoroutine(
+            waitForTxnSuccess = false;
+            waitForTransactionCor = StartCoroutine(
                 RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
                 {
                     waitForTxnSuccess = _pending;
