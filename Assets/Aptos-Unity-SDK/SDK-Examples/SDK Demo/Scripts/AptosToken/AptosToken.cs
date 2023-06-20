@@ -19,13 +19,11 @@ namespace Aptos.Unity.Sample
         IEnumerator RunAptosClientExample()
         {
             #region REST & Faucet Client Setup
-            Debug.Log("<color=cyan>=== ========= ===</color>");
+            Debug.Log("<color=cyan>=== =========================== ===</color>");
             Debug.Log("<color=cyan>=== Set Up Faucet & REST Client ===</color>");
-            Debug.Log("<color=cyan>=== ========= ===</color>");
+            Debug.Log("<color=cyan>=== =========================== ===</color>");
             string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
-
             FaucetClient faucetClient = FaucetClient.Instance;
-
             RestClient restClient = RestClient.Instance;
             Coroutine restClientSetupCor = StartCoroutine(RestClient.Instance.SetUp((_restClient) => {
                 restClient = _restClient;
@@ -38,7 +36,6 @@ namespace Aptos.Unity.Sample
             #region Create Accounts
             Account alice = Account.Generate();
             Account bob = Account.Generate();
-
             Debug.Log("<color=cyan>=== ========= ===</color>");
             Debug.Log("<color=cyan>=== Addresses ===</color>");
             Debug.Log("<color=cyan>=== ========= ===</color>");
@@ -103,7 +100,6 @@ namespace Aptos.Unity.Sample
             }
 
             Debug.Log("Alice's Balance After Funding: " + coin.Value);
-
 
             Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
             {
@@ -300,8 +296,7 @@ namespace Aptos.Unity.Sample
 
             yield return readObjectCollectionCor;
 
-            Debug.Log("ReadObject: " + readObjectCollection);
-            Debug.Log("ReadObject: " + readObjectCollection.ToString());
+            Debug.Log("Alice's collection: " + readObjectCollection);
             #endregion
 
             #region Token client read_object Token Address
@@ -321,8 +316,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("ReadObject: " + readObjectToken);
-            Debug.Log("ReadObject: " + readObjectToken.ToString());
+            Debug.Log("Alice's token: " + readObjectToken);
             #endregion
 
             #region Add token property
@@ -342,7 +336,6 @@ namespace Aptos.Unity.Sample
 
             yield return addTokenPropertyCor;
 
-            Debug.Log("ADD TOKEN PROPERTY \n" + responseString);
             AddTokenPropertyResponse addTokenPropertyResponse = JsonConvert.DeserializeObject<AddTokenPropertyResponse>(responseString);
             transactionHash = addTokenPropertyResponse.Hash;
 
@@ -363,7 +356,6 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("TOKEN ADDRESS: " + tokenAddress);
             // Read token object after adding property
             readObjectToken = new ReadObject(null);
             readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
@@ -374,8 +366,7 @@ namespace Aptos.Unity.Sample
 
             yield return readObjectTokenCor;
 
-            Debug.Log("ReadObject: " + readObjectToken);
-            Debug.Log("ReadObject: " + readObjectToken.ToString());
+            Debug.Log("Alice's token: " + readObjectToken);
             #endregion
 
             #region Remove token property
@@ -418,8 +409,7 @@ namespace Aptos.Unity.Sample
 
             yield return readObjectTokenCor;
 
-            Debug.Log("ReadObject: " + readObjectToken);
-            Debug.Log("ReadObject: " + readObjectToken.ToString());
+            Debug.Log("Alice's token: " + readObjectToken);
             #endregion
 
             #region Update Token Property
@@ -439,7 +429,6 @@ namespace Aptos.Unity.Sample
 
             yield return updateTokenPropertyCor;
 
-            Debug.Log("UPDATE TOKEN PROPERTY \n" + responseString);
             UpdateTokenResponse UpdateTokenPropertyResponse = JsonConvert.DeserializeObject<UpdateTokenResponse>(responseString);
             transactionHash = addTokenPropertyResponse.Hash;
 
@@ -470,13 +459,9 @@ namespace Aptos.Unity.Sample
 
             yield return readObjectTokenCor;
 
-            Debug.Log("ReadObject: " + readObjectToken);
-            Debug.Log("ReadObject: " + readObjectToken.ToString());
-
+            Debug.Log("Alice's token: " + readObjectToken);
             #endregion
 
-            ////////
-            ///
             #region Add token property -- binary data
             Debug.Log(
                 "<color=cyan>=== ==================================== ===</color>\n" +
@@ -494,10 +479,8 @@ namespace Aptos.Unity.Sample
 
             yield return addTokenPropertyCor;
 
-            Debug.Log("ADD TOKEN PROPERTY \n" + responseString);
             addTokenPropertyResponse = JsonConvert.DeserializeObject<AddTokenPropertyResponse>(responseString);
             transactionHash = addTokenPropertyResponse.Hash;
-            Debug.Log("TXN HASH: " + transactionHash);
 
             // Wait for transaction
             waitForTxnSuccess = false;
@@ -516,7 +499,6 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("TOKEN ADDRESS: " + tokenAddress);
             // Read token object after adding property
             readObjectToken = new ReadObject(null);
             readObjectTokenCor = StartCoroutine(tokenClient.ReadObject((_readObjectToken, _responseInfo) =>
@@ -527,8 +509,7 @@ namespace Aptos.Unity.Sample
 
             yield return readObjectTokenCor;
 
-            Debug.Log("ReadObject: " + readObjectToken);
-            Debug.Log("ReadObject: " + readObjectToken.ToString());
+            Debug.Log("Alice's token: " + readObjectToken);
             #endregion
 
             yield return null;
