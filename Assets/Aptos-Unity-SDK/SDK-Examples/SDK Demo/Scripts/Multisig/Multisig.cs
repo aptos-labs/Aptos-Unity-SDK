@@ -332,7 +332,6 @@ namespace Aptos.Unity.Sample
             }
 
             Debug.Log(string.Format("Transacthin hash: {0}", transactionHash));
-
             #endregion
 
             #region Section 6: New Account Balances
