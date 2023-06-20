@@ -18,14 +18,10 @@ namespace Aptos.Accounts
             if(Checked)
             {
                 if(!(MIN_KEYS <= Keys.Count && Keys.Count <= MAX_KEYS))
-                {
                     throw new Exception("Must have between " + MIN_KEYS + " and " + MAX_KEYS + " keys.");
-                }
 
                 if(!(MIN_THRESHOLD <= Threshold && Threshold < Keys.Count))
-                {
                     throw new Exception("Threshold must be between " +MIN_THRESHOLD + " and " + Keys.Count);
-                }
             }
 
             this.Keys = Keys;
