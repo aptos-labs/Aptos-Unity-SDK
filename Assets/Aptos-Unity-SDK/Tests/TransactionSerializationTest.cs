@@ -677,7 +677,12 @@ namespace Aptos.Unity.Test
         [Test]
         public void ScriptSerialize()
         {
-            string path = Application.dataPath + "\\Aptos-Unity-SDK\\Tests" + "\\two_by_two_transfer.mv";
+            string dp = Application.dataPath;
+           
+            string[] s = dp.Split("/"[0]);
+            Debug.Log("project = " + s[s.Length - 2]);
+
+            string path = Application.dataPath + "/Aptos-Unity-SDK/Tests" + "/two_by_two_transfer.mv";
             byte[] code = File.ReadAllBytes(path);
 
             AccountAddress caroldAddress = AccountAddress.FromHex("0x1");
