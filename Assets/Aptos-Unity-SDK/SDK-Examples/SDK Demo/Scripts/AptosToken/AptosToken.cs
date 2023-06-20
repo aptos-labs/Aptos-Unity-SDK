@@ -515,5 +515,4 @@ namespace Aptos.Unity.Sample
             yield return null;
         }
     }
-
 }
