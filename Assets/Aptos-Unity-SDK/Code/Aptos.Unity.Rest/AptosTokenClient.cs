@@ -243,8 +243,6 @@ namespace Aptos.Unity.Rest
 
         public byte[] SerializeValue()
         {
-            Debug.Log("PROPERTY TYPE: " + PropertyType.ToString());
-
             Serialization ser = new Serialization();
             if (this.PropertyType.Equals("bool"))
             {
@@ -424,7 +422,7 @@ namespace Aptos.Unity.Rest
             return new Property(Name, "u8", new U8(Value));
         }
 
-        //public static Property U16Prop()
+        //public static Property U16Prop() {}
 
         public static Property U32Prop(string Name, uint Value)
         {
@@ -506,7 +504,6 @@ namespace Aptos.Unity.Rest
 
             foreach(PropertyResource prop in props)
             {
-                Debug.Log("KEY: " + prop.Key + " VALUE TYPE: " + prop.Value.Type + " VALUE: " + prop.Value.Value);
                 properties.Add(
                     Property.Parse(
                         new BString(prop.Key),
@@ -600,8 +597,6 @@ namespace Aptos.Unity.Rest
             }, address));
             yield return getAccountResourceCor;
 
-            Debug.Log("READ OBJECT getAccountResource: " + "\n" + resourcesResp);
-
             ResponseInfo responseInfo = new ResponseInfo();
 
             if (!success && responseCode == 404)
@@ -612,10 +607,7 @@ namespace Aptos.Unity.Rest
                 yield break;
             }
 
-            Debug.Log("READ OBJECT: " + "\n" + resourcesResp);
-
             Dictionary<string, IResource> resources = new Dictionary<string, IResource>();
-            //List<IResourceBase> readResources = JsonConvert.DeserializeObject<List<IResourceBase>>(resourcesResp);
             List<IResourceBase> readResources = JsonConvert.DeserializeObject<List<IResourceBase>>(resourcesResp, new ResourceBaseListConverter<IResourceBase>());
             foreach (IResourceBase resource in readResources)
             {
@@ -633,9 +625,7 @@ namespace Aptos.Unity.Rest
                     }
                     else if(resourceObj.Equals(Object.StructTag))
                     {
-                        //ObjectResource objectRes = (ObjectResource)resource;
                         ObjectResource objectRes = (ObjectResource) resource;
-
                         ObjectResourceData data = objectRes.Data;
                         Object obj = (Object)Object.Parse(data);
                         resources.Add(resourceObj, obj);
@@ -662,7 +652,6 @@ namespace Aptos.Unity.Rest
                         resources.Add(resourceObj, token);
                     }
                 }
-
             }
 
             responseInfo.status = ResponseInfo.Status.Success;
@@ -716,19 +705,11 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
-
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
-
-            Debug.Log("SIGNED TXN: \n" + signedTransaction);
 
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
@@ -739,10 +720,7 @@ namespace Aptos.Unity.Rest
             }, signedTransaction));
             yield return cor_submitBcsTransaction;
 
-            Debug.Log("SUBMIT BCS TXN JSON RESPONSE: \n" + submitBcsTxnJsonResponse);
-
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -776,17 +754,11 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            //)
-            // return await self.client.submit_bcs_transaction(signed_transaction)
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
-
 
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
@@ -798,7 +770,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -834,22 +805,14 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
-
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
-
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -857,7 +820,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -874,12 +836,6 @@ namespace Aptos.Unity.Rest
                  new Sequence(new ISerializable[] { Token })
              );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
-
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
@@ -889,7 +845,6 @@ namespace Aptos.Unity.Rest
 
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -897,7 +852,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -914,22 +868,14 @@ namespace Aptos.Unity.Rest
                  new Sequence(new ISerializable[] { Token })
              );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
-
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
-
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -937,7 +883,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -954,22 +899,14 @@ namespace Aptos.Unity.Rest
                  new Sequence(new ISerializable[] { Token })
              );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
-
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
-
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -977,7 +914,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -987,10 +923,8 @@ namespace Aptos.Unity.Rest
             AccountAddress Token,
             Property Prop)
         {
-            // TODO: Double check this
             List<ISerializable> txnArgumentsList = Prop.ToTransactionArguments();
             txnArgumentsList.Insert(0, Token);
-
             ISerializable[] transactionArguments = txnArgumentsList.ToArray();
 
             EntryFunction payload = EntryFunction.Natural(
@@ -1000,22 +934,14 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
-
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
-
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -1023,7 +949,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -1045,21 +970,14 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
-
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -1067,7 +985,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
 
@@ -1077,12 +994,9 @@ namespace Aptos.Unity.Rest
             AccountAddress Token,
             Property Prop)
         {
-            // TODO: Double check this
             List<ISerializable> txnArgumentsList = Prop.ToTransactionArguments();
             txnArgumentsList.Insert(0, Token);
-
             ISerializable[] transactionArguments = txnArgumentsList.ToArray();
-
 
             EntryFunction payload = EntryFunction.Natural(
                 new ModuleId(AccountAddress.FromHex("0x4"), "aptos_token"),
@@ -1091,21 +1005,14 @@ namespace Aptos.Unity.Rest
                 new Sequence(transactionArguments)
             );
 
-            // TODO: Verify REST call
-            // signed_transaction = await self.client.create_bcs_signed_transaction(
-            //     creator, TransactionPayload(payload)
-            // )
-            // return await self.client.submit_bcs_transaction(signed_transaction)
             SignedTransaction signedTransaction = null;
             Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => {
                 signedTransaction = _signedTransaction;
             }, Creator, new BCS.TransactionPayload(payload)));
             yield return cor_createBcsSIgnedTransaction;
 
-
             string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
-
             Coroutine cor_submitBcsTransaction = StartCoroutine(Client.SubmitBCSTransaction((_responseJson, _responseInfo) => {
                 submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
@@ -1113,7 +1020,6 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
-
             yield return null;
         }
     }
