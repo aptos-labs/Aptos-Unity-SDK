@@ -1,6 +1,8 @@
 using Aptos.Unity.Rest.Model;
+
 using System;
 using System.Collections;
+
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,7 +12,7 @@ namespace Aptos.Unity.Rest
     /// Faucet Client for claiming APT from Devnet
     /// NOTE: Does not work on Testnet. Testnet only supports airdrops through an authenticated URL
     /// </summary>
-    public class FaucetClient: MonoBehaviour
+    public class FaucetClient : MonoBehaviour
     {
         public static FaucetClient Instance { get; set; }
 
@@ -32,7 +34,9 @@ namespace Aptos.Unity.Rest
         {
             string faucetURL = endpoint + "/mint?amount=" + amount + "&address=" + address;
             Uri transactionsURI = new Uri(faucetURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+
+            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+
             request.SetRequestHeader("Content-Type", "application/json");
 
             ResponseInfo responseInfo = new ResponseInfo();

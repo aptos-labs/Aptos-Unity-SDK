@@ -1,8 +1,11 @@
 using Aptos.Accounts;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
+
 using Newtonsoft.Json;
+
 using System.Collections;
+
 using UnityEngine;
 
 namespace Aptos.Unity.Sample
@@ -42,7 +45,7 @@ namespace Aptos.Unity.Sample
             }, aliceAddress.ToString(), 100000000, faucetEndpoint));
             yield return fundAliceAccountCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Faucet funding for Alice failed: " + responseInfo.message);
                 yield break;
@@ -87,13 +90,19 @@ namespace Aptos.Unity.Sample
 
             Debug.Log("Alice's Balance After Funding: " + coin.Value);
 
-
-            Coroutine getBobAccountBalance = StartCoroutine(RestClient.Instance.GetAccountBalance((_coin, _responseInfo) =>
+            // Whereas for Alice we lookup the balance by the resource API, for Bob we lookup
+            // the balance using a view function.
+            string[] data = new string[] {};
+            ViewRequest viewRequest = new ViewRequest();
+            viewRequest.Function = "0x1::coin::balance";
+            viewRequest.TypeArguments = new string[] { "0x1::aptos_coin::AptosCoin" };
+            viewRequest.Arguments = new string[] { bobAddress.ToString() };
+            Coroutine getBobAccountBalanceView = StartCoroutine(RestClient.Instance.View((_data, _responseInfo) =>
             {
-                coin = _coin;
+                data = _data;
                 responseInfo = _responseInfo;
-            }, bobAddress));
-            yield return getBobAccountBalance;
+            }, viewRequest));
+            yield return getBobAccountBalanceView;
 
             if (responseInfo.status == ResponseInfo.Status.Failed)
             {
@@ -101,7 +110,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log("Bob's Balance After Funding: " + coin.Value);
+            Debug.Log("Bob's Balance After Funding: " + ulong.Parse(data[0]));
             #endregion
 
             #region Collection & Token Naming Details
@@ -125,7 +134,7 @@ namespace Aptos.Unity.Sample
             }, alice, collectionName, collectionDescription, collectionUri));
             yield return createCollectionCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Cannot create collection. " + responseInfo.message);
             }
@@ -165,7 +174,7 @@ namespace Aptos.Unity.Sample
             );
             yield return createTokenCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Error creating token. " + responseInfo.message);
             }
@@ -204,7 +213,7 @@ namespace Aptos.Unity.Sample
             Debug.Log("Alice's Collection: " + getCollectionResult);
             #endregion
 
-            #region Get Token Balance 
+            #region Get Token Balance
             Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
             string getTokenBalanceResultAlice = "";
             Coroutine getTokenBalanceCor = StartCoroutine(
@@ -228,7 +237,7 @@ namespace Aptos.Unity.Sample
             );
             yield return getTokenDataCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Could not get toke data.");
                 yield break;
@@ -249,7 +258,7 @@ namespace Aptos.Unity.Sample
 
             yield return offerTokenCor;
 
-            if(responseInfo.status != ResponseInfo.Status.Success)
+            if (responseInfo.status != ResponseInfo.Status.Success)
             {
                 Debug.LogError("Error offering token. " + responseInfo.message);
                 yield break;

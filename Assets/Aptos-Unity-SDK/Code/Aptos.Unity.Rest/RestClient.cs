@@ -29,8 +29,8 @@ namespace Aptos.Unity.Rest
     /// <summary>
     /// The Aptos REST Client contains a set of [standalone] Coroutines
     /// that can started within any Unity script.
-    /// 
-    /// Consideration must be placed into the wait time required 
+    ///
+    /// Consideration must be placed into the wait time required
     /// for a transaction to be committed into the blockchain.
     /// </summary>
     public class RestClient : MonoBehaviour
@@ -95,18 +95,18 @@ namespace Aptos.Unity.Rest
         #region Account Accessors
 
         /// <summary>
-        /// Get Account Details.   
-        /// Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified. 
+        /// Get Account Details.
+        /// Return the authentication key and the sequence number for an account address. Optionally, a ledger version can be specified.
         /// If the ledger version is not specified in the request, the latest ledger version is used.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
         /// <returns>Calls <c>callback</c> function with <c>(AccountData, ResponseInfo)</c>: \n
-        /// An object that contains the account's:   
-        /// <c>sequence_number</c>, a string containing a 64-bit unsigned integer.   
+        /// An object that contains the account's:
+        /// <c>sequence_number</c>, a string containing a 64-bit unsigned integer.
         /// Example: <code>32425224034</code>
         /// <c>authentication_key</c> All bytes (Vec) data is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.
-        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
+        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.
         /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>, it is null if the request fails \n
         /// and a response object that contains the response details.
         /// </returns>
@@ -114,8 +114,10 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString();
             Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            var request = RequestClient.SubmitRequest(accountsURI);
+
             request.SendWebRequest();
+
             while (!request.isDone)
             {
                 yield return null;
@@ -158,6 +160,37 @@ namespace Aptos.Unity.Rest
         /// Get an account's balance.    
         /// 
         /// The <c>/account</{address}/resource/{coin_type}</c> endpoint for AptosCoin returns the following response:     
+        /// Gets Account Sequence Number
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <returns>Calls <c>callback</c> function with <c>(string, ResponseInfo)</c>: \n
+        /// A Sequence number as a string - null if the request fails, and a response object containing the response details. </returns>
+        public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
+        {
+            AccountData accountData = new AccountData();
+            ResponseInfo responseInfo = new ResponseInfo();
+            Coroutine cor = StartCoroutine(GetAccount((_accountData, _responseInfo) => {
+                accountData = _accountData;
+                responseInfo = _responseInfo;
+            }, accountAddress));
+            yield return cor;
+
+            if(responseInfo.status != ResponseInfo.Status.Success)
+            {
+                callback(null, responseInfo);
+                yield break;
+            }
+
+            string sequenceNumber = accountData.SequenceNumber;
+
+            callback(sequenceNumber, responseInfo);
+        }
+
+        /// <summary>
+        /// Get an account's balance.
+        ///
+        /// The <c>/account</{address}/resource/{coin_type}</c> endpoint for AptosCoin returns the following response:
         /// <code>
         /// {
         ///     "type":"0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>",
@@ -190,13 +223,14 @@ namespace Aptos.Unity.Rest
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
         /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoin.Coin, ResponseInfo)</c>: \n 
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoin.Coin, ResponseInfo)</c>: \n
         /// A representation of the coin, and an object containing the response details.</returns>
         public IEnumerator GetAccountBalance(Action<AccountResourceCoin.Coin, ResponseInfo> callback, Accounts.AccountAddress accountAddress)
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + Constants.APTOS_COIN_TYPE;
             Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            var request = RequestClient.SubmitRequest(accountsURI);
+
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -233,34 +267,6 @@ namespace Aptos.Unity.Rest
 
             request.Dispose();
             //yield return null;
-        }
-
-        /// <summary>
-        /// Gets Account Sequence Number
-        /// </summary>
-        /// <param name="callback">Callback function used after response is received.</param>
-        /// <param name="accountAddress">Address of the account.</param>
-        /// <returns>Calls <c>callback</c> function with <c>(string, ResponseInfo)</c>: \n
-        /// A Sequence number as a string - null if the request fails, and a response object containing the response details. </returns>
-        public IEnumerator GetAccountSequenceNumber(Action<string, ResponseInfo> callback, AccountAddress accountAddress)
-        {
-            AccountData accountData = new AccountData();
-            ResponseInfo responseInfo = new ResponseInfo();
-            Coroutine cor = StartCoroutine(GetAccount((_accountData, _responseInfo) => {
-                accountData = _accountData;
-                responseInfo = _responseInfo;
-            }, accountAddress));
-            yield return cor;
-
-            if (responseInfo.status != ResponseInfo.Status.Success)
-            {
-                callback(null, responseInfo);
-                yield break;
-            }
-
-            string sequenceNumber = accountData.SequenceNumber;
-
-            callback(sequenceNumber, responseInfo);
         }
 
         /// <summary>
@@ -351,8 +357,8 @@ namespace Aptos.Unity.Rest
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
             Uri accountsURI = new Uri(accountsURL);
+            var request = RequestClient.SubmitRequest(accountsURI);
 
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -389,62 +395,6 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Get a  table item at a specific ledger version from the table identified
-        /// by the handle {table_handle} in the path and a [simple] "key" (TableItemRequest)
-        /// provided by the request body.
-        /// 
-        /// Further details are provider <see cref="https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item">here</see>
-        /// </summary>
-        /// <param name="callback">Callback function used after response is received.</param>
-        /// <param name="handle">The identifier for the given table</param>
-        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
-        /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
-        /// <param name="key">The value of the table item's key, e.g. the name of a collection.</param>
-        /// <returns>Calls <c>callback</c> function with a JSON object representing a table item - null if the request fails.</returns>
-        public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
-        {
-            TableItemRequest tableItemRequest = new TableItemRequest
-            {
-                KeyType = keyType,
-                ValueType = valueType,
-                Key = key
-            };
-            string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
-
-            string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
-            Uri getTableItemURI = new Uri(getTableItemURL);
-
-            var request = new UnityWebRequest(getTableItemURI, "POST");
-            byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
-            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            request.SendWebRequest();
-            while (!request.isDone)
-            {
-                yield return null;
-            }
-
-            if (request.result == UnityWebRequest.Result.ConnectionError)
-            {
-                callback(null);
-            }
-            if (request.responseCode == 404)
-            {
-                callback(null);
-            }
-            else
-            {
-                string response = request.downloadHandler.text;
-                callback(response);
-            }
-
-            request.Dispose();
-            yield return null;
-        }
-
-        /// <summary>
         /// Gets table item that represents a coin resource
         /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see>
         /// </summary>
@@ -453,21 +403,14 @@ namespace Aptos.Unity.Rest
         /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction.</param>
         /// <param name="valueType">String representation of an on-chain Move type value.</param>
         /// <param name="key">The value of the table item's key, e.g. the name of a collection</param>
-        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n 
+        /// <returns>Calls <c>callback</c> function with <c>(AccountResourceCoing, ResponseInfo)</c>:\n
         /// An object representing the account resource that holds the coin's information - null if the request fails, and a response object the contains the response details.</returns>
         public IEnumerator GetTableItemCoin(Action<AccountResourceCoin, ResponseInfo> callback, string handle, string keyType, string valueType, string key)
         {
-            TableItemRequest tableItemRequest = new TableItemRequest
-            {
-                KeyType = keyType,
-                ValueType = valueType,
-                Key = key
-            };
-
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item/";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.SubmitRequest(getTableItemURI);
 
-            UnityWebRequest request = UnityWebRequest.Get(getTableItemURI);
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -501,9 +444,65 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
+        /// Get a  table item at a specific ledger version from the table identified
+        /// by the handle {table_handle} in the path and a [simple] "key" (TableItemRequest)
+        /// provided by the request body.
+        ///
+        /// Further details are provider <see cref="https://fullnode.devnet.aptoslabs.com/v1/spec#/operations/get_table_item">here</see>
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="handle">The identifier for the given table</param>
+        /// <param name="keyType">String representation of an on-chain Move tag that is exposed in the transaction, e.g. "0x1::string::String"</param>
+        /// <param name="valueType">String representation of an on-chain Move type value, e.g. "0x3::token::CollectionData"</param>
+        /// <param name="key">The value of the table item's key, e.g. the name of a collection.</param>
+        /// <returns>Calls <c>callback</c> function with a JSON object representing a table item - null if the request fails.</returns>
+        public IEnumerator GetTableItem(Action<string> callback, string handle, string keyType, string valueType, string key)
+        {
+            TableItemRequest tableItemRequest = new TableItemRequest
+            {
+                KeyType = keyType,
+                ValueType = valueType,
+                Key = key
+            };
+            string tableItemRequestJson = JsonConvert.SerializeObject(tableItemRequest);
+
+            string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
+            Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.SubmitRequest(getTableItemURI, UnityWebRequest.kHttpVerbPOST);
+
+            byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                callback(null);
+            }
+            if (request.responseCode == 404)
+            {
+                callback(null);
+            }
+            else
+            {
+                string response = request.downloadHandler.text;
+                callback(response);
+            }
+
+            request.Dispose();
+            yield return null;
+        }
+
+        /// <summary>
         /// Get a  table item for a NFT from the table identified
         /// by the handle {table_handle} in the path and a complex key provided by the request body.
-        /// 
+        ///
         /// See <see cref="GetTableItem(Action{string}, string, string, string, string)">GetTableItem</see> for a get table item using a generic string key.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
@@ -537,8 +536,8 @@ namespace Aptos.Unity.Rest
 
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.SubmitRequest(getTableItemURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -596,14 +595,14 @@ namespace Aptos.Unity.Rest
         /// <summary>
         /// Get a table item that contains a token's (NFT) metadata.
         /// In this case we are using a complex key to retrieve the table item.
-        ///  
+        ///
         /// Note: the response received from the REST <c>/table</c>  for this methods
-        /// has a particular format specific to the SDK example.    
-        /// 
+        /// has a particular format specific to the SDK example.
+        ///
         /// Developers will have to implement their own custom object's to match
-        /// the properties of the NFT, meaning the content in the table item.   
-        /// 
-        /// The response for <c>/table</c> in the SDK example has the following format:   
+        /// the properties of the NFT, meaning the content in the table item.
+        ///
+        /// The response for <c>/table</c> in the SDK example has the following format:
         /// <code>
         /// {
         ///     "default_properties":{
@@ -652,8 +651,8 @@ namespace Aptos.Unity.Rest
 
             string getTableItemURL = Endpoint + "/tables/" + handle + "/item";
             Uri getTableItemURI = new Uri(getTableItemURL);
+            var request = RequestClient.SubmitRequest(getTableItemURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(getTableItemURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -712,11 +711,12 @@ namespace Aptos.Unity.Rest
         /// Get the latest ledger information, including data such as chain ID, role type, ledger versions, epoch, etc.
         /// </summary>
         /// <param name="callback">Callback function used after response is received.</param>
-        /// <returns>Calls <c>callback</c>function with <c>(LedgerInfo, response)</c>: \n 
+        /// <returns>Calls <c>callback</c>function with <c>(LedgerInfo, response)</c>: \n
         /// An object that contains the chain details - null if the request fails, and a response object that contains the response details. </returns>
         public IEnumerator GetInfo(Action<LedgerInfo, ResponseInfo> callback)
         {
-            UnityWebRequest request = UnityWebRequest.Get(Endpoint);
+            var request = RequestClient.SubmitRequest(Endpoint);
+
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -861,6 +861,69 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
+        /// Execute the Move view function with the given parameters and return its execution result.
+        ///
+        /// Even if the function returns a single value, it will be wrapped in an array.
+        ///
+        /// Usage example where we determine an accounts AptosCoin balance:
+        /// <code>
+        /// string[] data = new string[] {};
+        /// ViewRequest viewRequest = new ViewRequest();
+        /// viewRequest.Function = "0x1::coin::balance";
+        /// viewRequest.TypeArguments = new string[] { "0x1::aptos_coin::AptosCoin" };
+        /// viewRequest.Arguments = new string[] { bobAddress.ToString() };
+        /// Coroutine getBobAccountBalanceView = StartCoroutine(RestClient.Instance.View((_data, _responseInfo) =>
+        /// {
+        ///     data = _data;
+        ///     responseInfo = _responseInfo;
+        /// }, viewRequest));
+        /// yield return getBobAccountBalanceView;
+        /// if (responseInfo.status == ResponseInfo.Status.Failed) {
+        ///     Debug.LogError(responseInfo.message);
+        ///     yield break;
+        /// }
+        /// Debug.Log("Bob's Balance After Funding: " + ulong.Parse(data[0]));
+        /// </code>
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received.</param>
+        /// <param name="viewRequest">The payload for the view function</param>
+        /// <returns>A vec containing the values returned from the view functions.</returns>
+        public IEnumerator View(Action<String[], ResponseInfo> callback, ViewRequest viewRequest)
+        {
+            var viewURL = Endpoint + "/view";
+            var viewURI = new Uri(viewURL);
+            var viewWebRequest = new UnityWebRequest(viewURI, "POST");
+            var jsonToSend = new UTF8Encoding().GetBytes(JsonConvert.SerializeObject(viewRequest));
+            viewWebRequest.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            viewWebRequest.downloadHandler = new DownloadHandlerBuffer();
+            viewWebRequest.SetRequestHeader("Content-Type", "application/json");
+
+            viewWebRequest.SendWebRequest();
+            while (!viewWebRequest.isDone)
+            {
+                yield return null;
+            }
+
+            var responseInfo = new ResponseInfo();
+            if (viewWebRequest.result != UnityWebRequest.Result.Success)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Error while submitting view function request. " + viewWebRequest.error;
+                callback(null, responseInfo);
+            }
+            else // 200
+            {
+                var response = viewWebRequest.downloadHandler.text;
+                var values = JsonConvert.DeserializeObject<String[]>(response);
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = response;
+                callback(values, responseInfo);
+            }
+
+            viewWebRequest.Dispose();
+        }
+
+        /// <summary>
         /// 1) Generates a transaction request \n
         /// 2) submits that to produce a raw transaction \n
         /// 3) signs the raw transaction \n
@@ -932,7 +995,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -971,12 +1035,12 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// A Coroutine that polls for a transaction hash until it is confimred in the blockchain
-        /// Times out if the transaction hash is not found after querying for N times.    
-        /// 
+        /// Times out if the transaction hash is not found after querying for N times.
+        ///
         /// Waits for a transaction query to respond whether a transaction submitted has been confirmed in the blockchain.
         /// Queries for a given transaction hash (txnHash) using <see cref="TransactionPending"/>
         /// by polling / looping until we find a "Success" transaction response, or until it times out after <see cref="TransactionWaitInSeconds"/>.
-        /// 
+        ///
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
         /// <param name="txnHash">Transaction hash.</param>
@@ -984,7 +1048,7 @@ namespace Aptos.Unity.Rest
         /// A boolean that is: \n
         /// -- true if the transaction hash was found after polling and the transaction was succesfully commited in the blockhain \n
         /// -- false if we did not find the transaction hash and timed out \n
-        /// 
+        ///
         /// A response object that contains the response details.
         /// </returns>
         public IEnumerator WaitForTransaction(Action<bool, ResponseInfo> callback, string txnHash)
@@ -1051,14 +1115,15 @@ namespace Aptos.Unity.Rest
         /// A boolean that is: \n
         /// -- true if transaction is still pending / hasn't been found, meaning 404, error in response, or `pending_transaction` is true \n
         /// -- false if transaction has been found, meaning `pending_transaction` is true \n
-        /// 
+        ///
         /// A response object that contains the response details.
         /// </returns>
         public IEnumerator TransactionPending(Action<bool, ResponseInfo> callback, string txnHash)
         {
-            string accountsURL = Endpoint + "/transactions/by_hash/" + txnHash;
-            Uri accountsURI = new Uri(accountsURL);
-            UnityWebRequest request = UnityWebRequest.Get(accountsURI);
+            string txnURL = Endpoint + "/transactions/by_hash/" + txnHash;
+            Uri txnURI = new Uri(txnURL);
+            var request = RequestClient.SubmitRequest(txnURI);
+
             request.SendWebRequest();
             while (!request.isDone)
             {
@@ -1240,8 +1305,8 @@ namespace Aptos.Unity.Rest
         #region Transaction Wrappers
         /// <summary>
         /// Transfer a given coin amount from a given Account to the recipient's account Address.
-        /// Returns the sequence number of the transaction used to transfer.   
-        /// 
+        /// Returns the sequence number of the transaction used to transfer.
+        ///
         /// NOTE: Recipient address must hold APT before hand, and or have been airdrop APT if testing on devnet.
         /// </summary>
         /// <param name="callback">Callback function used when response is received.</param>
@@ -1336,13 +1401,13 @@ namespace Aptos.Unity.Rest
         }
 
         /// <summary>
-        /// Encodes submission.   
-        /// This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner 
-        /// (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS.   
-        /// The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint. 
-        /// 
+        /// Encodes submission.
+        /// This endpoint accepts an EncodeSubmissionRequest, which internally is a UserTransactionRequestInner
+        /// (and optionally secondary signers) encoded as JSON, validates the request format, and then returns that request encoded in BCS.
+        /// The client can then use this to create a transaction signature to be used in a SubmitTransactionRequest, which it then passes to the /transactions POST endpoint.
+        ///
         /// If you are using an SDK that has BCS support, such as the official Rust, TypeScript, or Python SDKs, you may use the BCS encoding instead of this endpoint.
-        /// 
+        ///
         /// To sign a message using the response from this endpoint:
         /// - Decode the hex encoded string in the response to bytes.
         /// - Sign the bytes to create the signature.
@@ -1352,16 +1417,16 @@ namespace Aptos.Unity.Rest
         /// <param name="txnRequestJson">Transaction request in JSON format.</param>
         /// <returns>
         /// Calls <c>callback</c> function with: \n
-        /// All bytes (Vec) data that is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.  
-        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.   
+        /// All bytes (Vec) data that is represented as hex-encoded string prefixed with 0x and fulfilled with two hex digits per byte.
+        /// Unlike the Address type, HexEncodedBytes will not trim any zeros.
         /// Example: <code>0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1</code>
         /// </returns>
         public IEnumerator EncodeSubmission(Action<string> callback, string txnRequestJson)
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
-            Uri accountsURI = new Uri(transactionsEncodeURL);
+            Uri txnEncodedUri = new Uri(transactionsEncodeURL);
+            var request = RequestClient.SubmitRequest(txnEncodedUri, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(accountsURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1400,8 +1465,8 @@ namespace Aptos.Unity.Rest
         {
             string transactionsEncodeURL = Endpoint + "/transactions/encode_submission";
             Uri transactionsEncodeURI = new Uri(transactionsEncodeURL);
+            var request = RequestClient.SubmitRequest(transactionsEncodeURI, UnityWebRequest.kHttpVerbPOST);
 
-            var request = new UnityWebRequest(transactionsEncodeURI, "POST");
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1532,7 +1597,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -1674,7 +1740,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+
             byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1829,7 +1896,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1985,7 +2053,8 @@ namespace Aptos.Unity.Rest
 
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
-            var request = new UnityWebRequest(transactionsURI, "POST");
+            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
+            
             byte[] jsonToSend = new UTF8Encoding().GetBytes(signedTxnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -2137,7 +2206,7 @@ namespace Aptos.Unity.Rest
 
         /// <summary>
         /// Read Collection's token data table.
-        /// An example 
+        /// An example
         /// <code>
         /// {
         ///     "default_properties":{
@@ -2272,6 +2341,51 @@ namespace Aptos.Unity.Rest
                 );
             yield return getTableItemCor;
             callback(tableItemResp);
+        }
+
+        /// <summary>
+        /// Get a resource of a given type from an account.
+        /// NOTE: The response is a complex object of types only known to the developer writing the contracts.
+        /// This function return a string and expect the developer to deserialize it into an object.
+        /// See <see cref="GetAccountResourceCollection(Action{ResourceCollection, ResponseInfo}, AccountAddress, string)">GetAccountResourceCollection</see> for an example.
+        /// </summary>
+        /// <param name="callback">Callback function used when response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <param name="resourceType">Type of resource being queried for.</param>
+        /// <returns>Calls <c>callback</c> function with <c>(bool, long, string)</c>: \n
+        /// -- bool: success boolean \n
+        /// -- long: - error code, string - JSON response to be deserialized by the consumer of the function\n
+        /// -- string: - the response which may contain the resource details</returns>
+        public IEnumerator GetAccountResource(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string resourceType)
+        {
+            string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resource/" + resourceType;
+            Uri accountsURI = new Uri(accountsURL);
+            var request = RequestClient.SubmitRequest(accountsURI);
+            
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                callback(false, 0, "ERROR: Connection Error: " + request.error);
+            }
+            else if (request.responseCode == 404)
+            {
+                callback(false, request.responseCode, request.error);
+            }
+            else if (request.responseCode >= 400)
+            {
+                callback(false, request.responseCode, request.error);
+            }
+            else
+            {
+                callback(true, request.responseCode, request.downloadHandler.text);
+            }
+
+            request.Dispose();
         }
         #endregion
 
