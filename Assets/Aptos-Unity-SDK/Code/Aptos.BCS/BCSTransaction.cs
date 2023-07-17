@@ -827,7 +827,7 @@ namespace Aptos.BCS
         public override string ToString()
         {
             return String.Format(
-                "Transaction: {0} Authenticator: {1}", 
+                "Transaction: {0} \n Authenticator: {1}", 
                 this.transaction.ToString(), 
                 this.authenticator.ToString()
             );
