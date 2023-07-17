@@ -222,15 +222,17 @@ namespace Aptos.Unity.Rest
             }
             else
             {
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = request.downloadHandler.text;
                 AccountResourceCoin acctResourceCoin = JsonConvert.DeserializeObject<AccountResourceCoin>(request.downloadHandler.text);
-
                 AccountResourceCoin.Coin coin = new AccountResourceCoin.Coin();
                 coin.Value = acctResourceCoin.DataProp.Coin.Value;
-
+               
                 callback(coin, responseInfo);
             }
 
             request.Dispose();
+            //yield return null;
         }
 
         /// <summary>
@@ -1034,6 +1036,7 @@ namespace Aptos.Unity.Rest
                 yield return new WaitForSeconds(2f);
             }
 
+            yield return new WaitForSeconds(3f);
             callback(isTxnSuccessful, responseInfo);
         }
 
@@ -1190,7 +1193,7 @@ namespace Aptos.Unity.Rest
 
             if (responseInfo.status != ResponseInfo.Status.Success)
             {
-                throw new Exception("Unable to get sequence number for: " + Sender.AccountAddress);
+                throw new Exception("Unable to get sequence number for: " + Sender.AccountAddress + ".\n" + responseInfo.message);
             }
 
             ulong expirationTimestamp = ((ulong)(DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL));
