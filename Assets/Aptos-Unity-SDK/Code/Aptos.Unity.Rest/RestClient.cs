@@ -1333,7 +1333,7 @@ namespace Aptos.Unity.Rest
             {
                 Type = Constants.ENTRY_FUNCTION_PAYLOAD,
                 Function = Constants.COIN_TRANSFER_FUNCTION,
-                TypeArguments = new string[] { Constants.APTOS_ASSET_TYPE },
+                TypeArguments = new string[] {},
                 Arguments = new Arguments()
                 {
                     ArgumentStrings = new string[] { to, amount.ToString() }
@@ -1374,8 +1374,8 @@ namespace Aptos.Unity.Rest
 
             EntryFunction payload = EntryFunction.Natural(
                 new ModuleId(AccountAddress.FromHex("0x1"), "aptos_account"),
-                "transfer_coins",
-                new TagSequence(new ISerializableTag[] { new StructTag(AccountAddress.FromHex("0x1"), "aptos_coin", "AptosCoin", new ISerializableTag[0]) }),
+                "transfer",
+                new TagSequence(new ISerializableTag[] { }),
                 new BCS.Sequence(transactionArguments)
             );
 
