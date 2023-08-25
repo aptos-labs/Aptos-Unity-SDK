@@ -543,5 +543,82 @@ namespace Aptos.Unity.Test
             );
             Assert.AreEqual(actual, expected);
         }
+
+        [Test]
+        public void TestToStandardString()
+        {
+            // Test special address: 0x0
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x0000000000000000000000000000000000000000000000000000000000000000").ToString(),
+                "0x0"
+            );
+
+            // Test special address: 0x1
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x0000000000000000000000000000000000000000000000000000000000000001").ToString(),
+                "0x1"
+            );
+
+            // Test special address: 0x4
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x0000000000000000000000000000000000000000000000000000000000000004").ToString(),
+                "0x4"
+            );
+
+            // Test special address: 0xF
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x000000000000000000000000000000000000000000000000000000000000000f").ToString(),
+                "0xf"
+            );
+
+            // Test special address from short no 0x: d
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("d").ToString(),
+                "0xd"
+            );
+
+            // Test non-special address from long:
+            // 0x0000000000000000000000000000000000000000000000000000000000000010
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x0000000000000000000000000000000000000000000000000000000000000010").ToString(),
+                "0x0000000000000000000000000000000000000000000000000000000000000010"
+            );
+
+            // Test non-special address from long:
+            // 0x000000000000000000000000000000000000000000000000000000000000001f
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x000000000000000000000000000000000000000000000000000000000000001f").ToString(),
+                "0x000000000000000000000000000000000000000000000000000000000000001f"
+            );
+
+            // Test non-special address from long:
+            // 0x00000000000000000000000000000000000000000000000000000000000000a0
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0x00000000000000000000000000000000000000000000000000000000000000a0").ToString(),
+                "0x00000000000000000000000000000000000000000000000000000000000000a0"
+            );
+
+            // Test non-special address from long no 0x:
+            // ca843279e3427144cead5e4d5999a3d0ca843279e3427144cead5e4d5999a3d0
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("ca843279e3427144cead5e4d5999a3d0ca843279e3427144cead5e4d5999a3d0").ToString(),
+                "0xca843279e3427144cead5e4d5999a3d0ca843279e3427144cead5e4d5999a3d0"
+            );
+
+            // Test non-special address from long no 0x:
+            // 1000000000000000000000000000000000000000000000000000000000000000
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("1000000000000000000000000000000000000000000000000000000000000000").ToString(),
+                "0x1000000000000000000000000000000000000000000000000000000000000000"
+            );
+
+            // Demonstrate that neither leading nor trailing zeroes get trimmed for
+            // non-special addresses:
+            // 0f00000000000000000000000000000000000000000000000000000000000000
+            Assert.AreEqual(
+                Accounts.AccountAddress.FromHex("0f00000000000000000000000000000000000000000000000000000000000000").ToString(),
+                "0x0f00000000000000000000000000000000000000000000000000000000000000"
+            );
+        }
     }
 }
