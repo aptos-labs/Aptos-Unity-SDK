@@ -3,6 +3,13 @@ using System;
 using Aptos.HdWallet.Utils;
 using Aptos.BCS;
 using System.Text;
+using System.Linq;
+using Aptos.Unity.Rest.Model.Resources;
+using Org.BouncyCastle.Utilities;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.Profiling;
+using UnityEngine.TextCore.Text;
 
 namespace Aptos.Accounts
 {
@@ -38,23 +45,43 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Convert Address bytes into hexadecimal string.
+        /// Represent an account address in a way that is compliant with the v1 address
+        /// standard.The standard is defined as part of AIP-40, read more here:
+        /// https://github.com/aptos-foundation/AIPs/blob/main/aips/aip-40.md
         /// </summary>
         /// <returns>String representation of account address</returns>
         public override string ToString()
         {
-            return ToHexString();
+            string addressHex = BitConverter.ToString(AddressBytes); // Turn into hexadecimal string
+            addressHex = addressHex.Replace("-", "").ToLowerInvariant(); // Remove '-' characters from hexa hash
+            if (IsSpecial())
+            {
+                addressHex = addressHex.TrimStart('0');
+                if (string.IsNullOrEmpty(addressHex))
+                {
+                    addressHex = "0";
+                }
+            }
+            return "0x" + addressHex;
         }
 
         /// <summary>
-        /// Convert Address to hexadecimal string.
+        /// Returns whether the address is a "special" address. Addresses are considered
+        /// special if the first 63 characters of the hex string are zero.In other words,
+        /// an address is special if the first 31 bytes are zero and the last byte is
+        /// smaller than `0b10000` (16). In other words, special is defined as an address
+        /// that matches the following regex: `^0x0{63}[0-9a-f]$`. In short form this means
+        /// the addresses in the range from `0x0` to `0xf` (inclusive) are special.
+        ///
+        /// For more details see the v1 address standard defined as part of AIP-40:
+        /// https://github.com/aptos-foundation/AIPs/blob/main/aips/aip-40.md
         /// </summary>
-        /// <returns>Address as hexadecimal string</returns>
-        private string ToHexString()
+        /// <returns>Boolean representing if the address is special or not.</returns>
+        private bool IsSpecial()
         {
-            string addressHex = BitConverter.ToString(AddressBytes); // Turn into hexadecimal string
-            addressHex = addressHex.Replace("-", "").ToLowerInvariant(); // Remove '-' characters from hexa hash
-            return "0x" + addressHex;
+            return
+                AddressBytes.Take(AddressBytes.Length - 1).All(b => b == 0) &&
+                (AddressBytes[AddressBytes.Length - 1] < 0b10000);
         }
 
         /// <summary>
@@ -67,7 +94,13 @@ namespace Aptos.Accounts
             if (string.IsNullOrWhiteSpace(address))
                 throw new ArgumentException("Address string is empty.");
 
+            if (address.Length == 1)
+            {
+                address = "0x" + address;
+            }
+
             string addr = address;
+
             if (address[0..2].Equals("0x")) { addr = address[2..]; }
 
             if (addr.Length < AccountAddress.Length * 2)
