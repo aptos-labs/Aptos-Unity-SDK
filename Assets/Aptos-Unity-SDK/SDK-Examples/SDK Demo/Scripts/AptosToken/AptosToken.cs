@@ -244,9 +244,9 @@ namespace Aptos.Unity.Sample
             Debug.Log("Mint Token Response: " + responseInfo.message);
             Debug.Log("Transaction Details: " + mintTokenTxn);
 
+            CreateTokenResponse createTxnResponse = JsonConvert.DeserializeObject<CreateTokenResponse>(mintTokenTxn);
+            string createTokenTxnHash = createTxnResponse.Hash;
 
-            CreateTokenResponse createTxnResponse = JsonConvert.DeserializeObject<CreateTokenResponse>(createCollectionTxn);
-            string createTokenTxnHash = txnResponse.Hash;
             Debug.Log("Transaction Hash: " + createTokenTxnHash);
             #endregion
 
@@ -273,9 +273,16 @@ namespace Aptos.Unity.Sample
                 alice.AccountAddress, collectionName
             );
 
-            AccountAddress tokenAddress = AccountAddress.ForGuidObject(
-                alice.AccountAddress, creationNum
-            );
+            List<AccountAddress> mintedTokens = new List<AccountAddress>();
+
+            Coroutine mintedTokensCor = StartCoroutine(tokenClient.TokensMintedFromTransaction((_tokenArray, _responseInfo) => {
+                mintedTokens = _tokenArray;
+                responseInfo = _responseInfo;
+            }, createTokenTxnHash));
+
+            yield return mintedTokensCor;
+
+            AccountAddress tokenAddress = mintedTokens[0];
 
             Debug.Log("AccountAddress ForNamedCollection: " + collectionAddress.ToString());
             Debug.Log("AccountAddress ForGuidObject: " + tokenAddress.ToString());
@@ -510,6 +517,59 @@ namespace Aptos.Unity.Sample
             yield return readObjectTokenCor;
 
             Debug.Log("Alice's token: " + readObjectToken);
+            #endregion
+
+            #region Transferring Tokens
+            Debug.Log(
+                "<color=cyan>=== ======================================== ===</color>\n" +
+                "<color=cyan>=== Transferring the Token from Alice to Bob ===</color>\n" +
+                "<color=cyan>=== ======================================== ===</color>\n"
+            );
+            Debug.Log("Alice: " + alice.AccountAddress.ToString());
+            Debug.Log("Bob: " + bob.AccountAddress.ToString());
+
+            Coroutine transferTokenCor = StartCoroutine(restClient.TransferObject((_responseString, _responseInfo) => {
+                responseString = _responseString;
+                responseInfo = _responseInfo;
+            }, alice, tokenAddress, bob.AccountAddress));
+
+            yield return transferTokenCor;
+
+            Debug.Log("Response: " + responseString);
+
+            TransferObjectResponse transferObjectResponse = JsonConvert.DeserializeObject<TransferObjectResponse>(responseString);
+            transactionHash = transferObjectResponse.Hash;
+
+            // Wait for transaction
+            waitForTxnSuccess = false;
+            waitForTransactionCor = StartCoroutine(
+                RestClient.Instance.WaitForTransaction((_pending, _responseInfo) =>
+                {
+                    waitForTxnSuccess = _pending;
+                    responseInfo = _responseInfo;
+                }, transactionHash)
+            );
+
+            yield return waitForTransactionCor;
+
+            if (!waitForTxnSuccess)
+            {
+                Debug.LogWarning("Transaction was not found. Breaking out of example: Error: " + responseInfo.message);
+                yield break;
+            }
+
+            ReadObject transferObjectReadObject = new ReadObject(null);
+            readObjectCollectionCor = StartCoroutine(tokenClient.ReadObject((_readObjectCollection, _responseInfo) =>
+            {
+                transferObjectReadObject = _readObjectCollection;
+                responseInfo = _responseInfo;
+            },
+            tokenAddress
+            ));
+
+            yield return readObjectCollectionCor;
+
+            Debug.Log("Alice's transferred token: " + transferObjectReadObject);
             #endregion
 
             yield return null;
