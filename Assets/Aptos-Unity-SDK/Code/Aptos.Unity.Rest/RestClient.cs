@@ -4,6 +4,7 @@ using Aptos.Unity.Rest.Model;
 using Chaos.NaCl;
 using NBitcoin;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Cms;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1168,6 +1169,60 @@ namespace Aptos.Unity.Rest
                 responseInfo.message = request.downloadHandler.text;
 
                 callback(isPending, responseInfo);
+
+                request.Dispose();
+                yield return new WaitForSeconds(1f);
+            }
+        }
+
+        public IEnumerator TransactionByHash(Action<Transaction, ResponseInfo> callback, string txnHash)
+        {
+            string txnURL = Endpoint + "/transactions/by_hash/" + txnHash;
+            Uri txnURI = new Uri(txnURL);
+            var request = RequestClient.SubmitRequest(txnURI);
+
+            request.SendWebRequest();
+            while (!request.isDone)
+            {
+                yield return null;
+            }
+
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Connection error. " + request.error;
+
+                callback(null, responseInfo);
+                request.Dispose();
+                yield return new WaitForSeconds(1f);
+            }
+            else if (request.responseCode == 404)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Transaction Not Found: " + request.responseCode;
+
+                callback(null, responseInfo);
+                request.Dispose();
+                yield return new WaitForSeconds(1f);
+            }
+            else if (request.responseCode >= 400)
+            {
+                responseInfo.status = ResponseInfo.Status.Failed;
+                responseInfo.message = "Transaction Call Error: " + request.responseCode + " : " + request.downloadHandler.text;
+
+                callback(null, responseInfo);
+                request.Dispose();
+                yield return new WaitForSeconds(1f);
+            }
+            else
+            {
+                var transactionResult = JsonConvert.DeserializeObject<Transaction>(request.downloadHandler.text, new TransactionConverter())!;
+                responseInfo.status = ResponseInfo.Status.Success;
+                responseInfo.message = request.downloadHandler.text;
+
+                callback(transactionResult, responseInfo);
 
                 request.Dispose();
                 yield return new WaitForSeconds(1f);
@@ -2341,6 +2396,42 @@ namespace Aptos.Unity.Rest
                 );
             yield return getTableItemCor;
             callback(tableItemResp);
+        }
+
+        public IEnumerator TransferObject(Action<string, ResponseInfo> Callback, Account Owner, AccountAddress Object, AccountAddress To)
+        {
+            ISerializable[] transactionArguments =
+            {
+                Object,
+                To
+            };
+
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x1"), "object"),
+                Constants.APTOS_TRANSFER_CALL,
+                new TagSequence(new ISerializableTag[] { }),
+                new BCS.Sequence(transactionArguments)
+            );
+
+            SignedTransaction signedTransaction = null;
+            ResponseInfo responseInfo = new ResponseInfo();
+
+            Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(CreateBCSSignedTransaction((_signedTransaction) => {
+                signedTransaction = _signedTransaction;
+            }, Owner, new BCS.TransactionPayload(payload)));
+            yield return cor_createBcsSIgnedTransaction;
+
+            string submitBcsTxnJsonResponse = "";
+
+            Coroutine cor_submitBcsTransaction = StartCoroutine(SubmitBCSTransaction((_responseJson, _responseInfo) => {
+                submitBcsTxnJsonResponse = _responseJson;
+                responseInfo = _responseInfo;
+            }, signedTransaction));
+            yield return cor_submitBcsTransaction;
+
+            Callback(submitBcsTxnJsonResponse, responseInfo);
+
+            yield return null;
         }
 
         /// <summary>
