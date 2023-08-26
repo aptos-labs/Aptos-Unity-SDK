@@ -26,5 +26,8 @@ namespace Aptos.Unity.Rest
         public const string TOKEN_TRANSFER_CLAIM_SCRIPT = "0x3::token_transfers::claim_script";
         public const string COIN_TRANSFER_FUNCTION = "0x1::aptos_account::transfer";
         public const string APTOS_ASSET_TYPE = "0x1::aptos_coin::AptosCoin";
+        public const string APTOS_OBJECT_TYPE = "0x1::object";
+        public const string APTOS_TRANSFER_CALL = "transfer_call";
+        public const string APTOS_MINT_EVENT = "0x4::collection::MintEvent";
     }
 }
