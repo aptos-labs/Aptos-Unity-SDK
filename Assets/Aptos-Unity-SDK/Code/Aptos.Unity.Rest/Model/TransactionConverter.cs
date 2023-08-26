@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Aptos.Unity.Rest.Model
 {
@@ -61,6 +62,18 @@ namespace Aptos.Unity.Rest.Model
                         if (item["success"] != null) transaction.Success = (bool)item["success"];
                         if (item["vm_status"] != null) transaction.VmStatus = (string)item["vm_status"];
                         if (item["accumulator_root_hash"] != null) transaction.AccumulatorRootHash = (string)item["accumulator_root_hash"];
+                        if (item["events"] != null)
+                        {
+                            List<TransactionEvent> events = new List<TransactionEvent>();
+                            JArray a = (JArray)item["events"];
+                            foreach (JObject itemEvent in a)
+                            {
+                                TransactionEvent eventTx = JsonConvert.DeserializeObject<TransactionEvent>(itemEvent.ToString());
+                                events.Add(eventTx);
+                            }
+                            TransactionEvent[] eventArr = events.ToArray();
+                            transaction.Events = eventArr;
+                        }
 
                         return transaction;
                     }
