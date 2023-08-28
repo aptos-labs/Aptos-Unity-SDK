@@ -49,6 +49,54 @@ namespace Aptos.Unity.Rest.Model
 
         [JsonProperty("changes", Required = Required.AllowNull)]
         public Change[] Changes { get; set; }
+
+        [JsonProperty("events", Required = Required.AllowNull)]
+        public TransactionEvent[] Events { get; set; }
+    }
+
+    [JsonObject]
+    public class TransactionEvent
+    {
+        [JsonProperty("guid", Required = Required.Always)]
+        public GUIDAddress GUID { get; set; }
+
+        [JsonProperty("sequence_number", Required = Required.Always)]
+        public string SequenceNumber { get; set; }
+
+        [JsonProperty("type", Required = Required.Always)]
+        public string Type { get; set; }
+
+        [JsonProperty("data", Required = Required.Always)]
+        public DataObject Data { get; set; }
+
+        [JsonObject]
+        public class GUIDAddress
+        {
+            [JsonProperty("creation_number", Required = Required.Always)]
+            public string CreationNumber { get; set; }
+
+            [JsonProperty("account_address", Required = Required.Always)]
+            public string AccountAddress { get; set; }
+        }
+
+        [JsonObject]
+        public class DataObject
+        {
+            [JsonProperty("index")]
+            public string Index { get; set; }
+
+            [JsonProperty("token")]
+            public string Token { get; set; }
+
+            [JsonProperty("from")]
+            public string From { get; set; }
+
+            [JsonProperty("to")]
+            public string To { get; set; }
+
+            [JsonProperty("object")]
+            public string Object { get; set; }
+        }
     }
 
     [JsonObject]

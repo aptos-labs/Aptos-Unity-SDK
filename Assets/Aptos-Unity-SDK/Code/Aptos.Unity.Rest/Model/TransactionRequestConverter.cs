@@ -61,12 +61,19 @@ namespace Aptos.Unity.Rest.Model
 
                         if (arg.Type == JTokenType.Array)
                         {
-                            JArray boolArr = arg as JArray;
+                            JArray arrayVal = arg as JArray;
 
-                            foreach (var boolArg in boolArr)
+                            foreach (var argument in arrayVal)
                             {
-                                bool b = boolArg.Value<bool>();
-                                argumentBooleans.Add(b);
+                                if (argument.Type == JTokenType.Boolean)
+                                {
+                                    argumentBooleans.Add(argument.Value<bool>());
+                                }
+
+                                if (argument.Type == JTokenType.String)
+                                {
+                                    argumentStrings.Add(argument.Value<string>());
+                                }
                             }
                         }
                         transactionPayload.Arguments = new Arguments()

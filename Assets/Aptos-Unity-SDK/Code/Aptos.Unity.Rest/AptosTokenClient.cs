@@ -823,6 +823,16 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
+        public IEnumerator TransferToken(
+            Action<string, ResponseInfo> Callback,
+            Account Owner,
+            AccountAddress Token,
+            AccountAddress To
+        )
+        {
+            return Client.TransferObject(Callback, Owner, Token, To);
+        }
+
         public IEnumerator BurnToken(
             Action<string, ResponseInfo> Callback,
             Account Creator,
@@ -1020,6 +1030,31 @@ namespace Aptos.Unity.Rest
             yield return cor_submitBcsTransaction;
 
             Callback(submitBcsTxnJsonResponse, responseInfo);
+            yield return null;
+        }
+
+        public IEnumerator TokensMintedFromTransaction(Action<List<AccountAddress>, ResponseInfo> Callback, string TransactionHash)
+        {
+            ResponseInfo responseInfo = new ResponseInfo();
+            Transaction responseTx = new Transaction();
+            Coroutine transactionByHashCor = StartCoroutine(Client.TransactionByHash((_responseTx, _responseInfo) => {
+                responseTx = _responseTx;
+                responseInfo = _responseInfo;
+            }, TransactionHash));
+
+            yield return transactionByHashCor;
+
+            List<AccountAddress> mints = new List<AccountAddress>();
+
+            foreach (TransactionEvent txEvent in responseTx.Events)
+            {
+                if (txEvent.Type.Equals(Constants.APTOS_MINT_EVENT))
+                {
+                    mints.Add(AccountAddress.FromHex(txEvent.Data.Token));
+                }
+            }
+
+            Callback(mints, responseInfo);
             yield return null;
         }
     }
