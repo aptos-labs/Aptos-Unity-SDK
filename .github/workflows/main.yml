@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build my project ✨
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       # Checkout
       - name: Checkout repository
@@ -37,7 +37,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          unityVersion: 'auto'
+          unityVersion: '2021.3.6f1'
           targetPlatform: WebGL
 
       # Output
