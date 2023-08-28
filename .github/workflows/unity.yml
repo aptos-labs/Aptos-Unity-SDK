@@ -1,2 +1,0 @@
-- name: Unity - Test runner
-    uses: game-ci/unity-test-runner@v3.0.0
