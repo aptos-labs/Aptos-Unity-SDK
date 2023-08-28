@@ -1,66 +1,46 @@
-name: Test, Build, and Deploy with GameCI
-on:
-  push:
-    branches:
-      - develop
-      - main
-    paths:
-      - 'Assets/**'
-      - 'Packages/**'
-      - 'ProjectSettings/**'
-  pull_request:
-    types:
-      - opened
-    branches:
-      - main
-    paths:
-      - 'Assets/**'
-      - 'Packages/**'
-      - 'ProjectSettings/**'
-  release:
-    types:
-      - published
-  workflow_dispatch:
-    inputs:
-      workflow_mode:
-        description: '[release] [Android, iOS, StandaloneLinux64, WebGL, StandaloneWindows64, WSAPlayer, StandaloneOSX, Steam]'
-        required: false
-        default: ''
+name: Actions 😎
+
+on: [push, pull_request]
 
 jobs:
-  tests:
-    name: Unit Tests
+  build:
+    name: Build my project ✨
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      # Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-      - name: Create LFS file list
-        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-      - name: Restore LFS cache
-        uses: actions/cache@v3
-        id: lfs-cache
-        with:
-          path: .git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
-      - name: Git LFS Pull
-        run: |
-          git lfs pull
-          git add .
-          git reset --hard
-      - name: Cache Library
-        uses: actions/cache@v3
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: Library-test-
-      - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@main
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Test
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v2
         env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build
+      - name: Build project
+        uses: game-ci/unity-builder@v3
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          testMode: playmode
-          githubToken: ${{ secrets.GH_TOKEN }}
+          targetPlatform: WebGL
+
+      # Output
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build
+          path: build
