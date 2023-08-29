@@ -1,4 +1,7 @@
 # Aptos Unity SDK
+
+[![Actions](https://github.com/MarcoDotIO/Aptos-Unity-SDK/actions/workflows/main.yml/badge.svg)](https://github.com/MarcoDotIO/Aptos-Unity-SDK/actions/workflows/main.yml)
+
 The Aptos Unity SDK is a .NET implementation of the [Aptos SDK](https://aptos.dev/sdks/index/), compatible with .NET Standard 2.0 and .NET 4.x for Unity. 
 The goal of this SDK is to provide a set of tools for developers to build multi-platform applications (mobile, desktop, web, VR) using the [Unity](https://unity.com/) game engine and the Aptos blockchain infrastructure.
 
