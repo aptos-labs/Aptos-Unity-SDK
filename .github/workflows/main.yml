@@ -37,6 +37,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
+          allowDirtyBuild: true
           unityVersion: '2021.3.6f1'
           targetPlatform: StandaloneOSX
 
