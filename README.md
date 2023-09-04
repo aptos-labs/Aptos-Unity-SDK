@@ -18,7 +18,7 @@ Aptos2Unity is a Unity package written in C# to help developers integrate Aptos 
   - [Unity Package Importer](#unity-package-importer)
 - [Using Unity2Aptos](#using-unity2aptos)
   - [RestClient](#restclient)
-  - [FaucetClient](faucetclient)
+  - [FaucetClient](#faucetclient)
   - [TokenClient](#tokenclient)
   - [Account](#account)
   - [Wallet](#wallet)
