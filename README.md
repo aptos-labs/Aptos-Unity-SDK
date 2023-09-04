@@ -1,4 +1,6 @@
-<img src="./Resources/Unity2AptosLogo.png" alt="Unity2AptosLogo" style="zoom:30%;" />
+<p align="center">
+	<img src="./Resources/Unity2AptosLogo.png" alt="Unity2AptosLogo" width="256" height="256" />
+</p>
 
 # Unity2Aptos #
 
