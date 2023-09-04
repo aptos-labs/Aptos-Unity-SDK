@@ -228,4 +228,4 @@ The SDK comes with several examples and a demo project that show how to leverage
 
 ### License ###
 
-Unity2Aptos is released under the Apache 2.0 license. [See LICENSE](https://github.com/MarcoDotIO/OpenAIKit/blob/main/LICENSE) for details.
+Unity2Aptos is released under the Apache 2.0 license. [See LICENSE](https://github.com/MarcoDotIO/Aptos-Unity-SDK/blob/main/LICENSE) for details.
