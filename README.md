@@ -1,4 +1,4 @@
-<img src="/Users/marcodotio/dev/Github/Aptos-Unity-SDK/Assets/Aptos-Unity-SDK/Resources/Unity2AptosLogo.png" alt="Unity2AptosLogo" style="zoom:30%;" />
+<img src="./Resources/Unity2AptosLogo.png" alt="Unity2AptosLogo" style="zoom:30%;" />
 
 # Unity2Aptos #
 
@@ -222,7 +222,7 @@ Wallet wallet = new Wallet(mnemo);
 
 The SDK comes with several examples and a demo project that show how to leverage the SDK to its full potential. The examples include `AptosToken`, `Multisig`, `SimulateTransferCoin`, `TransferCoin`, and `SimpleNftExample`. As well, the demo project, shown below, is an example project that gives you various options to test out.
 
-![demo](/Users/marcodotio/dev/Github/Aptos-Unity-SDK/Assets/Aptos-Unity-SDK/Resources/demo.gif)
+![demo](./Resources/demo.gif)
 
 ### License ###
 
