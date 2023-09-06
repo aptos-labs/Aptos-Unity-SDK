@@ -7,7 +7,7 @@
 
 ## 		Aptos Made Easy in Unity
 
-[![Actions](https://github.com/MarcoDotIO/Aptos-Unity-SDK/actions/workflows/main.yaml/badge.svg)](https://github.com/MarcoDotIO/Aptos-Unity-SDK/actions/workflows/main.yaml) [![Made with Unity](https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity)](https://unity3d.com) [![](https://dcbadge.vercel.app/api/server/aptoslabs)](https://discord.gg/aptoslabs)
+[![Actions](https://github.com/aptos-labs/Aptos-Unity-SDK/actions/workflows/main.yaml/badge.svg)](https://github.com/aptos-labs/Aptos-Unity-SDK/actions/workflows/main.yaml) [![Made with Unity](https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity)](https://unity3d.com) [![](https://dcbadge.vercel.app/api/server/aptoslabs)](https://discord.gg/aptoslabs)
 
 Aptos-Unity-SDK is a Unity package written in C# to help developers integrate Aptos blockchain technology into their projects.
 
@@ -365,4 +365,4 @@ The SDK comes with several examples and a demo project that show how to leverage
 
 ### License ###
 
-Aptos-Unity-SDK is released under the Apache 2.0 license. [See LICENSE](https://github.com/MarcoDotIO/Aptos-Unity-SDK/blob/main/LICENSE) for details.
+Aptos-Unity-SDK is released under the Apache 2.0 license. [See LICENSE](https://github.com/aptos-labs/Aptos-Unity-SDK/blob/main/LICENSE) for details.
