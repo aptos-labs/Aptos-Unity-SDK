@@ -13,12 +13,34 @@ using UnityEngine.TextCore.Text;
 
 namespace Aptos.Accounts
 {
+    /// <summary>
+    /// A class representing the available authorization key schemes for Aptos Blockchain accounts.
+    /// </summary>
     public class AuthKeyScheme
     {
+        /// <summary>
+        /// The ED25519 authorization key scheme value.
+        /// </summary>
         public const byte Ed25519 = 0x00;
+
+        /// <summary>
+        /// The multi-ED25519 authorization key scheme value.
+        /// </summary>
         public const byte MultiEd25519 = 0x01;
+
+        /// <summary>
+        /// The authorization key scheme value used to derive an object address from a GUID.
+        /// </summary>
         public const byte DeriveObjectAddressFromGuid = 0xFD;
+
+        /// <summary>
+        /// The authorization key scheme value used to derive an object address from a seed.
+        /// </summary>
         public const byte DeriveObjectAddressFromSeed = 0xFE;
+
+        /// <summary>
+        /// The authorization key scheme value used to derive a resource account address.
+        /// </summary>
         public const byte DeriveResourceAccountAddress = 0xFF;
     }
 
@@ -28,11 +50,18 @@ namespace Aptos.Accounts
     /// </summary>
     public class AccountAddress: ISerializableTag
     {
+        /// <summary>
+        /// The length of the data in bytes.
+        /// </summary>
         private static readonly int Length = 32;
+
+        /// <summary>
+        /// The address data itself represented in byte array formatting.
+        /// </summary>
         private readonly byte[] AddressBytes;
 
         /// <summary>
-        /// Initializes an account address by setting a 32-byte representation of an address
+        /// Initializes an account address by setting a 32-byte representation of an address.
         /// </summary>
         /// <param name="address">Byte array representing address.</param>
         public AccountAddress(byte[] address)
@@ -52,8 +81,8 @@ namespace Aptos.Accounts
         /// <returns>String representation of account address</returns>
         public override string ToString()
         {
-            string addressHex = BitConverter.ToString(AddressBytes); // Turn into hexadecimal string
-            addressHex = addressHex.Replace("-", "").ToLowerInvariant(); // Remove '-' characters from hexa hash
+            string addressHex = BitConverter.ToString(AddressBytes);
+            addressHex = addressHex.Replace("-", "").ToLowerInvariant();
             if (IsSpecial())
             {
                 addressHex = addressHex.TrimStart('0');
@@ -133,6 +162,15 @@ namespace Aptos.Accounts
             return new AccountAddress(result);
         }
 
+        /// <summary>
+        /// Create an AccountAddress instance from a MultiPublicKey.
+        ///
+        /// This function creates an AccountAddress instance from a provided MultiPublicKey. The function generates a new address by appending the Multi ED25519 authorization key
+        /// scheme value to the byte representation of the provided MultiPublicKey, and then computes the SHA3-256 hash of the resulting byte array. The resulting hash is used to create
+        /// a new AccountAddress instance.
+        /// </summary>
+        /// <param name="keys">A MultiPublicKey instance representing the multiple public keys to create the AccountAddress instance from.</param>
+        /// <returns>An AccountAddress instance created from the provided MultiPublicKey.</returns>
         public static AccountAddress FromMultiEd25519(MultiPublicKey keys)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
@@ -145,6 +183,16 @@ namespace Aptos.Accounts
             return new AccountAddress(result);
         }
 
+        /// <summary>
+        /// Create an AccountAddress instance for a resource account.
+        ///
+        /// This function creates an AccountAddress instance for a resource account given the creator's address and a seed value. The function generates a new address by concatenating the byte
+        /// representation of the creator's address, the provided seed value, and the DERIVE_RESOURCE_ACCOUNT_ADDRESS authorization key scheme value. It then computes the SHA3-256
+        /// hash of the resulting byte array to generate a new AccountAddress instance.
+        /// </summary>
+        /// <param name="creator">An AccountAddress instance representing the address of the account that will create the resource account.</param>
+        /// <param name="seed">A byte array used to create a unique resource account.</param>
+        /// <returns>An AccountAddress instance representing the newly created resource account.</returns>
         public static AccountAddress ForResourceAccount(AccountAddress creator, byte[] seed)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
@@ -156,6 +204,16 @@ namespace Aptos.Accounts
             return new AccountAddress(result);
         }
 
+        /// <summary>
+        /// Generates an `AccountAddress` for a GUID object.
+        ///
+        /// This function takes in a creator address and a `creationNum` which it uses to serialize into an array of bytes.
+        /// It then appends the creator address and `deriveObjectAddressFromGuid` to this array. It uses this byte array
+        /// to compute a SHA-256 hash. This hash is then returned as a new `AccountAddress`.
+        /// </summary>
+        /// <param name="creator">The account address of the creator.</param>
+        /// <param name="creationNum">The creation number of the object.</param>
+        /// <returns>An `AccountAddress` which is generated for a GUID object.</returns>
         public static AccountAddress ForGuidObject(AccountAddress creator, int creationNum)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
@@ -170,6 +228,16 @@ namespace Aptos.Accounts
             return new AccountAddress(result);
         }
 
+        /// <summary>
+        /// Create an AccountAddress instance for a named object.
+        ///
+        /// This function creates an AccountAddress instance for a named object given the creator's address and a seed value. The function generates a new address by concatenating the byte representation
+        /// of the creator's address, the provided seed value, and the DERIVE_OBJECT_ADDRESS_FROM_SEED authorization key scheme value. It then computes the SHA3-256 hash of the resulting byte
+        /// array to generate a new AccountAddress instance.
+        /// </summary>
+        /// <param name="creator">An AccountAddress instance representing the address of the account that will create the named object.</param>
+        /// <param name="seed">A byte array used to create a unique named object.</param>
+        /// <returns>An AccountAddress instance representing the newly created named object.</returns>
         public static AccountAddress ForNamedObject(AccountAddress creator, byte[] seed)
         {
             var sha256 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256); // SHA256 it
@@ -181,6 +249,14 @@ namespace Aptos.Accounts
             return new AccountAddress(result);
         }
 
+        /// <summary>
+        /// Generates an AccountAddress for a named token by concatenating the collectionName, the tokenName, and the separator "::"
+        /// as a Data and calling the forNamedObject function with the resulting Data as the seed.
+        /// </summary>
+        /// <param name="creator">The AccountAddress of the account that creates the token./param>
+        /// <param name="collectionName">A String that represents the name of the collection to which the token belongs.</param>
+        /// <param name="tokenName">A String that represents the name of the token.</param>
+        /// <returns>An AccountAddress object that represents the named token.</returns>
         public static AccountAddress ForNamedToken(AccountAddress creator, string collectionName, string tokenName)
         {
             byte[] result = Encoding.ASCII.GetBytes(collectionName + "::" + tokenName);
@@ -189,6 +265,17 @@ namespace Aptos.Accounts
             );
         }
 
+        /// <summary>
+        /// Derive an AccountAddress for a named collection.
+        ///
+        /// This function takes the creator's AccountAddress and the name of the collection as a String. The collection name is
+        /// then converted to data using UTF-8 encoding. The forNamedObject function is called with the creator's address and the
+        /// collection name data as the seed. This returns an AccountAddress derived from the creator's address and collection name
+        /// seed, which represents the named collection.
+        /// </summary>
+        /// <param name="creator">The creator's AccountAddress.</param>
+        /// <param name="collectionName">The name of the collection as a String.</param>
+        /// <returns>An AccountAddress that represents the named collection.</returns>
         public static AccountAddress ForNamedCollection(AccountAddress creator, string collectionName)
         {
             byte[] collectionNameEncode = Encoding.ASCII.GetBytes(collectionName);

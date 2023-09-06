@@ -28,7 +28,6 @@ namespace Aptos.BCS
     public interface ISerializable
     {
         public void Serialize(Serialization serializer);
-
         public static ISerializable Deserialize(Deserialization deserializer) => throw new NotImplementedException();
     }
 
