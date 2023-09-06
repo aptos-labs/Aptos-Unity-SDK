@@ -219,12 +219,15 @@ yield return mintTokenCor;
 If a developer needs more flexibility with how they want to shape their transactions, e.g., arbitrary, generic, custom, using EntryFunction is the key class, along with the usage of the REST Client, to submit those types of transactions that aren't defined already. This is how the developer would initialize the transaction arguments, create the EntryFunction payload, and submit the transaction using BCS:
 
 ```c#
+// Initialize Account.
+Account Alice = Account.Generate();
+
 // Initialize Variables.
-let properties = new PropertyMap(new List<Property> { Property.StringProp("string", "string value") });
-let Collection = "My New Collection";
-let Description = "This is my first Collection.";
-let Name = "Aptos";
-let Uri = "https://aptos.dev";
+PropertyMap Properties = new PropertyMap(new List<Property> { Property.StringProp("string", "string value") });
+string Collection = "My New Collection";
+string Description = "This is my first Collection.";
+string Name = "Aptos";
+string Uri = "https://aptos.dev";
 Tuple<List<BString>, List<BString>, List<byte[]>> propertiesTuple = Properties.ToTuple();
 
 // Initialize Transaction Arguments.
@@ -253,7 +256,7 @@ SignedTransaction signedTransaction = null;
 Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => 
 {
 	signedTransaction = _signedTransaction;
-}, Creator, new BCS.TransactionPayload(payload)));
+}, Alice, new BCS.TransactionPayload(payload)));
 
 yield return cor_createBcsSIgnedTransaction;
 ```
