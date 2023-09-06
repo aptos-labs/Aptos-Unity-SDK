@@ -16,18 +16,36 @@ namespace Aptos.Accounts
     /// </summary>
     public class AuthenticationKey
     {
+        /// <summary>
         /// Byte length of authentication key.
+        /// </summary>
         public static int LENGTH = 32;
+
+        /// <summary>
         /// Byte that represents multi-ed25519 scheme.
+        /// </summary>
         public static byte MULTI_ED25519_SCHEME = 0x001;
+
+        /// <summary>
         /// Byte that represents single key ed25519 scheme.
+        /// </summary>
         public static byte ED25519_SCHEME = 0x00;
+
+        /// <summary>
         /// Byte that represents derive resource account scheme.
+        /// </summary>
         public static byte DERIVE_RESOURCE_ACCOUNT_SCHEME = 255;
 
-        /// Byte array representing authentication key
+        /// <summary>
+        /// Byte array representing authentication key.
+        /// </summary>
         public byte[] bytes;
 
+        /// <summary>
+        /// Initialize the Authentication Key.
+        /// </summary>
+        /// <param name="bytes">The raw byte array of the key itself.</param>
+        /// <exception cref="ArgumentException"></exception>
         public AuthenticationKey(byte[] bytes)
         {
             if (bytes.Length != AuthenticationKey.LENGTH)
@@ -39,7 +57,7 @@ namespace Aptos.Accounts
 
         /// <summary>
         /// Converts a K-of-N MultiEd25519PublicKey to AuthenticationKey with: \n
-        /// `auth_key = sha3-256(p_1 | … | p_n | K | 0x01)`. `K` represents the K-of-N required for \n
+        /// `auth_key = sha3-256(p_1 | ï¿½ | p_n | K | 0x01)`. `K` represents the K-of-N required for \n
         /// authenticating the transaction. `0x01` is the 1-byte scheme for multisig. \n
         /// </summary>
         /// <returns>Authentication key object from a multi ED25519 key</returns>

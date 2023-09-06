@@ -4,15 +4,43 @@ using Aptos.BCS;
 
 namespace Aptos.Accounts
 {
+    /// <summary>
+    /// The ED25519 Multi-Public Key implementation.
+    /// </summary>
     public class MultiPublicKey : ISerializable
     {
+        /// <summary>
+        /// The Public Keys themselves.
+        /// </summary>
         public List<PublicKey> Keys;
+
+        /// <summary>
+        /// The current amount of keys in the keys array.
+        /// </summary>
         public byte Threshold;
 
+        /// <summary>
+        /// The minimum amount of keys to initialize this class.
+        /// </summary>
         public static int MIN_KEYS = 2;
+
+        /// <summary>
+        /// The maximum amount of keys allowed for initialization.
+        /// </summary>
         public static int MAX_KEYS = 32;
+
+        /// <summary>
+        /// The minimum threshold amount.
+        /// </summary>
         public static int MIN_THRESHOLD = 1;
 
+        /// <summary>
+        /// Initializer for the MultiPublicKey.
+        /// </summary>
+        /// <param name="Keys">The Public Keys themselves.</param>
+        /// <param name="Threshold">The current amount of keys in the keys array.</param>
+        /// <param name="Checked">Verify whether the amount of keys fit within the threshold from 2 to 32 keys, both sides are inclusive.</param>
+        /// <exception cref="Exception"></exception>
         public MultiPublicKey(List<PublicKey> Keys, byte Threshold, bool Checked = true)
         {
             if(Checked)
@@ -33,6 +61,12 @@ namespace Aptos.Accounts
             return string.Format("{0}-of-{1} Multi-Ed25519 public key", this.Threshold, this.Keys.Count);
         }
 
+        /// <summary>
+        /// Serialize the threshold and concatenated keys of a given threshold signature scheme instance to a Data object.
+        ///
+        /// This function concatenates the keys of the instance and serializes the threshold and concatenated keys to a Data object.
+        /// </summary>
+        /// <returns>A bytes array containing the serialized threshold and concatenated keys.</returns>
         public byte[] ToBytes()
         {
             List<byte> concatenatedKeys = new List<byte>();
@@ -44,6 +78,14 @@ namespace Aptos.Accounts
             return concatenatedKeys.ToArray();
         }
 
+        /// <summary>
+        /// Deserialize a Data object to a MultiPublicKey instance.
+        ///
+        /// This function deserializes the given Data object to a MultiPublicKey instance by extracting the threshold and keys from it.
+        /// </summary>
+        /// <param name="Key">A Data object containing the serialized threshold and keys of a MultiPublicKey instance.</param>
+        /// <returns>A MultiPublicKey instance initialized with the deserialized keys and threshold.</returns>
+        /// <exception cref="Exception"></exception>
         public static MultiPublicKey FromBytes(byte[] Key)
         {
             // Get key count and threshold limits.

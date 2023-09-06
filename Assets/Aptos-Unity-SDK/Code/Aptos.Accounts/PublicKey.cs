@@ -120,6 +120,15 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
+        /// Check if PubliKey is a valid on the Ed25519 curve.
+        /// </summary>
+        /// <returns>Returns true if public key is on the curve.</returns>
+        public bool IsOnCurve()
+        {
+            return KeyBytes.IsOnCurve();
+        }
+
+        /// <summary>
         /// Serialize public key
         /// </summary>
         /// <param name="serializer">Serializer object</param>
@@ -132,18 +141,9 @@ namespace Aptos.Accounts
         {
             byte[] keyBytes = deserializer.ToBytes();
             if (keyBytes.Length != PublicKey.KeyLength)
-                throw new Exception("Length mismatch. Expected: " + PublicKey.KeyLength + ", Actual: "  + keyBytes.Length);
+                throw new Exception("Length mismatch. Expected: " + PublicKey.KeyLength + ", Actual: " + keyBytes.Length);
 
             return new PublicKey(keyBytes);
-        }
-
-        /// <summary>
-        /// Check if PubliKey is a valid on the Ed25519 curve.
-        /// </summary>
-        /// <returns>Returns true if public key is on the curve.</returns>
-        public bool IsOnCurve()
-        {
-            return KeyBytes.IsOnCurve();
         }
 
         /// <inheritdoc cref="object.Equals(object)"/>
