@@ -1,14 +1,15 @@
 <p align="center">
-	<img src="./Resources/Unity2AptosLogo.png" alt="Unity2AptosLogo" width="256" height="256" />
+	<img src="./Resources/aptosLogo.webp" alt="Unity2AptosLogo" width="256" height="256" />
 </p>
 
-# Unity2Aptos #
+
+# Aptos-Unity-SDK #
 
 ## 		Aptos Made Easy in Unity
 
 [![Actions](https://github.com/MarcoDotIO/Aptos-Unity-SDK/actions/workflows/main.yaml/badge.svg)](https://github.com/MarcoDotIO/Aptos-Unity-SDK/actions/workflows/main.yaml) [![Made with Unity](https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity)](https://unity3d.com) [![](https://dcbadge.vercel.app/api/server/aptoslabs)](https://discord.gg/aptoslabs)
 
-Aptos2Unity is a Unity package written in C# to help developers integrate Aptos blockchain technology into their projects.
+Aptos-Unity-SDK is a Unity package written in C# to help developers integrate Aptos blockchain technology into their projects.
 
 - [Features](#features)
 - [ToDo](#todo)
@@ -16,7 +17,7 @@ Aptos2Unity is a Unity package written in C# to help developers integrate Aptos 
 - [Dependencies](#dependencies)
 - [Installation](#installation)
   - [Unity Package Importer](#unity-package-importer)
-- [Using Unity2Aptos](#using-unity2aptos)
+- [Using Aptos-Unity-SDK](#using-aptos-unity-sdk)
   - [RestClient](#restclient)
   - [FaucetClient](#faucetclient)
   - [TokenClient](#tokenclient)
@@ -39,27 +40,28 @@ Aptos2Unity is a Unity package written in C# to help developers integrate Aptos 
 - [x] Compatibility with main, dev, and test networks.
 - [x] Comprehensive Unit and Integration Test coverage.
 
-### ToDo
-
-- [ ] Implement full documentation.
-- [ ] Implement E2E Testing.
-- [ ] Implement full coverage of BCS transactions.
-
 ### Make Account Transfer Quickly and Easily! ###
 
-With how easy the library is to use, Unity2Aptos gives you the power to quickly setup a Sui account and be able to transfer coins in only a few lines of code:
+With how easy the library is to use, Aptos-Unity-SDK gives you the power to quickly setup a Sui account and be able to transfer coins in only a few lines of code:
 ```c#
+// Initialize Accounts.
+Account alice = Account.Generate();
+Account bob = Account.Generate();
+
 // Initialize Transaction.
 Transaction transferTxn = new Transaction();
 
-// Start Coroutine with the transaction.
+// Initialize Response Info.
+ResponseInfo responseInfo = new ResponseInfo();
+
+// Start Coroutine With the Transaction.
 Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transaction, _responseInfo) =>
 {
 	transferTxn = _transaction;
 	responseInfo = _responseInfo;
 }, alice, bob.AccountAddress.ToString(), 1000));
 
-// Yield return the coroutine.
+// Yield Return the Coroutine.
 yield return transferCor;
 ```
 
@@ -86,14 +88,20 @@ yield return transferCor;
 
 ​	**NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is a common dependency. Prior versions of Unity require installing Newtonsoft.
 
-### Using Unity2Aptos ###
+### Using Aptos-Unity-SDK ###
 
-Unity2Aptos is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `EntryFunction`, `Account`, and `Wallet`. Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
+Aptos-Unity-SDK is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `EntryFunction`, `Account`, and `Wallet`. Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
 
 #### RestClient ####
 
 The REST Client provides you with the fundamental transaction endpoints needed for interacting with the Aptos Blockchain. As shown before, it only take a few lines of code to initialize a transfer for Aptos coins. This is the main class developers will be leveraging to interact directly with the Aptos Blockchain via REST Client calls. Here's another example showing how to create a collection:
 ```c#
+// Initialize Account.
+Account alice = Account.Generate();
+
+// Initialize Response Info.
+ResponseInfo responseInfo = new ResponseInfo();
+
 // Collection Details.
 string collectionName = "Alice's";
 string collectionDescription = "Alice's simple collection";
@@ -112,6 +120,13 @@ yield return createCollectionCor;
 Here's also how to wait for a transaction:
 
 ```c#
+// Initialize Accounts.
+Account alice = Account.Generate();
+Account bob = Account.Generate();
+
+// Initialize Response Info.
+ResponseInfo responseInfo = new ResponseInfo();
+
 // Initialize Transaction.
 Transaction transferTxn = new Transaction();
 Coroutine transferCor = StartCoroutine(RestClient.Instance.Transfer((_transaction, _responseInfo) =>
@@ -149,11 +164,18 @@ if (!waitForTxnSuccess)
 The Faucet Client allows the developer to leverage the ability to fund wallets on any of the non-main networks within the Aptos Blockchain. This can easily speed up development times through automating the process of funding wallets. Here's an example on how to use the Faucet Client:
 
 ```c#
+// Initialize Account.
+Account alice = Account.Generate();
+
+// Initialize Response Info.
+ResponseInfo responseInfo = new ResponseInfo();
+
+// Initialize Faucet Endpoint.
+private string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
+
 // Initialize Funding Request.
 Coroutine fundAliceAccountCor = StartCoroutine(FaucetClient.Instance.FundAccount((_success, _responseInfo) =>
 {
-	success = _success;
-	responseInfo = _responseInfo;
 }, aliceAddress.ToString(), 100000000, faucetEndpoint));
 yield return fundAliceAccountCor;
 ```
@@ -163,9 +185,18 @@ yield return fundAliceAccountCor;
 The Token Client provides the ability for the developer to have an easier time implementing NFT mechanics into their projects. Here's an example on minting an NFT using the client:
 
 ```c#
+// Initialize Account.
+Account alice = Account.Generate();
+
+// Initialize Response Info.
+ResponseInfo responseInfo = new ResponseInfo();
+
 // Token Details.
 string collectionName = "Alice's";
 string tokenName = "Alice's first token";
+
+// Initialize Mint Token Transaction Digest.
+string mintTokenTxn = "";
 
 // Initialize Token Mint.
 Coroutine mintTokenCor = StartCoroutine(tokenClient.MintToken((_mintTokenTxn, _responseInfo) =>
@@ -225,11 +256,11 @@ Accounts within the SDK represent the core part of a Wallet, that give ease of a
 
 ```c#
 // Generate Random Account.
-Account alice = Account.Generate();
+alice = Account.Generate();
 
 // Initialize Account Using Hexadecimal Private Key.
 const string PrivateKeyHex = "0x64f57603b58af16907c18a866123286e1cbce89790613558dc1775abb3fc5c8c";
-Account bob = Account.LoadKey(PrivateKeyHex);
+bob = Account.LoadKey(PrivateKeyHex);
 
 // Initialize Account Using Private and Public Key Bytes.
 private static readonly byte[] PrivateKeyBytes = {
@@ -323,4 +354,4 @@ The SDK comes with several examples and a demo project that show how to leverage
 
 ### License ###
 
-Unity2Aptos is released under the Apache 2.0 license. [See LICENSE](https://github.com/MarcoDotIO/Aptos-Unity-SDK/blob/main/LICENSE) for details.
+Aptos-Unity-SDK is released under the Apache 2.0 license. [See LICENSE](https://github.com/MarcoDotIO/Aptos-Unity-SDK/blob/main/LICENSE) for details.
