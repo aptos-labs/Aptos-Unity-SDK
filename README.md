@@ -282,6 +282,9 @@ Wallets will be the primary method of accessing accounts on the Aptos Blockchain
 // Initializing Wallet.
 string mnemo = "stadium valid laundry unknown tuition train december camera fiber vault sniff ripple";
 Wallet wallet = new Wallet(mnemo);
+
+// Initialize A Random Wallet.
+Mnemonic mnemo = new Mnemonic(Wordlist.English, WordCount.Twelve);
 ```
 
 This provides the developer with what's known as an [HD Wallet](https://www.investopedia.com/terms/h/hd-wallet-hierarchical-deterministic-wallet.asp) (Hierarchical Deterministic Wallet), which is what will enable to generate as many private keys from the wallet as they want. Here's different ways on how to retrieve the account(s) from the Wallet, along with deriving the mnemonic seed from the Wallet; which is the seed that's derived from the input mnemonic phrase and is what allows the developer to generate a number accounts from the Wallet:
