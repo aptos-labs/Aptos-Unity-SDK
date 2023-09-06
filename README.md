@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="./Resources/aptosLogo.webp" alt="Unity2AptosLogo" width="256" height="256" />
+	<img src="./Resources/aptosLogo.webp" alt="AptosUnitySDKLogo" width="256" height="256" />
 </p>
 
 
@@ -219,6 +219,14 @@ yield return mintTokenCor;
 If a developer needs more flexibility with how they want to shape their transactions, e.g., arbitrary, generic, custom, using EntryFunction is the key class, along with the usage of the REST Client, to submit those types of transactions that aren't defined already. This is how the developer would initialize the transaction arguments, create the EntryFunction payload, and submit the transaction using BCS:
 
 ```c#
+// Initialize Variables.
+let properties = new PropertyMap(new List<Property> { Property.StringProp("string", "string value") });
+let Collection = "My New Collection";
+let Description = "This is my first Collection.";
+let Name = "Aptos";
+let Uri = "https://aptos.dev";
+Tuple<List<BString>, List<BString>, List<byte[]>> propertiesTuple = Properties.ToTuple();
+
 // Initialize Transaction Arguments.
 ISerializable[] transactionArguments =
 {
