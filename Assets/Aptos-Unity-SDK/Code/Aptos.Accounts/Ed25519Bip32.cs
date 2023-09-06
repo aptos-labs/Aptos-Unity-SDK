@@ -23,7 +23,7 @@ namespace Aptos.Accounts
         private const string Curve = "ed25519 seed";
 
         /// <summary>
-        /// 
+        /// Hardened offset for BIP32 keys, commonly 0x80000000. Used to create secure, hardened child keys.
         /// </summary>
         private const uint HardenedOffset = 0x80000000;
 

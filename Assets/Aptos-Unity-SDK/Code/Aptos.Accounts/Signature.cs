@@ -24,6 +24,10 @@ namespace Aptos.Accounts
         /// </summary>
         private string _signature;
 
+        /// <summary>
+        /// Initialize the signature.
+        /// </summary>
+        /// <param name="signature">The raw signature in byte array format.</param>
         public Signature(byte[] signature)
         {
             _signatureBytes = signature;

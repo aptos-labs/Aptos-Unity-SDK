@@ -8,18 +8,28 @@ namespace Aptos.Accounts
     /// <summary>
     /// Represents an Aptos Accounts.   
     /// An Aptos account is represented by an extended private key, 
-    /// a public key and it's athentication key.
+    /// a public key and it's authentication key.
     /// </summary>
     public class Account
     {
-        /// Private key representation
+        /// <summary>
+        /// Private key representation.
+        /// </summary>
         public PrivateKey PrivateKey { get; set; }
-        /// Public key representation
+
+        /// <summary>
+        /// Public key representation.
+        /// </summary>
         public PublicKey PublicKey { get; set; }
-        /// Account address representation
+
+        /// <summary>
+        /// Account address representation.
+        /// </summary>
         public AccountAddress AccountAddress { get; set; }
 
-        /// 32-byte representation of the private key
+        /// <summary>
+        /// 32-byte representation of the private key.
+        /// </summary>
         public byte[] PrivateKeyShort { get; }
 
         /// <summary>
@@ -58,7 +68,7 @@ namespace Aptos.Accounts
         }
 
         /// <summary>
-        /// Utility function to be in par with the other SDKS
+        /// Utility function to be in par with the other SDKs
         /// , otherwise use the default constructor Account().
         /// </summary>
         /// <returns>A new account.</returns>
@@ -131,16 +141,53 @@ namespace Aptos.Accounts
         }
     }
 
+    /// <summary>
+    /// Used for the rotating proof challenge on the Aptos Blockchain.
+    /// </summary>
     public class RotationProofChallenge
     {
+        /// <summary>
+        /// The account used for the challenge (i.e., 0x1).
+        /// </summary>
         AccountAddress TypeInfoAccountAddress = AccountAddress.FromHex("0x1");
+
+        /// <summary>
+        /// The name of the module for the challenge.
+        /// </summary>
         string TypeInfoModuleName = "account";
+
+        /// <summary>
+        /// The struct's name.
+        /// </summary>
         string TypeInfoStructName = "RotationProofChallenge";
+
+        /// <summary>
+        /// The current sequence number of the account.
+        /// </summary>
         int SequenceNumber;
+
+        /// <summary>
+        /// The account currently wanting to be changed over.
+        /// </summary>
         AccountAddress Originator;
+
+        /// <summary>
+        /// The account currently wanting to be changed over.
+        /// </summary>
         AccountAddress CurrentAuthKey;
+
+        /// <summary>
+        /// The public key of the new account.
+        /// </summary>
         byte[] NewPublicKey;
 
+        /// <summary>
+        /// Create a new Rotation Proof Challenge.
+        /// </summary>
+        /// <param name="SequenceNumber">The current sequence number of the account.</param>
+        /// <param name="Originator">The account currently wanting to be changed over.</param>
+        /// <param name="CurrentAuthKey">The account currently wanting to be changed over.</param>
+        /// <param name="NewPublicKey"The public key of the new account.></param>
         public RotationProofChallenge(
             int SequenceNumber,
             AccountAddress Originator,
@@ -154,6 +201,14 @@ namespace Aptos.Accounts
             this.NewPublicKey = NewPublicKey;
         }
 
+        /// <summary>
+        /// Serialize the account object using a provided Serializer object.
+        ///
+        /// This function takes a Serializer object and serializes the account object's properties, which includes the
+        /// typeInfoAccountAddress, typeInfoModuleName, typeInfoStructName, sequence_number, originator, currentAuthKey and newPublicKey
+        /// The Serializer object serializes values in the order specified, which is the order of the calls in this function.
+        /// </summary>
+        /// <param name="serializer">The Serializer object to serialize the account object with.</param>
         public void Serialize(Serialization serializer)
         {
             this.TypeInfoAccountAddress.Serialize(serializer);
