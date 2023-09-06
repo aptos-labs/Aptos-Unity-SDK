@@ -20,6 +20,7 @@ Aptos2Unity is a Unity package written in C# to help developers integrate Aptos 
   - [RestClient](#restclient)
   - [FaucetClient](#faucetclient)
   - [TokenClient](#tokenclient)
+  - [EntryFunction](#entryfunction)
   - [Account](#account)
   - [Wallet](#wallet)
 - [Examples](#examples)
@@ -87,7 +88,7 @@ yield return transferCor;
 
 ### Using Unity2Aptos ###
 
-Unity2Aptos is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `Account`, and `Wallet`. Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
+Unity2Aptos is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `EntryFunction`, `Account`, and `Wallet`. Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
 
 #### RestClient ####
 
@@ -180,6 +181,42 @@ Coroutine mintTokenCor = StartCoroutine(tokenClient.MintToken((_mintTokenTxn, _r
 	new PropertyMap(new List<Property> { Property.StringProp("string", "string value") })
 ));
 yield return mintTokenCor;
+```
+
+#### EntryFunction ####
+
+If a developer needs more flexibility with how they want to shape their transactions, e.g., arbitrary, generic, custom, using EntryFunction is the key class, along with the usage of the REST Client, to submit those types of transactions that aren't defined already. This is how the developer would initialize the transaction arguments, create the EntryFunction payload, and submit the transaction using BCS:
+
+```c#
+// Initialize Transaction Arguments.
+ISerializable[] transactionArguments =
+{
+	new BString(Collection),
+	new BString(Description),
+	new BString(Name),
+	new BString(Uri),
+	new Sequence(propertiesTuple.Item1.ToArray()),
+	new Sequence(propertiesTuple.Item2.ToArray()),
+	new BytesSequence(propertiesTuple.Item3.ToArray())
+};
+
+// Initialize the Payload.
+EntryFunction payload = EntryFunction.Natural(
+	new ModuleId(AccountAddress.FromHex("0x4"), "aptos_token"),  // Package ID and Module Name.
+	"mint",  // Function Name.
+	new TagSequence(new ISerializableTag[0]),  // Type Arguments.
+	new Sequence(transactionArguments)  // Arguments.
+);
+
+// Execute Tranaction via BCS.
+SignedTransaction signedTransaction = null;
+
+Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(Client.CreateBCSSignedTransaction((_signedTransaction) => 
+{
+	signedTransaction = _signedTransaction;
+}, Creator, new BCS.TransactionPayload(payload)));
+
+yield return cor_createBcsSIgnedTransaction;
 ```
 
 #### Account ####
