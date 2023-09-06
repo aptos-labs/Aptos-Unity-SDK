@@ -91,7 +91,7 @@ Unity2Aptos is designed to be very easy to integrate into your own Unity project
 
 #### RestClient ####
 
-The REST Client provides you with the fundamental transaction endpoints needed for interacting with the Aptos Blockchain. As shown before, it only take a few lines of code to initialize a transfer for Aptos coins. Here's another example showing how to create a collection:
+The REST Client provides you with the fundamental transaction endpoints needed for interacting with the Aptos Blockchain. As shown before, it only take a few lines of code to initialize a transfer for Aptos coins. This is the main class developers will be leveraging to interact directly with the Aptos Blockchain via REST Client calls. Here's another example showing how to create a collection:
 ```c#
 // Collection Details.
 string collectionName = "Alice's";
@@ -210,6 +210,33 @@ private static readonly byte[] PublicKeyBytes = {
 Account chad = new Account(PrivateKeyBytes, PublicKeyBytes);
 ```
 
+From there, you're able to retrieve the byte array of the private and public keys, along with signing and verifying messages and transactions, as the core function of an Account object, as shown here:
+```c#
+// Retrieve Private Key.
+var privateKey = chad.PrivateKey;
+
+// Retrieve Public Key.
+var publicKey = chad.PublicKey;
+```
+
+The developer can now use the Account to sign various messages and transactions for interacting with the Aptos Blockchain, as shown here:
+
+```c#
+// Create a Signature Object Storing the Signature of the Signed Message.
+private static readonly byte[] MessageUt8Bytes = {
+	87, 69, 76, 67, 79, 77, 69, 32,
+	84, 79, 32, 65, 80, 84, 79, 83, 33 
+};
+var signature = privateKey.Sign(MessageUt8Bytes);
+```
+
+Developers can also verify the integrity of the message using the public key, as shown here:
+
+```c#
+// Initiailize Verified Bool Object.
+bool verified = publicKey.Verify(MessageUt8Bytes, signature);
+```
+
 #### Wallet ####
 
 Wallets will be the primary method of accessing accounts on the Aptos Blockchain via Mnemonic Keys, since they'll allow you to generate multiple accounts with ease. Here's an example on how to initialize a wallet using a mnemonic key:
@@ -218,6 +245,33 @@ Wallets will be the primary method of accessing accounts on the Aptos Blockchain
 // Initializing Wallet.
 string mnemo = "stadium valid laundry unknown tuition train december camera fiber vault sniff ripple";
 Wallet wallet = new Wallet(mnemo);
+```
+
+This provides the developer with what's known as an [HD Wallet](https://www.investopedia.com/terms/h/hd-wallet-hierarchical-deterministic-wallet.asp) (Hierarchical Deterministic Wallet), which is what will enable to generate as many private keys from the wallet as they want. Here's different ways on how to retrieve the account(s) from the Wallet, along with deriving the mnemonic seed from the Wallet; which is the seed that's derived from the input mnemonic phrase and is what allows the developer to generate a number accounts from the Wallet:
+
+```c#
+// Get the Initial Main Account.
+var mainAccount = wallet.Account;
+
+// Get Any Other Accounts Created / Derived From the Wallet (i represents the index from 0).
+var account = wallet.GetAccount(i);
+
+// Derive Mnemonic Seed from Wallet.
+var seed = wallet.DeriveMnemonicSeed();
+```
+
+The Wallet object can also allow the main account to sign and verify data, as shown here:
+
+```c#
+// Initialize a Signature Object.
+private static readonly byte[] MessageUt8Bytes = {
+	87, 69, 76, 67, 79, 77, 69, 32,
+	84, 79, 32, 65, 80, 84, 79, 83, 33 
+};
+var signature = wallet.Account.Sign(MessageUt8Bytes);
+
+// Initialize a Boolean Verified.
+bool verified = wallet.Account.Verify(MessageUt8Bytes, signature);
 ```
 
 ### Examples ###
