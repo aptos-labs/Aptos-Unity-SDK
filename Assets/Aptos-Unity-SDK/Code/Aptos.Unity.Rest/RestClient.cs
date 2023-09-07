@@ -765,7 +765,6 @@ namespace Aptos.Unity.Rest
         #endregion
 
         #region Transactions
-        // TODO: Test SimuateTransaction
         public IEnumerator SimulateTransaction(
             Action<string, ResponseInfo> callback,
             RawTransaction transaction,
@@ -787,8 +786,6 @@ namespace Aptos.Unity.Rest
             UnityWebRequest request = new UnityWebRequest(simulateTxnEndpoint, "POST");
             request.SetRequestHeader("Content-Type", "application/x.aptos.signed_transaction+bcs");
 
-            // byte[] jsonToSend = new UTF8Encoding().GetBytes(tableItemRequestJson);
-            // request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.uploadHandler = new UploadHandlerRaw(signedTransaction.Bytes());
             request.downloadHandler = new DownloadHandlerBuffer();
 
