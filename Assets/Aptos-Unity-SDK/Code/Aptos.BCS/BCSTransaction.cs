@@ -452,7 +452,6 @@ namespace Aptos.BCS
                 serializer.SerializeU64(Convert.ToUInt64(this.value.GetValue()));
             else if(this.variant == TypeTag.U128)
                 serializer.SerializeU128((System.Numerics.BigInteger)this.value.GetValue());
-            // TODO: Inquire on C# U256 support
             else if (this.variant == TypeTag.U256)
                 serializer.SerializeU256((System.Numerics.BigInteger)this.value.GetValue());
             else if(this.variant == TypeTag.ADDRESS)
