@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aptos.Unity.Rest.Model
 {
@@ -27,10 +26,15 @@ namespace Aptos.Unity.Rest.Model
                 // There's the submission response, and there's the VM response, e.g. user_transaction, transaction_pending
                 if (item["type"] == null && item["hash"] != null)
                 {
-                    TransactionRequest transactionRequest = JsonConvert.DeserializeObject<TransactionRequest>(item.ToString(), new TransactionRequestConverter());
-                    Transaction transaction = new Transaction(transactionRequest);
-                    transaction.Hash = (string)item["hash"];
-                    return transaction;
+                    if (item["vm_status"] != null) // Simulate transaction calls return a full TX object without a type
+                        return ProcessTransactionContents(item);
+                    else // It's a failed transaction, it only has a hash
+                    {
+                        TransactionRequest transactionRequest = JsonConvert.DeserializeObject<TransactionRequest>(item.ToString(), new TransactionRequestConverter());
+                        Transaction transaction = new Transaction(transactionRequest);
+                        transaction.Hash = (string)item["hash"];
+                        return transaction;
+                    }
                 }
 
                 else if (item["type"] != null)
@@ -50,36 +54,41 @@ namespace Aptos.Unity.Rest.Model
 
                     else if (type.Equals("user_transaction"))
                     {
-                        TransactionRequest transactionRequest = JsonConvert.DeserializeObject<TransactionRequest>(item.ToString(), new TransactionRequestConverter());
-                        Transaction transaction = new Transaction(transactionRequest);
-                        transaction.Type = type;
-
-                        if (item["hash"] != null) transaction.Hash = (string)item["hash"];
-                        if (item["state_change_hash"] != null) transaction.StateChangeHash = (string)item["state_change_hash"];
-                        if (item["event_root_hash"] != null) transaction.EventRootHash = (string)item["event_root_hash"];
-                        if (item["state_checkpoint_hash"] != null) transaction.StateCheckpointHash = (string)item["state_checkpoint_hash"];
-                        if (item["gas_used"] != null) transaction.GasUsed = (string)item["gas_used"];
-                        if (item["success"] != null) transaction.Success = (bool)item["success"];
-                        if (item["vm_status"] != null) transaction.VmStatus = (string)item["vm_status"];
-                        if (item["accumulator_root_hash"] != null) transaction.AccumulatorRootHash = (string)item["accumulator_root_hash"];
-                        if (item["events"] != null)
-                        {
-                            List<TransactionEvent> events = new List<TransactionEvent>();
-                            JArray a = (JArray)item["events"];
-                            foreach (JObject itemEvent in a)
-                            {
-                                TransactionEvent eventTx = JsonConvert.DeserializeObject<TransactionEvent>(itemEvent.ToString());
-                                events.Add(eventTx);
-                            }
-                            TransactionEvent[] eventArr = events.ToArray();
-                            transaction.Events = eventArr;
-                        }
-
-                        return transaction;
+                        return ProcessTransactionContents(item, type);
                     }
                 }
             }
             return null;
+        }
+
+        private Transaction ProcessTransactionContents(JObject item, string type = null)
+        {
+            TransactionRequest transactionRequest = JsonConvert.DeserializeObject<TransactionRequest>(item.ToString(), new TransactionRequestConverter());
+            Transaction transaction = new Transaction(transactionRequest);
+
+            if (type != null) transaction.Type = type;
+
+            if (item["hash"] != null) transaction.Hash = (string)item["hash"];
+            if (item["state_change_hash"] != null) transaction.StateChangeHash = (string)item["state_change_hash"];
+            if (item["event_root_hash"] != null) transaction.EventRootHash = (string)item["event_root_hash"];
+            if (item["state_checkpoint_hash"] != null) transaction.StateCheckpointHash = (string)item["state_checkpoint_hash"];
+            if (item["gas_used"] != null) transaction.GasUsed = (string)item["gas_used"];
+            if (item["success"] != null) transaction.Success = (bool)item["success"];
+            if (item["vm_status"] != null) transaction.VmStatus = (string)item["vm_status"];
+            if (item["accumulator_root_hash"] != null) transaction.AccumulatorRootHash = (string)item["accumulator_root_hash"];
+            if (item["events"] != null)
+            {
+                List<TransactionEvent> events = new List<TransactionEvent>();
+                JArray a = (JArray)item["events"];
+                foreach (JObject itemEvent in a)
+                {
+                    TransactionEvent eventTx = JsonConvert.DeserializeObject<TransactionEvent>(itemEvent.ToString());
+                    events.Add(eventTx);
+                }
+                TransactionEvent[] eventArr = events.ToArray();
+                transaction.Events = eventArr;
+            }
+            return transaction;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
