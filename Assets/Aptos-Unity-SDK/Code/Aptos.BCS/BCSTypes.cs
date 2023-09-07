@@ -843,6 +843,64 @@ namespace Aptos.BCS
     }
 
     /// <summary>
+    /// Representation of a 256.
+    /// </summary>
+    public class U256 : ISerializableTag
+    {
+        BigInteger value;
+
+        public U256(BigInteger value)
+        {
+            this.value = value;
+        }
+
+        public TypeTag Variant()
+        {
+            return TypeTag.U256;
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            serializer.Serialize(value);
+        }
+
+        public static BigInteger Deserialize(byte[] data)
+        {
+            return new BigInteger(data);
+        }
+
+        public static U256 Deserialize(Deserialization deserializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object GetValue()
+        {
+            return value;
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not U256)
+                throw new NotImplementedException();
+
+            U256 otherU256 = (U256)other;
+
+            return this.value == otherU256.value;
+        }
+
+        public override string ToString()
+        {
+            return this.value.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+    }
+
+    /// <summary>
     /// Representation of a struct tag.
     /// </summary>
     public class StructTag : ISerializableTag

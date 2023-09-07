@@ -178,11 +178,10 @@ namespace Aptos.BCS
             return BCS.U128.Deserialize(this.Read(16));
         }
 
-        // TODO: Discuss with Max
-        //public ulong U256()
-        //{
-        //    return BCS.U256.Deserialize(this.Read(32));
-        //}
+        public BigInteger DeserializeU256()
+        {
+            return BCS.U256.Deserialize(this.Read(32));
+        }
 
         public int DeserializeUleb128()
         {
@@ -580,6 +579,40 @@ namespace Aptos.BCS
             if (content.Length != 16)
             {
                 output.Write(new byte[16 - content.Length]);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Serialize a unsigned 256 int (big integer) value.
+        /// </summary>
+        /// <param name="value">Big integer value to serialize.</param>
+        /// <returns>The current Serialization object.</returns>
+        public Serialization SerializeU256(BigInteger value)
+        {
+            // Ensure the BigInteger is unsigned
+            if (value.Sign == -1)
+            {
+                throw new SerializationException("Invalid value for an unsigned int256");
+            }
+
+            // This is already little-endian
+            byte[] content = value.ToByteArray(isUnsigned: true, isBigEndian: false);
+
+            // BigInteger.toByteArray() may add a most-significant zero
+            // byte for signing purpose: ignore it.
+            if (!(content.Length <= 32 || content[0] == 0))
+            {
+                throw new SerializationException("Invalid value for an unsigned int256");
+            }
+
+            // Ensure we're padded to 32
+            output.Write(content);
+
+            if (content.Length != 32)
+            {
+                output.Write(new byte[32 - content.Length]);
             }
 
             return this;

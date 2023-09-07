@@ -453,8 +453,8 @@ namespace Aptos.BCS
             else if(this.variant == TypeTag.U128)
                 serializer.SerializeU128((System.Numerics.BigInteger)this.value.GetValue());
             // TODO: Inquire on C# U256 support
-            //else if(this.variant == TypeTag.U256)
-            //    serializer.Serial
+            else if (this.variant == TypeTag.U256)
+                serializer.SerializeU256((System.Numerics.BigInteger)this.value.GetValue());
             else if(this.variant == TypeTag.ADDRESS)
                 serializer.Serialize((AccountAddress) this.value);
             else if(this.variant == TypeTag.U8_VECTOR)
@@ -480,9 +480,8 @@ namespace Aptos.BCS
                 value = new U64(deserializer.DeserializeU64());
             else if(variant == TypeTag.U128)
                 value = new U128(deserializer.DeserializeU128());
-            // TODO: implement U256
-            //else if(variant == (int) TypeTag.U256)
-            //    value = deserializer.DeserializeU256();
+            else if (variant == TypeTag.U256)
+                value = new U256(deserializer.DeserializeU256());
             else if (variant == TypeTag.ADDRESS)
                 value = AccountAddress.Deserialize(deserializer);
             // TODO: Implement U8 Vector deserialization
