@@ -1567,133 +1567,41 @@ namespace Aptos.Unity.Rest
         /// </returns>
         public IEnumerator CreateCollection(Action<Transaction, ResponseInfo> callback, Account sender, string collectionName, string collectionDescription, string uri)
         {
-            // STEP 1: Create Transaction Arguments
-            Arguments arguments = new Arguments()
-            {
-                ArgumentStrings = new string[] { collectionName, collectionDescription, uri, "18446744073709551615" },
-                MutateSettings = new bool[] { false, false, false }
-            };
+            EntryFunction payload = EntryFunction.Natural(
+                new ModuleId(AccountAddress.FromHex("0x3"), "token"),
+                "create_collection_script",
+                new TagSequence(new ISerializableTag[] { }),
+                new BCS.Sequence(
+                    new ISerializable[]
+                    {
+                        new BString(collectionName),
+                        new BString(collectionDescription),
+                        new BString(uri),
+                        new U64(18446744073709551615),
+                        new BCS.Sequence(new[] { new Bool(false), new Bool(false), new Bool(false) })
+                    }
+                )
+            );
 
-            // STEP 2: Create Payload Containing Transaction Arguments
-            // TYPE: entry_function_payload
-            // TYPE: script_function_payload
-            // FUNCTION: create_collection_script
-            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
-            Model.TransactionPayload createCollectionPayload = new Model.TransactionPayload()
-            {
-                Type = Constants.ENTRY_FUNCTION_PAYLOAD,
-                Function = Constants.CREATE_COLLECTION_SCRIPT, // Contract Address
-                TypeArguments = new string[] { },
-                Arguments = arguments
-            };
+            BCS.TransactionPayload txnPayload = new BCS.TransactionPayload(payload);
 
-            string payloadJson = JsonConvert.SerializeObject(createCollectionPayload, new TransactionPayloadConverter());
+            SignedTransaction signedTransaction = null;
+            Coroutine cor_createBcsSIgnedTransaction = StartCoroutine(CreateBCSSignedTransaction((_signedTransaction) => {
+                signedTransaction = _signedTransaction;
+            }, sender, new BCS.TransactionPayload(payload)));
+            yield return cor_createBcsSIgnedTransaction;
 
-            ///////////////////////////////////////////////////////////////////////
-            // 1) Generate a transaction request
-            ///////////////////////////////////////////////////////////////////////
-            string sequenceNumber = "";
+            string submitBcsTxnJsonResponse = "";
             ResponseInfo responseInfo = new ResponseInfo();
 
-            Coroutine cor_sequenceNumber = StartCoroutine(GetAccountSequenceNumber((_sequenceNumber, _responseInfo) => {
-                sequenceNumber = _sequenceNumber;
+            Coroutine cor_submitBcsTransaction = StartCoroutine(SubmitBCSTransaction((_responseJson, _responseInfo) => {
+                submitBcsTxnJsonResponse = _responseJson;
                 responseInfo = _responseInfo;
-            }, sender.AccountAddress));
-            yield return cor_sequenceNumber;
+            }, signedTransaction));
+            yield return cor_submitBcsTransaction;
 
-            if (responseInfo.status != ResponseInfo.Status.Success)
-            {
-                callback(null, responseInfo);
-                yield break;
-            }
-
-            var expirationTimestamp = (DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL).ToString();
-
-            var txnRequest = new TransactionRequest()
-            {
-                Sender = sender.AccountAddress.ToString(),
-                SequenceNumber = sequenceNumber,
-                MaxGasAmount = Constants.MAX_GAS_AMOUNT.ToString(),
-                GasUnitPrice = Constants.GAS_UNIT_PRICE.ToString(),
-                ExpirationTimestampSecs = expirationTimestamp,
-                Payload = createCollectionPayload
-            };
-
-            string txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-
-            ///////////////////////////////////////////////////////////////////////
-            // 2) Submits raw transaction to get encoded submission
-            ///////////////////////////////////////////////////////////////////////
-            string encodedSubmission = "";
-
-            Coroutine cor_encodedSubmission = StartCoroutine(EncodeSubmission((_encodedSubmission) => {
-                encodedSubmission = _encodedSubmission;
-            }, txnRequestJson));
-            yield return cor_encodedSubmission;
-
-            ///////////////////////////////////////////////////////////////////////
-            // STEP 3: Sign Ttransaction
-            ///////////////////////////////////////////////////////////////////////
-            byte[] toSign = StringToByteArray(encodedSubmission.Trim('"')[2..]);
-            Signature signature = sender.Sign(toSign);
-
-            txnRequest.Signature = new SignatureData()
-            {
-                Type = "ed25519_signature",
-                PublicKey = "0x" + CryptoBytes.ToHexStringLower(sender.PublicKey), // Works ..
-                Signature = signature.ToString()
-            };
-
-            ///////////////////////////////////////////////////////////////////////
-            // STEP 4: Submit Transaction
-            ///////////////////////////////////////////////////////////////////////
-            txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
-            txnRequestJson = txnRequestJson.Trim();
-
-            string transactionURL = Endpoint + "/transactions";
-            Uri transactionsURI = new Uri(transactionURL);
-            var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
-
-            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(txnRequestJson);
-            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            request.SendWebRequest();
-            while (!request.isDone)
-            {
-                yield return null;
-            }
-
-            if (request.result == UnityWebRequest.Result.ConnectionError)
-            {
-                responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Error while submitting transaction. " + request.error;
-                callback(null, responseInfo);
-            }
-            else if (request.responseCode == 404)
-            {
-                responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Error. Response 404. " + request.error;
-                callback(null, responseInfo);
-            }
-            else if (request.responseCode >= 400)
-            {
-                responseInfo.status = ResponseInfo.Status.Failed;
-                responseInfo.message = "Error. Response 404. " + request.error;
-                callback(null, responseInfo);
-            }
-            else
-            {
-                string response = request.downloadHandler.text;
-                Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(response, new TransactionConverter());
-
-                responseInfo.status = ResponseInfo.Status.Success;
-                responseInfo.message = response;
-                callback(createCollectionTxn, responseInfo);
-            }
-
-            request.Dispose();
+            Transaction createCollectionTxn = JsonConvert.DeserializeObject<Transaction>(submitBcsTxnJsonResponse, new TransactionConverter());
+            callback(createCollectionTxn, responseInfo);
             yield return null;
         }
 
