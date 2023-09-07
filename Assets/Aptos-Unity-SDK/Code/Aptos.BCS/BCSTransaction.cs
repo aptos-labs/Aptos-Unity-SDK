@@ -469,26 +469,23 @@ namespace Aptos.BCS
             TypeTag variant = (TypeTag) deserializer.DeserializeU8();
             ISerializableTag value;
 
-            if(variant == (int) TypeTag.U8)
+            if (variant == (int)TypeTag.U8)
                 value = new U8(deserializer.DeserializeU8());
             else if (variant == TypeTag.U16)
                 value = new U16(deserializer.DeserializeU16());
-            else if(variant == TypeTag.U32)
+            else if (variant == TypeTag.U32)
                 value = new U32(deserializer.DeserializeU32());
-            else if(variant == TypeTag.U64)
+            else if (variant == TypeTag.U64)
                 value = new U64(deserializer.DeserializeU64());
-            else if(variant == TypeTag.U128)
+            else if (variant == TypeTag.U128)
                 value = new U128(deserializer.DeserializeU128());
             else if (variant == TypeTag.U256)
                 value = new U256(deserializer.DeserializeU256());
             else if (variant == TypeTag.ADDRESS)
                 value = AccountAddress.Deserialize(deserializer);
-            // TODO: Implement U8 Vector deserialization
-            //else if(variant == (int) TypeTag.U8_VECTOR)
-            //{
-
-            //}
-            else if(variant == TypeTag.BOOL)
+            else if (variant == TypeTag.U8_VECTOR)
+                throw new NotSupportedException("U8 vectors are currently not supported in the SDK.");
+            else if (variant == TypeTag.BOOL)
                 value = new Bool(deserializer.DeserializeBool());
             else
                 throw new Exception("Invalid variant");
