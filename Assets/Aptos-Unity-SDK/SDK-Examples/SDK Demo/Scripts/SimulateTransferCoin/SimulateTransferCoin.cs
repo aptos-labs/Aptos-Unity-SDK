@@ -4,6 +4,7 @@ using Aptos.Accounts;
 using Aptos.BCS;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
+using Newtonsoft.Json;
 using UnityEngine;
 using TransactionPayload = Aptos.BCS.TransactionPayload;
 
@@ -109,11 +110,13 @@ namespace Aptos.Unity.Sample
                     rawTxn, alice
                 )
             );
-            yield return null;
+            yield return simulateTxCor;
 
-            // TODO: Check output
-            // assert output[0]["vm_status"] != "Executed successfully", "This shouldn't succeed"
-            // print(json.dumps(output, indent = 4, sort_keys = True))
+            simulateTxnResponse = simulateTxnResponse.Substring(1, simulateTxnResponse.Length - 2); // Remove open and closing bracket, transaction converter only parses the JSON object
+            Transaction transactionResp = JsonConvert.DeserializeObject<Transaction>(simulateTxnResponse, new TransactionConverter());
+            Debug.Log(transactionResp.VmStatus);
+            Debug.Log("<color=cyan>=== This shouldn't succeed: " + !transactionResp.VmStatus.Equals("Executed successfully") + "\n" + transactionResp.VmStatus + " ===</color>");
+            Debug.Log(simulateTxnResponse);
 
             #endregion
 
@@ -150,12 +153,12 @@ namespace Aptos.Unity.Sample
                     rawTxn, alice
                 )
             );
-            yield return null;
+            yield return simulateTxCor;
 
-            // TODO: Check output
-            // assert output[0]["vm_status"] == "Executed successfully", "This should succeed"
-            // print(json.dumps(output, indent = 4, sort_keys = True))
-
+            simulateTxnResponse = simulateTxnResponse.Substring(1, simulateTxnResponse.Length - 2); // Remove open and closing bracket, transaction converter only parses the JSON object
+            transactionResp = JsonConvert.DeserializeObject<Transaction>(simulateTxnResponse, new TransactionConverter());
+            Debug.Log("<color=cyan>=== This should succeed: " + transactionResp.VmStatus.Equals("Executed successfully") + "\n" + transactionResp.VmStatus + " ===</color>");
+            Debug.Log(simulateTxnResponse);
             #endregion
 
             yield return null;
