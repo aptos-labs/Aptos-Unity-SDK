@@ -314,7 +314,13 @@ namespace Aptos.Unity.Rest
             request.Dispose();
         }
 
-        // TODO: Explore and add documentation
+        /// <summary>
+        /// Get resources (in a JSON format) from a given account.
+        /// </summary>
+        /// <param name="callback">allback function used when response is received.</param>
+        /// <param name="accountAddress">Address of the account.</param>
+        /// <param name="ledgerVersion">Type of resource being queried for.</param>
+        /// <returns></returns>
         public IEnumerator GetAccountResources(Action<bool, long, string> callback, Accounts.AccountAddress accountAddress, string ledgerVersion = "")
         {
             string accountsURL = Endpoint + "/accounts/" + accountAddress.ToString() + "/resources";
@@ -693,7 +699,14 @@ namespace Aptos.Unity.Rest
         }
 
 
-        // TODO: Implement AggregatorValue
+        /// <summary>
+        /// Aggregates the values from a resource query.
+        /// </summary>
+        /// <param name="Callback"></param>
+        /// <param name="AccountAddress"></param>
+        /// <param name="ResourceType"></param>
+        /// <param name="AggregatorPath"></param>
+        /// <returns></returns>
         public IEnumerator AggregatorValue(
             Action<string, ResponseInfo> Callback,
             AccountAddress AccountAddress,
@@ -701,7 +714,7 @@ namespace Aptos.Unity.Rest
             List<string> AggregatorPath
         )
         {
-            yield return null;
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -1233,7 +1246,6 @@ namespace Aptos.Unity.Rest
 
         #region Transaction Helpers
 
-        // TODO: Update all TransactionPayload instantiations to use BCS.TransactionPayload
         public IEnumerable CreateMultiAgentBCSTransaction(Action<SignedTransaction> Callback, Account Sender, List<Account> SecondaryAccounts, BCS.TransactionPayload Payload)
         {
             string sequenceNumber = "";
@@ -1296,7 +1308,6 @@ namespace Aptos.Unity.Rest
             Callback(new SignedTransaction(rawTransaction.Inner(), authenticator));
         }
 
-        // TODO: Fix TransactionPayload declaration
         public IEnumerator CreateBCSTransaction(
             Action<RawTransaction> Callback,
             Account Sender,
@@ -1333,7 +1344,6 @@ namespace Aptos.Unity.Rest
             yield return null;
         }
 
-        // TODO: Fix "full qualifying TransactionPayload"
         public IEnumerator CreateBCSSignedTransaction(
             Action<SignedTransaction> Callback,
             Account Sender,
