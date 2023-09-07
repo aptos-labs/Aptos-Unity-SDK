@@ -158,11 +158,10 @@ namespace Aptos.BCS
             return (byte) this.ReadInt(1);
         }
 
-        // TODO: Discuss with Max
-        //public int U16()
-        //{
-        //    return BCS.U16.Deserialize(this.Read(2));
-        //}
+        public ushort DeserializeU16()
+        {
+            return BCS.U16.Deserialize(this.Read(2));
+        }
 
         public uint DeserializeU32()
         {
