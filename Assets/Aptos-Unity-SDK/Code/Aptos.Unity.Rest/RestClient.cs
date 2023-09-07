@@ -1757,8 +1757,8 @@ namespace Aptos.Unity.Rest
             }, signedTransaction));
             yield return cor_submitBcsTransaction;
 
-            Transaction offerTokenTxn = JsonConvert.DeserializeObject<Transaction>(submitBcsTxnJsonResponse, new TransactionConverter());
-            callback(offerTokenTxn, responseInfo);
+            Transaction createTokenTxn = JsonConvert.DeserializeObject<Transaction>(submitBcsTxnJsonResponse, new TransactionConverter());
+            callback(createTokenTxn, responseInfo);
             yield return null;
         }
 
