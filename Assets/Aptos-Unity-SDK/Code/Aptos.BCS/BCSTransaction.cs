@@ -749,8 +749,6 @@ namespace Aptos.BCS
 
     /// <summary>
     /// Signed transaction implementation.
-    /// NOTE: TransactionArgument is not implemented in this SDK, instead a Sequence object is used
-    /// TODO: Add comoments regarding TransactionArgument not being implemented
     /// </summary>
     public class SignedTransaction : ISerializable
     {
