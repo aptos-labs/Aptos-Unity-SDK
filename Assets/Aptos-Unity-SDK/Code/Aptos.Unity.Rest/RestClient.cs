@@ -772,17 +772,12 @@ namespace Aptos.Unity.Rest
             Account sender
         )
         {
-            // authenticator = Authenticator(
-            //      Ed25519Authenticator(
-            //          sender.public_key(),
-            //          ed25519.Signature(b"\x00" * 64),
-            //      )
-            // )
-
+            byte[] emptySignature = new byte[64]; // all 0's
             Authenticator authenticator = new Authenticator(
                 new Ed25519Authenticator(
                     sender.PublicKey,
-                    new Signature(new byte[64]) // TODO: Check if this generates a byte array 64 lenght with padded 0's
+                    new Signature(emptySignature)
+
                 )
             );
 
