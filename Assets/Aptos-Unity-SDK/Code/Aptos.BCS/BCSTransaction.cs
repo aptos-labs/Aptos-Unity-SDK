@@ -530,10 +530,10 @@ namespace Aptos.BCS
     /// </summary>
     public class EntryFunction : ISerializable
     {
-        readonly ModuleId module;
-        readonly string function;
-        readonly TagSequence typeArgs;
-        readonly Sequence args;
+        public ModuleId module { get; set; }
+        public string function { get; set; }
+        public TagSequence typeArgs { get; set; }
+        public Sequence args { get; set; }
 
         public EntryFunction(ModuleId module, string function, TagSequence typeArgs, Sequence args)
         {
