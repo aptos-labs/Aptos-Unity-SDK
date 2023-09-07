@@ -60,9 +60,8 @@ namespace Aptos.BCS
                 return U64.Deserialize(deserializer);
             else if (variant == TypeTag.U128)
                 return U128.Deserialize(deserializer);
-            // TODO: Implement U256
-            //else if (variant == TypeTag.U256)
-            //    return U256.Deserialize(deserializer);
+            else if (variant == TypeTag.U256)
+                return U256.Deserialize(deserializer);
             else if (variant == TypeTag.ACCOUNT_ADDRESS)
                 return AccountAddress.Deserialize(deserializer);
             else if (variant == TypeTag.SIGNER)
