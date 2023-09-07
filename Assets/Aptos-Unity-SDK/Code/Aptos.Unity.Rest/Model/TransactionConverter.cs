@@ -84,8 +84,7 @@ namespace Aptos.Unity.Rest.Model
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            // TODO: Implement TransactionConverter serializer (WriteJson)
-            throw new NotImplementedException();
+            throw new NotSupportedException("Converting transaction to JSON is not supported in the SDK.");
         }
     }
 }
