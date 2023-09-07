@@ -52,9 +52,8 @@ namespace Aptos.BCS
                 return Bool.Deserialize(deserializer);
             else if (variant == TypeTag.U8)
                 return U8.Deserialize(deserializer);
-            // TODO: Implement U16
-            //else if (variant == TypeTag.U16)
-            //    return U16.Deserialize(deserializer);
+            else if (variant == TypeTag.U16)
+                return U16.Deserialize(deserializer);
             else if (variant == TypeTag.U32)
                 return U32.Deserialize(deserializer);
             else if (variant == TypeTag.U64)
@@ -612,6 +611,62 @@ namespace Aptos.BCS
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+    }
+
+    /// <summary>
+    /// Representation of a U32.
+    /// </summary>
+    public class U16 : ISerializableTag
+    {
+        public uint value;
+
+        public U16(uint value)
+        {
+            this.value = value;
+        }
+
+        public TypeTag Variant()
+        {
+            return TypeTag.U16;
+        }
+
+        public void Serialize(Serialization serializer)
+        {
+            serializer.Serialize(value);
+        }
+
+        public static ushort Deserialize(byte[] data)
+        {
+            return BitConverter.ToUInt16(data);
+        }
+
+        public static U16 Deserialize(Deserialization deserializer)
+        {
+            U16 val = new U16(deserializer.DeserializeU32());
+            return val;
+        }
+
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is not U16)
+                throw new NotImplementedException();
+
+            U16 otherU16 = (U16)other;
+
+            return this.value == otherU16.value;
+        }
+
+        public override int GetHashCode() => this.value.GetHashCode();
+
+        public object GetValue()
+        {
+            return value;
         }
     }
 

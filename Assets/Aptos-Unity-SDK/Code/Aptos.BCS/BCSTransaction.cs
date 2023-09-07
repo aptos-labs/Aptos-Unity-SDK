@@ -472,9 +472,8 @@ namespace Aptos.BCS
 
             if(variant == (int) TypeTag.U8)
                 value = new U8(deserializer.DeserializeU8());
-            // TODO: implement U16
-            //else if(variant == (int) TypeTag.U16)
-            //    value = deserializer.DeserializeU16();
+            else if (variant == TypeTag.U16)
+                value = new U16(deserializer.DeserializeU16());
             else if(variant == TypeTag.U32)
                 value = new U32(deserializer.DeserializeU32());
             else if(variant == TypeTag.U64)
