@@ -571,7 +571,7 @@ namespace Aptos.BCS
                     byte[] bytes = seqSerializer.GetBytes();
                     valuesAsBytes.Add(new Bytes(bytes)); // Serialized into bytes
                 }
-                else // TODO: Explore this case
+                else
                 {
                     Serialization s = new Serialization();
                     element.Serialize(s);

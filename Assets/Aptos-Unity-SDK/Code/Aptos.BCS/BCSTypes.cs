@@ -195,7 +195,7 @@ namespace Aptos.BCS
                     serializer.SerializeU32AsUleb128((uint)sequenceLen);
                     serializer.SerializeFixedBytes(elementsBytes);
                 }
-                else // TODO: Explore this case
+                else
                 {
                     Serialization s = new Serialization();
                     element.Serialize(s);
