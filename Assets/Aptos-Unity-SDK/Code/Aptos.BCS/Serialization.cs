@@ -373,7 +373,6 @@ namespace Aptos.BCS
         /// <returns></returns>
         public Serialization Serialize(ISerializable[] args)
         {
-            // TODO: Remove or update after refactoring Sequence serialization code
             SerializeU32AsUleb128((uint)args.Length);
             foreach (ISerializable element in args)
             {

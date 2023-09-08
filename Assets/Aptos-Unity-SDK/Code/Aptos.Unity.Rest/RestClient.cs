@@ -822,7 +822,12 @@ namespace Aptos.Unity.Rest
 
         }
 
-        // TODO: Check JSON object returned by Submit BCS Transaction, and update return type
+        /// <summary>
+        /// Submits a BCS transaction.
+        /// </summary>
+        /// <param name="callback">Callback function used after response is received with the JSON response.</param>
+        /// <param name="SignedTransaction">The signed transaction.</param>
+        /// <returns></returns>
         public IEnumerator SubmitBCSTransaction(
             Action<string, ResponseInfo> callback,
             SignedTransaction SignedTransaction
