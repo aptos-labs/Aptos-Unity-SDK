@@ -941,7 +941,7 @@ namespace Aptos.Unity.Rest
         /// <returns>Calls <c>callback</c>function with <c>(Transaction, ResponseInfo)</c>:\n
         /// An object that represents the transaction submitted - null if the transaction fails, and a response object with the response detials.
         /// </returns>
-        public IEnumerator SubmitTransaction(Action<Transaction, ResponseInfo> callback, Account sender, Model.TransactionPayload payload)
+        public IEnumerator SubmitTransaction(Action<Transaction, ResponseInfo> callback, Account sender, EntryFunction entryFunction)
         {
             ///////////////////////////////////////////////////////////////////////
             // 1) Generate a transaction request
@@ -968,7 +968,7 @@ namespace Aptos.Unity.Rest
                 MaxGasAmount = Constants.MAX_GAS_AMOUNT.ToString(),
                 GasUnitPrice = Constants.GAS_UNIT_PRICE.ToString(),
                 ExpirationTimestampSecs = expirationTimestamp,
-                Payload = payload
+                EntryFunction = entryFunction
             };
 
             var txnRequestJson = JsonConvert.SerializeObject(txnRequest, new TransactionRequestConverter());
@@ -1002,7 +1002,7 @@ namespace Aptos.Unity.Rest
             string transactionURL = Endpoint + "/transactions";
             Uri transactionsURI = new Uri(transactionURL);
             var request = RequestClient.SubmitRequest(transactionsURI, UnityWebRequest.kHttpVerbPOST);
-            
+
             byte[] jsonToSend = new UTF8Encoding().GetBytes(txnRequestJson);
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -1385,24 +1385,25 @@ namespace Aptos.Unity.Rest
                 yield break;
             }
 
-            // TODO: Fix - use BCS.TransactionPayload instead of Model.TransactionPayload
-            var transferPayload = new Model.TransactionPayload()
-            {
-                Type = Constants.ENTRY_FUNCTION_PAYLOAD,
-                Function = Constants.COIN_TRANSFER_FUNCTION,
-                TypeArguments = new string[] {},
-                Arguments = new Arguments()
-                {
-                    ArgumentStrings = new string[] { to, amount.ToString() }
-                }
-            };
+            EntryFunction payload = new EntryFunction(
+                new ModuleId(AccountAddress.FromHex("0x1"), "aptos_account"),
+                "transfer",
+                new TagSequence(new ISerializableTag[] { }),
+                new BCS.Sequence(
+                    new ISerializable[]
+                    {
+                        AccountAddress.FromHex(to),
+                        new U64((ulong)amount)
+                    }
+                )
+            );
 
             Transaction submitTxn = new Transaction();
             responseInfo = new ResponseInfo();
             Coroutine cor_response = StartCoroutine(SubmitTransaction((_submitTxn, _responseInfo) => {
                 submitTxn = _submitTxn;
                 responseInfo = _responseInfo;
-            }, sender, transferPayload));
+            }, sender, payload));
             yield return cor_response;
 
             if (responseInfo.status == ResponseInfo.Status.Success)

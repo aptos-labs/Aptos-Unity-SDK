@@ -1,3 +1,4 @@
+using Aptos.BCS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -113,41 +114,30 @@ namespace Aptos.Unity.Rest.Model
             oTransactionRequest.Add("expiration_timestamp_secs", transactionRequest.ExpirationTimestampSecs);
 
             // PAYLOAD
-            TransactionPayload payload = transactionRequest.Payload;
+            BCS.EntryFunction entryFunction = transactionRequest.EntryFunction;
 
             JObject oPayload = new JObject();
-            oPayload.Add("function", payload.Function);
-            oPayload.Add("type_arguments", new JArray(payload.TypeArguments));
+            oPayload.Add("function", entryFunction.module + "::" + entryFunction.function);
 
-            string[] argsString = transactionRequest.Payload.Arguments.ArgumentStrings;
-            JArray jArguments = new JArray(argsString);
+            JArray jTypeArguments = new JArray();
+            TagSequence tagSeq = entryFunction.typeArgs;
+            ISerializableTag[] typeArgs = (ISerializableTag[])tagSeq.GetValue();
 
-            if (transactionRequest.Payload.Arguments.MutateSettings != null)
+            foreach (ISerializableTag typeArg in typeArgs)
             {
-                bool[] argsBool = transactionRequest.Payload.Arguments.MutateSettings;
-                jArguments.Add(new JArray(argsBool));
+                jTypeArguments.Add(typeArg);
             }
+            oPayload.Add("type_arguments", jTypeArguments);
 
-            if (transactionRequest.Payload.Arguments.PropertyKeys != null)
+            JArray jArguments = new JArray();
+            ISerializable[] args = (ISerializable[])transactionRequest.EntryFunction.args.GetValue();
+            foreach (ISerializable arg in args)
             {
-                string[] propertyKeys = transactionRequest.Payload.Arguments.PropertyKeys;
-                jArguments.Add(new JArray(propertyKeys));
-            }
-
-            if (transactionRequest.Payload.Arguments.PropertyValues != null)
-            {
-                int[] propertyValues = transactionRequest.Payload.Arguments.PropertyValues;
-                jArguments.Add(new JArray(propertyValues));
-            }
-
-            if (transactionRequest.Payload.Arguments.PropertyTypes != null)
-            {
-                string[] propertyTypes = transactionRequest.Payload.Arguments.PropertyTypes;
-                jArguments.Add(new JArray(propertyTypes));
+                jArguments.Add(arg.ToString());
             }
 
             oPayload.Add("arguments", jArguments);
-            oPayload.Add("type", payload.Type);
+            oPayload.Add("type", Constants.ENTRY_FUNCTION_PAYLOAD);
 
             oTransactionRequest.Add("payload", oPayload);
 

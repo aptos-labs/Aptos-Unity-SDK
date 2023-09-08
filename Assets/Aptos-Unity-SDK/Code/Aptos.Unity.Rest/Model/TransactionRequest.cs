@@ -1,3 +1,4 @@
+using Aptos.BCS;
 using Newtonsoft.Json;
 
 namespace Aptos.Unity.Rest.Model
@@ -17,7 +18,7 @@ namespace Aptos.Unity.Rest.Model
             MaxGasAmount = transactionRequest.MaxGasAmount;
             GasUnitPrice = transactionRequest.GasUnitPrice;
             ExpirationTimestampSecs = transactionRequest.ExpirationTimestampSecs;
-            Payload = transactionRequest.Payload;
+            EntryFunction = transactionRequest.EntryFunction;
             Signature = transactionRequest.Signature;
         }
 
@@ -38,6 +39,9 @@ namespace Aptos.Unity.Rest.Model
 
         [JsonProperty("payload", Required = Required.Always)]
         public TransactionPayload Payload { get; set; }
+
+        [JsonProperty("entryFunction", Required = Required.Always)]
+        public EntryFunction EntryFunction { get; set; }
 
         [JsonProperty("signature", Required = Required.AllowNull, NullValueHandling = NullValueHandling.Ignore)]
         public SignatureData Signature { get; set; }
