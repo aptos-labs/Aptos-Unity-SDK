@@ -196,20 +196,12 @@ namespace Aptos.Unity.Rest
     }
     #endregion
 
-    #region
-    // TODO: Implement InvalidPropertyType
-    public class InvalidPropertyType
-    {
-
-    }
-    #endregion
-
     #region Property Class
     public class Property
     {
         public BString Name;
         public BString PropertyType;
-        public ISerializable Value; // TODO: Define static type
+        public ISerializable Value;
 
         public static int BOOL = 0;
         public static int U8 = 1;
