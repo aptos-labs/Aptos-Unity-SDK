@@ -92,13 +92,15 @@ yield return transferCor;
 
 Aptos-Unity-SDK is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `EntryFunction`, `Account`, and `Wallet`. Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
 
-A set of examples (scenes & scripts) can be found in the following directory: `Assets/Aptos-Unity-SDK/SDK-Examples/SDK Demo/Scenes/`.   
+A set of examples (scenes & scripts) can be found in the following directory:   
+`Assets/Aptos-Unity-SDK/SDK-Examples/SDK Demo/Scenes/`.   
+
 Each scene contains a `Web3Controller` object with the required client scripts.
-- `AptosTokenClientExample` - mint collections, mint tokens, update token properties, read objects
-- `MultisignExample` - perform a multisig transaction
-- `SimpleNftExample` - simple NFT transaction
-- `SimulateTransactionExample` - simulate a set of transactions 
-- `TransferCoinExample` - a simplem transfer coin transaction
+- **AptosTokenClientExample** scene - mint collections, mint tokens, update token properties, read objects
+- **MultisignExample** scene - perform a multisig transaction
+- **SimpleNftExample** scene - simple NFT transaction
+- **SimulateTransactionExample** scene - simulate a set of transactions 
+- **TransferCoinExample** scene - a simplem transfer coin transaction
 
 #### RestClient ####
 
