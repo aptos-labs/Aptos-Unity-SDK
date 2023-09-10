@@ -102,6 +102,11 @@ Each scene contains a `Web3Controller` object with the required client scripts.
 - **SimulateTransactionExample** scene - simulate a set of transactions 
 - **TransferCoinExample** scene - a simplem transfer coin transaction
 
+There are three core client classes:
+- **FaucetClient** - used to request for airdrops
+- **RESTClient** - used to query the aptos blockchain
+- **AptosClient** - a REST client wrapper used to interact with Aptos tokens
+
 #### RestClient ####
 
 The REST Client provides you with the fundamental transaction endpoints needed for interacting with the Aptos Blockchain. As shown before, it only take a few lines of code to initialize a transfer for Aptos coins. This is the main class developers will be leveraging to interact directly with the Aptos Blockchain via REST Client calls. Here's another example showing how to create a collection:
