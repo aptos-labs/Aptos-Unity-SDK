@@ -42,7 +42,7 @@ Aptos-Unity-SDK is a Unity package written in C# to help developers integrate Ap
 
 ### Make Account Transfer Quickly and Easily! ###
 
-With how easy the library is to use, Aptos-Unity-SDK gives you the power to quickly setup a Sui account and be able to transfer coins in only a few lines of code:
+With how easy the library is to use, Aptos-Unity-SDK gives you the power to quickly setup a Aptos account and be able to transfer coins in only a few lines of code:
 ```c#
 // Initialize Accounts.
 Account alice = Account.Generate();
