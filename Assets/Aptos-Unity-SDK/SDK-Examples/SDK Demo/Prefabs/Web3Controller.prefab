@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8302701459970791517}
-  - component: {fileID: 8302701459970791518}
   - component: {fileID: 8302701459970791519}
+  - component: {fileID: 8302701459970791518}
+  - component: {fileID: 1681756238187536673}
   m_Layer: 0
   m_Name: Web3Controller
   m_TagString: Untagged
@@ -33,6 +34,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8302701459970791519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8302701459970791507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 750e87c108307454fa0f2476c1eaf5e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8302701459970791518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe4224f48c1a754390064558e8ae140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8302701459970791519
+--- !u!114 &1681756238187536673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,6 +67,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8302701459970791507}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 750e87c108307454fa0f2476c1eaf5e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 5167fd1da8f9340ada8424bceb1fcb2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
