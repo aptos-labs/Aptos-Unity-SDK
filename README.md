@@ -88,10 +88,7 @@ yield return transferCor;
 
 ​	**NOTE:**  As of Unity 2021.x.x, Newtonsoft Json is a common dependency. Prior versions of Unity require installing Newtonsoft.
 
-### Using Aptos-Unity-SDK ###
-
-Aptos-Unity-SDK is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `EntryFunction`, `Account`, and `Wallet`. Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
-
+### Examples and Test Suite
 A set of examples (scenes & scripts) can be found in the following directory:   
 `Assets/Aptos-Unity-SDK/SDK-Examples/SDK Demo/Scenes/`.   
 
@@ -102,10 +99,24 @@ Each scene contains a `Web3Controller` object with the required client scripts.
 - **SimulateTransactionExample** scene - simulate a set of transactions 
 - **TransferCoinExample** scene - a simplem transfer coin transaction
 
+The SDK's test suite can be found in the following directory:   
+`Assets/Aptos-Unity-SDK/Test/`.   
+
+The test suite covers:
+- Account - private / public keys, signatures and verification
+- Transactions - creation and serialization
+- BCS serialization and deserialization
+
+### Using Aptos-Unity-SDK ###
+
+Aptos-Unity-SDK is designed to be very easy to integrate into your own Unity projects. The main functionality comes from several key classes: `RestClient`, `FacetClient`, `TokenClient`, `EntryFunction`, `Account`, and `Wallet`.   
+
 There are three core client classes:
 - **FaucetClient** - used to request for airdrops
 - **RESTClient** - used to query the aptos blockchain
 - **AptosClient** - a REST client wrapper used to interact with Aptos tokens
+
+Let's go over each of the classes, along with examples for each to demonstrate their power and flexibility.
 
 #### RestClient ####
 
