@@ -40,25 +40,19 @@ namespace Aptos.Unity.Rest
 
         /// Based enpoint for REST API.
         public Uri Endpoint { get; private set; }
-        public int ChainId { get; private set; }
+        public int? ChainId { get; private set; }
 
         private void Awake()
         {
             if (Instance != null && Instance != this)
-            {
                 Destroy(this);
-            }
             else
-            {
                 Instance = this;
-            }
         }
 
         #region Setup
-        public IEnumerator SetUp(Action<RestClient> Callback, string BaseUrl)
+        public IEnumerator SetUp()
         {
-            this.Endpoint = new Uri(BaseUrl);
-
             LedgerInfo ledgerInfo = new LedgerInfo();
             ResponseInfo responseInfo = new ResponseInfo();
             Coroutine ledgerInfoCor = StartCoroutine(
@@ -78,17 +72,42 @@ namespace Aptos.Unity.Rest
             }
 
             this.ChainId = ledgerInfo.ChainId;
-
-            Callback(Instance);
         }
+        //public IEnumerator SetUp(Action<RestClient> Callback, string BaseUrl)
+        //{
+        //    this.Endpoint = new Uri(BaseUrl);
+
+        //    LedgerInfo ledgerInfo = new LedgerInfo();
+        //    ResponseInfo responseInfo = new ResponseInfo();
+        //    Coroutine ledgerInfoCor = StartCoroutine(
+        //        GetInfo((_ledgerInfo, _responseInfo) =>
+        //        {
+        //            ledgerInfo = _ledgerInfo;
+        //            responseInfo = _responseInfo;
+        //        })
+        //    );
+
+        //    yield return ledgerInfoCor;
+
+        //    if (responseInfo.status != ResponseInfo.Status.Success)
+        //    {
+        //        Debug.LogError("Error getting ledger info: " + responseInfo.message);
+        //        yield break;
+        //    }
+
+        //    this.ChainId = ledgerInfo.ChainId;
+
+        //    Callback(Instance);
+        //}
 
         /// <summary>
         /// Set Endpoint for RPC / REST call.
         /// </summary>
         /// <param name="url">Base URL for REST API.</param>
-        public void SetEndPoint(string url)
+        public RestClient SetEndPoint(string url)
         {
             Endpoint = new Uri(url);
+            return this;
         }
         #endregion
 
@@ -1262,6 +1281,12 @@ namespace Aptos.Unity.Rest
             foreach (Account account in SecondaryAccounts)
                 secondaryAddressList.Add(account.AccountAddress);
 
+            if(ChainId == null) // If ChainId is null, the set up the REST Client, get the chain ID.
+            {
+                Coroutine restClientSetupCor = StartCoroutine(this.SetUp());
+                yield return restClientSetupCor;
+            }
+
             ulong expirationTimestamp = ((ulong)(DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL));
 
             MultiAgentRawTransaction rawTransaction = new MultiAgentRawTransaction(
@@ -1272,7 +1297,7 @@ namespace Aptos.Unity.Rest
                     ClientConfig.MAX_GAS_AMOUNT,
                     ClientConfig.GAS_UNIT_PRICE,
                     expirationTimestamp,
-                    this.ChainId
+                    (int)this.ChainId
                 ),
                 new BCS.Sequence(secondaryAddressList.ToArray())
             );
@@ -1323,6 +1348,12 @@ namespace Aptos.Unity.Rest
                 throw new Exception("Unable to get sequence number for: " + Sender.AccountAddress + ".\n" + responseInfo.message);
             }
 
+            if (ChainId == null) // If ChainId is null, the set up the REST Client, get the chain ID.
+            {
+                Coroutine restClientSetupCor = StartCoroutine(this.SetUp());
+                yield return restClientSetupCor;
+            }
+
             ulong expirationTimestamp = ((ulong)(DateTime.Now.ToUnixTimestamp() + Constants.EXPIRATION_TTL));
 
             RawTransaction rawTxn = new RawTransaction(
@@ -1332,7 +1363,7 @@ namespace Aptos.Unity.Rest
                 ClientConfig.MAX_GAS_AMOUNT,
                 ClientConfig.GAS_UNIT_PRICE,
                 expirationTimestamp,
-                this.ChainId
+                (int)this.ChainId
             );
 
             Callback(rawTxn);
