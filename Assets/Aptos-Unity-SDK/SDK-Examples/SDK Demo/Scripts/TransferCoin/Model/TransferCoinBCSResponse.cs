@@ -1,4 +1,3 @@
-
 using Newtonsoft.Json;
 
 namespace Aptos.Unity.Rest.Model

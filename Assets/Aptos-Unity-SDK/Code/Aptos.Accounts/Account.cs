@@ -72,10 +72,7 @@ namespace Aptos.Accounts
         /// , otherwise use the default constructor Account().
         /// </summary>
         /// <returns>A new account.</returns>
-        public static Account Generate()
-        {
-            return new Account();
-        }
+        public static Account Generate() => new Account();
 
         /// <summary>
         /// Creates an account from private key in string format.
@@ -116,10 +113,7 @@ namespace Aptos.Accounts
         /// </summary>
         /// <param name="message"></param> The signature of the data.
         /// <returns>The signature as an object</returns>
-        public Signature Sign(byte[] message)
-        {
-            return PrivateKey.Sign(message);
-        }
+        public Signature Sign(byte[] message) => PrivateKey.Sign(message);
 
         /// <summary>
         /// Get the ED25519 keypair from the given seed (in bytes).

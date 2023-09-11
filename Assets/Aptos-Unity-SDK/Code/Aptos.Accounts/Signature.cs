@@ -37,10 +37,7 @@ namespace Aptos.Accounts
         /// The signature data in 64-bytes.
         /// </summary>
         /// <returns>64-byte array representing the signature data</returns>
-        public byte[] Data()
-        {
-            return _signatureBytes;
-        }
+        public byte[] Data() => _signatureBytes;
 
         /// <summary>
         /// Serialize signature
@@ -61,10 +58,7 @@ namespace Aptos.Accounts
         }
 
         /// <inheritdoc cref="GetHashCode"/>
-        public override int GetHashCode()
-        {
-            return this.ToString().GetHashCode();
-        }
+        public override int GetHashCode() => this.ToString().GetHashCode();
 
         /// <inheritdoc cref="ToString"/>
         public override string ToString()
@@ -79,9 +73,7 @@ namespace Aptos.Accounts
         public override bool Equals(object obj)
         {
             if (obj is Signature signature)
-            {
                 return signature.ToString() == this.ToString();
-            }
 
             return false;
         }

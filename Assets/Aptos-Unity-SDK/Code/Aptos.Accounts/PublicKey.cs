@@ -40,10 +40,7 @@ namespace Aptos.Accounts
                 return _key;
             }
 
-            set
-            {
-                _key = value;
-            }
+            set => _key = value;
         }
 
         /// <summary>
@@ -62,10 +59,7 @@ namespace Aptos.Accounts
                 return _keyBytes;
             }
 
-            set
-            {
-                _keyBytes = value;
-            }
+            set => _keyBytes = value;
         }
 
         /// <summary>
@@ -93,7 +87,7 @@ namespace Aptos.Accounts
             if (!Utils.IsValidAddress(key))
                 throw new ArgumentException("Invalid key", nameof(key));
 
-            Key = key ?? throw new ArgumentNullException(nameof(key));
+            this.Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
         /// <summary>
@@ -123,10 +117,7 @@ namespace Aptos.Accounts
         /// Check if PubliKey is a valid on the Ed25519 curve.
         /// </summary>
         /// <returns>Returns true if public key is on the curve.</returns>
-        public bool IsOnCurve()
-        {
-            return KeyBytes.IsOnCurve();
-        }
+        public bool IsOnCurve() => KeyBytes.IsOnCurve();
 
         /// <summary>
         /// Serialize public key
@@ -150,22 +141,23 @@ namespace Aptos.Accounts
         public override bool Equals(object obj)
         {
             if (obj is PublicKey publicKey)
-            {
+ 
                 return publicKey.Key.Equals(Key);
-            }
 
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return Key.GetHashCode();
-        }
+        /// <summary>
+        /// Value used as a hash
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode() => Key.GetHashCode();
 
-        public override string ToString()
-        {
-            return Key;
-        }
+        /// <summary>
+        /// ToString implementation return the key as a hex string.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => Key;
 
         /// <summary>
         /// Compares two public key objects.
@@ -178,57 +170,47 @@ namespace Aptos.Accounts
             if (lhs is null)
             {
                 if (rhs is null)
-                {
                     return true;
-                }
+
                 return false;
             }
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(PublicKey lhs, PublicKey rhs)
-        {
-            return lhs == rhs;
-        }
+        /// <summary>
+        /// Compares two public key objects for inequality.
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator !=(PublicKey lhs, PublicKey rhs) => lhs == rhs;
 
         /// <summary>
         /// Convert a PublicKey object to hex encoded string representatio public key.
         /// </summary>
         /// <param name="publicKey">The PublicKey object.</param>
         /// <returns>Hex encoded string representing the public key.</returns>
-        public static implicit operator string(PublicKey publicKey)
-        {
-            return publicKey.Key;
-        }
+        public static implicit operator string(PublicKey publicKey) => publicKey.Key;
 
         /// <summary>
         /// Convert Hex encoded string of a public key to PublicKey object.
         /// </summary>
         /// <param name="publicKey">hex encoded string representing a public key.</param>
         /// <returns>PublicKey object.</returns>
-        public static explicit operator PublicKey(string publicKey)
-        {
-            return new PublicKey(publicKey);
-        }
+        public static explicit operator PublicKey(string publicKey) => new PublicKey(publicKey);
 
         /// <summary>
         /// Convert a PublicKey object to a byte array representation of a public key.
         /// </summary>
         /// <param name="publicKey">The PublicKey object.</param>
         /// <returns>Public key as a byte array.</returns>
-        public static implicit operator byte[](PublicKey publicKey)
-        {
-            return publicKey.KeyBytes;
-        }
+        public static implicit operator byte[](PublicKey publicKey) => publicKey.KeyBytes;
 
         /// <summary>
         /// Convert byte array representation of a public key to a PublicKey object.
         /// </summary>
         /// <param name="keyBytes">The public key as a byte array.</param>
         /// <returns>PublicKey object.</returns>
-        public static explicit operator PublicKey(byte[] keyBytes)
-        {
-            return new PublicKey(keyBytes);
-        }
+        public static explicit operator PublicKey(byte[] keyBytes) => new PublicKey(keyBytes);
     }
 }

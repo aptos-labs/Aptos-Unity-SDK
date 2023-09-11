@@ -10,6 +10,10 @@ using TransactionPayload = Aptos.BCS.TransactionPayload;
 
 namespace Aptos.Unity.Sample
 {
+    /// <summary>
+    /// Example to simulate the transfer of a coins.
+    /// This examples performs a transfer using a BCS encoding transaction.
+    /// </summary>
     public class SimulateTransferCoin : MonoBehaviour
     {
         void Start()
@@ -115,7 +119,7 @@ namespace Aptos.Unity.Sample
             simulateTxnResponse = simulateTxnResponse.Substring(1, simulateTxnResponse.Length - 2); // Remove open and closing bracket, transaction converter only parses the JSON object
             Transaction transactionResp = JsonConvert.DeserializeObject<Transaction>(simulateTxnResponse, new TransactionConverter());
             Debug.Log(transactionResp.VmStatus);
-            Debug.Log("<color=cyan>=== This shouldn't succeed: " + !transactionResp.VmStatus.Equals("Executed successfully") + "\n" + transactionResp.VmStatus + " ===</color>");
+            Debug.Log("<color=cyan>=== This shouldn't succeed: " + !transactionResp.VmStatus.Equals("Executed successfully") + "\nVM Status:   " + transactionResp.VmStatus + " ===</color>");
             Debug.Log(simulateTxnResponse);
 
             #endregion
@@ -157,7 +161,7 @@ namespace Aptos.Unity.Sample
 
             simulateTxnResponse = simulateTxnResponse.Substring(1, simulateTxnResponse.Length - 2); // Remove open and closing bracket, transaction converter only parses the JSON object
             transactionResp = JsonConvert.DeserializeObject<Transaction>(simulateTxnResponse, new TransactionConverter());
-            Debug.Log("<color=cyan>=== This should succeed: " + transactionResp.VmStatus.Equals("Executed successfully") + "\n" + transactionResp.VmStatus + " ===</color>");
+            Debug.Log("<color=cyan>=== This should succeed: " + transactionResp.VmStatus.Equals("Executed successfully") + "\nVM Status:   " + transactionResp.VmStatus + " ===</color>");
             Debug.Log(simulateTxnResponse);
             #endregion
 

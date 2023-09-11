@@ -48,10 +48,9 @@ namespace Aptos.Accounts
         /// <exception cref="ArgumentException"></exception>
         public AuthenticationKey(byte[] bytes)
         {
-            if (bytes.Length != AuthenticationKey.LENGTH)
-            {
-                throw new ArgumentException("Byte array must be " + AuthenticationKey.LENGTH + " bytes");
-            }
+            if (bytes.Length != LENGTH)
+                throw new ArgumentException("Byte array must be " + LENGTH + " bytes");
+
             this.bytes = bytes;
         }
 
@@ -109,9 +108,8 @@ namespace Aptos.Accounts
         {
             string hexString = CryptoBytes.ToHexStringLower(bytes);
             if (!hexString.StartsWith("0x"))
-            {
                 hexString = "0x" + hexString;
-            }
+
             return hexString;
         }
     }

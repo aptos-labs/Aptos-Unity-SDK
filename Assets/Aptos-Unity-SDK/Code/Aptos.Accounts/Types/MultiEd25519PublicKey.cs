@@ -1,3 +1,4 @@
+using System;
 using Chaos.NaCl;
 
 namespace Aptos.Accounts.Types
@@ -28,9 +29,8 @@ namespace Aptos.Accounts.Types
         public MultiEd25519PublicKey(PublicKey[] PublicKeys, int threshold)
         {
             if (threshold > MAX_SIGNATURES_SUPPORTED)
-            {
-                //throw new Error("'threshold' cannot be larger than " MAX_SIGNATURES_SUPPORTED);
-            }
+                throw new ArgumentException("Threshold' cannot be larger than " + MAX_SIGNATURES_SUPPORTED);
+
             this.PublicKeys = PublicKeys;
             this.threshold = threshold;
         }
@@ -44,9 +44,7 @@ namespace Aptos.Accounts.Types
         {
             byte[] bytes = new byte[(PublicKeys.Length * Ed25519.PublicKeySizeInBytes) + 1];
             for (int i = 0; i < PublicKeys.Length; i++)
-            {
                 bytes.SetValue(PublicKeys[i], i * Ed25519.PublicKeySizeInBytes);
-            }
 
             bytes[this.PublicKeys.Length * Ed25519.PublicKeySizeInBytes] = (byte)threshold;
 
