@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gas_5funit_5fprice_0',['GAS_UNIT_PRICE',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#ad2e47100464330c2a9c8e245553c5239',1,'Aptos::Unity::Rest::Constants']]]
+  ['signaturelength_0',['SignatureLength',['../class_aptos_1_1_accounts_1_1_signature.html#afc3e938cc9b4dff7ee95b2f8e76833e7',1,'Aptos::Accounts::Signature']]]
 ];

@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['resourcecollection_0',['ResourceCollection',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection.html',1,'Aptos::Unity::Rest::Model']]],
-  ['resourcecollectionold_1',['ResourceCollectionOLD',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resource_collection_o_l_d.html',1,'Aptos::Unity::Rest::Model']]],
-  ['responseinfo_2',['ResponseInfo',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_response_info.html',1,'Aptos::Unity::Rest::Model']]],
-  ['restclient_3',['RestClient',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html',1,'Aptos::Unity::Rest']]],
-  ['royalty_4',['Royalty',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_royalty.html',1,'Aptos::Unity::Rest::Model']]]
+  ['privatekey_0',['PrivateKey',['../class_aptos_1_1_accounts_1_1_private_key.html',1,'Aptos::Accounts']]],
+  ['property_1',['Property',['../class_aptos_1_1_unity_1_1_rest_1_1_property.html',1,'Aptos::Unity::Rest']]],
+  ['propertymap_2',['PropertyMap',['../class_aptos_1_1_unity_1_1_rest_1_1_property_map.html',1,'Aptos::Unity::Rest']]],
+  ['propertymapresource_3',['PropertyMapResource',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resources_1_1_property_map_resource.html',1,'Aptos::Unity::Rest::Model::Resources']]],
+  ['propertymapresourcedata_4',['PropertyMapResourceData',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resources_1_1_property_map_resource_data.html',1,'Aptos::Unity::Rest::Model::Resources']]],
+  ['propertyresource_5',['PropertyResource',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resources_1_1_property_resource.html',1,'Aptos::Unity::Rest::Model::Resources']]],
+  ['propertyvalue_6',['PropertyValue',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resources_1_1_property_value.html',1,'Aptos::Unity::Rest::Model::Resources']]],
+  ['publickey_7',['PublicKey',['../class_aptos_1_1_accounts_1_1_public_key.html',1,'Aptos::Accounts']]]
 ];

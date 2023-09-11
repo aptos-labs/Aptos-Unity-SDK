@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['coin_5ftransfer_5ffunction_0',['COIN_TRANSFER_FUNCTION',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#a8c2d3b908d0163ba14b5f6961b403cb7',1,'Aptos::Unity::Rest::Constants']]],
-  ['create_5fcollection_5fscript_1',['CREATE_COLLECTION_SCRIPT',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#ae704536f305ca4d4c10881bbaad4b5f1',1,'Aptos::Unity::Rest::Constants']]],
-  ['create_5ftoken_5fscript_5ffunction_2',['CREATE_TOKEN_SCRIPT_FUNCTION',['../class_aptos_1_1_unity_1_1_rest_1_1_constants.html#a960ef0d3cefc8ebde833f8e09e313dfd',1,'Aptos::Unity::Rest::Constants']]]
+  ['key_0',['Key',['../class_aptos_1_1_accounts_1_1_ed25519_bip32.html#afcae4b81394deeed3f0adb16145da176',1,'Aptos::Accounts::Ed25519Bip32']]],
+  ['keylength_1',['keylength',['../class_aptos_1_1_accounts_1_1_private_key.html#a1ede235120bf982582f8d4a6ee9d7ccf',1,'Aptos.Accounts.PrivateKey.KeyLength'],['../class_aptos_1_1_accounts_1_1_public_key.html#aa84db6fe623ee49d7ccc4e4466fafb63',1,'Aptos.Accounts.PublicKey.KeyLength']]],
+  ['keys_2',['Keys',['../class_aptos_1_1_accounts_1_1_multi_public_key.html#a203f50a34c1a41d2915ba1805f97ddd3',1,'Aptos::Accounts::MultiPublicKey']]]
 ];

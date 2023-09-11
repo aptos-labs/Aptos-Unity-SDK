@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['privatekey_0',['PrivateKey',['../class_aptos_1_1_accounts_1_1_private_key.html',1,'Aptos::Accounts']]],
-  ['publickey_1',['PublicKey',['../class_aptos_1_1_accounts_1_1_public_key.html',1,'Aptos::Accounts']]]
+  ['object_0',['Object',['../class_aptos_1_1_unity_1_1_rest_1_1_object.html',1,'Aptos::Unity::Rest']]],
+  ['objectresource_1',['ObjectResource',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resources_1_1_object_resource.html',1,'Aptos::Unity::Rest::Model::Resources']]],
+  ['objectresourcedata_2',['ObjectResourceData',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_resources_1_1_object_resource_data.html',1,'Aptos::Unity::Rest::Model::Resources']]]
 ];

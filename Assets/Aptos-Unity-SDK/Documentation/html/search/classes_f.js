@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['wallet_0',['Wallet',['../class_aptos_1_1_hd_wallet_1_1_wallet.html',1,'Aptos::HdWallet']]],
-  ['withdrawevents_1',['WithdrawEvents',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_account_resource_token_store_1_1_withdraw_events.html',1,'Aptos::Unity::Rest::Model::AccountResourceTokenStore']]]
+  ['u128_0',['U128',['../class_aptos_1_1_b_c_s_1_1_u128.html',1,'Aptos::BCS']]],
+  ['u16_1',['U16',['../class_aptos_1_1_b_c_s_1_1_u16.html',1,'Aptos::BCS']]],
+  ['u256_2',['U256',['../class_aptos_1_1_b_c_s_1_1_u256.html',1,'Aptos::BCS']]],
+  ['u32_3',['U32',['../class_aptos_1_1_b_c_s_1_1_u32.html',1,'Aptos::BCS']]],
+  ['u64_4',['U64',['../class_aptos_1_1_b_c_s_1_1_u64.html',1,'Aptos::BCS']]],
+  ['u8_5',['U8',['../class_aptos_1_1_b_c_s_1_1_u8.html',1,'Aptos::BCS']]]
 ];
