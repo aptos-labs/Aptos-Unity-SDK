@@ -7,7 +7,7 @@
 
 ## 		Aptos Made Easy in Unity
 
-[![Actions](https://github.com/aptos-labs/Aptos-Unity-SDK/actions/workflows/main.yaml/badge.svg)](https://github.com/aptos-labs/Aptos-Unity-SDK/actions/workflows/main.yaml) [![Made with Unity](https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity)](https://unity3d.com) [![](https://dcbadge.vercel.app/api/server/aptoslabs)](https://discord.gg/aptoslabs)
+[![Made with Unity](https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity)](https://unity3d.com) [![](https://dcbadge.vercel.app/api/server/aptoslabs)](https://discord.gg/aptoslabs)
 
 Aptos-Unity-SDK is a Unity package written in C# to help developers integrate Aptos blockchain technology into their projects.
 
