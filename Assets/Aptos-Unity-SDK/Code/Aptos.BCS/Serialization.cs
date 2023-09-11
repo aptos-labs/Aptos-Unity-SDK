@@ -28,10 +28,7 @@ namespace Aptos.BCS
             this.input = new MemoryStream(data);
         }
 
-        public long Remaining()
-        {
-            return length - input.Position;
-        }
+        public long Remaining() => length - input.Position;
 
         public bool DeserializeBool()
         {
@@ -40,15 +37,9 @@ namespace Aptos.BCS
             return value;
         }
 
-        public byte[] ToBytes()
-        {
-            return this.Read(this.DeserializeUleb128());
-        }
+        public byte[] ToBytes() => this.Read(this.DeserializeUleb128());
 
-        public byte[] FixedBytes(int length)
-        {
-            return this.Read(length);
-        }
+        public byte[] FixedBytes(int length) => this.Read(length);
 
         public BCSMap DeserializeMap(Type keyType, Type valueType)
         {
@@ -68,9 +59,7 @@ namespace Aptos.BCS
 
             Dictionary<BString, ISerializable> value = new Dictionary<BString, ISerializable>();
             foreach (KeyValuePair<string, ISerializable> entry in sortedMap)
-            {
                 value.Add(new BString(entry.Key), entry.Value);
-            }
 
             return new BCSMap(value);
         }
@@ -143,13 +132,10 @@ namespace Aptos.BCS
             return BString.Deserialize(this.Read(this.DeserializeUleb128()));
         }
 
-        //public ISerializable Struct(ISerializable structObj )
         public ISerializable Struct(Type structType)
         {
-            //Type structType = structObj.GetType();
             MethodInfo method = structType.GetMethod("Deserialize", new Type[] { typeof(Deserialization) });
             ISerializableTag val = (ISerializableTag)method.Invoke(null, new[] { this });
-
             return val;
         }
 
@@ -212,16 +198,11 @@ namespace Aptos.BCS
             int totalRead = this.input.Read(value, 0, length);
 
             if(totalRead == 0 || totalRead < length)
-            {
-                throw new Exception("Unexpected end of input. Requested: " + length + ", found: " + totalRead);
-            }
+                throw new ArgumentException("Unexpected end of input. Requested: " + length + ", found: " + totalRead);
             return value;
         }
 
-        public byte ReadInt(int length)
-        {
-            return this.Read(length)[0];
-        }
+        public byte ReadInt(int length) => this.Read(length)[0];
 
         #endregion
     }
@@ -480,14 +461,9 @@ namespace Aptos.BCS
         public Serialization SerializeBool(bool value)
         {
             if (value)
-            {
                 output.WriteByte(0x01);
-            }
             else
-            {
                 output.WriteByte(0x00);
-            }
-
             return this;
         }
 
@@ -558,9 +534,7 @@ namespace Aptos.BCS
         {
             // Ensure the BigInteger is unsigned
             if (value.Sign == -1)
-            {
                 throw new SerializationException("Invalid value for an unsigned int128");
-            }
 
             // This is already little-endian
             byte[] content = value.ToByteArray(isUnsigned: true, isBigEndian: false);
@@ -568,17 +542,13 @@ namespace Aptos.BCS
             // BigInteger.toByteArray() may add a most-significant zero
             // byte for signing purpose: ignore it.
             if (!(content.Length <= 16 || content[0] == 0))
-            {
                 throw new SerializationException("Invalid value for an unsigned int128");
-            }
 
             // Ensure we're padded to 16
             output.Write(content);
 
             if (content.Length != 16)
-            {
                 output.Write(new byte[16 - content.Length]);
-            }
 
             return this;
         }
@@ -592,9 +562,7 @@ namespace Aptos.BCS
         {
             // Ensure the BigInteger is unsigned
             if (value.Sign == -1)
-            {
                 throw new SerializationException("Invalid value for an unsigned int256");
-            }
 
             // This is already little-endian
             byte[] content = value.ToByteArray(isUnsigned: true, isBigEndian: false);
@@ -602,17 +570,13 @@ namespace Aptos.BCS
             // BigInteger.toByteArray() may add a most-significant zero
             // byte for signing purpose: ignore it.
             if (!(content.Length <= 32 || content[0] == 0))
-            {
                 throw new SerializationException("Invalid value for an unsigned int256");
-            }
 
             // Ensure we're padded to 32
             output.Write(content);
 
             if (content.Length != 32)
-            {
                 output.Write(new byte[32 - content.Length]);
-            }
 
             return this;
         }
