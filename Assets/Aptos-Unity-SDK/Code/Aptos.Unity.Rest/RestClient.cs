@@ -73,32 +73,6 @@ namespace Aptos.Unity.Rest
 
             this.ChainId = ledgerInfo.ChainId;
         }
-        //public IEnumerator SetUp(Action<RestClient> Callback, string BaseUrl)
-        //{
-        //    this.Endpoint = new Uri(BaseUrl);
-
-        //    LedgerInfo ledgerInfo = new LedgerInfo();
-        //    ResponseInfo responseInfo = new ResponseInfo();
-        //    Coroutine ledgerInfoCor = StartCoroutine(
-        //        GetInfo((_ledgerInfo, _responseInfo) =>
-        //        {
-        //            ledgerInfo = _ledgerInfo;
-        //            responseInfo = _responseInfo;
-        //        })
-        //    );
-
-        //    yield return ledgerInfoCor;
-
-        //    if (responseInfo.status != ResponseInfo.Status.Success)
-        //    {
-        //        Debug.LogError("Error getting ledger info: " + responseInfo.message);
-        //        yield break;
-        //    }
-
-        //    this.ChainId = ledgerInfo.ChainId;
-
-        //    Callback(Instance);
-        //}
 
         /// <summary>
         /// Set Endpoint for RPC / REST call.
