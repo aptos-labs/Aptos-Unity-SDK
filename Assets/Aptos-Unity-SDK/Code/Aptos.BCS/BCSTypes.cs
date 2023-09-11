@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using UnityEngine;
 
 namespace Aptos.BCS
 {
@@ -25,25 +24,62 @@ namespace Aptos.BCS
         U256
     }
 
+    /// <summary>
+    /// An interfaces that enforces types to implement a serialization method.
+    /// </summary>
     public interface ISerializable
     {
+        /// <summary>
+        /// Serialize the object.
+        /// </summary>
+        /// <param name="serializer"></param>
         public void Serialize(Serialization serializer);
+
+        /// <summary>
+        /// Deserializes a byte array hosted inside the Deserializer.
+        /// </summary>
+        /// <param name="deserializer"></param>
+        /// <returns></returns>
         public static ISerializable Deserialize(Deserialization deserializer) => throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// An interface that encorces all type tags to implement a
+    /// serializaiton method and also return it's internal values.
+    /// A static deserializaton method is also provides.
+    /// </summary>
     public interface ISerializableTag : ISerializable
     {
+        /// <summary>
+        /// Returns the type of type tag.
+        /// </summary>
+        /// <returns>A TypeTag enum.</returns>
         public TypeTag Variant();
 
+        /// <summary>
+        /// Gets the internal value.
+        /// </summary>
+        /// <returns></returns>
         public object GetValue();
 
-        public void SerializeTag(Serialization serializer)
-        {
-            this.Serialize(serializer);
-        }
+        /// <summary>
+        /// Serializes the type tag using it's own serializaton method.
+        /// </summary>
+        /// <param name="serializer"></param>
+        public void SerializeTag(Serialization serializer) => this.Serialize(serializer);
 
+        /// <summary>
+        /// Deserializes a byte array hosted inside the Deserializer.
+        /// </summary>
+        /// <param name="deserializer"></param>
+        /// <returns></returns>
         public static new ISerializableTag Deserialize(Deserialization deserializer) => throw new NotImplementedException();
 
+        /// <summary>
+        /// Deserialize a tag based on it's type.
+        /// </summary>
+        /// <param name="deserializer"></param>
+        /// <returns>An object.</returns>
         public static ISerializableTag DeserializeTag(Deserialization deserializer)
         {
             TypeTag variant = (TypeTag)deserializer.DeserializeUleb128();
@@ -70,8 +106,6 @@ namespace Aptos.BCS
                 throw new NotImplementedException();
             else if (variant == TypeTag.STRUCT)
                 return StructTag.Deserialize(deserializer);
-            //return ISerializableTag.Deserialize(deserializer);
-
             throw new NotImplementedException();
         }
     }
@@ -81,22 +115,27 @@ namespace Aptos.BCS
     /// </summary>
     public class TagSequence : ISerializable
     {
+        /// <summary>
+        /// A list of serializable tags.
+        /// </summary>
         ISerializableTag[] serializableTags;
 
+        /// <summary>
+        /// Creates a TagSequence objects from a list of serializable tags.
+        /// </summary>
+        /// <param name="serializableTags">A list of serializable tags.</param>
         public TagSequence(ISerializableTag[] serializableTags)
-        {
-            this.serializableTags = serializableTags;
-        }
+            => this.serializableTags = serializableTags;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.serializableTags.Length);
             foreach (ISerializableTag element in this.serializableTags)
-            {
                 element.SerializeTag(serializer);
-            }
         }
 
+        /// <inheritdoc/>
         public static TagSequence Deserialize(Deserialization deserializer)
         {
             int length = deserializer.DeserializeUleb128();
@@ -108,36 +147,36 @@ namespace Aptos.BCS
                 ISerializableTag tag = ISerializableTag.DeserializeTag(deserializer);
                 values.Add(tag);
             }
-
             return new TagSequence(values.ToArray());
         }
 
-        public object GetValue()
-        {
-            return serializableTags;
-        }
+        /// <summary>
+        /// Gets the internal list of objects inside the TagSequence.
+        /// </summary>
+        /// <returns>The list of objects.</returns>
+        public object GetValue() => serializableTags;
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             TagSequence otherTagSeq = (TagSequence)other;
-            return Enumerable.SequenceEqual((ISerializableTag[])this.GetValue(), (ISerializableTag[])otherTagSeq.GetValue());
+            return Enumerable.SequenceEqual(
+                (ISerializableTag[])this.GetValue(),
+                (ISerializableTag[])otherTagSeq.GetValue()
+            );
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
             foreach (var tag in serializableTags)
-            {
                 result.Append(tag.ToString());
-            }
-
             return result.ToString();
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -157,26 +196,30 @@ namespace Aptos.BCS
     /// </summary>
     public class Sequence : ISerializable
     {
+        /// <summary>
+        /// The internal list of objects that are to be serialized or deserialized.
+        /// </summary>
         ISerializable[] values;
 
-        public int Length
-        {
-            get
-            {
-                return values.Length;
-            }
-        }
+        /// <summary>
+        /// The length of the Sequence.
+        /// </summary>
+        public int Length { get => values.Length; }
 
-        public object GetValue()
-        {
-            return values;
-        }
+        /// <summary>
+        /// Gets the internal list of objects inside the Sequence.
+        /// </summary>
+        /// <returns>The list of object.</returns>
+        public object GetValue() => values;
 
-        public Sequence(ISerializable[] serializable)
-        {
-            this.values = serializable;
-        }
+        /// <summary>
+        /// Creates a Sequence object from a list of serializable objects,
+        /// e.g. U8, AccountAddress.
+        /// </summary>
+        /// <param name="serializable">A list of serializable objects.</param>
+        public Sequence(ISerializable[] serializable) => this.values = serializable;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.values.Length);
@@ -205,25 +248,25 @@ namespace Aptos.BCS
             }
         }
 
+        /// <inheritdoc/>
         public static Sequence Deserialize(Deserialization deser)
         {
             int length = deser.DeserializeUleb128();
             List<ISerializable> values = new List<ISerializable>();
 
             while (values.Count < length)
-            {
                 values.Add(new Bytes(deser.ToBytes()));
-            }
-
             return new Sequence(values.ToArray());
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             Sequence otherSeq = (Sequence)other;
             return Enumerable.SequenceEqual(this.values, otherSeq.values);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
@@ -232,10 +275,8 @@ namespace Aptos.BCS
             return result.ToString();
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -243,13 +284,18 @@ namespace Aptos.BCS
     /// </summary>
     public class BytesSequence : ISerializable
     {
+        /// <summary>
+        /// A list of a list of bytes.
+        /// </summary>
         byte[][] values;
 
-        public BytesSequence(byte[][] values)
-        {
-            this.values = values;
-        }
+        /// <summary>
+        /// Creates a ByteSequence object from a list of a list of bytes.
+        /// </summary>
+        /// <param name="values">A lsit of a list of bytes.</param>
+        public BytesSequence(byte[][] values) => this.values = values;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.values.Length);
@@ -257,6 +303,7 @@ namespace Aptos.BCS
                 serializer.SerializeBytes(element);
         }
 
+        /// <inheritdoc/>
         public static BytesSequence Deserialize(Deserialization deserializer)
         {
             int length = deserializer.DeserializeUleb128();
@@ -271,10 +318,8 @@ namespace Aptos.BCS
             return new BytesSequence(bytesList.ToArray());
         }
 
-        public object GetValue()
-        {
-            return values;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => values;
 
         public override bool Equals(object other)
         {
@@ -286,11 +331,10 @@ namespace Aptos.BCS
             return equal;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
@@ -305,17 +349,24 @@ namespace Aptos.BCS
     /// </summary>
     public class BCSMap : ISerializable
     {
+        /// <summary>
+        /// A dictionary mapping to values that are serializable.
+        /// </summary>
         public Dictionary<BString, ISerializable> values;
 
+        /// <summary>
+        /// Creates a BCSMap from a Dictionary.
+        /// </summary>
+        /// <param name="values">A dictionary mapping to values that are
+        /// serializable.</param>
         public BCSMap(Dictionary<BString, ISerializable> values)
-        {
-            this.values = values;
-        }
+            => this.values = values;
 
-        public object GetValue()
-        {
-            return values;
-        }
+        /// <summary>
+        /// Gets the internal dictionary of a BCSMap.
+        /// </summary>
+        /// <returns></returns>
+        public object GetValue() => values;
 
         /// <summary>
         /// Maps (Key / Value Stores)
@@ -329,7 +380,8 @@ namespace Aptos.BCS
         public void Serialize(Serialization serializer)
         {
             Serialization mapSerializer = new Serialization();
-            SortedDictionary<string, (byte[], byte[])> byteMap = new SortedDictionary<string, (byte[], byte[])>();
+            SortedDictionary<string, (byte[], byte[])> byteMap
+                = new SortedDictionary<string, (byte[], byte[])>();
 
             foreach (KeyValuePair<BString, ISerializable> entry in this.values)
             {
@@ -354,6 +406,7 @@ namespace Aptos.BCS
             serializer.SerializeFixedBytes(mapSerializer.GetBytes());
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
@@ -368,62 +421,60 @@ namespace Aptos.BCS
     /// </summary>
     public class BString : ISerializable
     {
+        /// <summary>
+        /// The internal string value.
+        /// </summary>
         public string value;
 
-        public BString(string value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a BString from a string.
+        /// </summary>
+        /// <param name="value">A string value.</param>
+        public BString(string value) => this.value = value;
 
-        public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+        /// <summary>
+        /// Serializes the BString object using the given Serializer.
+        /// </summary>
+        /// <param name="serializer">The Serializer object.</param>
+        public void Serialize(Serialization serializer) => serializer.Serialize(value);
 
-        public static string Deserialize(byte[] data)
-        {
-            return Encoding.UTF8.GetString(data);
-        }
+        /// <summary>
+        /// Deserializes a give byte array into a UTF8 compliant string.
+        /// </summary>
+        /// <param name="data">A string represented as a byte array.</param>
+        /// <returns></returns>
+        public static string Deserialize(byte[] data) => Encoding.UTF8.GetString(data);
 
+        /// <summary>
+        /// Utility function used to RemoveBOM prefixes.
+        /// </summary>
+        /// <param name="data">A string represented as a byte array.</param>
+        /// <returns>The cleaned byte array.</returns>
         public static byte[] RemoveBOM(byte[] data)
         {
             var bom = Encoding.UTF8.GetPreamble();
             if (data.Length > bom.Length)
-            {
                 for (int i = 0; i < bom.Length; i++)
-                {
                     if (data[i] != bom[i])
                         return data;
-                }
-            }
             return data.Skip(3).ToArray();
         }
 
-        private static string RemoveBOM(string xml)
-        {
-            // https://stackoverflow.com/questions/17795167/
-            // xml-loaddata-data-at-the-root-level-is-invalid-line-1-position-1
-            var preamble = Encoding.UTF8.GetPreamble();
-            string byteOrderMarkUtf8 = Encoding.UTF8.GetString(preamble);
-            if (xml.StartsWith(byteOrderMarkUtf8))
-            {
-                xml = xml.Remove(0, byteOrderMarkUtf8.Length);
-            }
-
-            return xml;
-        }
-
+        /// <summary>
+        /// Deserializes a byte array contained by the Deserializer.
+        /// </summary>
+        /// <param name="deserializer">The Deserializer that contains the bytes.</param>
+        /// <returns>A BString object.</returns>
         public static BString Deserialize(Deserialization deserializer)
         {
             string deserStr = deserializer.DeserializeString();
             return new BString(deserStr);
         }
 
-        public override string ToString()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public override string ToString() => value;
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             BString otherBString;
@@ -434,16 +485,14 @@ namespace Aptos.BCS
                 throw new NotImplementedException();
             else 
                 otherBString = (BString)other;
-
             return this.value == otherBString.value;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() => this.value.GetHashCode();
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => this.value;
     }
 
     /// <summary>
@@ -451,39 +500,42 @@ namespace Aptos.BCS
     /// </summary>
     public class Bytes : ISerializable
     {
+        /// <summary>
+        /// The internals byte array.
+        /// </summary>
         byte[] values;
 
-        public Bytes(byte[] values)
-        {
-            this.values = values;
-        }
+        /// <summary>
+        /// Creates a Bytes object from a given byte array.
+        /// </summary>
+        /// <param name="values">A list of bytes to serialize.</param>
+        public Bytes(byte[] values) => this.values = values;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(values);
-        }
+            => serializer.Serialize(values);
 
+        /// <inheritdoc/>
         public Bytes Deserialize(Deserialization deserializer)
-        {
-            return new Bytes(deserializer.ToBytes());
-        }
+            => new Bytes(deserializer.ToBytes());
 
-        public byte[] GetValue()
-        {
-            return values;
-        }
+        /// <summary>
+        /// Gets the byte array containes within the Bytes object.
+        /// </summary>
+        /// <returns></returns>
+        public byte[] GetValue() => values;
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not Bytes)
                 throw new NotImplementedException();
 
             Bytes otherBytes = (Bytes)other;
-            bool equal = Enumerable.SequenceEqual(this.values, otherBytes.values);
-
-            return equal;
+            return Enumerable.SequenceEqual(this.values, otherBytes.values);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
@@ -492,10 +544,8 @@ namespace Aptos.BCS
             return result.ToString();
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -503,56 +553,49 @@ namespace Aptos.BCS
     /// </summary>
     public class Bool : ISerializableTag
     {
+        /// <summary>
+        /// The internal boolean value.
+        /// </summary>
         bool value;
 
-        public Bool(bool value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a Bool object from a given boolean.
+        /// </summary>
+        /// <param name="value">A bolean value to serialize.</param>
+        public Bool(bool value) => this.value = value;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+            => serializer.Serialize(value);
 
+        /// <inheritdoc/>
         public static bool Deserialize(byte[] data)
-        {
-            bool ret = BitConverter.ToBoolean(data);
-            return ret;
-        }
+            => BitConverter.ToBoolean(data);
 
+        /// <inheritdoc/>
         public static Bool Deserialize(Deserialization deserializer)
-        {
-            return new Bool(deserializer.DeserializeBool());
-        }
+            => new Bool(deserializer.DeserializeBool());
 
-        public TypeTag Variant()
-        {
-            return TypeTag.BOOL;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.BOOL;
 
-        public override string ToString()
-        {
-            return value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => value.ToString();
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not Bool)
                 throw new NotImplementedException();
-
             Bool otherBool = (Bool)other;
-
             return this.value == otherBool.value;
         }
 
-
+        /// <inheritdoc/>
         public override int GetHashCode() => this.value.GetHashCode();
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
     }
 
     /// <summary>
@@ -560,57 +603,49 @@ namespace Aptos.BCS
     /// </summary>
     public class U8 : ISerializableTag
     {
+        /// <summary>
+        /// The internal U8 value as a byte.
+        /// </summary>
         byte value;
 
-        public U8(byte value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a U8 object from a given byte.
+        /// </summary>
+        /// <param name="value">A byte value to serialize as u8.</param>
+        public U8(byte value) => this.value = value;
 
-        public TypeTag Variant()
-        {
-            return TypeTag.U8;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.U8;
 
-        public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+        /// <inheritdoc/>
+        public void Serialize(Serialization serializer) => serializer.Serialize(value);
 
-        public static int Deserialize(byte[] data)
-        {
-            return BitConverter.ToInt32(data);
-        }
+        /// <inheritdoc/>
+        public static int Deserialize(byte[] data) => BitConverter.ToInt32(data);
 
+        /// <inheritdoc/>
         public static U8 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
 
-        public override string ToString()
-        {
-            return this.value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => this.value.ToString();
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not U8)
                 throw new NotImplementedException();
-
             U8 otherU8 = (U8)other;
-
             return this.value == otherU8.value;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -618,55 +653,50 @@ namespace Aptos.BCS
     /// </summary>
     public class U16 : ISerializableTag
     {
+        /// <summary>
+        /// The internal U16 values as a uint data type.
+        /// </summary>
         public uint value;
 
-        public U16(uint value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a U16 object from a given uint value.
+        /// </summary>
+        /// <param name="value">A uint value to serialize as u16.</param>
+        public U16(uint value) => this.value = value;
 
-        public TypeTag Variant()
-        {
-            return TypeTag.U16;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.U16;
 
-        public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+        /// <inheritdoc/>
+        public void Serialize(Serialization serializer) => serializer.Serialize(value);
 
-        public static ushort Deserialize(byte[] data)
-        {
-            return BitConverter.ToUInt16(data);
-        }
+        /// <inheritdoc/>
+        public static ushort Deserialize(byte[] data) => BitConverter.ToUInt16(data);
 
+        /// <inheritdoc/>
         public static U16 Deserialize(Deserialization deserializer)
         {
             U16 val = new U16(deserializer.DeserializeU32());
             return val;
         }
 
-        public override string ToString()
-        {
-            return value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => value.ToString();
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not U16)
                 throw new NotImplementedException();
-
             U16 otherU16 = (U16)other;
-
             return this.value == otherU16.value;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() => this.value.GetHashCode();
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
     }
 
     /// <summary>
@@ -674,55 +704,50 @@ namespace Aptos.BCS
     /// </summary>
     public class U32 : ISerializableTag
     {
+        /// <summary>
+        /// The internal U32 values as a uint data type.
+        /// </summary>
         public uint value;
 
-        public U32(uint value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a U32 object from a uint value.
+        /// </summary>
+        /// <param name="value">A uint value to serialize as u32.</param>
+        public U32(uint value) => this.value = value;
 
-        public TypeTag Variant()
-        {
-            return TypeTag.U32;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.U32;
 
-        public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+        /// <inheritdoc/>
+        public void Serialize(Serialization serializer) => serializer.Serialize(value);
 
-        public static uint Deserialize(byte[] data)
-        {
-            return BitConverter.ToUInt32(data);
-        }
+        /// <inheritdoc/>
+        public static uint Deserialize(byte[] data) => BitConverter.ToUInt32(data);
 
+        /// <inheritdoc/>
         public static U32 Deserialize(Deserialization deserializer)
         {
             U32 val = new U32(deserializer.DeserializeU32());
             return val;
         }
 
-        public override string ToString()
-        {
-            return value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => value.ToString();
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not U32)
                 throw new NotImplementedException();
-
             U32 otherU8 = (U32)other;
-
             return this.value == otherU8.value;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() => this.value.GetHashCode();
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
     }
 
     /// <summary>
@@ -730,57 +755,49 @@ namespace Aptos.BCS
     /// </summary>
     public class U64 : ISerializableTag
     {
+        /// <summary>
+        /// The internal U64 value as a ulong data type.
+        /// </summary>
         ulong value;
 
-        public U64(ulong value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a U64 object from a given ulong value.
+        /// </summary>
+        /// <param name="value">A ulong value to serialize as u64.</param>
+        public U64(ulong value) => this.value = value;
 
-        public TypeTag Variant()
-        {
-            return TypeTag.U64;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.U64;
 
-        public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+        /// <inheritdoc/>
+        public void Serialize(Serialization serializer) => serializer.Serialize(value);
 
-        public static ulong Deserialize(byte[] data)
-        {
-            return BitConverter.ToUInt64(data);
-        }
+        /// <inheritdoc/>
+        public static ulong Deserialize(byte[] data) => BitConverter.ToUInt64(data);
 
+        /// <inheritdoc/>
         public static U64 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not U64)
                 throw new NotImplementedException();
-
             U64 otherU64 = (U64)other;
-
             return this.value == (ulong)otherU64.GetValue();
         }
 
-        public override string ToString()
-        {
-            return this.value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => this.value.ToString();
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -788,57 +805,51 @@ namespace Aptos.BCS
     /// </summary>
     public class U128 : ISerializableTag
     {
+        /// <summary>
+        /// The internal U128 value as a BigInteger data type.
+        /// </summary>
         BigInteger value;
 
-        public U128(BigInteger value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a U128 objeect from a BigInteger value.
+        /// </summary>
+        /// <param name="value">A BigInteger value to serialize as u128.</param>
+        public U128(BigInteger value) => this.value = value;
 
-        public TypeTag Variant()
-        {
-            return TypeTag.U128;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.U128;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+            => serializer.Serialize(value);
 
+        /// <inheritdoc/>
         public static BigInteger Deserialize(byte[] data)
-        {
-            return new BigInteger(data);
-        }
+            => new BigInteger(data);
 
+        /// <inheritdoc/>
         public static U128 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not U128)
                 throw new NotImplementedException();
-
             U128 otherU128 = (U128)other;
-
             return this.value == otherU128.value;
         }
 
-        public override string ToString()
-        {
-            return this.value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => this.value.ToString();
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -846,57 +857,51 @@ namespace Aptos.BCS
     /// </summary>
     public class U256 : ISerializableTag
     {
+        /// <summary>
+        /// The internal U256 value as a BigInteger data type.
+        /// </summary>
         BigInteger value;
 
-        public U256(BigInteger value)
-        {
-            this.value = value;
-        }
+        /// <summary>
+        /// Creates a U256 object from a given BigInteger value.
+        /// </summary>
+        /// <param name="value">A BigInteger value to serialize as u256.</param>
+        public U256(BigInteger value) => this.value = value;
 
-        public TypeTag Variant()
-        {
-            return TypeTag.U256;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.U256;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
-        {
-            serializer.Serialize(value);
-        }
+            => serializer.Serialize(value);
 
+        /// <inheritdoc/>
         public static BigInteger Deserialize(byte[] data)
-        {
-            return new BigInteger(data);
-        }
+            => new BigInteger(data);
 
+        /// <inheritdoc/>
         public static U256 Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
 
-        public object GetValue()
-        {
-            return value;
-        }
+        /// <inheritdoc/>
+        public object GetValue() => value;
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not U256)
                 throw new NotImplementedException();
-
             U256 otherU256 = (U256)other;
-
             return this.value == otherU256.value;
         }
 
-        public override string ToString()
-        {
-            return this.value.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => this.value.ToString();
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -904,11 +909,34 @@ namespace Aptos.BCS
     /// </summary>
     public class StructTag : ISerializableTag
     {
+        /// <summary>
+        /// The account address of the struct tag.
+        /// </summary>
         AccountAddress address;
+
+        /// <summary>
+        /// The module name of the struct tag.
+        /// </summary>
         string module;
+
+        /// <summary>
+        /// The function name of the struct tag.
+        /// </summary>
         string name;
+
+        /// <summary>
+        /// A set of type arguments, if any.
+        /// </summary>
         ISerializableTag[] typeArgs;
 
+        /// <summary>
+        /// Creates a StructTag object from an address, module, function name,
+        /// and type arguments.
+        /// </summary>
+        /// <param name="address">An AccountAddress.</param>
+        /// <param name="module">The module name.</param>
+        /// <param name="name">The function name.</param>
+        /// <param name="typeArgs">A list of type arguments.</param>
         public StructTag(AccountAddress address, string module, string name, ISerializableTag[] typeArgs)
         {
             this.address = address;
@@ -917,11 +945,10 @@ namespace Aptos.BCS
             this.typeArgs = typeArgs;
         }
 
-        public TypeTag Variant()
-        {
-            return TypeTag.STRUCT;
-        }
+        /// <inheritdoc/>
+        public TypeTag Variant() => TypeTag.STRUCT;
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.Variant());
@@ -934,6 +961,7 @@ namespace Aptos.BCS
                 this.typeArgs[i].Serialize(serializer);
         }
 
+        /// <inheritdoc/>
         public static StructTag Deserialize(Deserialization deserializer)
         {
             AccountAddress address = AccountAddress.Deserialize(deserializer);
@@ -957,15 +985,16 @@ namespace Aptos.BCS
                 name,
                 typeArgsArr
             );
-
             return structTag;
         }
 
+        /// <inheritdoc/>
         public object GetValue()
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not StructTag)
@@ -981,6 +1010,7 @@ namespace Aptos.BCS
             ); ;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             string value = string.Format(
@@ -1000,6 +1030,7 @@ namespace Aptos.BCS
             return value;
         }
 
+        /// <inheritdoc/>
         public static StructTag FromStr(string typeTag)
         {
             string name = "";
@@ -1024,9 +1055,7 @@ namespace Aptos.BCS
             );
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 }
