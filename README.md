@@ -12,11 +12,11 @@
 Aptos-Unity-SDK is a Unity package written in C# to help developers integrate Aptos blockchain technology into their projects.
 
 - [Features](#features)
-- [ToDo](#todo)
 - [Requirements](#requirements)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
   - [Unity Package Importer](#unity-package-importer)
+- [Examples and Test Suite](#examples-and-test-suite)
 - [Using Aptos-Unity-SDK](#using-aptos-unity-sdk)
   - [RestClient](#restclient)
   - [FaucetClient](#faucetclient)
@@ -120,8 +120,19 @@ Let's go over each of the classes, along with examples for each to demonstrate t
 
 #### RestClient ####
 
-The REST Client provides you with the fundamental transaction endpoints needed for interacting with the Aptos Blockchain. As shown before, it only take a few lines of code to initialize a transfer for Aptos coins. This is the main class developers will be leveraging to interact directly with the Aptos Blockchain via REST Client calls. Here's another example showing how to create a collection:
-```c#
+The REST Client provides you with the fundamental transaction endpoints needed for interacting with the Aptos Blockchain. The following showcases how to initialize the `RestClient` and `AptosTokenClient`.
+
+```csharp
+RestClient restClient = RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+Coroutine restClientSetupCor = StartCoroutine(RestClient.Instance.SetUp());
+yield return restClientSetupCor;
+
+AptosTokenClient tokenClient = AptosTokenClient.Instance.SetUp(restClient);
+```
+
+As shown before, it only take a few lines of code to initialize a transfer for Aptos coins. This is the main class developers will be leveraging to interact directly with the Aptos Blockchain via REST Client calls. Here's another example showing how to create a collection:
+
+```csharp
 // Initialize Account.
 Account alice = Account.Generate();
 
@@ -145,7 +156,7 @@ yield return createCollectionCor;
 
 Here's also how to wait for a transaction:
 
-```c#
+```csharp
 // Initialize Accounts.
 Account alice = Account.Generate();
 Account bob = Account.Generate();
@@ -189,7 +200,7 @@ if (!waitForTxnSuccess)
 
 The Faucet Client allows the developer to leverage the ability to fund wallets on any of the non-main networks within the Aptos Blockchain. This can easily speed up development times through automating the process of funding wallets. Here's an example on how to use the Faucet Client:
 
-```c#
+```csharp
 // Initialize Account.
 Account alice = Account.Generate();
 
@@ -210,7 +221,7 @@ yield return fundAliceAccountCor;
 
 The Token Client provides the ability for the developer to have an easier time implementing NFT mechanics into their projects. Here's an example on minting an NFT using the client:
 
-```c#
+```csharp
 // Initialize Account.
 Account alice = Account.Generate();
 
@@ -244,7 +255,7 @@ yield return mintTokenCor;
 
 If a developer needs more flexibility with how they want to shape their transactions, e.g., arbitrary, generic, custom, using EntryFunction is the key class, along with the usage of the REST Client, to submit those types of transactions that aren't defined already. This is how the developer would initialize the transaction arguments, create the EntryFunction payload, and submit the transaction using BCS:
 
-```c#
+```csharp
 // Initialize Account.
 Account Alice = Account.Generate();
 
@@ -291,7 +302,7 @@ yield return cor_createBcsSIgnedTransaction;
 
 Accounts within the SDK represent the core part of a Wallet, that give ease of access to the needed information you'd need for communicating with the Aptos Blockchain. Here are some example initializations of accounts:
 
-```c#
+```csharp
 // Generate Random Account.
 alice = Account.Generate();
 
@@ -316,7 +327,7 @@ Account chad = new Account(PrivateKeyBytes, PublicKeyBytes);
 ```
 
 From there, you're able to retrieve the byte array of the private and public keys, along with signing and verifying messages and transactions, as the core function of an Account object, as shown here:
-```c#
+```csharp
 // Retrieve Private Key.
 var privateKey = chad.PrivateKey;
 
@@ -326,7 +337,7 @@ var publicKey = chad.PublicKey;
 
 The developer can now use the Account to sign various messages and transactions for interacting with the Aptos Blockchain, as shown here:
 
-```c#
+```csharp
 // Create a Signature Object Storing the Signature of the Signed Message.
 private static readonly byte[] MessageUt8Bytes = {
 	87, 69, 76, 67, 79, 77, 69, 32,
@@ -337,7 +348,7 @@ var signature = privateKey.Sign(MessageUt8Bytes);
 
 Developers can also verify the integrity of the message using the public key, as shown here:
 
-```c#
+```csharp
 // Initiailize Verified Bool Object.
 bool verified = publicKey.Verify(MessageUt8Bytes, signature);
 ```
@@ -346,7 +357,7 @@ bool verified = publicKey.Verify(MessageUt8Bytes, signature);
 
 Wallets will be the primary method of accessing accounts on the Aptos Blockchain via Mnemonic Keys, since they'll allow you to generate multiple accounts with ease. Here's an example on how to initialize a wallet using a mnemonic key:
 
-```c#
+```csharp
 // Initializing Wallet.
 string mnemo = "stadium valid laundry unknown tuition train december camera fiber vault sniff ripple";
 Wallet wallet = new Wallet(mnemo);
@@ -358,7 +369,7 @@ Wallet wallet = new Wallet(mnemo);
 
 This provides the developer with what's known as an [HD Wallet](https://www.investopedia.com/terms/h/hd-wallet-hierarchical-deterministic-wallet.asp) (Hierarchical Deterministic Wallet), which is what will enable to generate as many private keys from the wallet as they want. Here's different ways on how to retrieve the account(s) from the Wallet, along with deriving the mnemonic seed from the Wallet; which is the seed that's derived from the input mnemonic phrase and is what allows the developer to generate a number accounts from the Wallet:
 
-```c#
+```csharp
 // Get the Initial Main Account.
 var mainAccount = wallet.Account;
 
@@ -371,7 +382,7 @@ var seed = wallet.DeriveMnemonicSeed();
 
 The Wallet object can also allow the main account to sign and verify data, as shown here:
 
-```c#
+```csharp
 // Initialize a Signature Object.
 private static readonly byte[] MessageUt8Bytes = {
 	87, 69, 76, 67, 79, 77, 69, 32,
