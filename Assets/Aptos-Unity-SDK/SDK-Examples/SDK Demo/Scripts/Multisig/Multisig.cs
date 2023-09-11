@@ -29,11 +29,8 @@ namespace Aptos.Unity.Sample
             string faucetEndpoint = "https://faucet.devnet.aptoslabs.com";
 
             FaucetClient faucetClient = FaucetClient.Instance;
-
-            RestClient restClient = new RestClient();
-            Coroutine restClientSetupCor = StartCoroutine(RestClient.Instance.SetUp((_restClient) => {
-                restClient = _restClient;
-            }, Constants.DEVNET_BASE_URL));
+            RestClient restClient = RestClient.Instance.SetEndPoint(Constants.DEVNET_BASE_URL);
+            Coroutine restClientSetupCor = StartCoroutine(RestClient.Instance.SetUp());
             yield return restClientSetupCor;
 
             AptosTokenClient tokenClient = AptosTokenClient.Instance.SetUp(restClient);
@@ -254,7 +251,7 @@ namespace Aptos.Unity.Sample
                 Constants.MAX_GAS_AMOUNT,
                 Constants.GAS_UNIT_PRICE,
                 expirationTimestamp,
-                restClient.ChainId
+                (int)restClient.ChainId
             );
 
             Debug.Log("RAW TXN: " + rawTransaction.ToString());
@@ -578,7 +575,7 @@ namespace Aptos.Unity.Sample
                 yield break;
             }
 
-            Debug.Log(string.Format("Transacthin hash: {0}", transactionHash));
+            Debug.Log(string.Format("Transaction hash: {0}", transactionHash));
 
             responseInfo = new ResponseInfo();
             cor = StartCoroutine(restClient.GetAccount((_accountData, _responseInfo) => {
