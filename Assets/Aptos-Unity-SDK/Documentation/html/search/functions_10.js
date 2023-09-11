@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['waitfortransaction_0',['WaitForTransaction',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a75fd417c0f8430e31c742be93b7f43af',1,'Aptos::Unity::Rest::RestClient']]],
-  ['wallet_1',['Wallet',['../class_aptos_1_1_hd_wallet_1_1_wallet.html#a5de2d1bd195034a667f12daccdf29c1d',1,'Aptos.HdWallet.Wallet.Wallet(WordCount wordCount, Wordlist wordList, string passphrase=&quot;&quot;, SeedMode seedMode=SeedMode.Ed25519Bip32)'],['../class_aptos_1_1_hd_wallet_1_1_wallet.html#a7db67db4959f62d0688ce9bc383b7989',1,'Aptos.HdWallet.Wallet.Wallet(Mnemonic mnemonic, string passphrase=&quot;&quot;, SeedMode seedMode=SeedMode.Ed25519Bip32)'],['../class_aptos_1_1_hd_wallet_1_1_wallet.html#a342a9115c01167d1eef7454f7fdb9125',1,'Aptos.HdWallet.Wallet.Wallet(string mnemonicWords, Wordlist wordList=null, string passphrase=&quot;&quot;, SeedMode seedMode=SeedMode.Ed25519Bip32)'],['../class_aptos_1_1_hd_wallet_1_1_wallet.html#a775c3f130b41414a91913068089c758d',1,'Aptos.HdWallet.Wallet.Wallet(byte[] seed, string passphrase=&quot;&quot;, SeedMode seedMode=SeedMode.Ed25519Bip32)']]],
-  ['writebytes_2',['WriteBytes',['../class_aptos_1_1_utilities_1_1_b_c_s_1_1_serialization.html#ae929d5bd5edcebd052de9ffc945c0156',1,'Aptos::Utilities::BCS::Serialization']]],
-  ['writejson_3',['WriteJson',['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_converter.html#a8a7dcf6448094b6d2b1d20bc1639a880',1,'Aptos.Unity.Rest.Model.TransactionConverter.WriteJson()'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_payload_converter.html#af29308cf975a40f7a4401443fe619d2e',1,'Aptos.Unity.Rest.Model.TransactionPayloadConverter.WriteJson()'],['../class_aptos_1_1_unity_1_1_rest_1_1_model_1_1_transaction_request_converter.html#a48227a994765a9f4fb0eb9e6f37927a7',1,'Aptos.Unity.Rest.Model.TransactionRequestConverter.WriteJson()']]]
+  ['u128_0',['U128',['../class_aptos_1_1_b_c_s_1_1_u128.html#a4daab0f44330f8719b3c44133cd59677',1,'Aptos::BCS::U128']]],
+  ['u16_1',['U16',['../class_aptos_1_1_b_c_s_1_1_u16.html#a7ab6d0f2bc90082534ead0f7ce92487b',1,'Aptos::BCS::U16']]],
+  ['u256_2',['U256',['../class_aptos_1_1_b_c_s_1_1_u256.html#afc724c40e9b8a896be754b26bc8ce45b',1,'Aptos::BCS::U256']]],
+  ['u32_3',['U32',['../class_aptos_1_1_b_c_s_1_1_u32.html#ac9b924165adffa6b4b9efbae5f0a1208',1,'Aptos::BCS::U32']]],
+  ['u64_4',['U64',['../class_aptos_1_1_b_c_s_1_1_u64.html#aa1ebe3d4e9e1c2150ecdc04795cb42a0',1,'Aptos::BCS::U64']]],
+  ['u8_5',['U8',['../class_aptos_1_1_b_c_s_1_1_u8.html#a8ee10aa2dd9c2cd88594e6c39cd41e41',1,'Aptos::BCS::U8']]]
 ];

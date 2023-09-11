@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['offertoken_0',['OfferToken',['../class_aptos_1_1_unity_1_1_rest_1_1_rest_client.html#a2ea5434d1cce09f77504947918a40cb2',1,'Aptos::Unity::Rest::RestClient']]],
-  ['operator_20byte_5b_5d_1',['operator byte[]',['../class_aptos_1_1_accounts_1_1_public_key.html#a1d8c729c56e5b2127508f43e7d3e00c8',1,'Aptos::Accounts::PublicKey']]],
-  ['operator_20publickey_2',['operator PublicKey',['../class_aptos_1_1_accounts_1_1_public_key.html#a29c1b1922f6da160ab261e66092d2cca',1,'Aptos.Accounts.PublicKey.operator PublicKey(string publicKey)'],['../class_aptos_1_1_accounts_1_1_public_key.html#ab7820d69c631d8d229ffd5dfe05921bf',1,'Aptos.Accounts.PublicKey.operator PublicKey(byte[] keyBytes)']]],
-  ['operator_20string_3',['operator string',['../class_aptos_1_1_accounts_1_1_private_key.html#a19608c483861da28ae538126a4e4db6b',1,'Aptos.Accounts.PrivateKey.operator string()'],['../class_aptos_1_1_accounts_1_1_public_key.html#aab3d7ab088bea71147b8c12af096acb6',1,'Aptos.Accounts.PublicKey.operator string()']]],
-  ['operator_21_3d_4',['operator!=',['../class_aptos_1_1_accounts_1_1_private_key.html#a140cf49bab6d6229553b2f5e1fb14eb5',1,'Aptos.Accounts.PrivateKey.operator!=()'],['../class_aptos_1_1_accounts_1_1_public_key.html#aee7b19a3ea943c923d607a79c4ad7c9a',1,'Aptos.Accounts.PublicKey.operator!=()']]],
-  ['operator_3d_3d_5',['operator==',['../class_aptos_1_1_accounts_1_1_private_key.html#a8153f8fee2d91354225eb908075ca1c1',1,'Aptos.Accounts.PrivateKey.operator==()'],['../class_aptos_1_1_accounts_1_1_public_key.html#a37c52988c2b311d23705cee3f9b84a88',1,'Aptos.Accounts.PublicKey.operator==()']]]
+  ['multiagentauthenticator_0',['MultiAgentAuthenticator',['../class_aptos_1_1_b_c_s_1_1_multi_agent_authenticator.html#a7443852a54f4ecc144d0c90d0c03e3ca',1,'Aptos::BCS::MultiAgentAuthenticator']]],
+  ['multied25519authenticator_1',['MultiEd25519Authenticator',['../class_aptos_1_1_b_c_s_1_1_multi_ed25519_authenticator.html#aa948bd29249e2db6872c9936b7e3c229',1,'Aptos::BCS::MultiEd25519Authenticator']]],
+  ['multied25519publickey_2',['MultiEd25519PublicKey',['../class_aptos_1_1_accounts_1_1_types_1_1_multi_ed25519_public_key.html#afe62aa944edd5db1d1359971629c17b2',1,'Aptos::Accounts::Types::MultiEd25519PublicKey']]],
+  ['multipublickey_3',['MultiPublicKey',['../class_aptos_1_1_accounts_1_1_multi_public_key.html#a0d0351a07daea7c478f7140e647e94fe',1,'Aptos::Accounts::MultiPublicKey']]],
+  ['multisignature_4',['MultiSignature',['../class_aptos_1_1_accounts_1_1_multi_signature.html#a11a1cd7641de6c199b55eda5431cc4d9',1,'Aptos::Accounts::MultiSignature']]]
 ];
