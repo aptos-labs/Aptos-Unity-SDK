@@ -58,10 +58,7 @@ namespace Aptos.Accounts
                 return _key;
             }
 
-            set
-            {
-                _key = value;
-            }
+            set => _key = value;
         }
 
         /// <summary>
@@ -128,7 +125,7 @@ namespace Aptos.Accounts
             if(!HdWallet.Utils.Utils.IsValidAddress(key))
                 throw new ArgumentException("Invalid key", nameof(key));
 
-            Key = key ?? throw new ArgumentNullException(nameof(key));
+            this.Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
         /// <summary>
@@ -185,9 +182,7 @@ namespace Aptos.Accounts
             if (lhs is null)
             {
                 if (rhs is null)
-                {
                     return true;
-                }
 
                 // Only the left side is null.
                 return false;
@@ -225,33 +220,22 @@ namespace Aptos.Accounts
         public override bool Equals(object obj)
         {
             if(obj is PrivateKey privateKey)
-            {
                 return privateKey.Key == this.Key;
-            }
 
             return false;
         }
 
         /// <inheritdoc cref="GetHashCode"/>
-        public override int GetHashCode()
-        {
-            return Key.GetHashCode();
-        }
+        public override int GetHashCode() => Key.GetHashCode();
 
         /// <inheritdoc cref="ToString"/>
-        public override string ToString()
-        {
-            return Key;
-        }
+        public override string ToString() => Key;
 
         /// <summary>
         /// Convert a PrivateKey object to hexadecimal string representation of private key.
         /// </summary>
         /// <param name="privateKey">The PrivateKey object.</param>
         /// <returns>Hexadecimal string representing the private key.</returns>
-        public static implicit operator string(PrivateKey privateKey)
-        {
-            return privateKey.Key;
-        }
+        public static implicit operator string(PrivateKey privateKey) => privateKey.Key;
     }
 }

@@ -46,10 +46,10 @@ namespace Aptos.Accounts
             if(Checked)
             {
                 if(!(MIN_KEYS <= Keys.Count && Keys.Count <= MAX_KEYS))
-                    throw new Exception("Must have between " + MIN_KEYS + " and " + MAX_KEYS + " keys.");
+                    throw new ArgumentException("Must have between " + MIN_KEYS + " and " + MAX_KEYS + " keys.");
 
                 if(!(MIN_THRESHOLD <= Threshold && Threshold < Keys.Count))
-                    throw new Exception("Threshold must be between " +MIN_THRESHOLD + " and " + Keys.Count);
+                    throw new ArgumentException("Threshold must be between " +MIN_THRESHOLD + " and " + Keys.Count);
             }
 
             this.Keys = Keys;
@@ -94,17 +94,15 @@ namespace Aptos.Accounts
             int minThreshold = MIN_THRESHOLD;
 
             // Get number of signers.
-            int nSigners = (int)Key.Length / PublicKey.KeyLength;
+            int nSigners = Key.Length / PublicKey.KeyLength;
             if(!(minKeys <= nSigners && nSigners <= maxKeys))
-            {
-                throw new Exception(string.Format("Must have between {0} and {1} keys.", minKeys, maxKeys));
-            }
+                throw new ArgumentException(string.Format("Must have between {0} and {1} keys.", minKeys, maxKeys));
 
             // Get threshold.
             byte threshold = Key[Key.Length - 1];
-            if(!(minThreshold <= threshold && threshold <= nSigners)) {
+            if(!(minThreshold <= threshold && threshold <= nSigners))
                 throw new Exception(string.Format("Threshold must be between {0} and {1}.", minThreshold, nSigners));
-            }
+
             List<PublicKey> keys = new List<PublicKey>(); // Initialize empty keys list.
 
             for(int i = 0; i < nSigners; i++) // Loop over all signers.

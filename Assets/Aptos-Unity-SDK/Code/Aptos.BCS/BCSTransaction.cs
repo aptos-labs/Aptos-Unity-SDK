@@ -19,7 +19,9 @@ namespace Aptos.BCS
         ulong expirationTimestampsSecs;
         int chainId;
 
-        public RawTransaction(AccountAddress sender, int sequenceNumber, TransactionPayload payload, int maxGasAmount, int gasUnitPrice, ulong expirationTimestampsSecs, int chainId)
+        public RawTransaction(AccountAddress sender, int sequenceNumber,
+            TransactionPayload payload, int maxGasAmount, int gasUnitPrice,
+            ulong expirationTimestampsSecs, int chainId)
         {
             this.sender = sender;
             this.sequenceNumber = sequenceNumber;
@@ -535,7 +537,8 @@ namespace Aptos.BCS
         public TagSequence typeArgs { get; set; }
         public Sequence args { get; set; }
 
-        public EntryFunction(ModuleId module, string function, TagSequence typeArgs, Sequence args)
+        public EntryFunction(ModuleId module, string function,
+            TagSequence typeArgs, Sequence args)
         {
             this.module = module;
             this.function = function;
@@ -551,7 +554,8 @@ namespace Aptos.BCS
         /// <param name="typeArgs"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static EntryFunction Natural(ModuleId module, string function, TagSequence typeArgs, Sequence args)
+        public static EntryFunction Natural(ModuleId module, string function,
+            TagSequence typeArgs, Sequence args)
         {
             // Encode all args in array of byte arrays
             // See transaction.py `EntryFunction.natural(...)`
@@ -688,7 +692,8 @@ namespace Aptos.BCS
 
             ModuleId otherModuleId = (ModuleId)other;
 
-            return this.address.Equals(otherModuleId.address) && this.name.Equals(otherModuleId.name);
+            return this.address.Equals(otherModuleId.address)
+                && this.name.Equals(otherModuleId.name);
         }
 
         public override string ToString()
@@ -769,7 +774,8 @@ namespace Aptos.BCS
             Type elementType = this.authenticator.GetAuthenticator().GetType();
             if (elementType == typeof(MultiAgentAuthenticator))
             {
-                MultiAgentAuthenticator authenticator = (MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
+                MultiAgentAuthenticator authenticator
+                    = (MultiAgentAuthenticator)this.authenticator.GetAuthenticator();
                 
                 MultiAgentRawTransaction transaction = new MultiAgentRawTransaction(
                     this.transaction, authenticator.SecondaryAddresses()

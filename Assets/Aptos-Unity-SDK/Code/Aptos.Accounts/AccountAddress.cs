@@ -4,12 +4,6 @@ using Aptos.HdWallet.Utils;
 using Aptos.BCS;
 using System.Text;
 using System.Linq;
-using Aptos.Unity.Rest.Model.Resources;
-using Org.BouncyCastle.Utilities;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.TextCore.Text;
 
 namespace Aptos.Accounts
 {
@@ -67,9 +61,8 @@ namespace Aptos.Accounts
         public AccountAddress(byte[] address)
         {
             if (address.Length != Length)
-            {
                 throw new ArgumentException("Address must be " + Length + " bytes");
-            }
+
             this.AddressBytes = address;
         }
 
@@ -87,9 +80,7 @@ namespace Aptos.Accounts
             {
                 addressHex = addressHex.TrimStart('0');
                 if (string.IsNullOrEmpty(addressHex))
-                {
                     addressHex = "0";
-                }
             }
             return "0x" + addressHex;
         }

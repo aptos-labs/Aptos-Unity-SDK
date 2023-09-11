@@ -18,6 +18,9 @@ namespace Aptos.BCS
         public bool Verify(byte[] data);
     }
 
+    /// <summary>
+    /// A generic Authenticator.
+    /// </summary>
     public class Authenticator : IAuthenticator
     {
         public const int ED25519 = 0;
@@ -27,6 +30,10 @@ namespace Aptos.BCS
         private int Variant;
         private readonly IAuthenticator authenticator;
 
+        /// <summary>
+        /// Creates an Authenticator from a given concrete authenticator.
+        /// </summary>
+        /// <param name="authenticator">A concrete authenticator.</param>
         public Authenticator(IAuthenticator authenticator)
         {
             if (authenticator.GetType() == typeof(Ed25519Authenticator))
@@ -41,6 +48,10 @@ namespace Aptos.BCS
             this.authenticator = authenticator;
         }
 
+        /// <summary>
+        /// Returns that type of Authenticator.
+        /// </summary>
+        /// <returns>An integer that represents the type of Authenticator.</returns>
         public int GetVariant()
         {
             return this.Variant;
@@ -65,16 +76,14 @@ namespace Aptos.BCS
             return this.authenticator.Verify(data);
         }
 
-        /// <summary>
-        /// Serializes the Authenticator.
-        /// </summary>
-        /// <param name="serializer"></param>
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeU32AsUleb128((uint)this.Variant);
             this.authenticator.Serialize(serializer);
         }
 
+        /// <inheritdoc/>
         public static ISerializable Deserialize(Deserialization deserializer)
         {
             int variant = deserializer.DeserializeUleb128();
@@ -92,6 +101,7 @@ namespace Aptos.BCS
             return new Authenticator((IAuthenticator)authenticator);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not Authenticator)
@@ -103,12 +113,11 @@ namespace Aptos.BCS
             );
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() => this.authenticator.GetHashCode();
 
-        public override string ToString()
-        {
-            return this.authenticator.ToString();
-        }
+        /// <inheritdoc/>
+        public override string ToString() => this.authenticator.ToString();
     }
 
     /// <summary>
@@ -116,9 +125,21 @@ namespace Aptos.BCS
     /// </summary>
     public class Ed25519Authenticator : IAuthenticator, ISerializable
     {
+        /// <summary>
+        /// The authenticators public key.
+        /// </summary>
         private readonly PublicKey publicKey;
+
+        /// <summary>
+        /// The authenticator's public key.
+        /// </summary>
         private readonly Signature signature;
 
+        /// <summary>
+        /// Creates an Ed25519Authenticator using a given public key and signature.
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <param name="signature"></param>
         public Ed25519Authenticator(PublicKey publicKey, Signature signature)
         {
             this.publicKey = publicKey;
@@ -135,16 +156,14 @@ namespace Aptos.BCS
             return publicKey.Verify(data, signature);
         }
 
-        /// <summary>
-        /// Serialize authenticator object.
-        /// </summary>
-        /// <param name="serializer">Serializer object</param>
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.SerializeBytes(this.publicKey); // Note in Python we call serializer.struct
             this.signature.Serialize(serializer); // Note in Python we call serializer.struct
         }
 
+        /// <inheritdoc/>
         public static Ed25519Authenticator Deserialize(Deserialization deserializer)
         {
             PublicKey key = PublicKey.Deserialize(deserializer);
@@ -153,6 +172,7 @@ namespace Aptos.BCS
             return new Ed25519Authenticator(key, signature);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not Ed25519Authenticator)
@@ -163,15 +183,13 @@ namespace Aptos.BCS
                 && this.signature.Equals(((Ed25519Authenticator)other).signature);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
-        {
-            return publicKey.GetHashCode() + signature.GetHashCode();
-        }
+            => publicKey.GetHashCode() + signature.GetHashCode();
 
+        /// <inheritdoc/>
         public override string ToString()
-        {
-            return "PublicKey: " + this.publicKey + ", Signature: " + this.signature; 
-        }
+            => "PublicKey: " + this.publicKey + ", Signature: " + this.signature;
     }
 
     /// <summary>
@@ -179,10 +197,24 @@ namespace Aptos.BCS
     /// </summary>
     public class MultiAgentAuthenticator : IAuthenticator
     {
+        /// <summary>
+        /// The multi agent authenticator's sender's authenticator.
+        /// </summary>
         private Authenticator sender;
+
+        /// <summary>
+        /// A list of acount address to authenticator tuples.
+        /// </summary>
         private List<Tuple<AccountAddress, Authenticator>> secondarySigners;
 
-        public MultiAgentAuthenticator(Authenticator sender, List<Tuple<AccountAddress, Authenticator>> secondarySigners)
+        /// <summary>
+        /// Creates a MultiAgentAuthenticator object from a given sender
+        /// authenticator, and a list of acount address to authenticator tuples.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="secondarySigners"></param>
+        public MultiAgentAuthenticator(Authenticator sender,
+            List<Tuple<AccountAddress, Authenticator>> secondarySigners)
         {
             this.sender = sender;
             this.secondarySigners = secondarySigners;
@@ -213,10 +245,7 @@ namespace Aptos.BCS
             return secondarySigners.All(signer => signer.Item2.Verify(data));   
         }
 
-        /// <summary>
-        /// Serializes the MultiAgentAuthenticator.
-        /// </summary>
-        /// <param name="serializer"></param>
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             AccountAddress[] secondaryAddresses = secondarySigners.Select(signer => signer.Item1).ToArray();
@@ -230,6 +259,7 @@ namespace Aptos.BCS
             serializer.Serialize(authenticatorsSeq);
         }
 
+        /// <inheritdoc/>
         public static MultiAgentAuthenticator Deserialize(Deserialization deserializer)
         {
             Authenticator sender = (Authenticator)Authenticator.Deserialize(deserializer);
@@ -245,6 +275,7 @@ namespace Aptos.BCS
             return new MultiAgentAuthenticator(sender, secondarySigners);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
             if (other is not MultiAgentAuthenticator)
@@ -264,10 +295,8 @@ namespace Aptos.BCS
             );
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -275,42 +304,45 @@ namespace Aptos.BCS
     /// </summary>
     public class MultiEd25519Authenticator : IAuthenticator
     {
+        /// <summary>
+        /// The authenticator's multi-public key.
+        /// </summary>
         MultiPublicKey PublicKey;
+
+        /// <summary>
+        /// The authenticator's multi-signature.
+        /// </summary>
         MultiSignature Signature;
 
+        /// <summary>
+        /// Creates a MultiEd25519Authenticator from a given multi-public key
+        /// and multi-signature.
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <param name="signature"></param>
         public MultiEd25519Authenticator(MultiPublicKey publicKey, MultiSignature signature)
         {
             this.PublicKey = publicKey;
             this.Signature = signature;
         }
 
+        /// <inheritdoc/>
         public bool Verify(byte[] data)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public void Serialize(Serialization serializer)
         {
             serializer.Serialize(this.PublicKey);
             serializer.Serialize(this.Signature);
         }
 
+        /// <inheritdoc/>
         public static MultiEd25519Authenticator Deserialize(Deserialization deserializer)
         {
             throw new NotImplementedException();
         }
-
-        //public override bool Equals(object other)
-        //{
-        //    if (other is not MultiEd25519Authenticator)
-        //        throw new NotImplementedException();
-
-        //    return base.Equals(other);
-        //}
-
-        //public override int GetHashCode()
-        //{
-        //    return base.GetHashCode();
-        //}
     }
 }

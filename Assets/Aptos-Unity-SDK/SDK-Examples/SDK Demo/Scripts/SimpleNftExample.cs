@@ -1,11 +1,8 @@
 using Aptos.Accounts;
 using Aptos.Unity.Rest;
 using Aptos.Unity.Rest.Model;
-
 using Newtonsoft.Json;
-
 using System.Collections;
-
 using UnityEngine;
 
 namespace Aptos.Unity.Sample
@@ -255,7 +252,7 @@ namespace Aptos.Unity.Sample
             #endregion
 
             #region Transferring the Token to Bob
-            Debug.Log("<color=cyan>=== Get Token Balance for Alice NFT ===</color>");
+            Debug.Log("<color=cyan>=== Alice Offering Token to Bob ===</color>");
             Transaction offerTokenTxn = new Transaction();
             Coroutine offerTokenCor = StartCoroutine(RestClient.Instance.OfferToken((_offerTokenTxn, _responseInfo) =>
             {
